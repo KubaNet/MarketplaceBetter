@@ -1,3 +1,5 @@
+using Autofac;
+using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
 using MarketplaceBetter.Web.ModelBuilders.Catalog;
@@ -5,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +15,7 @@ using MudBlazor.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Web
@@ -32,8 +36,18 @@ namespace MarketplaceBetter.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMudServices();
-            services.AddScoped<IBrandModelBuilder, BrandModelBuilder>();
-            services.AddScoped<IBrandService, BrandService>();
+            services.AddDbContext<BetterDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BetterConnection")));
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            // Register your own things directly with Autofac here.
+            builder.RegisterType<BetterDbContext>().As<IDbContext>();
+            builder.RegisterType<UnitOfWork<BetterDbContext>>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(BrandService))).AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(BrandModelBuilder))).AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(Startup))).Where(t => t.Name.EndsWith("Controller")).InstancePerLifetimeScope();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

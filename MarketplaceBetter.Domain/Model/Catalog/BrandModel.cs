@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Infrastructure.Validation;
+﻿using MarketplaceBetter.Domain.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

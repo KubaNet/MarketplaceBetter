@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Domain
+namespace MarketplaceBetter.Domain.Entities
 {
     public abstract class Entity
     {

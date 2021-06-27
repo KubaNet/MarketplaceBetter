@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Infrastructure.Constants
+namespace MarketplaceBetter.Domain.Constants
 {
     public static class Standard
     {

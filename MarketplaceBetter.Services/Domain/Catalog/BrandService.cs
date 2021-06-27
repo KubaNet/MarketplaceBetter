@@ -1,4 +1,6 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog;
+﻿using MarketplaceBetter.Domain.Entities.Catalog;
+using MarketplaceBetter.Domain.Model.Catalog;
+using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,9 +12,29 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 {
     public class BrandService : IBrandService
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Brand> _repository;
+
+        public BrandService(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _repository = unitOfWork.GetRepository<Brand>();
+        }
+
         public void Add(BrandModel brand)
         {
-            throw new NotImplementedException();
+            Brand newBrand = new();
+
+            TransferValues(brand, newBrand);
+
+            _repository.Add(newBrand);
+            _unitOfWork.Save();
+        }
+
+        private void TransferValues(BrandModel fromBrand, Brand toBrand)
+        {
+            toBrand.Name = fromBrand.Name;
+            toBrand.Code = fromBrand.Code;
         }
     }
 }

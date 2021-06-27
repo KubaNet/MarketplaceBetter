@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarketplaceBetter.Domain\MarketplaceBetter.Domain.csproj" />
+    <ProjectReference Include="..\MarketplaceBetter.Infrastructure\MarketplaceBetter.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

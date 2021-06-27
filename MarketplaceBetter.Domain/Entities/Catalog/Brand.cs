@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Domain.Catalog
+namespace MarketplaceBetter.Domain.Entities.Catalog
 {
     public class Brand : Entity
     {
