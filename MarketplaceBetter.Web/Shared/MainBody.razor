@@ -1,0 +1,8 @@
+﻿<MudPaper Class="pa-4 mt-2" Style="@GreyBackground" Outlined="true" Square="true">
+    @ChildContent
+</MudPaper>
+
+@code {
+    private string GreyBackground = $"background-color:{Colors.Grey.Lighten4};";
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

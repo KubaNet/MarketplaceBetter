@@ -1,0 +1,21 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+
+@inject IBrandService BrandService
+
+<EditForm Model="Brand" OnValidSubmit="@HandleValidSubmit">
+    <FormDialog Title="Add brand">
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="Brand.Name" For="() => Brand.Name" />
+        <MudTextField Label="Code" @bind-Value="Brand.Code" For="() => Brand.Code" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", "3" } })" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    private BrandModel Brand = new();
+
+    private void HandleValidSubmit()
+    {
+        BrandService.Add(Brand);
+    }
+}

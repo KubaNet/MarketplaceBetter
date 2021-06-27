@@ -1,0 +1,47 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Web.ModelBuilders.Catalog
+
+@page "/brands"
+@inject IBrandModelBuilder BrandModelBuilder
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Brands</MudText>
+
+<MainBody>
+    <MudTable Items="@BrandsData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddBrand" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Brand</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.Id</MudTd>
+            <MudTd DataLabel="Sign">@context.Name</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<BrandModel> BrandsData { get; set; }
+
+    private void AddBrand()
+    {
+        var dialog = DialogService.Show<AddBrandDialog>();
+        var result = dialog.Result;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (BrandsData == null)
+        {
+            BrandsData = BrandModelBuilder.GetBrands();
+        }
+    }
+}
