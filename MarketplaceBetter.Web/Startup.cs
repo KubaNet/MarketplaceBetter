@@ -2,7 +2,6 @@ using Autofac;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
-using MarketplaceBetter.Web.ModelBuilders.Catalog;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +45,6 @@ namespace MarketplaceBetter.Web
             builder.RegisterType<UnitOfWork<BetterDbContext>>().As<IUnitOfWork>().InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(BrandService))).AsImplementedInterfaces().InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(BrandModelBuilder))).AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(Startup))).Where(t => t.Name.EndsWith("Controller")).InstancePerLifetimeScope();
         }
 

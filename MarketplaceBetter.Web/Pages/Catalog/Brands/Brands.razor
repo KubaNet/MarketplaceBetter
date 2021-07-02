@@ -1,8 +1,8 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
-@using MarketplaceBetter.Web.ModelBuilders.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
 @page "/brands"
-@inject IBrandModelBuilder BrandModelBuilder
+@inject IBrandService BrandService
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h3">Brands</MudText>
@@ -15,10 +15,12 @@
         <HeaderContent>
             <MudTh>Id</MudTh>
             <MudTh>Name</MudTh>
+            <MudTh>Code</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Nr">@context.Id</MudTd>
-            <MudTd DataLabel="Sign">@context.Name</MudTd>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Code">@context.Code</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager />
@@ -39,9 +41,6 @@
     {
         base.OnInitialized();
 
-        if (BrandsData == null)
-        {
-            BrandsData = BrandModelBuilder.GetBrands();
-        }
+        BrandsData = BrandService.GetBrands();
     }
 }

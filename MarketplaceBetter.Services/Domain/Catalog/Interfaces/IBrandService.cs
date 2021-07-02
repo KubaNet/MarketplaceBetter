@@ -10,5 +10,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
     public interface IBrandService
     {
         void Add(BrandModel brand);
+
+        IList<BrandModel> GetBrands();
     }
 }

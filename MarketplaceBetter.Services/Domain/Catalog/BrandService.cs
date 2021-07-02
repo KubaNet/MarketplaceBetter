@@ -31,6 +31,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _unitOfWork.Save();
         }
 
+        public IList<BrandModel> GetBrands()
+        {
+            IList<BrandModel> brands = new List<BrandModel> { new BrandModel { Id = 1, Name = "Futrzane", Code = "FUT" } };
+
+            return brands;
+        }
+
         private void TransferValues(BrandModel fromBrand, Brand toBrand)
         {
             toBrand.Name = fromBrand.Name;
