@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog;
+﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
@@ -14,18 +15,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Brand> _repository;
+        private readonly IMapper _mapper;
 
-        public BrandService(IUnitOfWork unitOfWork)
+        public BrandService(IUnitOfWork unitOfWork,
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Brand>();
+            _mapper = mapper;
         }
 
         public void Add(BrandModel brand)
         {
             Brand newBrand = new();
 
-            TransferValues(brand, newBrand);
+            TransferValues(newBrand, brand);
 
             _repository.Add(newBrand);
             _unitOfWork.Save();
@@ -33,12 +37,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<BrandModel> GetBrands()
         {
-            IList<BrandModel> brands = new List<BrandModel> { new BrandModel { Id = 1, Name = "Futrzane", Code = "FUT" } };
+            IList<BrandModel> brands = _mapper.Map<IList<BrandModel>>(_repository.GetAll());
 
             return brands;
         }
 
-        private void TransferValues(BrandModel fromBrand, Brand toBrand)
+        private void TransferValues(Brand toBrand, BrandModel fromBrand)
         {
             toBrand.Name = fromBrand.Name;
             toBrand.Code = fromBrand.Code;

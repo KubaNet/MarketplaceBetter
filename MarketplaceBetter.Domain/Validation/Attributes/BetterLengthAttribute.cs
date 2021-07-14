@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Validation
+namespace MarketplaceBetter.Domain.Validation.Attributes
 {
     public class BetterLengthAttribute : StringLengthAttribute
     {

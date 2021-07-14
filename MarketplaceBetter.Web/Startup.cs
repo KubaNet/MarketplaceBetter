@@ -35,6 +35,7 @@ namespace MarketplaceBetter.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMudServices();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<BetterDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BetterConnection")));
         }
 

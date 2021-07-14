@@ -1,7 +1,9 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
 
 @inject IBrandService BrandService
+@inject IBrandValidator BrandValidator
 
 <EditForm Model="Brand" OnValidSubmit="@HandleValidSubmit">
     <FormDialog Title="Add brand">
@@ -16,6 +18,11 @@
 
     private void HandleValidSubmit()
     {
-        BrandService.Add(Brand);
+        ValidationResult result = BrandValidator.Validate(Brand);
+
+        if (result.IsValid)
+        {
+            BrandService.Add(Brand);
+        }
     }
 }
