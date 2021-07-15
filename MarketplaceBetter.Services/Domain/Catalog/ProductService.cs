@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,42 +29,44 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public ProductModel Get(long id)
         {
-            Product brand = _repository.Get(id);
+            Product product = _repository.Get(id);
 
-            return _mapper.Map<ProductModel>(brand);
+            return _mapper.Map<ProductModel>(product);
         }
 
         public IList<ProductModel> GetAll()
         {
-            IList<ProductModel> brands = _mapper.Map<IList<ProductModel>>(_repository.GetAll());
+            IList<Product> products = _repository.GetQuery().Include(p => p.Brand).ToList();
+            IList<ProductModel> productsModel = _mapper.Map<IList<ProductModel>>(products);
 
-            return brands;
+            return productsModel;
         }
 
-        public void Add(ProductModel brand)
+        public void Add(ProductModel product)
         {
-            Product brandToAdd = new();
+            Product productToAdd = new();
 
-            TransferValues(brandToAdd, brand);
+            TransferValues(productToAdd, product);
 
-            _repository.Add(brandToAdd);
+            _repository.Add(productToAdd);
             _unitOfWork.Save();
         }
 
-        public void Update(ProductModel brand)
+        public void Update(ProductModel product)
         {
-            Product brandToUpdate = _repository.Get(brand.Id);
+            Product productToUpdate = _repository.Get(product.Id);
 
-            TransferValues(brandToUpdate, brand);
+            TransferValues(productToUpdate, product);
 
-            _repository.Update(brandToUpdate);
+            _repository.Update(productToUpdate);
             _unitOfWork.Save();
         }
 
         private void TransferValues(Product toProduct, ProductModel fromProduct)
         {
             toProduct.Name = fromProduct.Name;
-            toProduct.BrandId = fromProduct.BrandId;
+            toProduct.Code = fromProduct.Code;
+            toProduct.BrandId = fromProduct.Brand.Id;
         }
     }
 }

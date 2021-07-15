@@ -20,13 +20,18 @@ namespace MarketplaceBetter.Services.Validation.Catalog
             _repository = unitOfWork.GetRepository<Product>();
         }
 
-        public ValidationResult Validate(ProductModel brand)
+        public ValidationResult Validate(ProductModel product)
         {
             ValidationResult result = new();
 
-            if (_repository.Any(b => b.Name == brand.Name && b.Id != brand.Id))
+            if (_repository.Any(p => p.Name == product.Name && product.Brand.Id == p.BrandId && p.Id != product.Id))
             {
                 result.AddErrorFor<ProductModel>(b => b.Name, ValidationMessages.NameNotUnique, "Product");
+            }
+
+            if (_repository.Any(p => p.Code == product.Code && product.Brand.Id == p.BrandId && p.Id != product.Id))
+            {
+                result.AddErrorFor<BrandModel>(b => b.Code, ValidationMessages.PropertyNotUnique, "Product", "Code");
             }
 
             return result;

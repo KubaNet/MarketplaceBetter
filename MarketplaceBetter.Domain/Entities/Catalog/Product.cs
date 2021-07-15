@@ -10,6 +10,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog
     {
         public string Name { get; set; }
 
+        public string Code { get; set; }
+
         public long BrandId { get; set; }
 
         public Brand Brand { get; set; }

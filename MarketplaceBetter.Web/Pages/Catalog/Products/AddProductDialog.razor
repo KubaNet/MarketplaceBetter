@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Validation.Catalog.Interfaces
 
 @inject IProductService ProductService
+@inject IBrandService BrandService
 @inject IProductValidator ProductValidator
 @inject ISnackbar Snackbar
 
@@ -11,16 +12,29 @@
     <FormDialog Title="Add product">
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
-        <MudTextField Label="Code" @bind-Value="Product.BrandId" For="() => Product.BrandId" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", "3" } })" />
+        <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
+        <MudSelect T="BrandModel" @bind-Value="Product.Brand" Label="Brand" For="() => Product.Brand">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
     </FormDialog>
 </EditForm>
 
 @code {
     ProductModel Product = new();
+    IList<BrandModel> Brands;
     CustomValidation CustomValidation = new();
 
-    [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+    }
 
     private void HandleValidSubmit()
     {

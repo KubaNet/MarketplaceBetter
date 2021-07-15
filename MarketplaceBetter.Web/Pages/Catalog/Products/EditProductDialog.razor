@@ -11,7 +11,6 @@
     <FormDialog Title="Edit product">
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
-        <MudTextField Label="Brand" @bind-Value="Product.BrandId" For="() => Product.BrandId" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", "3" } })" />
     </FormDialog>
 </EditForm>
 
