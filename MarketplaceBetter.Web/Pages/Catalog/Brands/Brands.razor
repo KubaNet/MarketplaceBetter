@@ -31,10 +31,17 @@
 @code {
     private IList<BrandModel> BrandsData { get; set; }
 
-    private void AddBrand()
+    private async void AddBrand()
     {
         var dialog = DialogService.Show<AddBrandDialog>();
-        var result = dialog.Result;
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            BrandsData = BrandService.GetBrands();
+
+            StateHasChanged();
+        }
     }
 
     protected override void OnInitialized()

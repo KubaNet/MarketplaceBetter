@@ -4,8 +4,10 @@
 
 @inject IBrandService BrandService
 @inject IBrandValidator BrandValidator
+@inject ISnackbar Snackbar
 
 <EditForm Model="Brand" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
     <FormDialog Title="Add brand">
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Brand.Name" For="() => Brand.Name" />
@@ -14,7 +16,11 @@
 </EditForm>
 
 @code {
-    private BrandModel Brand = new();
+    BrandModel Brand = new();
+    CustomValidation CustomValidation = new();
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
 
     private void HandleValidSubmit()
     {
@@ -23,6 +29,12 @@
         if (result.IsValid)
         {
             BrandService.Add(Brand);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Brand"));
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
         }
     }
 }
