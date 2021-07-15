@@ -25,14 +25,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _mapper = mapper;
         }
 
-        public void Add(BrandModel brand)
+        public BrandModel Get(long id)
         {
-            Brand newBrand = new();
+            Brand brand = _repository.Get(id);
 
-            TransferValues(newBrand, brand);
-
-            _repository.Add(newBrand);
-            _unitOfWork.Save();
+            return _mapper.Map<BrandModel>(brand);
         }
 
         public IList<BrandModel> GetBrands()
@@ -40,6 +37,26 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             IList<BrandModel> brands = _mapper.Map<IList<BrandModel>>(_repository.GetAll());
 
             return brands;
+        }
+
+        public void Add(BrandModel brand)
+        {
+            Brand brandToAdd = new();
+
+            TransferValues(brandToAdd, brand);
+
+            _repository.Add(brandToAdd);
+            _unitOfWork.Save();
+        }
+
+        public void Update(BrandModel brand)
+        {
+            Brand brandToUpdate = _repository.Get(brand.Id);
+
+            TransferValues(brandToUpdate, brand);
+
+            _repository.Update(brandToUpdate);
+            _unitOfWork.Save();
         }
 
         private void TransferValues(Brand toBrand, BrandModel fromBrand)

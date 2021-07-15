@@ -9,8 +9,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 {
     public interface IBrandService
     {
-        void Add(BrandModel brand);
+        BrandModel Get(long id);
 
         IList<BrandModel> GetBrands();
+
+        void Add(BrandModel brand);
+
+        void Update(BrandModel brand);
     }
 }

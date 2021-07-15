@@ -12,5 +12,10 @@ namespace MarketplaceBetter.Infrastructure.Helpers
         {
             return string.Format("{0} was successfully added.", entityName);
         }
+
+        public static string SuccessfullyUpdated(string entityName)
+        {
+            return string.Format("{0} was successfully updated.", entityName);
+        }
     }
 }

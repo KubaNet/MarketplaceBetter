@@ -1,0 +1,47 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject IBrandService BrandService
+@inject IBrandValidator BrandValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="Brand" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title="Edit brand">
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="Brand.Name" For="() => Brand.Name" />
+        <MudTextField Label="Code" @bind-Value="Brand.Code" For="() => Brand.Code" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", "3" } })" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    BrandModel Brand;
+    CustomValidation CustomValidation = new();
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public long BrandId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brand = BrandService.Get(BrandId);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = BrandValidator.Validate(Brand);
+
+        if (result.IsValid)
+        {
+            BrandService.Update(Brand);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Brand"));
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}
