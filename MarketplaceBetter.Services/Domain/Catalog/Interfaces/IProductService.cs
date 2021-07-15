@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 {
-    public interface IBrandService
+    public interface IProductService
     {
-        BrandModel Get(long id);
+        ProductModel Get(long id);
 
-        IList<BrandModel> GetAll();
+        IList<ProductModel> GetAll();
 
-        void Add(BrandModel brand);
+        void Add(ProductModel Product);
 
-        void Update(BrandModel brand);
+        void Update(ProductModel Product);
     }
 }

@@ -1,7 +1,69 @@
-﻿@page "/products"
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+
+@page "/products"
+@inject IProductService ProductService
+@inject IDialogService DialogService
 
 <MudText Typo="Typo.h3">Products</MudText>
 
-@code {
+<MainBody>
+    <MudTable Items="@ProductsData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Product</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Code</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
 
+@code {
+    private IList<ProductModel> ProductsData { get; set; }
+
+    private async void AddProduct()
+    {
+        var dialog = DialogService.Show<AddProductDialog>();
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            ProductsData = ProductService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    private async void EditProduct(long id)
+    {
+        DialogParameters parameters = new DialogParameters { ["ProductId"] = id };
+        var dialog = DialogService.Show<EditProductDialog>(null, parameters);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            ProductsData = ProductService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProductsData = ProductService.GetAll();
+    }
 }

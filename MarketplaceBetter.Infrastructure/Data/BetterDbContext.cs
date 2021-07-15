@@ -20,6 +20,7 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         // Catalog
         public DbSet<Brand> Brand { get; set; }
+        public DbSet<Product> Product { get; set; }
 
         //public override int SaveChanges()
         //{

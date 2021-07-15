@@ -1,0 +1,40 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject IProductService ProductService
+@inject IProductValidator ProductValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title="Add product">
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
+        <MudTextField Label="Code" @bind-Value="Product.BrandId" For="() => Product.BrandId" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", "3" } })" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    ProductModel Product = new();
+    CustomValidation CustomValidation = new();
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ProductValidator.Validate(Product);
+
+        if (result.IsValid)
+        {
+            ProductService.Add(Product);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product"));
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

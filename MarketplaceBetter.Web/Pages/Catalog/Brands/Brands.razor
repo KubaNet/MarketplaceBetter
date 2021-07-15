@@ -40,7 +40,7 @@
 
         if (!result.Cancelled)
         {
-            BrandsData = BrandService.GetBrands();
+            BrandsData = BrandService.GetAll();
 
             StateHasChanged();
         }
@@ -54,7 +54,7 @@
 
         if (!result.Cancelled)
         {
-            BrandsData = BrandService.GetBrands();
+            BrandsData = BrandService.GetAll();
 
             StateHasChanged();
         }
@@ -64,6 +64,6 @@
     {
         base.OnInitialized();
 
-        BrandsData = BrandService.GetBrands();
+        BrandsData = BrandService.GetAll();
     }
 }

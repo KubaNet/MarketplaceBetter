@@ -11,38 +11,38 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Catalog
 {
-    public class BrandService : IBrandService
+    public class ProductService : IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<Brand> _repository;
+        private readonly IRepository<Product> _repository;
         private readonly IMapper _mapper;
 
-        public BrandService(
+        public ProductService(
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _repository = unitOfWork.GetRepository<Brand>();
+            _repository = unitOfWork.GetRepository<Product>();
             _mapper = mapper;
         }
 
-        public BrandModel Get(long id)
+        public ProductModel Get(long id)
         {
-            Brand brand = _repository.Get(id);
+            Product brand = _repository.Get(id);
 
-            return _mapper.Map<BrandModel>(brand);
+            return _mapper.Map<ProductModel>(brand);
         }
 
-        public IList<BrandModel> GetAll()
+        public IList<ProductModel> GetAll()
         {
-            IList<BrandModel> brands = _mapper.Map<IList<BrandModel>>(_repository.GetAll());
+            IList<ProductModel> brands = _mapper.Map<IList<ProductModel>>(_repository.GetAll());
 
             return brands;
         }
 
-        public void Add(BrandModel brand)
+        public void Add(ProductModel brand)
         {
-            Brand brandToAdd = new();
+            Product brandToAdd = new();
 
             TransferValues(brandToAdd, brand);
 
@@ -50,9 +50,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _unitOfWork.Save();
         }
 
-        public void Update(BrandModel brand)
+        public void Update(ProductModel brand)
         {
-            Brand brandToUpdate = _repository.Get(brand.Id);
+            Product brandToUpdate = _repository.Get(brand.Id);
 
             TransferValues(brandToUpdate, brand);
 
@@ -60,10 +60,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _unitOfWork.Save();
         }
 
-        private void TransferValues(Brand toBrand, BrandModel fromBrand)
+        private void TransferValues(Product toProduct, ProductModel fromProduct)
         {
-            toBrand.Name = fromBrand.Name;
-            toBrand.Code = fromBrand.Code;
+            toProduct.Name = fromProduct.Name;
+            toProduct.BrandId = fromProduct.BrandId;
         }
     }
 }
