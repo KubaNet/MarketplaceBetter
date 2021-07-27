@@ -37,23 +37,20 @@
 
     private async void AddProduct()
     {
-        var dialog = DialogService.Show<AddProductDialog>();
-        var result = await dialog.Result;
+        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add product" }).Result;
 
-        if (!result.Cancelled)
-        {
-            ProductsData = ProductService.GetAll();
-
-            StateHasChanged();
-        }
+        ProcessProductDialogResult(result);
     }
 
     private async void EditProduct(long id)
     {
-        DialogParameters parameters = new DialogParameters { ["ProductId"] = id };
-        var dialog = DialogService.Show<EditProductDialog>(null, parameters);
-        var result = await dialog.Result;
+        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
 
+        ProcessProductDialogResult(result);
+    }
+
+    private void ProcessProductDialogResult(DialogResult result)
+    {
         if (!result.Cancelled)
         {
             ProductsData = ProductService.GetAll();

@@ -3,29 +3,45 @@
 @using MarketplaceBetter.Services.Validation.Catalog.Interfaces
 
 @inject IProductService ProductService
+@inject IBrandService BrandService
 @inject IProductValidator ProductValidator
 @inject ISnackbar Snackbar
 
 <EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <FormDialog Title="Edit product">
+    <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
+        <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
+        <MudSelect T="BrandModel" @bind-Value="Product.Brand" Label="Brand" For="() => Product.Brand">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
     </FormDialog>
 </EditForm>
 
 @code {
-    ProductModel Product;
     CustomValidation CustomValidation = new();
+    ProductModel Product = new();
+    IList<BrandModel> Brands;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
     [Parameter] public long ProductId { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Product = ProductService.Get(ProductId);
+        Brands = BrandService.GetAll();
+
+        if (IsEdit)
+        {
+            Product = ProductService.Get(ProductId);
+        }
     }
 
     private void HandleValidSubmit()
@@ -34,8 +50,17 @@
 
         if (result.IsValid)
         {
-            ProductService.Update(Product);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product"));
+            if (IsEdit)
+            {
+                ProductService.Update(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product"));
+            }
+            else
+            {
+                ProductService.Add(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product"));
+            }
+
             MudDialog.Close();
         }
         else

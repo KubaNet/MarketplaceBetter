@@ -8,7 +8,7 @@
 
 <EditForm Model="Brand" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <FormDialog Title="Edit brand">
+    <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Brand.Name" For="() => Brand.Name" />
         <MudTextField Label="Code" @bind-Value="Brand.Code" For="() => Brand.Code" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", "3" } })" />
@@ -16,17 +16,22 @@
 </EditForm>
 
 @code {
-    BrandModel Brand;
     CustomValidation CustomValidation = new();
+    BrandModel Brand = new();
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
     [Parameter] public long BrandId { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Brand = BrandService.Get(BrandId);
+        if (IsEdit)
+        {
+            Brand = BrandService.Get(BrandId);
+        }
     }
 
     private void HandleValidSubmit()
@@ -35,8 +40,17 @@
 
         if (result.IsValid)
         {
-            BrandService.Update(Brand);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Brand"));
+            if (IsEdit)
+            {
+                BrandService.Update(Brand);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Brand"));
+            }
+            else
+            {
+                BrandService.Add(Brand);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Brand"));
+            }
+
             MudDialog.Close();
         }
         else

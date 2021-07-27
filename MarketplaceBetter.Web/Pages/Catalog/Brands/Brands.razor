@@ -35,23 +35,20 @@
 
     private async void AddBrand()
     {
-        var dialog = DialogService.Show<AddBrandDialog>();
-        var result = await dialog.Result;
+        var result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Add brand" }).Result;
 
-        if (!result.Cancelled)
-        {
-            BrandsData = BrandService.GetAll();
-
-            StateHasChanged();
-        }
+        ProcessBrandDialogResult(result);
     }
 
     private async void EditBrand(long id)
     {
-        DialogParameters parameters = new DialogParameters { ["BrandId"] = id };
-        var dialog = DialogService.Show<EditBrandDialog>(null, parameters);
-        var result = await dialog.Result;
+        var result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Edit brand", ["IsEdit"] = true, ["BrandId"] = id }).Result;
 
+        ProcessBrandDialogResult(result);
+    }
+
+    private void ProcessBrandDialogResult(DialogResult result)
+    {
         if (!result.Cancelled)
         {
             BrandsData = BrandService.GetAll();
