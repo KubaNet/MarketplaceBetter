@@ -8,3 +8,9 @@
 	CONSTRAINT  [FK_Product_Brand]	FOREIGN KEY ([BrandId])	REFERENCES [dbo].[Brand] ([Id]),
 );
 GO
+
+CREATE UNIQUE INDEX UIX_Product_Brand_Name  ON [dbo].[Product] ([BrandId] ASC, [Name] ASC);
+GO
+
+CREATE UNIQUE INDEX UIX_Product_Brand_Code  ON [dbo].[Product] ([BrandId] ASC, [Code] ASC);
+GO
