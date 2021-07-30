@@ -1,0 +1,60 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject ISizeGroupService SizeGroupService
+@inject ISizeGroupValidator SizeGroupValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="SizeGroup" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="SizeGroup.Name" For="() => SizeGroup.Name" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    CustomValidation CustomValidation = new();
+    SizeGroupModel SizeGroup = new();
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long SizeGroupId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (IsEdit)
+        {
+            SizeGroup = SizeGroupService.Get(SizeGroupId);
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = SizeGroupValidator.Validate(SizeGroup);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                SizeGroupService.Update(SizeGroup);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Size group"));
+            }
+            else
+            {
+                SizeGroupService.Add(SizeGroup);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Size group"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

@@ -1,0 +1,64 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+
+@page "/sizegroups"
+@inject ISizeGroupService SizeGroupService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Size groups</MudText>
+
+<MainBody>
+    <MudTable Items="@SizeGroupsData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddSizeGroup" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add size group</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditSizeGroup(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<SizeGroupModel> SizeGroupsData { get; set; }
+
+    private async void AddSizeGroup()
+    {
+        var result = await DialogService.Show<SizeGroupDialog>(null, new DialogParameters { ["Title"] = "Add size group" }).Result;
+
+        ProcessSizeGroupDialogResult(result);
+    }
+
+    private async void EditSizeGroup(long id)
+    {
+        var result = await DialogService.Show<SizeGroupDialog>(null, new DialogParameters { ["Title"] = "Edit size group", ["IsEdit"] = true, ["SizeGroupId"] = id }).Result;
+
+        ProcessSizeGroupDialogResult(result);
+    }
+
+    private void ProcessSizeGroupDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            SizeGroupsData = SizeGroupService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        SizeGroupsData = SizeGroupService.GetAll();
+    }
+}

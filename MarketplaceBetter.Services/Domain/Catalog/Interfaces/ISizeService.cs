@@ -1,0 +1,20 @@
+﻿using MarketplaceBetter.Domain.Model.Catalog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
+{
+    public interface ISizeService
+    {
+        SizeModel Get(long id);
+
+        IList<SizeModel> GetAll();
+
+        void Add(SizeModel color);
+
+        void Update(SizeModel color);
+    }
+}

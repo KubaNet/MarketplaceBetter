@@ -1,0 +1,68 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+
+@page "/sizes"
+@inject ISizeService SizeService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Sizes</MudText>
+
+<MainBody>
+    <MudTable Items="@SizesData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddSize" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Size</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Code</MudTh>
+            <MudTh>Size group</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Code">@context.Code</MudTd>
+            <MudTd DataLabel="Group">@context.Group.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditSize(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<SizeModel> SizesData { get; set; }
+
+    private async void AddSize()
+    {
+        var result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Add size" }).Result;
+
+        ProcessSizeDialogResult(result);
+    }
+
+    private async void EditSize(long id)
+    {
+        var result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Edit size", ["IsEdit"] = true, ["SizeId"] = id }).Result;
+
+        ProcessSizeDialogResult(result);
+    }
+
+    private void ProcessSizeDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            SizesData = SizeService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        SizesData = SizeService.GetAll();
+    }
+}

@@ -67,6 +67,8 @@
     <Build Include="dbo\Tables\Catalog\Product.sql" />
     <Build Include="dbo\Tables\Catalog\ColorGroup.sql" />
     <Build Include="dbo\Tables\Catalog\Color.sql" />
+    <Build Include="dbo\Tables\Catalog\SizeGroup.sql" />
+    <Build Include="dbo\Tables\Catalog\Size.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />
