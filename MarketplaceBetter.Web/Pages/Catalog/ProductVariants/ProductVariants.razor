@@ -1,30 +1,32 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
-@page "/products"
-@inject IProductService ProductService
+@page "/productvariants"
+@inject IProductVariantService ProductVariantService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3">Products</MudText>
+<MudText Typo="Typo.h3">Product variants</MudText>
 
 <MainBody>
-    <MudTable Items="@ProductsData" Dense="true">
+    <MudTable Items="@ProductVariantsData" Dense="true">
         <ToolBarContent>
-            <MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Product</MudButton>
+            <MudButton OnClick="AddProductVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add product variant</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Id</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Code</MudTh>
-            <MudTh>Brand</MudTh>
+            <MudTh>Sku</MudTh>
+            <MudTh>Product</MudTh>
+            <MudTh>Color</MudTh>
+            <MudTh>Size</MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>
+            <MudTd DataLabel="Sku">@context.Sku</MudTd>
+            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="Color">@context.Color.Name</MudTd>
+            <MudTd DataLabel="Size">@context.Size.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductVariant(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager />
@@ -33,27 +35,27 @@
 </MainBody>
 
 @code {
-    private IList<ProductModel> ProductsData { get; set; }
+    private IList<ProductVariantModel> ProductVariantsData { get; set; }
 
-    private async void AddProduct()
+    private async void AddProductVariant()
     {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add product" }).Result;
+        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add product variant" }).Result;
 
-        ProcessProductDialogResult(result);
+        ProcessProductVariantDialogResult(result);
     }
 
-    private async void EditProduct(long id)
+    private async void EditProductVariant(long id)
     {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
+        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Edit product variant", ["IsEdit"] = true, ["ProductVariantId"] = id }).Result;
 
-        ProcessProductDialogResult(result);
+        ProcessProductVariantDialogResult(result);
     }
 
-    private void ProcessProductDialogResult(DialogResult result)
+    private void ProcessProductVariantDialogResult(DialogResult result)
     {
         if (!result.Cancelled)
         {
-            ProductsData = ProductService.GetAll();
+            ProductVariantsData = ProductVariantService.GetAll();
 
             StateHasChanged();
         }
@@ -63,6 +65,6 @@
     {
         base.OnInitialized();
 
-        ProductsData = ProductService.GetAll();
+        ProductVariantsData = ProductVariantService.GetAll();
     }
 }

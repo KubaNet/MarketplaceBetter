@@ -2,21 +2,33 @@
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
 @using MarketplaceBetter.Services.Validation.Catalog.Interfaces
 
+@inject IProductVariantService ProductVariantService
+@inject IProductVariantValidator ProductVariantValidator
 @inject IProductService ProductService
-@inject IBrandService BrandService
-@inject IProductValidator ProductValidator
+@inject IColorService ColorService
+@inject ISizeService SizeService
 @inject ISnackbar Snackbar
 
-<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="ProductVariant" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
-        <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
-        <MudSelect T="BrandModel" @bind-Value="Product.Brand" Label="Brand" For="() => Product.Brand">
-            @foreach (var brand in Brands)
+        <MudSelect T="ProductModel" @bind-Value="ProductVariant.Product" Label="Product" For="() => ProductVariant.Product">
+            @foreach (var product in Products)
             {
-                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="ColorModel" @bind-Value="ProductVariant.Color" Label="Color" For="() => ProductVariant.Color">
+            @foreach (var color in Colors)
+            {
+                <MudSelectItem Value="color">@color.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="SizeModel" @bind-Value="ProductVariant.Size" Label="Size" For="() => ProductVariant.Size">
+            @foreach (var size in Sizes)
+            {
+                <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
     </FormDialog>
@@ -24,41 +36,45 @@
 
 @code {
     CustomValidation CustomValidation = new();
-    ProductModel Product = new();
-    IList<BrandModel> Brands;
+    ProductVariantModel ProductVariant = new();
+    IList<ProductModel> Products;
+    IList<ColorModel> Colors;
+    IList<SizeModel> Sizes;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long ProductId { get; set; }
+    [Parameter] public long ProductVariantId { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Brands = BrandService.GetAll();
+        Products = ProductService.GetAll();
+        Colors = ColorService.GetAll();
+        Sizes = SizeService.GetAll();
 
         if (IsEdit)
         {
-            Product = ProductService.Get(ProductId);
+            ProductVariant = ProductVariantService.Get(ProductVariantId);
         }
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = ProductValidator.Validate(Product);
+        ValidationResult result = ProductVariantValidator.Validate(ProductVariant);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                ProductService.Update(Product);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product"));
+                ProductVariantService.Update(ProductVariant);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product variant"));
             }
             else
             {
-                ProductService.Add(Product);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product"));
+                ProductVariantService.Add(ProductVariant);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product variant"));
             }
 
             MudDialog.Close();
