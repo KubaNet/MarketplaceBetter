@@ -11,22 +11,22 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Catalog
 {
-    public class SizeGroupValidator : ISizeGroupValidator
+    public class ProductVariantValidator : IProductVariantValidator
     {
-        private readonly IRepository<SizeGroup> _repository;
+        private readonly IRepository<ProductVariant> _repository;
 
-        public SizeGroupValidator(IUnitOfWork unitOfWork)
+        public ProductVariantValidator(IUnitOfWork unitOfWork)
         {
-            _repository = unitOfWork.GetRepository<SizeGroup>();
+            _repository = unitOfWork.GetRepository<ProductVariant>();
         }
 
-        public ValidationResult Validate(SizeGroupModel group)
+        public ValidationResult Validate(ProductVariantModel variant)
         {
             ValidationResult result = new();
 
-            if (_repository.Any(g => g.Id != group.Id && g.Name == group.Name))
+            if (_repository.Any(v => v.Id != variant.Id && v.Sku == variant.Sku))
             {
-                result.AddErrorFor<SizeGroupModel>(g => g.Name, ValidationMessages.NameNotUnique, "Size Group");
+                result.AddErrorFor<ProductVariantModel>(v => v.Sku, ValidationMessages.PropertyNotUnique, "Product Variant", "Sku");
             }
 
             return result;

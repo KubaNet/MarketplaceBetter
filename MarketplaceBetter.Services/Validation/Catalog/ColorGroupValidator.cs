@@ -24,7 +24,7 @@ namespace MarketplaceBetter.Services.Validation.Catalog
         {
             ValidationResult result = new();
 
-            if (_repository.Any(g => g.Name == group.Name && g.Id != group.Id))
+            if (_repository.Any(g => g.Id != group.Id && g.Name == group.Name))
             {
                 result.AddErrorFor<ColorGroupModel>(g => g.Name, ValidationMessages.NameNotUnique, "Color Group");
             }

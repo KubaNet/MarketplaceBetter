@@ -2,6 +2,17 @@
 
 <MudNavMenu>
     <MudNavGroup Title="Catalog" Icon="@Icons.Filled.Folder" Expanded="true" HideExpandIcon="true">
+        @if (IsProductsModule())
+        {
+            <MudNavGroup Title="Products" Icon="@Icons.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/products">Products</MudNavLink>
+                <MudNavLink Href="/productvariants">Product variants</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
+        }
         <MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
         <MudNavLink Href="/brands" Icon="@Icons.Filled.Stars">Brands</MudNavLink>
         @if (IsColorsModule())
@@ -30,8 +41,6 @@
 </MudNavMenu>
 
 @code {
-    string Page;
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -42,6 +51,17 @@
     private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
     {
         StateHasChanged();
+    }
+
+    private bool IsProductsModule()
+    {
+        if (NavigationManager.Uri.Contains("products")
+            || NavigationManager.Uri.Contains("productvariants"))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private bool IsColorsModule()
