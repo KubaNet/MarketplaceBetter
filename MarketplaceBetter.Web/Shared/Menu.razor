@@ -1,6 +1,51 @@
-﻿<MudNavMenu>
+﻿@inject NavigationManager NavigationManager
+
+<MudNavMenu>
     <MudNavGroup Title="Catalog" Icon="@Icons.Filled.Folder" Expanded="true" HideExpandIcon="true">
         <MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
         <MudNavLink Href="/brands" Icon="@Icons.Filled.Stars">Brands</MudNavLink>
+        @if (IsColorsModule())
+        {
+            <MudNavGroup Title="Colors" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/colors">Colors</MudNavLink>
+                <MudNavLink Href="/colorgroups">Color groups</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/colors" Icon="@Icons.Filled.Palette">Colors</MudNavLink>
+        }
     </MudNavGroup>
 </MudNavMenu>
+
+@code {
+    string Page;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        NavigationManager.LocationChanged += HandleLocationChanged;
+    }
+
+    private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    private bool IsColorsModule()
+    {
+        if (NavigationManager.Uri.Contains("colors")
+            || NavigationManager.Uri.Contains("colorgroups"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= HandleLocationChanged;
+    }
+}

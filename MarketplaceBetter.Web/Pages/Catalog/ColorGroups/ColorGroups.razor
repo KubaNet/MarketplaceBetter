@@ -1,0 +1,64 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+
+@page "/colorgroups"
+@inject IColorGroupService ColorGroupService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Color groups</MudText>
+
+<MainBody>
+    <MudTable Items="@ColorGroupsData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddColorGroup" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add color group</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColorGroup(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<ColorGroupModel> ColorGroupsData { get; set; }
+
+    private async void AddColorGroup()
+    {
+        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Add color group" }).Result;
+
+        ProcessColorGroupDialogResult(result);
+    }
+
+    private async void EditColorGroup(long id)
+    {
+        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Edit color group", ["IsEdit"] = true, ["ColorGroupId"] = id }).Result;
+
+        ProcessColorGroupDialogResult(result);
+    }
+
+    private void ProcessColorGroupDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            ColorGroupsData = ColorGroupService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ColorGroupsData = ColorGroupService.GetAll();
+    }
+}

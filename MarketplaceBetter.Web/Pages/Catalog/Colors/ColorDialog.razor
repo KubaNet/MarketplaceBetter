@@ -1,0 +1,71 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject IColorService ColorService
+@inject IColorGroupService GroupService
+@inject IColorValidator ColorValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="Color" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="Color.Name" For="() => Color.Name" />
+        <MudTextField Label="Code" @bind-Value="Color.Code" For="() => Color.Code" />
+        <MudSelect T="ColorGroupModel" @bind-Value="Color.Group" Label="Group" For="() => Color.Group">
+            @foreach (var brand in Groups)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    CustomValidation CustomValidation = new();
+    ColorModel Color = new();
+    IList<ColorGroupModel> Groups;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long ColorId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Groups = GroupService.GetAll();
+
+        if (IsEdit)
+        {
+            Color = ColorService.Get(ColorId);
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ColorValidator.Validate(Color);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                ColorService.Update(Color);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color"));
+            }
+            else
+            {
+                ColorService.Add(Color);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

@@ -1,0 +1,68 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+
+@page "/colors"
+@inject IColorService ColorService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Colors</MudText>
+
+<MainBody>
+    <MudTable Items="@ColorsData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddColor" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Color</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Code</MudTh>
+            <MudTh>Color group</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Code">@context.Code</MudTd>
+            <MudTd DataLabel="Group">@context.Group.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColor(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<ColorModel> ColorsData { get; set; }
+
+    private async void AddColor()
+    {
+        var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Add color" }).Result;
+
+        ProcessColorDialogResult(result);
+    }
+
+    private async void EditColor(long id)
+    {
+        var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Edit color", ["IsEdit"] = true, ["ColorId"] = id }).Result;
+
+        ProcessColorDialogResult(result);
+    }
+
+    private void ProcessColorDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            ColorsData = ColorService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ColorsData = ColorService.GetAll();
+    }
+}

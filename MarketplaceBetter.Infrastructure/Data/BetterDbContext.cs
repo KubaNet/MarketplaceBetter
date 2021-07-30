@@ -21,6 +21,8 @@ namespace MarketplaceBetter.Infrastructure.Data
         // Catalog
         public DbSet<Brand> Brand { get; set; }
         public DbSet<Product> Product { get; set; }
+        public DbSet<Color> Color { get; set; }
+        public DbSet<ColorGroup> ColorGroup { get; set; }
 
         //public override int SaveChanges()
         //{
