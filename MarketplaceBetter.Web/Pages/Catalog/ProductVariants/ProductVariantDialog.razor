@@ -4,6 +4,7 @@
 
 @inject IProductVariantService ProductVariantService
 @inject IProductVariantValidator ProductVariantValidator
+@inject IBrandService BrandService
 @inject IProductService ProductService
 @inject IColorService ColorService
 @inject ISizeService SizeService
@@ -13,19 +14,25 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudSelect T="ProductModel" @bind-Value="ProductVariant.Product" Label="Product" For="() => ProductVariant.Product">
+        <MudSelect T="BrandModel" Label="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="ProductModel" Label="Product" For="() => ProductVariant.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ColorModel" @bind-Value="ProductVariant.Color" Label="Color" For="() => ProductVariant.Color">
+        <MudSelect T="ColorModel" @bind-Value="ProductVariant.Color" Label="Color" For="() => ProductVariant.Color" Disabled="ColorSelectDisabled">
             @foreach (var color in Colors)
             {
                 <MudSelectItem Value="color">@color.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="SizeModel" @bind-Value="ProductVariant.Size" Label="Size" For="() => ProductVariant.Size">
+        <MudSelect T="SizeModel" @bind-Value="ProductVariant.Size" Label="Size" For="() => ProductVariant.Size" Disabled="SizeSelectDisabled">
             @foreach (var size in Sizes)
             {
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
@@ -35,29 +42,92 @@
 </EditForm>
 
 @code {
-    CustomValidation CustomValidation = new();
-    ProductVariantModel ProductVariant = new();
-    IList<ProductModel> Products;
-    IList<ColorModel> Colors;
-    IList<SizeModel> Sizes;
-
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
     [Parameter] public long ProductVariantId { get; set; }
 
+    CustomValidation CustomValidation = new();
+    ProductVariantModel ProductVariant = new();
+
+    IList<BrandModel> Brands;
+    IList<ProductModel> Products = new List<ProductModel>();
+    IList<ColorModel> Colors = new List<ColorModel>();
+    IList<SizeModel> Sizes = new List<SizeModel>();
+
+    bool ProductSelectDisabled = true;
+    bool ColorSelectDisabled = true;
+    bool SizeSelectDisabled = true;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Products = ProductService.GetAll();
-        Colors = ColorService.GetAll();
-        Sizes = SizeService.GetAll();
+        Brands = BrandService.GetAll();
 
         if (IsEdit)
         {
             ProductVariant = ProductVariantService.Get(ProductVariantId);
         }
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        ResetProduct();
+        ResetColor();
+        ResetSize();
+
+        ActivateProduct(brand.Id);
+    }
+
+    private void HandleProductChanged(ProductModel product)
+    {
+        ProductVariant.Product = product;
+
+        ResetColor();
+        ResetSize();
+
+        ActivateColor(product.ColorGroup.Id);
+        ActivateSize(product.SizeGroup.Id);
+    }
+
+    private void ResetProduct()
+    {
+        ProductVariant.Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
+    }
+
+    private void ActivateProduct(long brandId)
+    {
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId).OrderBy(p => p.Name).ToList();
+    }
+
+    private void ResetColor()
+    {
+        ProductVariant.Color = null;
+        ColorSelectDisabled = true;
+        Colors = new List<ColorModel>();
+    }
+
+    private void ActivateColor(long colorGroupId)
+    {
+        ColorSelectDisabled = false;
+        Colors = ColorService.GetAllForGroup(colorGroupId).OrderBy(p => p.Name).ToList();
+    }
+
+    private void ResetSize()
+    {
+        ProductVariant.Size = null;
+        SizeSelectDisabled = true;
+        Sizes = new List<SizeModel>();
+    }
+
+    private void ActivateSize(long sizeGroupId)
+    {
+        SizeSelectDisabled = false;
+        Sizes = SizeService.GetAllForGroup(sizeGroupId).OrderBy(p => p.Name).ToList();
     }
 
     private void HandleValidSubmit()

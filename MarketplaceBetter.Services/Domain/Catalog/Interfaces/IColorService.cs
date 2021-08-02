@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<ColorModel> GetAll();
 
+        IList<ColorModel> GetAllForGroup(long groupId);
+
         void Add(ColorModel color);
 
         void Update(ColorModel color);

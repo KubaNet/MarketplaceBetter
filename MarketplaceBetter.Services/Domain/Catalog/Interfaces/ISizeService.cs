@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<SizeModel> GetAll();
 
+        IList<SizeModel> GetAllForGroup(long groupId);
+
         void Add(SizeModel color);
 
         void Update(SizeModel color);

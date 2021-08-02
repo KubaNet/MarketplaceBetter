@@ -36,7 +36,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<SizeModel> GetAll()
         {
-            IList<Size> sizes = _repository.GetQuery().Include(p => p.Group).ToList();
+            IList<Size> sizes = _repository.GetAll();
+            IList<SizeModel> sizesModel = _mapper.Map<IList<SizeModel>>(sizes);
+
+            return sizesModel;
+        }
+
+        public IList<SizeModel> GetAllForGroup(long groupId)
+        {
+            IList<Size> sizes = _repository.GetQuery().Where(s => s.GroupId == groupId).ToList();
             IList<SizeModel> sizesModel = _mapper.Map<IList<SizeModel>>(sizes);
 
             return sizesModel;

@@ -42,6 +42,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             return productsModel;
         }
 
+        public IList<ProductModel> GetAllForBrand(long brandId)
+        {
+            IList<Product> products = _repository.GetQuery().Where(p => p.BrandId == brandId).ToList();
+            IList<ProductModel> productsModel = _mapper.Map<IList<ProductModel>>(products);
+
+            return productsModel;
+        }
+
         public void Add(ProductModel product)
         {
             Product productToAdd = new();
