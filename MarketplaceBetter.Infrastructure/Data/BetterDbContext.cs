@@ -16,6 +16,8 @@ namespace MarketplaceBetter.Infrastructure.Data
             //Database.SetInitializer<MarketplaceBetterDbContext>(null);
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseLazyLoadingProxies();
+
         // Common
 
         // Catalog

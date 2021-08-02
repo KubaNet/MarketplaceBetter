@@ -36,7 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ProductModel> GetAll()
         {
-            IList<Product> products = _repository.GetQuery().Include(p => p.Brand).ToList();
+            IList<Product> products = _repository.GetAll();
             IList<ProductModel> productsModel = _mapper.Map<IList<ProductModel>>(products);
 
             return productsModel;
@@ -67,6 +67,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             toProduct.Name = fromProduct.Name;
             toProduct.Code = fromProduct.Code;
             toProduct.BrandId = fromProduct.Brand.Id;
+            toProduct.ColorGroupId = fromProduct.ColorGroup.Id;
+            toProduct.SizeGroupId = fromProduct.SizeGroup.Id;
         }
     }
 }

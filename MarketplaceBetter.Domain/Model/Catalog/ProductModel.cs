@@ -22,5 +22,11 @@ namespace MarketplaceBetter.Domain.Model.Catalog
 
         [Required]
         public BrandModel Brand { get; set; }
+
+        [Required]
+        public ColorGroupModel ColorGroup { get; set; }
+
+        [Required]
+        public SizeGroupModel SizeGroup { get; set; }
     }
 }

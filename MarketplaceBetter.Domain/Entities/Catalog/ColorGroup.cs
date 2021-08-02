@@ -14,7 +14,7 @@ namespace MarketplaceBetter.Domain.Entities.Catalog
 
         public long GroupId { get; set; }
 
-        public ColorGroup Group { get; set; }
+        public virtual ColorGroup Group { get; set; }
 
         public override string ToString()
         {

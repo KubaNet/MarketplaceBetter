@@ -14,7 +14,7 @@ namespace MarketplaceBetter.Domain.Entities.Catalog
 
         public long GroupId { get; set; }
 
-        public SizeGroup Group { get; set; }
+        public virtual SizeGroup Group { get; set; }
 
         public override string ToString()
         {

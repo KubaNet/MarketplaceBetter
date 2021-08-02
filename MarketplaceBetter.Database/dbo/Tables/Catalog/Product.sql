@@ -1,11 +1,15 @@
 ﻿CREATE TABLE [dbo].[Product]
 (
-	[Id]		BIGINT				NOT NULL	IDENTITY,
-	[Name]		NVARCHAR (255)		NOT NULL,
-	[Code]		NVARCHAR (255)		NOT NULL,
-	[BrandId]	BIGINT				NOT NULL,
-	CONSTRAINT	[PK_Product]		PRIMARY KEY ([Id]),
-	CONSTRAINT  [FK_Product_Brand]	FOREIGN KEY ([BrandId])	REFERENCES [dbo].[Brand] ([Id]),
+	[Id]			BIGINT				NOT NULL	IDENTITY,
+	[Name]			NVARCHAR (255)		NOT NULL,
+	[Code]			NVARCHAR (255)		NOT NULL,
+	[BrandId]		BIGINT				NOT NULL,
+	[ColorGroupId]	BIGINT				NOT NULL,
+	[SizeGroupId]	BIGINT				NOT NULL,
+	CONSTRAINT	[PK_Product]			PRIMARY KEY ([Id]),
+	CONSTRAINT  [FK_Product_Brand]		FOREIGN KEY ([BrandId])	REFERENCES [dbo].[Brand] ([Id]),
+	CONSTRAINT  [FK_Product_ColorGroup]	FOREIGN KEY ([ColorGroupId])	REFERENCES [dbo].[ColorGroup] ([Id]),
+	CONSTRAINT  [FK_Product_SizeGroup]	FOREIGN KEY ([SizeGroupId])	REFERENCES [dbo].[SizeGroup] ([Id]),
 );
 GO
 

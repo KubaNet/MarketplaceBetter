@@ -3,8 +3,10 @@
 @using MarketplaceBetter.Services.Validation.Catalog.Interfaces
 
 @inject IProductService ProductService
-@inject IBrandService BrandService
 @inject IProductValidator ProductValidator
+@inject IBrandService BrandService
+@inject IColorGroupService ColorGroupService
+@inject ISizeGroupService SizeGroupService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
@@ -19,6 +21,18 @@
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect T="ColorGroupModel" @bind-Value="Product.ColorGroup" Label="Color group" For="() => Product.ColorGroup">
+            @foreach (var colorGroup in ColorGroups)
+            {
+                <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="SizeGroupModel" @bind-Value="Product.SizeGroup" Label="Size group" For="() => Product.SizeGroup">
+            @foreach (var sizeGroup in SizeGroups)
+            {
+                <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
+            }
+        </MudSelect>
     </FormDialog>
 </EditForm>
 
@@ -26,6 +40,8 @@
     CustomValidation CustomValidation = new();
     ProductModel Product = new();
     IList<BrandModel> Brands;
+    IList<ColorGroupModel> ColorGroups;
+    IList<SizeGroupModel> SizeGroups;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
@@ -37,6 +53,8 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
+        ColorGroups = ColorGroupService.GetAll();
+        SizeGroups = SizeGroupService.GetAll();
 
         if (IsEdit)
         {

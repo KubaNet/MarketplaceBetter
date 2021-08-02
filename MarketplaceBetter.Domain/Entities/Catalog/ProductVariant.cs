@@ -12,14 +12,14 @@ namespace MarketplaceBetter.Domain.Entities.Catalog
 
         public long ProductId { get; set; }
 
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; }
 
         public long ColorId { get; set; }
 
-        public Color Color { get; set; }
+        public virtual Color Color { get; set; }
 
         public long SizeId { get; set; }
 
-        public Size Size { get; set; }
+        public virtual Size Size { get; set; }
     }
 }

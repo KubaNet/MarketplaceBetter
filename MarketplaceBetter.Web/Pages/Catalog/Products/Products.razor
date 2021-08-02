@@ -17,6 +17,8 @@
             <MudTh>Name</MudTh>
             <MudTh>Code</MudTh>
             <MudTh>Brand</MudTh>
+            <MudTh>Color group</MudTh>
+            <MudTh>Size group</MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -24,6 +26,8 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
             <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
+            <MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
+            <MudTd DataLabel="Size group">@context.SizeGroup.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
