@@ -9,8 +9,7 @@
     <ProjectGuid>{6aeafb90-4291-4e41-8cc0-cf5fa2765b5a}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
-    <RootPath>
-    </RootPath>
+    <RootPath />
     <RootNamespace>MarketplaceBetter.Database</RootNamespace>
     <AssemblyName>MarketplaceBetter.Database</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
@@ -48,7 +47,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -60,6 +58,11 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Tables\Catalog" />
     <Folder Include="SchemaCompare" />
+    <Folder Include="dbo\Tables\Sales" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Inserts" />
+    <Folder Include="dbo\Tables\General" />
+    <Folder Include="dbo\Tables\Amazon" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Brand.sql" />
@@ -70,8 +73,15 @@
     <Build Include="dbo\Tables\Catalog\SizeGroup.sql" />
     <Build Include="dbo\Tables\Catalog\Size.sql" />
     <Build Include="dbo\Tables\Catalog\ProductVariant.sql" />
+    <Build Include="dbo\Tables\Sales\SalesChannel.sql" />
+    <Build Include="dbo\Tables\Sales\Instance.sql" />
+    <None Include="Scripts\Inserts\06_Instances.sql" />
+    <Build Include="dbo\Tables\General\Country.sql" />
+    <None Include="Scripts\Inserts\01_Countries.sql" />
+    <Build Include="dbo\Tables\Amazon\AmazonParent.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />
+    <None Include="Scripts\Inserts\05_SalesChannels.sql" />
   </ItemGroup>
 </Project>

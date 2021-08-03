@@ -37,6 +37,18 @@
             <MudNavLink Href="/sizes" Icon="@Icons.Filled.SettingsEthernet">Sizes</MudNavLink>
         }
     </MudNavGroup>
+    <MudNavGroup Title="Amazon" Icon="@Icons.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
+        @if (IsAmazonInventoryModule())
+        {
+            <MudNavGroup Title="Inventory" Icon="@Icons.Filled.Inventory" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/amazonparents">Parents</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/amazonparents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
+        }
+    </MudNavGroup>
 </MudNavMenu>
 
 @code {
@@ -78,6 +90,16 @@
     {
         if (NavigationManager.Uri.Contains("sizes")
             || NavigationManager.Uri.Contains("sizegroups"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool IsAmazonInventoryModule()
+    {
+        if (NavigationManager.Uri.Contains("amazonparents"))
         {
             return true;
         }

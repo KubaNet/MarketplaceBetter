@@ -1,0 +1,89 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject IProductService ProductService
+@inject IProductValidator ProductValidator
+@inject IBrandService BrandService
+@inject IColorGroupService ColorGroupService
+@inject ISizeGroupService SizeGroupService
+@inject ISnackbar Snackbar
+
+<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
+        <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
+        <MudSelect T="BrandModel" @bind-Value="Product.Brand" Label="Brand" For="() => Product.Brand">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="ColorGroupModel" @bind-Value="Product.ColorGroup" Label="Color group" For="() => Product.ColorGroup">
+            @foreach (var colorGroup in ColorGroups)
+            {
+                <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="SizeGroupModel" @bind-Value="Product.SizeGroup" Label="Size group" For="() => Product.SizeGroup">
+            @foreach (var sizeGroup in SizeGroups)
+            {
+                <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    CustomValidation CustomValidation = new();
+    ProductModel Product = new();
+    IList<BrandModel> Brands;
+    IList<ColorGroupModel> ColorGroups;
+    IList<SizeGroupModel> SizeGroups;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long ProductId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+        ColorGroups = ColorGroupService.GetAll();
+        SizeGroups = SizeGroupService.GetAll();
+
+        if (IsEdit)
+        {
+            Product = ProductService.Get(ProductId);
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ProductValidator.Validate(Product);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                ProductService.Update(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product"));
+            }
+            else
+            {
+                ProductService.Add(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

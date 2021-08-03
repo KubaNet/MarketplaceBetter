@@ -7,3 +7,6 @@
 	CONSTRAINT  [FK_Template_Related]	FOREIGN KEY ([BrandId])	REFERENCES [dbo].[Brand] ([Id]),
 );
 GO
+
+CREATE UNIQUE INDEX UIX_Template_Name  ON [dbo].[Template] ([Name] ASC);
+GO
