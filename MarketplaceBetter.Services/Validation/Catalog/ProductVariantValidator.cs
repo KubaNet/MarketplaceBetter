@@ -29,6 +29,11 @@ namespace MarketplaceBetter.Services.Validation.Catalog
                 result.AddErrorFor<ProductVariantModel>(v => v.Sku, ValidationMessages.PropertyNotUnique, "Product Variant", "Sku");
             }
 
+            if (_repository.Any(v => v.Id != variant.Id && v.ProductId == variant.Product.Id && v.ColorId == variant.Color.Id && v.SizeId == variant.Size.Id))
+            {
+                result.AddError("There already exists such a variant.");
+            }
+
             return result;
         }
     }

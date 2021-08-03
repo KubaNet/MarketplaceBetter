@@ -14,30 +14,32 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
+        <ValidationSummary />
         <MudSelect T="BrandModel" Label="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ProductModel" Label="Product" For="() => ProductVariant.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+        <MudSelect T="ProductModel" Value="ProductVariant.Product" Label="Product" For="() => ProductVariant.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ColorModel" @bind-Value="ProductVariant.Color" Label="Color" For="() => ProductVariant.Color" Disabled="ColorSelectDisabled">
+        <MudSelect T="ColorModel" Value="ProductVariant.Color" Label="Color" For="() => ProductVariant.Color" ValueChanged="HandleColorChanged" Disabled="ColorSelectDisabled">
             @foreach (var color in Colors)
             {
                 <MudSelectItem Value="color">@color.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="SizeModel" @bind-Value="ProductVariant.Size" Label="Size" For="() => ProductVariant.Size" Disabled="SizeSelectDisabled">
+        <MudSelect T="SizeModel" Value="ProductVariant.Size" Label="Size" For="() => ProductVariant.Size" ValueChanged="HandleSizeChanged" Disabled="SizeSelectDisabled">
             @foreach (var size in Sizes)
             {
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudTextField Label="Sku" @bind-Value="ProductVariant.Sku" For="() => ProductVariant.Sku" />
     </FormDialog>
 </EditForm>
 
@@ -78,6 +80,9 @@
         ResetSize();
 
         ActivateProduct(brand.Id);
+        SetVariantSku();
+
+        ProductVariant.Sku = brand.Code;
     }
 
     private void HandleProductChanged(ProductModel product)
@@ -89,6 +94,22 @@
 
         ActivateColor(product.ColorGroup.Id);
         ActivateSize(product.SizeGroup.Id);
+
+        SetVariantSku();
+    }
+
+    private void HandleColorChanged(ColorModel color)
+    {
+        ProductVariant.Color = color;
+
+        SetVariantSku();
+    }
+
+    private void HandleSizeChanged(SizeModel size)
+    {
+        ProductVariant.Size = size;
+
+        SetVariantSku();
     }
 
     private void ResetProduct()
@@ -128,6 +149,24 @@
     {
         SizeSelectDisabled = false;
         Sizes = SizeService.GetAllForGroup(sizeGroupId).OrderBy(p => p.Name).ToList();
+    }
+
+    private void SetVariantSku()
+    {
+        if (ProductVariant.Product != null)
+        {
+            ProductVariant.Sku = string.Format("{0}_{1}", ProductVariant.Product.Brand.Code, ProductVariant.Product.Code);
+
+            if (ProductVariant.Color != null)
+            {
+                ProductVariant.Sku += string.Format("_{0}", ProductVariant.Color.Code);
+
+                if (ProductVariant.Size != null)
+                {
+                    ProductVariant.Sku += string.Format("_{0}", ProductVariant.Size.Code);
+                }
+            }
+        }
     }
 
     private void HandleValidSubmit()
