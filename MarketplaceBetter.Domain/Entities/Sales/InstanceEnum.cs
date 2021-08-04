@@ -11,5 +11,7 @@ namespace MarketplaceBetter.Domain.Entities.Sales
         None = 0,
 
         AmazonUK = 1,
+
+        AmazonDE = 2,
     }
 }
