@@ -1,82 +1,113 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
-@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Interfaces
 
-@inject IProductService ProductService
-@inject IProductValidator ProductValidator
+@inject IAmazonParentService AmazonParentService
+@inject IAmazonParentValidator AmazonParentValidator
 @inject IBrandService BrandService
-@inject IColorGroupService ColorGroupService
-@inject ISizeGroupService SizeGroupService
+@inject IProductService ProductService
+@inject IInstanceService InstanceService
 @inject ISnackbar Snackbar
 
-<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="AmazonParent" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
-        <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
-        <MudSelect T="BrandModel" @bind-Value="Product.Brand" Label="Brand" For="() => Product.Brand">
+        <MudSelect T="BrandModel" Label="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ColorGroupModel" @bind-Value="Product.ColorGroup" Label="Color group" For="() => Product.ColorGroup">
-            @foreach (var colorGroup in ColorGroups)
+        <MudSelect T="ProductModel" Value="AmazonParent.Product" Label="Product" For="() => AmazonParent.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+            @foreach (var product in Products)
             {
-                <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="SizeGroupModel" @bind-Value="Product.SizeGroup" Label="Size group" For="() => Product.SizeGroup">
-            @foreach (var sizeGroup in SizeGroups)
+        <MudSelect T="InstanceModel" @bind-Value="AmazonParent.Instance" Label="Instance" For="() => AmazonParent.Instance">
+            @foreach (var instance in Instances)
             {
-                <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudTextField Label="Sku" @bind-Value="AmazonParent.Sku" For="() => AmazonParent.Sku" />
     </FormDialog>
 </EditForm>
 
 @code {
-    CustomValidation CustomValidation = new();
-    ProductModel Product = new();
-    IList<BrandModel> Brands;
-    IList<ColorGroupModel> ColorGroups;
-    IList<SizeGroupModel> SizeGroups;
-
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long ProductId { get; set; }
+    [Parameter] public long AmazonParentId { get; set; }
+
+    CustomValidation CustomValidation = new();
+    AmazonParentModel AmazonParent = new();
+    IList<BrandModel> Brands;
+    IList<ProductModel> Products = new List<ProductModel>();
+    IList<InstanceModel> Instances;
+
+    bool ProductSelectDisabled = true;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        ColorGroups = ColorGroupService.GetAll();
-        SizeGroups = SizeGroupService.GetAll();
+        Instances = InstanceService.GetAllForAmazon();
 
         if (IsEdit)
         {
-            Product = ProductService.Get(ProductId);
+            AmazonParent = AmazonParentService.Get(AmazonParentId);
         }
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        ResetProduct();
+        ActivateProduct(brand.Id);
+
+        AmazonParent.Sku = null;
+    }
+
+    private void HandleProductChanged(ProductModel product)
+    {
+        AmazonParent.Product = product;
+        AmazonParent.Sku = AmazonParent.Product.Name.ToLower().Replace(" ", "_");
+    }
+
+    private void ResetProduct()
+    {
+        AmazonParent.Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
+    }
+
+    private void ActivateProduct(long brandId)
+    {
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId).OrderBy(p => p.Name).ToList();
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = ProductValidator.Validate(Product);
+        ValidationResult result = AmazonParentValidator.Validate(AmazonParent);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                ProductService.Update(Product);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product"));
+                AmazonParentService.Update(AmazonParent);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("AmazonParent"));
             }
             else
             {
-                ProductService.Add(Product);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product"));
+                AmazonParentService.Add(AmazonParent);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("AmazonParent"));
             }
 
             MudDialog.Close();

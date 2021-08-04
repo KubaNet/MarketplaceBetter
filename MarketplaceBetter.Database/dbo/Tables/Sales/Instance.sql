@@ -1,9 +1,11 @@
 ﻿CREATE TABLE [dbo].[Instance]
 (
-	[Id]			BIGINT			NOT NULL	IDENTITY,
-	[Name]			NVARCHAR (255)	NOT NULL,
-	[SystemName]	INT				NOT NULL,
-	CONSTRAINT		[PK_Instance]	PRIMARY KEY ([Id]),
+	[Id]				BIGINT						NOT NULL	IDENTITY,
+	[Name]				NVARCHAR (255)				NOT NULL,
+	[SystemName]		INT							NOT NULL,
+	[SalesChannelId]	BIGINT						NOT NULL,
+	CONSTRAINT			[PK_Instance]				PRIMARY KEY ([Id]),
+	CONSTRAINT			[FK_Instance_SalesChannel]	FOREIGN KEY ([SalesChannelId])	REFERENCES [dbo].[SalesChannel] ([Id]),
 );
 GO
 

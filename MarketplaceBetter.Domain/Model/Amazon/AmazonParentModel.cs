@@ -12,9 +12,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon
     {
         public long Id { get; set; }
 
-        public InstanceModel Instance { get; set; }
-
         public ProductModel Product { get; set; }
+
+        public InstanceModel Instance { get; set; }
 
         public string Sku { get; set; }
 

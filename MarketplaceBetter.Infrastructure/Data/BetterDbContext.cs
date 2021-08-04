@@ -1,4 +1,6 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog;
+﻿using MarketplaceBetter.Domain.Entities.Amazon;
+using MarketplaceBetter.Domain.Entities.Catalog;
+using MarketplaceBetter.Domain.Entities.Sales;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,7 +20,9 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseLazyLoadingProxies();
 
-        // Common
+        // Sales
+        public DbSet<Instance> Instance { get; set; }
+        public DbSet<SalesChannel> SalesChannel { get; set; }
 
         // Catalog
         public DbSet<Brand> Brand { get; set; }
@@ -28,6 +32,9 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<ColorGroup> ColorGroup { get; set; }
         public DbSet<Size> Size { get; set; }
         public DbSet<SizeGroup> SizeGroup { get; set; }
+
+        // Amazon
+        public DbSet<AmazonParent> AmazonParent { get; set; }
 
         //public override int SaveChanges()
         //{

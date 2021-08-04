@@ -15,8 +15,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<ProductModel> GetAllForBrand(long brandId);
 
-        void Add(ProductModel Product);
+        void Add(ProductModel product);
 
-        void Update(ProductModel Product);
+        void Update(ProductModel product);
     }
 }

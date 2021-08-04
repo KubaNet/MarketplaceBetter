@@ -23,14 +23,14 @@
 </EditForm>
 
 @code {
-    CustomValidation CustomValidation = new();
-    SizeModel Size = new();
-    IList<SizeGroupModel> Groups;
-
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
     [Parameter] public long SizeId { get; set; }
+
+    CustomValidation CustomValidation = new();
+    SizeModel Size = new();
+    IList<SizeGroupModel> Groups;
 
     protected override void OnInitialized()
     {

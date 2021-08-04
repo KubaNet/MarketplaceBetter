@@ -1,34 +1,32 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog
-@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
 @page "/amazonparents"
-@inject IProductService ProductService
+@inject IAmazonParentService AmazonParentService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3">Products</MudText>
+<MudText Typo="Typo.h3">Amazon Parents</MudText>
 
 <MainBody>
-    <MudTable Items="@ProductsData" Dense="true">
+    <MudTable Items="@AmazonParentsData" Dense="true">
         <ToolBarContent>
-            @*<MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Product</MudButton>*@
+            <MudButton OnClick="AddAmazonParent" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Parent</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Id</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Code</MudTh>
-            <MudTh>Brand</MudTh>
-            <MudTh>Color group</MudTh>
-            <MudTh>Size group</MudTh>
+            <MudTh>Product</MudTh>
+            <MudTh>Instance</MudTh>
+            <MudTh>SKU</MudTh>
+            <MudTh>ASIN</MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
-            <MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
-            <MudTd DataLabel="Size group">@context.SizeGroup.Name</MudTd>
-            @*<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>*@
+            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="SKU">@context.Sku</MudTd>
+            <MudTd DataLabel="ASIN">@context.Asin</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonParent(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager />
@@ -37,27 +35,27 @@
 </MainBody>
 
 @code {
-    private IList<ProductModel> ProductsData { get; set; }
+    private IList<AmazonParentModel> AmazonParentsData { get; set; }
 
-@*    private async void AddProduct()
+    private async void AddAmazonParent()
     {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add product" }).Result;
+        var result = await DialogService.Show<AmazonParentDialog>(null, new DialogParameters { ["Title"] = "Add amazon parent" }).Result;
 
-        ProcessProductDialogResult(result);
+        ProcessAmazonParentDialogResult(result);
     }
 
-    private async void EditProduct(long id)
+    private async void EditAmazonParent(long id)
     {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
+        var result = await DialogService.Show<AmazonParentDialog>(null, new DialogParameters { ["Title"] = "Edit amazon parent", ["IsEdit"] = true, ["AmazonParentId"] = id }).Result;
 
-        ProcessProductDialogResult(result);
-    }*@
+        ProcessAmazonParentDialogResult(result);
+    }
 
-    private void ProcessProductDialogResult(DialogResult result)
+    private void ProcessAmazonParentDialogResult(DialogResult result)
     {
         if (!result.Cancelled)
         {
-            ProductsData = ProductService.GetAll();
+            AmazonParentsData = AmazonParentService.GetAll();
 
             StateHasChanged();
         }
@@ -67,6 +65,6 @@
     {
         base.OnInitialized();
 
-        ProductsData = ProductService.GetAll();
+        AmazonParentsData = AmazonParentService.GetAll();
     }
 }
