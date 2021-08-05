@@ -18,6 +18,7 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
+        <ValidationSummary />
         <MudSelect T="BrandModel" Label="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
@@ -64,6 +65,7 @@
         if (IsEdit)
         {
             AmazonParent = AmazonParentService.Get(AmazonParentId);
+            AmazonParent.Instance = Instances.Single(i => i.Id == AmazonParent.Instance.Id);
         }
     }
 
