@@ -37,7 +37,8 @@
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="Sku" @bind-Value="AmazonParent.Sku" For="() => AmazonParent.Sku" />
+        <MudTextField Label="SKU" @bind-Value="AmazonParent.Sku" For="() => AmazonParent.Sku" />
+        <MudTextField Label="ASIN" @bind-Value="AmazonParent.Asin" For="() => AmazonParent.Asin" />
     </FormDialog>
 </EditForm>
 
@@ -123,7 +124,7 @@
 
         if (AmazonParent.Product != null && AmazonParent.Instance != null)
         {
-            AmazonParent.Sku = string.Format("{0}_{1}", GetInstanceCode(AmazonParent.Instance), AmazonParent.Product.Name.ToLower().Replace(" ", "_"));
+            AmazonParent.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(AmazonParent.Instance.SystemName), AmazonParent.Product.Name.ToLower().Replace(" ", "_"));
         }
         else if (AmazonParent.Product != null)
         {
@@ -131,18 +132,8 @@
         }
         else if (AmazonParent.Instance != null)
         {
-            AmazonParent.Sku = GetInstanceCode(AmazonParent.Instance);
+            AmazonParent.Sku = AmazonInstanceHelper.GetCodeFor(AmazonParent.Instance.SystemName);
         }
-    }
-
-    private string GetInstanceCode(InstanceModel instance)
-    {
-        return instance.SystemName switch
-        {
-            InstanceEnum.AmazonUK => "uk",
-            InstanceEnum.AmazonDE => "de",
-            _ => throw new UnrecognizedEnumValue<InstanceEnum>(instance.SystemName)
-        };
     }
 
     private void HandleValidSubmit()

@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<ProductVariantModel> GetAll();
 
+        IList<ProductVariantModel> GetAllForProduct(long productId);
+
         void Add(ProductVariantModel productVariant);
 
         void Update(ProductVariantModel productVariant);

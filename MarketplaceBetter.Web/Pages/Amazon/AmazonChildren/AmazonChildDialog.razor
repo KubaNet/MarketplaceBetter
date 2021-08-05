@@ -38,13 +38,14 @@
                 <MudSelectItem Value="parent">@parent.Sku</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ProductVariantModel" Value="AmazonChild.ProductVariant" Label="ProductVariant" For="() => AmazonChild.ProductVariant" ValueChanged="HandleProductVariantChanged" Disabled="ProductVariantDisabled">
+        <MudSelect T="ProductVariantModel" Value="AmazonChild.ProductVariant" Label="Product Variant" For="() => AmazonChild.ProductVariant" ValueChanged="HandleProductVariantChanged" Disabled="ProductVariantDisabled">
             @foreach (var productVariant in ProductVariants)
             {
                 <MudSelectItem Value="productVariant">@productVariant.Sku</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="Sku" @bind-Value="AmazonChild.Sku" For="() => AmazonChild.Sku" />
+        <MudTextField Label="SKU" @bind-Value="AmazonChild.Sku" For="() => AmazonChild.Sku" />
+        <MudTextField Label="ASIN" @bind-Value="AmazonChild.Asin" For="() => AmazonChild.Asin" />
     </FormDialog>
 </EditForm>
 
@@ -107,17 +108,23 @@
 
         ResetParent();
         ActivateParent();
+
+        SetChildSku();
     }
 
     private void HandleParentChanged(AmazonParentModel parent)
     {
         AmazonChild.Parent = parent;
-        //SetChildSku();
+
+        ResetProductVariant();
+        ActivateProductVariant();
     }
 
     private void HandleProductVariantChanged(ProductVariantModel productVariant)
     {
         AmazonChild.ProductVariant = productVariant;
+
+        SetChildSku();
     }
 
     private void ResetParent()
@@ -136,32 +143,40 @@
         }
     }
 
-    @*    private void SetChildSku()
-        {
+    private void ResetProductVariant()
+    {
+        AmazonChild.ProductVariant = null;
+        ProductVariantDisabled = true;
+        ProductVariants = new List<ProductVariantModel>();
+    }
+
+    private void ActivateProductVariant()
+    {
+        ProductVariantDisabled = false;
+        ProductVariants = ProductVariantService.GetAllForProduct(AmazonChild.Parent.Product.Id);
+    }
+
+    private void SetChildSku()
+    {
         AmazonChild.Sku = null;
 
-        if (AmazonChild.Parent != null && AmazonChild.Instance != null)
+        if (Instance != null && AmazonChild.ProductVariant != null)
         {
-        AmazonChild.Sku = string.Format("{0}_{1}", GetInstanceCode(AmazonChild.Instance), AmazonChild.Parent.Name.ToLower().Replace(" ", "_"));
+            AmazonChild.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(Instance.SystemName), GetSkuForProductVariant(AmazonChild.ProductVariant));
         }
-        else if (AmazonChild.Parent != null)
+        else if (Instance != null)
         {
-        AmazonChild.Sku = AmazonChild.Parent.Name.ToLower().Replace(" ", "_");
+            AmazonChild.Sku = AmazonInstanceHelper.GetCodeFor(Instance.SystemName);
         }
-        else if (AmazonChild.Instance != null)
+        else if (AmazonChild.ProductVariant != null)
         {
-        AmazonChild.Sku = GetInstanceCode(AmazonChild.Instance);
+            AmazonChild.Sku = GetSkuForProductVariant(AmazonChild.ProductVariant);
         }
-        }*@
+    }
 
-    private string GetInstanceCode(InstanceModel instance)
+    private string GetSkuForProductVariant(ProductVariantModel productVariant)
     {
-        return instance.SystemName switch
-        {
-            InstanceEnum.AmazonUK => "uk",
-            InstanceEnum.AmazonDE => "de",
-            _ => throw new UnrecognizedEnumValue<InstanceEnum>(instance.SystemName)
-        };
+        return string.Format("{0}_{1}_{2}", productVariant.Product.Code, productVariant.Color.Code, productVariant.Size.Code);
     }
 
     private void HandleValidSubmit()

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Amazon
 {
-    public class AmazonParentProfile : Profile
+    public class AmazonChildProfile : Profile
     {
-        public AmazonParentProfile()
+        public AmazonChildProfile()
         {
-            CreateMap<AmazonParent, AmazonParentModel>();
+            CreateMap<AmazonChild, AmazonChildModel>();
         }
     }
 }

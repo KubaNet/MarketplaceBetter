@@ -14,17 +14,17 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Id</MudTh>
+            <MudTh>SKU</MudTh>
             <MudTh>Parent</MudTh>
             <MudTh>Product Variant</MudTh>
-            <MudTh>SKU</MudTh>
             <MudTh>ASIN</MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="SKU">@context.Sku</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Product Variant">@context.ProductVariant.Sku</MudTd>
-            <MudTd DataLabel="SKU">@context.Sku</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonChild(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>

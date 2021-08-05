@@ -35,10 +35,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<AmazonChildModel> GetAll()
         {
-            IList<AmazonChild> children = _repository.GetAll();
-            IList<AmazonChildModel> childrenModel = _mapper.Map<IList<AmazonChildModel>>(children);
+            IList<AmazonChildModel> children = _mapper.Map<IList<AmazonChildModel>>(_repository.GetAll());
 
-            return childrenModel;
+            return children;
         }
 
         public void Add(AmazonChildModel child)

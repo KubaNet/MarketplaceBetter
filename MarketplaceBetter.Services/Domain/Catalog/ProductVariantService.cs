@@ -41,6 +41,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             return variants;
         }
 
+        public IList<ProductVariantModel> GetAllForProduct(long productId)
+        {
+            IList<ProductVariantModel> variants = _mapper.Map<IList<ProductVariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
+
+            return variants;
+        }
+
         public void Add(ProductVariantModel variant)
         {
             ProductVariant variantToAdd = new();
