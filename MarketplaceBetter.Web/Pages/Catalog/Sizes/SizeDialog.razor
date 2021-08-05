@@ -40,9 +40,14 @@
 
         if (IsEdit)
         {
-            Size = SizeService.Get(SizeId);
-            Size.Group = Groups.Single(g => g.Id == Size.Group.Id);
+            SetInitialValues();
         }
+    }
+
+    private void SetInitialValues()
+    {
+        Size = SizeService.Get(SizeId);
+        Size.Group = Groups.Single(g => g.Id == Size.Group.Id);
     }
 
     private void HandleValidSubmit()

@@ -40,9 +40,14 @@
 
         if (IsEdit)
         {
-            Color = ColorService.Get(ColorId);
-            Color.Group = Groups.Single(g => g.Id == Color.Group.Id);
+            SetInitialValues();
         }
+    }
+
+    private void SetInitialValues()
+    {
+        Color = ColorService.Get(ColorId);
+        Color.Group = Groups.Single(g => g.Id == Color.Group.Id);
     }
 
     private void HandleValidSubmit()

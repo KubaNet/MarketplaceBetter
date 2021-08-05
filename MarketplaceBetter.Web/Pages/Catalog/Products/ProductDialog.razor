@@ -58,11 +58,16 @@
 
         if (IsEdit)
         {
-            Product = ProductService.Get(ProductId);
-            Product.Brand = Brands.Single(b => b.Id == Product.Brand.Id);
-            Product.ColorGroup = ColorGroups.Single(g => g.Id == Product.ColorGroup.Id);
-            Product.SizeGroup = SizeGroups.Single(g => g.Id == Product.SizeGroup.Id);
+            SetInitialValues();
         }
+    }
+
+    private void SetInitialValues()
+    {
+        Product = ProductService.Get(ProductId);
+        Product.Brand = Brands.Single(b => b.Id == Product.Brand.Id);
+        Product.ColorGroup = ColorGroups.Single(g => g.Id == Product.ColorGroup.Id);
+        Product.SizeGroup = SizeGroups.Single(g => g.Id == Product.SizeGroup.Id);
     }
 
     private void HandleValidSubmit()

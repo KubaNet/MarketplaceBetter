@@ -15,7 +15,7 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect T="BrandModel" Label="Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect T="BrandModel" Value="Brand" Label="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
@@ -51,6 +51,7 @@
 
     CustomValidation CustomValidation = new();
     ProductVariantModel ProductVariant = new();
+    BrandModel Brand;
 
     IList<BrandModel> Brands;
     IList<ProductModel> Products = new List<ProductModel>();
@@ -69,8 +70,27 @@
 
         if (IsEdit)
         {
-            ProductVariant = ProductVariantService.Get(ProductVariantId);
+            SetInitialValues();
         }
+    }
+
+    private void SetInitialValues()
+    {
+        ProductVariant = ProductVariantService.Get(ProductVariantId);
+
+        Brand = Brands.Single(b => b.Id == ProductVariant.Product.Brand.Id);
+
+        Products = ProductService.GetAllForBrand(Brand.Id).OrderBy(p => p.Name).ToList();
+        ProductVariant.Product = Products.Single(p => p.Id == ProductVariant.Product.Id);
+        ProductSelectDisabled = false;
+
+        Colors = ColorService.GetAllForGroup(ProductVariant.Product.ColorGroup.Id).OrderBy(p => p.Name).ToList();
+        ProductVariant.Color = Colors.Single(c => c.Id == ProductVariant.Color.Id);
+        ColorSelectDisabled = false;
+
+        Sizes = SizeService.GetAllForGroup(ProductVariant.Product.SizeGroup.Id).OrderBy(p => p.Name).ToList();
+        ProductVariant.Size = Sizes.Single(s => s.Id == ProductVariant.Size.Id);
+        SizeSelectDisabled = false;
     }
 
     private void HandleBrandChanged(BrandModel brand)
