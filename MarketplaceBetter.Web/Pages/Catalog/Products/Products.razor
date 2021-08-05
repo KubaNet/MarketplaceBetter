@@ -41,14 +41,14 @@
 
     private async void AddProduct()
     {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add product" }).Result;
+        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add Product" }).Result;
 
         ProcessProductDialogResult(result);
     }
 
     private async void EditProduct(long id)
     {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
+        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit Product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
 
         ProcessProductDialogResult(result);
     }

@@ -39,14 +39,14 @@
 
     private async void AddAmazonParent()
     {
-        var result = await DialogService.Show<AmazonParentDialog>(null, new DialogParameters { ["Title"] = "Add amazon parent" }).Result;
+        var result = await DialogService.Show<AmazonParentDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Parent" }).Result;
 
         ProcessAmazonParentDialogResult(result);
     }
 
     private async void EditAmazonParent(long id)
     {
-        var result = await DialogService.Show<AmazonParentDialog>(null, new DialogParameters { ["Title"] = "Edit amazon parent", ["IsEdit"] = true, ["AmazonParentId"] = id }).Result;
+        var result = await DialogService.Show<AmazonParentDialog>(null, new DialogParameters { ["Title"] = "Edit Amazon Parent", ["IsEdit"] = true, ["AmazonParentId"] = id }).Result;
 
         ProcessAmazonParentDialogResult(result);
     }

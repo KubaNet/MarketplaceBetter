@@ -1,0 +1,70 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+
+@page "/amazonchildren"
+@inject IAmazonChildService AmazonChildService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Amazon Children</MudText>
+
+<MainBody>
+    <MudTable Items="@AmazonChildrenData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddAmazonChild" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Child</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Parent</MudTh>
+            <MudTh>Product Variant</MudTh>
+            <MudTh>SKU</MudTh>
+            <MudTh>ASIN</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
+            <MudTd DataLabel="Product Variant">@context.ProductVariant.Sku</MudTd>
+            <MudTd DataLabel="SKU">@context.Sku</MudTd>
+            <MudTd DataLabel="ASIN">@context.Asin</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonChild(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<AmazonChildModel> AmazonChildrenData { get; set; }
+
+    private async void AddAmazonChild()
+    {
+        var result = await DialogService.Show<AmazonChildDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Child" }).Result;
+
+        ProcessAmazonChildDialogResult(result);
+    }
+
+    private async void EditAmazonChild(long id)
+    {
+        var result = await DialogService.Show<AmazonChildDialog>(null, new DialogParameters { ["Title"] = "Edit Amazon Child", ["IsEdit"] = true, ["AmazonChildId"] = id }).Result;
+
+        ProcessAmazonChildDialogResult(result);
+    }
+
+    private void ProcessAmazonChildDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            AmazonChildrenData = AmazonChildService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        AmazonChildrenData = AmazonChildService.GetAll();
+    }
+}

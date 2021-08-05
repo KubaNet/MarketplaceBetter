@@ -36,18 +36,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ColorModel> GetAll()
         {
-            IList<Color> colors = _repository.GetAll();
-            IList<ColorModel> colorsModel = _mapper.Map<IList<ColorModel>>(colors);
+            IList<ColorModel> colors = _mapper.Map<IList<ColorModel>>(_repository.GetAll());
 
-            return colorsModel;
+            return colors;
         }
 
         public IList<ColorModel> GetAllForGroup(long groupId)
         {
-            IList<Color> colors = _repository.GetQuery().Where(c => c.GroupId == groupId).ToList();
-            IList<ColorModel> colorsModel = _mapper.Map<IList<ColorModel>>(colors);
+            IList<ColorModel> colors = _mapper.Map<IList<ColorModel>>(_repository.GetQuery().Where(c => c.GroupId == groupId));
 
-            return colorsModel;
+            return colors;
         }
 
         public void Add(ColorModel color)

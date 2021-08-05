@@ -37,14 +37,14 @@
 
     private async void AddColor()
     {
-        var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Add color" }).Result;
+        var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Add Color" }).Result;
 
         ProcessColorDialogResult(result);
     }
 
     private async void EditColor(long id)
     {
-        var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Edit color", ["IsEdit"] = true, ["ColorId"] = id }).Result;
+        var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Edit Color", ["IsEdit"] = true, ["ColorId"] = id }).Result;
 
         ProcessColorDialogResult(result);
     }

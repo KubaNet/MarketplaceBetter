@@ -35,10 +35,17 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<AmazonParentModel> GetAll()
         {
-            IList<AmazonParent> parents = _repository.GetAll();
-            IList<AmazonParentModel> parentsModel = _mapper.Map<IList<AmazonParentModel>>(parents);
+            IList<AmazonParentModel> parents = _mapper.Map<IList<AmazonParentModel>>(_repository.GetAll());
 
-            return parentsModel;
+            return parents;
+        }
+
+        public IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId)
+        {
+            IList<AmazonParentModel> parents = _mapper.Map<IList<AmazonParentModel>>(
+                _repository.GetQuery().Where(p => p.Product.BrandId == brandId && p.InstanceId == instanceId));
+
+            return parents;
         }
 
         public void Add(AmazonParentModel parent)

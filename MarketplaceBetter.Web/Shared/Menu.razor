@@ -42,6 +42,7 @@
         {
             <MudNavGroup Title="Inventory" Icon="@Icons.Filled.Inventory" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/amazonparents">Parents</MudNavLink>
+                <MudNavLink Href="/amazonchildren">Children</MudNavLink>
             </MudNavGroup>
         }
         else
@@ -99,7 +100,8 @@
 
     private bool IsAmazonInventoryModule()
     {
-        if (NavigationManager.Uri.Contains("amazonparents"))
+        if (NavigationManager.Uri.Contains("amazonparents") ||
+            NavigationManager.Uri.Contains("amazonchildren"))
         {
             return true;
         }

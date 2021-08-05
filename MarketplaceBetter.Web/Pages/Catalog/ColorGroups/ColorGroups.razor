@@ -33,14 +33,14 @@
 
     private async void AddColorGroup()
     {
-        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Add color group" }).Result;
+        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Add Color Group" }).Result;
 
         ProcessColorGroupDialogResult(result);
     }
 
     private async void EditColorGroup(long id)
     {
-        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Edit color group", ["IsEdit"] = true, ["ColorGroupId"] = id }).Result;
+        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Edit Color Group", ["IsEdit"] = true, ["ColorGroupId"] = id }).Result;
 
         ProcessColorGroupDialogResult(result);
     }

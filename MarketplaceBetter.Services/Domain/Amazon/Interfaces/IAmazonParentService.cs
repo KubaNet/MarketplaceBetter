@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<AmazonParentModel> GetAll();
 
+        IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId);
+
         void Add(AmazonParentModel parent);
 
         void Update(AmazonParentModel parent);

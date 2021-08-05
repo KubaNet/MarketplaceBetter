@@ -36,18 +36,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ProductModel> GetAll()
         {
-            IList<Product> products = _repository.GetAll();
-            IList<ProductModel> productsModel = _mapper.Map<IList<ProductModel>>(products);
+            IList<ProductModel> products = _mapper.Map<IList<ProductModel>>(_repository.GetAll());
 
-            return productsModel;
+            return products;
         }
 
         public IList<ProductModel> GetAllForBrand(long brandId)
         {
-            IList<Product> products = _repository.GetQuery().Where(p => p.BrandId == brandId).ToList();
-            IList<ProductModel> productsModel = _mapper.Map<IList<ProductModel>>(products);
+            IList<ProductModel> products = _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId));
 
-            return productsModel;
+            return products;
         }
 
         public void Add(ProductModel product)

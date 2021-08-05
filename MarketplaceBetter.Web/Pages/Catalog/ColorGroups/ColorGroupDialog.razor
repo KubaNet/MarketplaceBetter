@@ -42,12 +42,12 @@
             if (IsEdit)
             {
                 ColorGroupService.Update(ColorGroup);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color group"));
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color Group"));
             }
             else
             {
                 ColorGroupService.Add(ColorGroup);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color group"));
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color Group"));
             }
 
             MudDialog.Close();

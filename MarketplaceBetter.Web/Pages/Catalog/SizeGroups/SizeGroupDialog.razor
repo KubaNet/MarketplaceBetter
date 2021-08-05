@@ -42,12 +42,12 @@
             if (IsEdit)
             {
                 SizeGroupService.Update(SizeGroup);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Size group"));
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Size Group"));
             }
             else
             {
                 SizeGroupService.Add(SizeGroup);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Size group"));
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Size Group"));
             }
 
             MudDialog.Close();

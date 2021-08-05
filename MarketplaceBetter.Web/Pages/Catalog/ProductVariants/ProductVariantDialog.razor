@@ -200,12 +200,12 @@
             if (IsEdit)
             {
                 ProductVariantService.Update(ProductVariant);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product variant"));
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product Variant"));
             }
             else
             {
                 ProductVariantService.Add(ProductVariant);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product variant"));
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product Variant"));
             }
 
             MudDialog.Close();

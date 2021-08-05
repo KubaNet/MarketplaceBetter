@@ -36,10 +36,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ProductVariantModel> GetAll()
         {
-            IList<ProductVariant> variants = _repository.GetQuery().Include(v => v.Product).Include(v => v.Color).Include(v => v.Size).ToList();
-            IList<ProductVariantModel> variantsModel = _mapper.Map<IList<ProductVariantModel>>(variants);
+            IList<ProductVariantModel> variants = _mapper.Map<IList<ProductVariantModel>>(_repository.GetAll());
 
-            return variantsModel;
+            return variants;
         }
 
         public void Add(ProductVariantModel variant)

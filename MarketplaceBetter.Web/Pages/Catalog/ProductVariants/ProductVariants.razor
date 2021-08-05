@@ -39,14 +39,14 @@
 
     private async void AddProductVariant()
     {
-        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add product variant" }).Result;
+        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add Product Variant" }).Result;
 
         ProcessProductVariantDialogResult(result);
     }
 
     private async void EditProductVariant(long id)
     {
-        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Edit product variant", ["IsEdit"] = true, ["ProductVariantId"] = id }).Result;
+        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Edit Product Variant", ["IsEdit"] = true, ["ProductVariantId"] = id }).Result;
 
         ProcessProductVariantDialogResult(result);
     }
