@@ -35,6 +35,7 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         // Amazon
         public DbSet<AmazonParent> AmazonParent { get; set; }
+        public DbSet<AmazonChild> AmazonChild { get; set; }
 
         //public override int SaveChanges()
         //{

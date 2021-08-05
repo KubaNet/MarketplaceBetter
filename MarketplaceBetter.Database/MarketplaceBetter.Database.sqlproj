@@ -79,6 +79,7 @@
     <Build Include="dbo\Tables\General\Country.sql" />
     <None Include="Scripts\Inserts\01_Countries.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonParent.sql" />
+    <Build Include="dbo\Tables\Amazon\AmazonChild.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />

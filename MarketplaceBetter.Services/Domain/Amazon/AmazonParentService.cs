@@ -63,8 +63,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         private void TransferValues(AmazonParent toAmazonParent, AmazonParentModel fromAmazonParent)
         {
-            toAmazonParent.InstanceId = fromAmazonParent.Instance.Id;
             toAmazonParent.ProductId = fromAmazonParent.Product.Id;
+            toAmazonParent.InstanceId = fromAmazonParent.Instance.Id;
             toAmazonParent.Sku = fromAmazonParent.Sku;
             toAmazonParent.Asin = fromAmazonParent.Asin;
         }
