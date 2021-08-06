@@ -77,22 +77,23 @@
 
         if (IsEdit)
         {
-            //SetInitialValues();
+            SetInitialValues();
         }
     }
 
-    @*    private void SetInitialValues()
-        {
+    private void SetInitialValues()
+    {
         AmazonChild = AmazonChildService.Get(AmazonChildId);
 
         Brand = Brands.Single(b => b.Id == AmazonChild.Parent.Product.Brand.Id);
+        Instance = Instances.Single(i => i.Id == AmazonChild.Parent.Instance.Id);
 
-        Parents = AmazonParentService.GetAllForBrand(Brand.Id).OrderBy(p => p.Name).ToList();
+        ActivateParent();
+        ActivateProductVariant(AmazonChild.Parent.Product.Id);
+
         AmazonChild.Parent = Parents.Single(p => p.Id == AmazonChild.Parent.Id);
-        ParentSelectDisabled = false;
-
-        AmazonChild.Instance = Instances.Single(i => i.Id == AmazonChild.Instance.Id);
-        }*@
+        AmazonChild.ProductVariant = ProductVariants.Single(v => v.Id == AmazonChild.ProductVariant.Id);
+    }
 
     private void HandleBrandChanged(BrandModel brand)
     {
@@ -100,6 +101,10 @@
 
         ResetParent();
         ActivateParent();
+
+        ResetProductVariant();
+
+        SetChildSku();
     }
 
     private void HandleInstanceChanged(InstanceModel instance)
@@ -109,6 +114,8 @@
         ResetParent();
         ActivateParent();
 
+        ResetProductVariant();
+
         SetChildSku();
     }
 
@@ -117,7 +124,9 @@
         AmazonChild.Parent = parent;
 
         ResetProductVariant();
-        ActivateProductVariant();
+        ActivateProductVariant(parent.Product.Id);
+
+        SetChildSku();
     }
 
     private void HandleProductVariantChanged(ProductVariantModel productVariant)
@@ -150,10 +159,10 @@
         ProductVariants = new List<ProductVariantModel>();
     }
 
-    private void ActivateProductVariant()
+    private void ActivateProductVariant(long productId)
     {
         ProductVariantDisabled = false;
-        ProductVariants = ProductVariantService.GetAllForProduct(AmazonChild.Parent.Product.Id);
+        ProductVariants = ProductVariantService.GetAllForProduct(productId);
     }
 
     private void SetChildSku()

@@ -16,3 +16,6 @@ GO
 
 CREATE UNIQUE INDEX UIX_AmazonParent_Sku  ON [dbo].[AmazonParent] ([Sku] ASC);
 GO
+
+CREATE UNIQUE INDEX UIX_AmazonParent_Asin  ON [dbo].[AmazonParent] ([Asin] ASC);
+GO

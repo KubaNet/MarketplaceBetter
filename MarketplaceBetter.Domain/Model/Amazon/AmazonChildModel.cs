@@ -11,11 +11,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon
     {
         public long Id { get; set; }
 
-        public long ParentId { get; set; }
-
         public AmazonParentModel Parent { get; set; }
-
-        public long ProductVariantId { get; set; }
 
         public ProductVariantModel ProductVariant { get; set; }
 

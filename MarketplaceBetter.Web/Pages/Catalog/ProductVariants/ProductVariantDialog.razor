@@ -80,17 +80,15 @@
 
         Brand = Brands.Single(b => b.Id == ProductVariant.Product.Brand.Id);
 
-        Products = ProductService.GetAllForBrand(Brand.Id).OrderBy(p => p.Name).ToList();
+        ActivateProduct(Brand.Id);
+
         ProductVariant.Product = Products.Single(p => p.Id == ProductVariant.Product.Id);
-        ProductSelectDisabled = false;
 
-        Colors = ColorService.GetAllForGroup(ProductVariant.Product.ColorGroup.Id).OrderBy(p => p.Name).ToList();
+        ActivateColor(ProductVariant.Product.ColorGroup.Id);
+        ActivateSize(ProductVariant.Product.SizeGroup.Id);
+
         ProductVariant.Color = Colors.Single(c => c.Id == ProductVariant.Color.Id);
-        ColorSelectDisabled = false;
-
-        Sizes = SizeService.GetAllForGroup(ProductVariant.Product.SizeGroup.Id).OrderBy(p => p.Name).ToList();
         ProductVariant.Size = Sizes.Single(s => s.Id == ProductVariant.Size.Id);
-        SizeSelectDisabled = false;
     }
 
     private void HandleBrandChanged(BrandModel brand)

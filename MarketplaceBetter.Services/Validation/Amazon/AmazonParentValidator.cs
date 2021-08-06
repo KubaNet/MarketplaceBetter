@@ -31,7 +31,12 @@ namespace MarketplaceBetter.Services.Validation.Amazon
 
             if (_repository.Any(p => p.Id != parent.Id && p.Sku == parent.Sku))
             {
-                result.AddErrorFor<AmazonParentModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Amazon Parent", "Sku");
+                result.AddErrorFor<AmazonParentModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Amazon Parent", "SKU");
+            }
+
+            if (_repository.Any(p => p.Id != parent.Id && p.Asin == parent.Asin))
+            {
+                result.AddErrorFor<AmazonParentModel>(p => p.Asin, ValidationMessages.PropertyNotUnique, "Amazon Parent", "ASIN");
             }
 
             return result;

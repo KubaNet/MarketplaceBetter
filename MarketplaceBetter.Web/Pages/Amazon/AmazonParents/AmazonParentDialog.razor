@@ -77,10 +77,9 @@
 
         Brand = Brands.Single(b => b.Id == AmazonParent.Product.Brand.Id);
 
-        Products = ProductService.GetAllForBrand(Brand.Id).OrderBy(p => p.Name).ToList();
-        AmazonParent.Product = Products.Single(p => p.Id == AmazonParent.Product.Id);
-        ProductSelectDisabled = false;
+        ActivateProduct(Brand.Id);
 
+        AmazonParent.Product = Products.Single(p => p.Id == AmazonParent.Product.Id);
         AmazonParent.Instance = Instances.Single(i => i.Id == AmazonParent.Instance.Id);
     }
 
