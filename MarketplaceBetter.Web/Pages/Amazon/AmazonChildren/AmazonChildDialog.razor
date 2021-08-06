@@ -162,7 +162,7 @@
     private void ActivateProductVariant(long productId)
     {
         ProductVariantDisabled = false;
-        ProductVariants = ProductVariantService.GetAllForProduct(productId);
+        ProductVariants = ProductVariantService.GetForProduct(productId);
     }
 
     private void SetChildSku()

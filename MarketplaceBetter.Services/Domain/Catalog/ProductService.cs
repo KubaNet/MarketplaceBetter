@@ -2,8 +2,11 @@
 using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
+using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
+using MarketplaceBetter.Services.Model.ListRequests.Catalog;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,23 +32,40 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public ProductModel Get(long id)
         {
-            Product product = _repository.Get(id);
-
-            return _mapper.Map<ProductModel>(product);
+            return _mapper.Map<ProductModel>(_repository.Get(id));
         }
 
         public IList<ProductModel> GetAll()
         {
-            IList<ProductModel> products = _mapper.Map<IList<ProductModel>>(_repository.GetAll());
-
-            return products;
+            return _mapper.Map<IList<ProductModel>>(_repository.GetAll());
         }
 
-        public IList<ProductModel> GetAllForBrand(long brandId)
+        public IList<ProductModel> GetForBrand(long brandId)
         {
-            IList<ProductModel> products = _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId));
+            return _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId));
+        }
 
-            return products;
+        public IList<ProductModel> GetForListRequest(ProductListRequest request)
+        {
+            IQueryable<Product> products = _repository.GetQuery();
+
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+            {
+                products = request.SortBy switch
+                {
+                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
+                    "code" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Code) : products.OrderByDescending(p => p.Code),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Brand.Name) : products.OrderByDescending(p => p.Brand.Name),
+                    "color_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ColorGroup.Name) : products.OrderByDescending(p => p.ColorGroup.Name),
+                    "size_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.SizeGroup.Name) : products.OrderByDescending(p => p.SizeGroup.Name),
+                    _ => throw new UnrecognizedSortingException<ProductListRequest>(request.SortBy)
+                };
+            }
+
+            products = products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+
+            return _mapper.Map<IList<ProductModel>>(products);
         }
 
         public void Add(ProductModel product)

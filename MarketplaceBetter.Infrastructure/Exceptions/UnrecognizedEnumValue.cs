@@ -14,7 +14,7 @@ namespace MarketplaceBetter.Infrastructure.Exceptions
 
         private static string GetMessage(Enum value)
         {
-            return string.Format("Unrecognized value of {0}. Value: {1}", value.GetType().Name, value.ToString());
+            return string.Format("Unrecognized value of {0}. Value: {1}.", value.GetType().Name, value.ToString());
         }
     }
 }

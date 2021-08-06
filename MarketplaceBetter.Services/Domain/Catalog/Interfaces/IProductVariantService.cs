@@ -1,9 +1,6 @@
 ﻿using MarketplaceBetter.Domain.Model.Catalog;
-using System;
+using MarketplaceBetter.Services.Model.ListRequests.Catalog;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 {
@@ -13,7 +10,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<ProductVariantModel> GetAll();
 
-        IList<ProductVariantModel> GetAllForProduct(long productId);
+        IList<ProductVariantModel> GetForProduct(long productId);
+
+        int CountForListRequest(ProductVariantListRequest request);
+
+        IList<ProductVariantModel> GetForListRequest(ProductVariantListRequest request);
 
         void Add(ProductVariantModel productVariant);
 

@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Model.ListRequests.Catalog
 
 @page "/products"
 @inject IProductService ProductService
@@ -8,17 +9,17 @@
 <MudText Typo="Typo.h3">Products</MudText>
 
 <MainBody>
-    <MudTable Items="@ProductsData" Dense="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(ReloadProducts))" Dense="true" Hover="true">
         <ToolBarContent>
             <MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Product</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Code</MudTh>
-            <MudTh>Brand</MudTh>
-            <MudTh>Color group</MudTh>
-            <MudTh>Size group</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ProductModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="ProductModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="code" T="ProductModel">Code</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ProductModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="color_group" T="ProductModel">Color group</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="size_group" T="ProductModel">Size group</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -37,7 +38,25 @@
 </MainBody>
 
 @code {
-    private IList<ProductModel> ProductsData { get; set; }
+    private MudTable<ProductModel> Table;
+    private ProductListRequest ListRequest = new();
+
+    private Task<TableData<ProductModel>> ReloadProducts(TableState state)
+    {
+        PupulateListRequest(state);
+
+        IList<ProductModel> products = ProductService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<ProductModel>() { TotalItems = products.Count, Items = products });
+    }
+
+    private void PupulateListRequest(TableState state)
+    {
+        ListRequest.SortBy = state.SortLabel;
+        ListRequest.SortDirection = state.SortDirection;
+        ListRequest.Page = state.Page;
+        ListRequest.PageSize = state.PageSize;
+    }
 
     private async void AddProduct()
     {
@@ -57,16 +76,7 @@
     {
         if (!result.Cancelled)
         {
-            ProductsData = ProductService.GetAll();
-
-            StateHasChanged();
+            Table.ReloadServerData();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        ProductsData = ProductService.GetAll();
     }
 }

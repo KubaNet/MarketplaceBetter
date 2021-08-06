@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Model.ListRequests.Catalog
 
 @page "/productvariants"
 @inject IProductVariantService ProductVariantService
@@ -8,16 +9,16 @@
 <MudText Typo="Typo.h3">Product Variants</MudText>
 
 <MainBody>
-    <MudTable Items="@ProductVariantsData" Dense="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductVariantModel>>>(ReloadProductVariants))" Dense="true" Hover="true">
         <ToolBarContent>
             <MudButton OnClick="AddProductVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add product variant</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Sku</MudTh>
-            <MudTh>Product</MudTh>
-            <MudTh>Color</MudTh>
-            <MudTh>Size</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ProductVariantModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sku" T="ProductVariantModel">SKU</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="ProductVariantModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="color" T="ProductVariantModel">Color</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="size" T="ProductVariantModel">Size</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -35,7 +36,26 @@
 </MainBody>
 
 @code {
-    private IList<ProductVariantModel> ProductVariantsData { get; set; }
+    private MudTable<ProductVariantModel> Table;
+    private ProductVariantListRequest ListRequest = new();
+
+    private Task<TableData<ProductVariantModel>> ReloadProductVariants(TableState state)
+    {
+        PupulateListRequest(state);
+
+        int totalItems = ProductVariantService.CountForListRequest(ListRequest);
+        IList<ProductVariantModel> productVariants = ProductVariantService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<ProductVariantModel>() { TotalItems = totalItems, Items = productVariants });
+    }
+
+    private void PupulateListRequest(TableState state)
+    {
+        ListRequest.SortBy = state.SortLabel;
+        ListRequest.SortDirection = state.SortDirection;
+        ListRequest.Page = state.Page;
+        ListRequest.PageSize = state.PageSize;
+    }
 
     private async void AddProductVariant()
     {
@@ -55,16 +75,7 @@
     {
         if (!result.Cancelled)
         {
-            ProductVariantsData = ProductVariantService.GetAll();
-
-            StateHasChanged();
+            Table.ReloadServerData();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        ProductVariantsData = ProductVariantService.GetAll();
     }
 }

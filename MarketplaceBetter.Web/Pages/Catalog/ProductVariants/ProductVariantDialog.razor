@@ -142,7 +142,7 @@
     private void ActivateProduct(long brandId)
     {
         ProductSelectDisabled = false;
-        Products = ProductService.GetAllForBrand(brandId).OrderBy(p => p.Name).ToList();
+        Products = ProductService.GetForBrand(brandId).OrderBy(p => p.Name).ToList();
     }
 
     private void ResetColor()
