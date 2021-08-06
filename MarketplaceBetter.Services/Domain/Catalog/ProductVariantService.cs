@@ -54,20 +54,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
         {
             IQueryable<ProductVariant> variants = _repository.GetQuery();
 
-            if (!string.IsNullOrWhiteSpace(request.SortBy))
-            {
-                variants = request.SortBy switch
-                {
-                    "id" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Id) : variants.OrderByDescending(v => v.Id),
-                    "sku" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Sku) : variants.OrderByDescending(v => v.Sku),
-                    "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
-                    "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
-                    "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
-                    _ => throw new UnrecognizedSortingException<ProductVariantListRequest>(request.SortBy)
-                };
-            }
-
-            variants = variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            ApplyFilter(variants, request);
+            ApplySorting(variants, request);
+            ApplyPaging(variants, request);
 
             return _mapper.Map<IList<ProductVariantModel>>(variants);
         }
@@ -98,6 +87,55 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             toProductVariant.ProductId = fromProductVariant.Product.Id;
             toProductVariant.ColorId = fromProductVariant.Color.Id;
             toProductVariant.SizeId = fromProductVariant.Size.Id;
+        }
+
+        private void ApplyFilter(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        {
+            if (request.Id.HasValue)
+            {
+                variants = variants.Where(p => p.Id == request.Id.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Sku))
+            {
+                variants = variants.Where(p => p.Sku.Contains(request.Sku));
+            }
+
+            if (request.Product != null)
+            {
+                variants = variants.Where(p => p.ProductId == request.Product.Id);
+            }
+
+            if (request.Color != null)
+            {
+                variants = variants.Where(p => p.ColorId == request.Color.Id);
+            }
+
+            if (request.Size != null)
+            {
+                variants = variants.Where(p => p.SizeId == request.Size.Id);
+            }
+        }
+
+        private void ApplySorting(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        {
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+            {
+                variants = request.SortBy switch
+                {
+                    "id" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Id) : variants.OrderByDescending(v => v.Id),
+                    "sku" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Sku) : variants.OrderByDescending(v => v.Sku),
+                    "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
+                    "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
+                    "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
+                    _ => throw new UnrecognizedSortingException<ProductVariantListRequest>(request.SortBy)
+                };
+            }
+        }
+
+        private void ApplyPaging(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        {
+            variants = variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

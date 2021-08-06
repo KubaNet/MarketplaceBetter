@@ -16,6 +16,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<ProductModel> GetForBrand(long brandId);
 
+        int CountForListRequest(ProductListRequest request);
+
         IList<ProductModel> GetForListRequest(ProductListRequest request);
 
         void Add(ProductModel product);
