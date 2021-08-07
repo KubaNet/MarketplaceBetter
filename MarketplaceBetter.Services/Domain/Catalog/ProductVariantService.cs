@@ -54,9 +54,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
         {
             IQueryable<ProductVariant> variants = _repository.GetQuery();
 
-            ApplyFilter(variants, request);
-            ApplySorting(variants, request);
-            ApplyPaging(variants, request);
+            variants = ApplyFilter(variants, request);
+            variants = ApplySorting(variants, request);
+            variants = ApplyPaging(variants, request);
 
             return _mapper.Map<IList<ProductVariantModel>>(variants);
         }
@@ -89,7 +89,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             toProductVariant.SizeId = fromProductVariant.Size.Id;
         }
 
-        private void ApplyFilter(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        private IQueryable<ProductVariant> ApplyFilter(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
         {
             if (request.Id.HasValue)
             {
@@ -115,9 +115,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             {
                 variants = variants.Where(p => p.SizeId == request.Size.Id);
             }
+
+            return variants;
         }
 
-        private void ApplySorting(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        private IQueryable<ProductVariant> ApplySorting(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -131,11 +133,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     _ => throw new UnrecognizedSortingException<ProductVariantListRequest>(request.SortBy)
                 };
             }
+
+            return variants;
         }
 
-        private void ApplyPaging(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        private IQueryable<ProductVariant> ApplyPaging(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
         {
-            variants = variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

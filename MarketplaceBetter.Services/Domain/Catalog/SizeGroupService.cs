@@ -35,7 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<SizeGroupModel> GetAll()
         {
-            IList<SizeGroupModel> groups = _mapper.Map<IList<SizeGroupModel>>(_repository.GetAll());
+            IList<SizeGroupModel> groups = _mapper.Map<IList<SizeGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
             return groups;
         }

@@ -15,19 +15,19 @@
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
         <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
-        <MudSelect T="BrandModel" @bind-Value="Product.Brand" Label="Brand" For="() => Product.Brand">
+        <MudSelect Label="Brand" T="BrandModel" @bind-Value="Product.Brand" For="() => Product.Brand">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ColorGroupModel" @bind-Value="Product.ColorGroup" Label="Color group" For="() => Product.ColorGroup">
+        <MudSelect Label="Color group" T="ColorGroupModel" @bind-Value="Product.ColorGroup" For="() => Product.ColorGroup">
             @foreach (var colorGroup in ColorGroups)
             {
                 <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="SizeGroupModel" @bind-Value="Product.SizeGroup" Label="Size group" For="() => Product.SizeGroup">
+        <MudSelect Label="Size group" T="SizeGroupModel" @bind-Value="Product.SizeGroup" For="() => Product.SizeGroup">
             @foreach (var sizeGroup in SizeGroups)
             {
                 <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>

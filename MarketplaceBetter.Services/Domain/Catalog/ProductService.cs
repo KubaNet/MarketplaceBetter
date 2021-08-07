@@ -58,9 +58,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
         {
             IQueryable<Product> products = _repository.GetQuery();
 
-            ApplyFilter(products, request);
-            ApplySorting(products, request);
-            ApplyPaging(products, request);
+            products = ApplyFilter(products, request);
+            products = ApplySorting(products, request);
+            products = ApplyPaging(products, request);
 
             return _mapper.Map<IList<ProductModel>>(products);
         }
@@ -94,7 +94,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             toProduct.SizeGroupId = fromProduct.SizeGroup.Id;
         }
 
-        private void ApplyFilter(IQueryable<Product> products, ProductListRequest request)
+        private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ProductListRequest request)
         {
             if (request.Id.HasValue)
             {
@@ -125,9 +125,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             {
                 products = products.Where(p => p.SizeGroupId == request.SizeGroup.Id);
             }
+
+            return products;
         }
 
-        private void ApplySorting(IQueryable<Product> products, ProductListRequest request)
+        private IQueryable<Product> ApplySorting(IQueryable<Product> products, ProductListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -142,11 +144,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     _ => throw new UnrecognizedSortingException<ProductListRequest>(request.SortBy)
                 };
             }
+
+            return products;
         }
 
-        private void ApplyPaging(IQueryable<Product> products, ProductListRequest request)
+        private IQueryable<Product> ApplyPaging(IQueryable<Product> products, ProductListRequest request)
         {
-            products = products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

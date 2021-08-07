@@ -35,7 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<BrandModel> GetAll()
         {
-            IList<BrandModel> brands = _mapper.Map<IList<BrandModel>>(_repository.GetAll());
+            IList<BrandModel> brands = _mapper.Map<IList<BrandModel>>(_repository.GetAll().OrderBy(b => b.Name));
 
             return brands;
         }
