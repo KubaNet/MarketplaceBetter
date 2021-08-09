@@ -1,0 +1,70 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+
+@page "/keywordanalyses"
+@inject IAmazonParentService AmazonParentService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Amazon Parents</MudText>
+
+<MainBody>
+    <MudTable Items="@AmazonParentsData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddAmazonParent" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Parent</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>SKU</MudTh>
+            <MudTh>Product</MudTh>
+            <MudTh>Instance</MudTh>
+            <MudTh>ASIN</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="SKU">@context.Sku</MudTd>
+            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="ASIN">@context.Asin</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonParent(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<AmazonParentModel> AmazonParentsData { get; set; }
+
+    private async void AddAmazonParent()
+    {
+        var result = await DialogService.Show<KeywordAnalysisDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Parent" }).Result;
+
+        ProcessAmazonParentDialogResult(result);
+    }
+
+    private async void EditAmazonParent(long id)
+    {
+        var result = await DialogService.Show<KeywordAnalysisDialog>(null, new DialogParameters { ["Title"] = "Edit Amazon Parent", ["IsEdit"] = true, ["AmazonParentId"] = id }).Result;
+
+        ProcessAmazonParentDialogResult(result);
+    }
+
+    private void ProcessAmazonParentDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            AmazonParentsData = AmazonParentService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        AmazonParentsData = AmazonParentService.GetAll();
+    }
+}
