@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Validation.Attributes
 {
-    public class BetterLengthAttribute : StringLengthAttribute
+    public class BetterMaxLengthAttribute : StringLengthAttribute
     {
-        public BetterLengthAttribute() : base(Standard.StringMaxLength)
+        public BetterMaxLengthAttribute() : base(Standard.StringMaxLength)
         {
-            MinimumLength = Standard.StringMinLength;
         }
     }
 }

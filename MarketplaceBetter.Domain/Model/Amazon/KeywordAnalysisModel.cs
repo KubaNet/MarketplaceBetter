@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog;
+﻿using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Domain.Validation.Attributes;
 using System;
@@ -10,20 +10,18 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon
 {
-    public class AmazonParentModel
+    public class KeywordAnalysisModel
     {
         public long Id { get; set; }
 
         [Required]
-        public ProductModel Product { get; set; }
+        [BetterLength]
+        public string Name { get; set; }
+
+        [BetterMaxLength]
+        public string Description { get; set; }
 
         [Required]
         public InstanceModel Instance { get; set; }
-
-        [Required]
-        public string Sku { get; set; }
-
-        [BetterMaxLength]
-        public string Asin { get; set; }
     }
 }

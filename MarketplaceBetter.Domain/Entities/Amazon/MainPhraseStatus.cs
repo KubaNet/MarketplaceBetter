@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MarketplaceBetter.Domain.Entities.Amazon
+{
+    public class MainPhraseStatus
+    {
+        public string Name { get; set; }
+
+        public MainPhraseStatusEnum SystemName { get; set; }
+    }
+}
