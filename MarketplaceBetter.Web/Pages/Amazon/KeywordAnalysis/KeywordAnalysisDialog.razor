@@ -1,44 +1,26 @@
-﻿@using MarketplaceBetter.Domain.Entities.Sales
-@using MarketplaceBetter.Domain.Model.Amazon
-@using MarketplaceBetter.Domain.Model.Catalog
+﻿@using MarketplaceBetter.Domain.Model.Amazon
 @using MarketplaceBetter.Domain.Model.Sales
 @using MarketplaceBetter.Services.Domain.Amazon.Interfaces
-@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
 @using MarketplaceBetter.Services.Domain.Sales.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.Interfaces
 
-@inject IAmazonParentService AmazonParentService
-@inject IAmazonParentValidator AmazonParentValidator
-@inject IBrandService BrandService
-@inject IProductService ProductService
+@inject IKeywordAnalysisService KeywordAnalysisService
+@inject IKeywordAnalysisValidator KeywordAnalysisValidator
 @inject IInstanceService InstanceService
 @inject ISnackbar Snackbar
 
-<EditForm Model="AmazonParent" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="KeywordAnalysis" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <ValidationSummary />
-        <MudSelect T="BrandModel" Value="Brand" Label="Brand" ValueChanged="HandleBrandChanged">
-            @foreach (var brand in Brands)
-            {
-                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudSelect T="ProductModel" Value="AmazonParent.Product" Label="Product" For="() => AmazonParent.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
-            @foreach (var product in Products)
-            {
-                <MudSelectItem Value="product">@product.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudSelect T="InstanceModel" Value="AmazonParent.Instance" Label="Instance" For="() => AmazonParent.Instance" ValueChanged="HandleInstanceChanged">
+        <MudTextField Label="Name" @bind-Value="KeywordAnalysis.Name" For="() => KeywordAnalysis.Name" />
+        <MudTextField Label="Description" @bind-Value="KeywordAnalysis.Description" For="() => KeywordAnalysis.Description" />
+        <MudSelect T="InstanceModel" @bind-Value="KeywordAnalysis.Instance" Label="Instance" For="() => KeywordAnalysis.Instance">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="SKU" @bind-Value="AmazonParent.Sku" For="() => AmazonParent.Sku" />
-        <MudTextField Label="ASIN" @bind-Value="AmazonParent.Asin" For="() => AmazonParent.Asin" />
     </FormDialog>
 </EditForm>
 
@@ -46,24 +28,17 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long AmazonParentId { get; set; }
+    [Parameter] public long KeywordAnalysisId { get; set; }
 
     CustomValidation CustomValidation = new();
-    AmazonParentModel AmazonParent = new();
-    BrandModel Brand;
-
-    IList<BrandModel> Brands;
-    IList<ProductModel> Products = new List<ProductModel>();
+    KeywordAnalysisModel KeywordAnalysis = new();
     IList<InstanceModel> Instances;
-
-    bool ProductSelectDisabled = true;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAllForAmazon();
+        Instances = InstanceService.GetAll();
 
         if (IsEdit)
         {
@@ -73,83 +48,25 @@
 
     private void SetInitialValues()
     {
-        AmazonParent = AmazonParentService.Get(AmazonParentId);
-
-        Brand = Brands.Single(b => b.Id == AmazonParent.Product.Brand.Id);
-
-        ActivateProduct(Brand.Id);
-
-        AmazonParent.Product = Products.Single(p => p.Id == AmazonParent.Product.Id);
-        AmazonParent.Instance = Instances.Single(i => i.Id == AmazonParent.Instance.Id);
-    }
-
-    private void HandleBrandChanged(BrandModel brand)
-    {
-        Brand = brand;
-
-        ResetProduct();
-        ActivateProduct(brand.Id);
-        SetParentSku();
-    }
-
-    private void HandleProductChanged(ProductModel product)
-    {
-        AmazonParent.Product = product;
-        SetParentSku();
-    }
-
-    private void HandleInstanceChanged(InstanceModel instance)
-    {
-        AmazonParent.Instance = instance;
-        SetParentSku();
-    }
-
-    private void ResetProduct()
-    {
-        AmazonParent.Product = null;
-        ProductSelectDisabled = true;
-        Products = new List<ProductModel>();
-    }
-
-    private void ActivateProduct(long brandId)
-    {
-        ProductSelectDisabled = false;
-        Products = ProductService.GetForBrand(brandId).OrderBy(p => p.Name).ToList();
-    }
-
-    private void SetParentSku()
-    {
-        AmazonParent.Sku = null;
-
-        if (AmazonParent.Product != null && AmazonParent.Instance != null)
-        {
-            AmazonParent.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(AmazonParent.Instance.SystemName), AmazonParent.Product.Name.ToLower().Replace(" ", "_"));
-        }
-        else if (AmazonParent.Product != null)
-        {
-            AmazonParent.Sku = AmazonParent.Product.Name.ToLower().Replace(" ", "_");
-        }
-        else if (AmazonParent.Instance != null)
-        {
-            AmazonParent.Sku = AmazonInstanceHelper.GetCodeFor(AmazonParent.Instance.SystemName);
-        }
+        KeywordAnalysis = KeywordAnalysisService.Get(KeywordAnalysisId);
+        KeywordAnalysis.Instance = Instances.Single(i => i.Id == KeywordAnalysis.Instance.Id);
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = AmazonParentValidator.Validate(AmazonParent);
+        ValidationResult result = KeywordAnalysisValidator.Validate(KeywordAnalysis);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                AmazonParentService.Update(AmazonParent);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Amazon Parent"));
+                KeywordAnalysisService.Update(KeywordAnalysis);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Keyword Analysis"));
             }
             else
             {
-                AmazonParentService.Add(AmazonParent);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Amazon Parent"));
+                KeywordAnalysisService.Add(KeywordAnalysis);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Keyword Analysis"));
             }
 
             MudDialog.Close();

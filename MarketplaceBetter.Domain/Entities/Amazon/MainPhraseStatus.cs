@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon
 {
-    public class MainPhraseStatus
+    public class MainPhraseStatus : Entity
     {
         public string Name { get; set; }
 
