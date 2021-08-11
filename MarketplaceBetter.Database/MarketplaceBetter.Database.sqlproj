@@ -87,6 +87,8 @@
     <Build Include="dbo\Tables\Amazon\MainPhrase.sql" />
     <None Include="Scripts\Inserts\08_KeywordDataSources.sql" />
     <Build Include="dbo\Tables\Amazon\KeywordDataSource.sql" />
+    <Build Include="dbo\Tables\Amazon\KeywordData.sql" />
+    <Build Include="dbo\Tables\Amazon\PhraseData.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />
