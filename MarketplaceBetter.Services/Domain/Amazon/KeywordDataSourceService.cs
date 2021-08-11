@@ -11,33 +11,33 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon
 {
-    public class MainPhraseStatusService : IMainPhraseStatusService
+    public class KeywordDataSourceService : IKeywordDataSourceService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<MainPhraseStatus> _repository;
+        private readonly IRepository<KeywordDataSource> _repository;
         private readonly IMapper _mapper;
 
-        public MainPhraseStatusService(
+        public KeywordDataSourceService(
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _repository = unitOfWork.GetRepository<MainPhraseStatus>();
+            _repository = unitOfWork.GetRepository<KeywordDataSource>();
             _mapper = mapper;
         }
 
-        public MainPhraseStatusModel Get(long id)
+        public KeywordDataSourceModel Get(long id)
         {
-            MainPhraseStatus status = _repository.Get(id);
+            KeywordDataSource source = _repository.Get(id);
 
-            return _mapper.Map<MainPhraseStatusModel>(status);
+            return _mapper.Map<KeywordDataSourceModel>(source);
         }
 
-        public IList<MainPhraseStatusModel> GetAll()
+        public IList<KeywordDataSourceModel> GetAll()
         {
-            IList<MainPhraseStatusModel> statuses = _mapper.Map<IList<MainPhraseStatusModel>>(_repository.GetAll().OrderBy(g => g.Id));
+            IList<KeywordDataSourceModel> sources = _mapper.Map<IList<KeywordDataSourceModel>>(_repository.GetAll().OrderBy(g => g.Id));
 
-            return statuses;
+            return sources;
         }
     }
 }
