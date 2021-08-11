@@ -28,7 +28,7 @@ namespace MarketplaceBetter.Services.Domain.Sales
 
         public IList<InstanceModel> GetAll()
         {
-            IList<InstanceModel> instances = _mapper.Map<IList<InstanceModel>>(_repository.GetAll());
+            IList<InstanceModel> instances = _mapper.Map<IList<InstanceModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
             return instances;
         }

@@ -26,12 +26,12 @@ namespace MarketplaceBetter.Services.Validation.Catalog
 
             if (_repository.Any(c => c.Id != color.Id && c.Name == color.Name && c.GroupId == color.Group.Id))
             {
-                result.AddErrorFor<ColorModel>(c => c.Name, ValidationMessages.NameNotUnique, "Color");
+                result.AddErrorFor<ColorModel>(c => c.Name, ValidationMessages.NameNotUniqueForSelected, "Color", "Group");
             }
 
             if (_repository.Any(c => c.Id != color.Id && c.Code == color.Code && c.GroupId == color.Group.Id))
             {
-                result.AddErrorFor<ColorModel>(c => c.Code, ValidationMessages.PropertyNotUnique, "Color", "Code");
+                result.AddErrorFor<ColorModel>(c => c.Code, ValidationMessages.PropertyNotUniqueForSelected, "Color", "Code", "Group");
             }
 
             return result;

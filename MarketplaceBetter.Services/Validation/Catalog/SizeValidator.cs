@@ -26,12 +26,12 @@ namespace MarketplaceBetter.Services.Validation.Catalog
 
             if (_repository.Any(s => s.Id != size.Id && s.Name == size.Name && s.GroupId == size.Group.Id))
             {
-                result.AddErrorFor<SizeModel>(s => s.Name, ValidationMessages.NameNotUnique, "Size");
+                result.AddErrorFor<SizeModel>(s => s.Name, ValidationMessages.NameNotUniqueForSelected, "Size", "Group");
             }
 
             if (_repository.Any(s => s.Id != size.Id && s.Code == size.Code && s.GroupId == size.Group.Id))
             {
-                result.AddErrorFor<SizeModel>(s => s.Code, ValidationMessages.PropertyNotUnique, "Size", "Code");
+                result.AddErrorFor<SizeModel>(s => s.Code, ValidationMessages.PropertyNotUniqueForSelected, "Size", "Code", "Group");
             }
 
             return result;

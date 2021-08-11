@@ -36,7 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ColorModel> GetAll()
         {
-            IList<ColorModel> colors = _mapper.Map<IList<ColorModel>>(_repository.GetAll());
+            IList<ColorModel> colors = _mapper.Map<IList<ColorModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
             return colors;
         }

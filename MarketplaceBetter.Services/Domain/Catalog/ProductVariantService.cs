@@ -37,7 +37,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ProductVariantModel> GetAll()
         {
-            return _mapper.Map<IList<ProductVariantModel>>(_repository.GetAll());
+            return _mapper.Map<IList<ProductVariantModel>>(_repository.GetAll().OrderBy(g => g.Sku));
         }
 
         public IList<ProductVariantModel> GetForProduct(long productId)
@@ -81,12 +81,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _unitOfWork.Save();
         }
 
-        private void TransferValues(ProductVariant toProductVariant, ProductVariantModel fromProductVariant)
+        private void TransferValues(ProductVariant toVariant, ProductVariantModel fromVariant)
         {
-            toProductVariant.Sku = fromProductVariant.Sku;
-            toProductVariant.ProductId = fromProductVariant.Product.Id;
-            toProductVariant.ColorId = fromProductVariant.Color.Id;
-            toProductVariant.SizeId = fromProductVariant.Size.Id;
+            toVariant.Sku = fromVariant.Sku;
+            toVariant.ProductId = fromVariant.Product.Id;
+            toVariant.ColorId = fromVariant.Color.Id;
+            toVariant.SizeId = fromVariant.Size.Id;
         }
 
         private IQueryable<ProductVariant> ApplyFilter(IQueryable<ProductVariant> variants, ProductVariantListRequest request)

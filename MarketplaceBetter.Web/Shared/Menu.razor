@@ -53,6 +53,7 @@
         {
             <MudNavGroup Title="Keywords" Icon="@Icons.Filled.VpnKey" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/keywordanalyses">Analyses</MudNavLink>
+                <MudNavLink Href="/mainphrases">Main Phrases</MudNavLink>
             </MudNavGroup>
         }
         else
@@ -121,7 +122,8 @@
 
     private bool IsKeywordsModule()
     {
-        if (NavigationManager.Uri.Contains("keywordanalyses"))
+        if (NavigationManager.Uri.Contains("keywordanalyses") ||
+            NavigationManager.Uri.Contains("mainphrases"))
         {
             return true;
         }

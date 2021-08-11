@@ -35,7 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<AmazonChildModel> GetAll()
         {
-            IList<AmazonChildModel> children = _mapper.Map<IList<AmazonChildModel>>(_repository.GetAll());
+            IList<AmazonChildModel> children = _mapper.Map<IList<AmazonChildModel>>(_repository.GetAll().OrderBy(g => g.Sku));
 
             return children;
         }
@@ -60,12 +60,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
-        private void TransferValues(AmazonChild toAmazonChild, AmazonChildModel fromAmazonChild)
+        private void TransferValues(AmazonChild toChild, AmazonChildModel fromChild)
         {
-            toAmazonChild.ParentId = fromAmazonChild.Parent.Id;
-            toAmazonChild.ProductVariantId = fromAmazonChild.ProductVariant.Id;
-            toAmazonChild.Sku = fromAmazonChild.Sku;
-            toAmazonChild.Asin = fromAmazonChild.Asin;
+            toChild.ParentId = fromChild.Parent.Id;
+            toChild.ProductVariantId = fromChild.ProductVariant.Id;
+            toChild.Sku = fromChild.Sku;
+            toChild.Asin = fromChild.Asin;
         }
     }
 }

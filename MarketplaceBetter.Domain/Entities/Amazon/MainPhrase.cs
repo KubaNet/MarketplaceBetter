@@ -8,6 +8,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon
 {
     public class MainPhrase : Entity
     {
+        public long AnalysisId { get; set; }
+
+        public virtual KeywordAnalysis Analysis { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -15,9 +19,5 @@ namespace MarketplaceBetter.Domain.Entities.Amazon
         public long StatusId { get; set; }
 
         public virtual MainPhraseStatus Status { get; set; }
-
-        public long AnalysisId { get; set; }
-
-        public virtual KeywordAnalysis Analysis { get; set; }
     }
 }

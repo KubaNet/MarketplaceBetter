@@ -35,7 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<KeywordAnalysisModel> GetAll()
         {
-            IList<KeywordAnalysisModel> analyses = _mapper.Map<IList<KeywordAnalysisModel>>(_repository.GetAll());
+            IList<KeywordAnalysisModel> analyses = _mapper.Map<IList<KeywordAnalysisModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
             return analyses;
         }
@@ -60,11 +60,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
-        private void TransferValues(KeywordAnalysis toKeywordAnalysis, KeywordAnalysisModel fromKeywordAnalysis)
+        private void TransferValues(KeywordAnalysis toAnalysis, KeywordAnalysisModel fromAnalysis)
         {
-            toKeywordAnalysis.Name = fromKeywordAnalysis.Name;
-            toKeywordAnalysis.Description = fromKeywordAnalysis.Description;
-            toKeywordAnalysis.InstanceId = fromKeywordAnalysis.Instance.Id;
+            toAnalysis.Name = fromAnalysis.Name;
+            toAnalysis.Description = fromAnalysis.Description;
+            toAnalysis.InstanceId = fromAnalysis.Instance.Id;
         }
     }
 }
