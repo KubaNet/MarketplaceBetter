@@ -26,19 +26,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
         }
 
-        public KeywordAnalysisModel Get(long id)
-        {
-            KeywordAnalysis analysis = _repository.Get(id);
+        public KeywordAnalysisModel Get(long id) => _mapper.Map<KeywordAnalysisModel>(_repository.Get(id));
 
-            return _mapper.Map<KeywordAnalysisModel>(analysis);
-        }
-
-        public IList<KeywordAnalysisModel> GetAll()
-        {
-            IList<KeywordAnalysisModel> analyses = _mapper.Map<IList<KeywordAnalysisModel>>(_repository.GetAll().OrderBy(g => g.Name));
-
-            return analyses;
-        }
+        public IList<KeywordAnalysisModel> GetAll() => _mapper.Map<IList<KeywordAnalysisModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
         public void Add(KeywordAnalysisModel analysis)
         {

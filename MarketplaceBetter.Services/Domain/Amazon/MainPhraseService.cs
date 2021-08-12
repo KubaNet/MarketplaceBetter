@@ -26,19 +26,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
         }
 
-        public MainPhraseModel Get(long id)
-        {
-            MainPhrase phrase = _repository.Get(id);
+        public MainPhraseModel Get(long id) => _mapper.Map<MainPhraseModel>(_repository.Get(id));
 
-            return _mapper.Map<MainPhraseModel>(phrase);
-        }
+        public IList<MainPhraseModel> GetAll() => _mapper.Map<IList<MainPhraseModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
-        public IList<MainPhraseModel> GetAll()
-        {
-            IList<MainPhraseModel> phrases = _mapper.Map<IList<MainPhraseModel>>(_repository.GetAll().OrderBy(g => g.Name));
-
-            return phrases;
-        }
+        public IList<MainPhraseModel> GetForAnalysis(long analysisId) => _mapper.Map<IList<MainPhraseModel>>(_repository.GetQuery().Where(p => p.AnalysisId == analysisId).OrderBy(g => g.Name));
 
         public void Add(MainPhraseModel phrase)
         {

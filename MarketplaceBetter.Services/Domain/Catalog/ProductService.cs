@@ -30,20 +30,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _mapper = mapper;
         }
 
-        public ProductModel Get(long id)
-        {
-            return _mapper.Map<ProductModel>(_repository.Get(id));
-        }
+        public ProductModel Get(long id) => _mapper.Map<ProductModel>(_repository.Get(id));
 
-        public IList<ProductModel> GetAll()
-        {
-            return _mapper.Map<IList<ProductModel>>(_repository.GetAll().OrderBy(g => g.Name));
-        }
+        public IList<ProductModel> GetAll() => _mapper.Map<IList<ProductModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
-        public IList<ProductModel> GetForBrand(long brandId)
-        {
-            return _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId));
-        }
+        public IList<ProductModel> GetForBrand(long brandId) => _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId));
 
         public int CountForListRequest(ProductListRequest request)
         {

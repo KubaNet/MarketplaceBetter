@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<MainPhraseModel> GetAll();
 
+        IList<MainPhraseModel> GetForAnalysis(long analysisId);
+
         void Add(MainPhraseModel phrase);
 
         void Update(MainPhraseModel phrase);

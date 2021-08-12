@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Validation.Amazon.Interfaces
 
 @inject IKeywordDataService KeywordDataService
+@inject IKeywordDataValidator KeywordDataValidator
 @inject IKeywordAnalysisService KeywordAnalysisService
 @inject IMainPhraseService MainPhraseService
 @inject ISnackbar Snackbar
@@ -11,13 +12,13 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudSelect T="KeywordAnalysisModel" @bind-Value="KeywordData.Analysis" Label="Analysis" For="() => KeywordData.Analysis">
+        <MudSelect T="KeywordAnalysisModel" Value="Analysis" Label="Analysis" ValueChanged="HandleAnalysisChanged">
             @foreach (var analysis in Analyses)
             {
                 <MudSelectItem Value="analysis">@analysis.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="MainPhraseModel" @bind-Value="KeywordData.MainPhrase" Label="Status" For="() => KeywordData.MainPhrase">
+        <MudSelect T="MainPhraseModel" @bind-Value="KeywordData.MainPhrase" Label="Status" For="() => KeywordData.MainPhrase" Disabled="MainPhraseSelectDisabled">
             @foreach (var mainPhrase in MainPhrases)
             {
                 <MudSelectItem Value="mainPhrase">@mainPhrase.Name</MudSelectItem>
@@ -34,15 +35,18 @@
 
     CustomValidation CustomValidation = new();
     KeywordDataModel KeywordData = new();
+    KeywordAnalysisModel Analysis;
+
     IList<KeywordAnalysisModel> Analyses;
-    IList<MainPhraseModel> MainPhrases;
+    IList<MainPhraseModel> MainPhrases = new List<MainPhraseModel>();
+
+    bool MainPhraseSelectDisabled = true;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         Analyses = KeywordAnalysisService.GetAll();
-        MainPhrases = MainPhraseService.GetAll();
 
         if (IsEdit)
         {
@@ -50,11 +54,32 @@
         }
     }
 
+    private void HandleAnalysisChanged(KeywordAnalysisModel analysis)
+    {
+        Analysis = analysis;
+
+        ResetMainPhrase();
+        ActivateMainPhrase(analysis.Id);
+    }
+
+        private void ResetMainPhrase()
+    {
+        KeywordData.MainPhrase = null;
+        MainPhraseSelectDisabled = true;
+        MainPhrases = new List<MainPhraseModel>();
+    }
+
+    private void ActivateMainPhrase(long analysisId)
+    {
+        MainPhraseSelectDisabled = false;
+        MainPhrases = MainPhraseService.GetForAnalysis(analysisId).OrderBy(p => p.Name).ToList();
+    }
+
     private void SetInitialValues()
     {
         KeywordData = KeywordDataService.Get(KeywordDataId);
-        KeywordData.Analysis = Analyses.Single(a => a.Id == KeywordData.Analysis.Id);
-        KeywordData.Status = MainPhrases.Single(s => s.Id == KeywordData.Status.Id);
+        Analysis = Analyses.Single(a => a.Id == KeywordData.MainPhrase.Analysis.Id);
+        KeywordData.MainPhrase = MainPhrases.Single(s => s.Id == KeywordData.MainPhrase.Id);
     }
 
     private void HandleValidSubmit()

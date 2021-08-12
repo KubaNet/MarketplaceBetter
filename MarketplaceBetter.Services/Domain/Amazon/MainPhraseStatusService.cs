@@ -26,18 +26,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
         }
 
-        public MainPhraseStatusModel Get(long id)
-        {
-            MainPhraseStatus status = _repository.Get(id);
+        public MainPhraseStatusModel Get(long id) => _mapper.Map<MainPhraseStatusModel>(_repository.Get(id));
 
-            return _mapper.Map<MainPhraseStatusModel>(status);
-        }
-
-        public IList<MainPhraseStatusModel> GetAll()
-        {
-            IList<MainPhraseStatusModel> statuses = _mapper.Map<IList<MainPhraseStatusModel>>(_repository.GetAll().OrderBy(g => g.Id));
-
-            return statuses;
-        }
+        public IList<MainPhraseStatusModel> GetAll() => _mapper.Map<IList<MainPhraseStatusModel>>(_repository.GetAll().OrderBy(g => g.Id));
     }
 }

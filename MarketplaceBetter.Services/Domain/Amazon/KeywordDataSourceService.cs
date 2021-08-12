@@ -26,18 +26,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
         }
 
-        public KeywordDataSourceModel Get(long id)
-        {
-            KeywordDataSource source = _repository.Get(id);
+        public KeywordDataSourceModel Get(long id) => _mapper.Map<KeywordDataSourceModel>(_repository.Get(id));
 
-            return _mapper.Map<KeywordDataSourceModel>(source);
-        }
-
-        public IList<KeywordDataSourceModel> GetAll()
-        {
-            IList<KeywordDataSourceModel> sources = _mapper.Map<IList<KeywordDataSourceModel>>(_repository.GetAll().OrderBy(g => g.Id));
-
-            return sources;
-        }
+        public IList<KeywordDataSourceModel> GetAll() => _mapper.Map<IList<KeywordDataSourceModel>>(_repository.GetAll().OrderBy(g => g.Id));
     }
 }

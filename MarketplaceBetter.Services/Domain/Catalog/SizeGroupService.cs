@@ -26,19 +26,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _mapper = mapper;
         }
 
-        public SizeGroupModel Get(long id)
-        {
-            SizeGroup group = _repository.Get(id);
+        public SizeGroupModel Get(long id) => _mapper.Map<SizeGroupModel>(_repository.Get(id));
 
-            return _mapper.Map<SizeGroupModel>(group);
-        }
-
-        public IList<SizeGroupModel> GetAll()
-        {
-            IList<SizeGroupModel> groups = _mapper.Map<IList<SizeGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
-
-            return groups;
-        }
+        public IList<SizeGroupModel> GetAll() => _mapper.Map<IList<SizeGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
         public void Add(SizeGroupModel group)
         {

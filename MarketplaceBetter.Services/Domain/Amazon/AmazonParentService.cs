@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon;
+using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Amazon;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Amazon.Interfaces;
@@ -26,27 +27,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
         }
 
-        public AmazonParentModel Get(long id)
-        {
-            AmazonParent parent = _repository.Get(id);
+        public AmazonParentModel Get(long id) => _mapper.Map<AmazonParentModel>(_repository.Get(id));
 
-            return _mapper.Map<AmazonParentModel>(parent);
-        }
+        public IList<AmazonParentModel> GetAll() => _mapper.Map<IList<AmazonParentModel>>(_repository.GetAll().OrderBy(g => g.Sku));
 
-        public IList<AmazonParentModel> GetAll()
-        {
-            IList<AmazonParentModel> parents = _mapper.Map<IList<AmazonParentModel>>(_repository.GetAll().OrderBy(g => g.Sku));
-
-            return parents;
-        }
-
-        public IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId)
-        {
-            IList<AmazonParentModel> parents = _mapper.Map<IList<AmazonParentModel>>(
+        public IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId) => _mapper.Map<IList<AmazonParentModel>>(
                 _repository.GetQuery().Where(p => p.Product.BrandId == brandId && p.InstanceId == instanceId));
-
-            return parents;
-        }
 
         public void Add(AmazonParentModel parent)
         {

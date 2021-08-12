@@ -26,19 +26,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
         }
 
-        public AmazonChildModel Get(long id)
-        {
-            AmazonChild child = _repository.Get(id);
+        public AmazonChildModel Get(long id) => _mapper.Map<AmazonChildModel>(_repository.Get(id));
 
-            return _mapper.Map<AmazonChildModel>(child);
-        }
-
-        public IList<AmazonChildModel> GetAll()
-        {
-            IList<AmazonChildModel> children = _mapper.Map<IList<AmazonChildModel>>(_repository.GetAll().OrderBy(g => g.Sku));
-
-            return children;
-        }
+        public IList<AmazonChildModel> GetAll() => _mapper.Map<IList<AmazonChildModel>>(_repository.GetAll().OrderBy(g => g.Sku));
 
         public void Add(AmazonChildModel child)
         {

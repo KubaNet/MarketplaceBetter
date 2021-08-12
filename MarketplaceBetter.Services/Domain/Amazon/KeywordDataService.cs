@@ -26,19 +26,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
         }
 
-        public KeywordDataModel Get(long id)
-        {
-            KeywordData data = _repository.Get(id);
+        public KeywordDataModel Get(long id) => _mapper.Map<KeywordDataModel>(_repository.Get(id));
 
-            return _mapper.Map<KeywordDataModel>(data);
-        }
-
-        public IList<KeywordDataModel> GetAll()
-        {
-            IList<KeywordDataModel> data = _mapper.Map<IList<KeywordDataModel>>(_repository.GetAll().OrderByDescending(d => d.Id));
-
-            return data;
-        }
+        public IList<KeywordDataModel> GetAll() => _mapper.Map<IList<KeywordDataModel>>(_repository.GetAll().OrderByDescending(d => d.Id));
 
         public void Add(KeywordDataModel data)
         {
@@ -60,12 +50,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
-        private void TransferValues(KeywordData toPhrase, KeywordDataModel fromPhrase)
+        private void TransferValues(KeywordData toData, KeywordDataModel fromData)
         {
-            toPhrase.Name = fromPhrase.Name;
-            toPhrase.Description = fromPhrase.Description;
-            toPhrase.StatusId = fromPhrase.Status.Id;
-            toPhrase.AnalysisId = fromPhrase.Analysis.Id;
+            toData.MainPhraseId = fromData.MainPhrase.Id;
+            toData.SourceId = fromData.Source.Id;
         }
     }
 }

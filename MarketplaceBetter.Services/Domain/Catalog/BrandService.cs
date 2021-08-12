@@ -26,19 +26,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _mapper = mapper;
         }
 
-        public BrandModel Get(long id)
-        {
-            Brand brand = _repository.Get(id);
+        public BrandModel Get(long id) => _mapper.Map<BrandModel>(_repository.Get(id));
 
-            return _mapper.Map<BrandModel>(brand);
-        }
-
-        public IList<BrandModel> GetAll()
-        {
-            IList<BrandModel> brands = _mapper.Map<IList<BrandModel>>(_repository.GetAll().OrderBy(b => b.Name));
-
-            return brands;
-        }
+        public IList<BrandModel> GetAll() => _mapper.Map<IList<BrandModel>>(_repository.GetAll().OrderBy(b => b.Name));
 
         public void Add(BrandModel brand)
         {

@@ -26,19 +26,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _mapper = mapper;
         }
 
-        public ColorGroupModel Get(long id)
-        {
-            ColorGroup group = _repository.Get(id);
+        public ColorGroupModel Get(long id) => _mapper.Map<ColorGroupModel>(_repository.Get(id));
 
-            return _mapper.Map<ColorGroupModel>(group);
-        }
-
-        public IList<ColorGroupModel> GetAll()
-        {
-            IList<ColorGroupModel> groups = _mapper.Map<IList<ColorGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
-
-            return groups;
-        }
+        public IList<ColorGroupModel> GetAll() => _mapper.Map<IList<ColorGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
         public void Add(ColorGroupModel group)
         {

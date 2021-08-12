@@ -27,26 +27,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _mapper = mapper;
         }
 
-        public SizeModel Get(long id)
-        {
-            Size size = _repository.Get(id);
+        public SizeModel Get(long id) => _mapper.Map<SizeModel>(_repository.Get(id));
 
-            return _mapper.Map<SizeModel>(size);
-        }
+        public IList<SizeModel> GetAll() => _mapper.Map<IList<SizeModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
-        public IList<SizeModel> GetAll()
-        {
-            IList<SizeModel> sizes = _mapper.Map<IList<SizeModel>>(_repository.GetAll().OrderBy(g => g.Name));
-
-            return sizes;
-        }
-
-        public IList<SizeModel> GetAllForGroup(long groupId)
-        {
-            IList<SizeModel> sizes = _mapper.Map<IList<SizeModel>>(_repository.GetQuery().Where(s => s.GroupId == groupId));
-
-            return sizes;
-        }
+        public IList<SizeModel> GetAllForGroup(long groupId) => _mapper.Map<IList<SizeModel>>(_repository.GetQuery().Where(s => s.GroupId == groupId));
 
         public void Add(SizeModel size)
         {
