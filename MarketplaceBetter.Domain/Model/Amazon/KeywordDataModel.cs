@@ -11,8 +11,8 @@ namespace MarketplaceBetter.Domain.Model.Amazon
     {
         public long Id { get; set; }
 
-        public KeywordDataSourceModel Source { get; set; }
-
         public MainPhraseModel MainPhrase { get; set; }
+
+        public KeywordDataSourceModel Source { get; set; }
     }
 }

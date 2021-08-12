@@ -1,0 +1,68 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+
+@page "/keyworddata"
+@inject IKeywordDataService KeywordDataService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Main Phrases</MudText>
+
+<MainBody>
+    <MudTable Items="@KeywordDataData" Dense="true">
+        <ToolBarContent>
+            <MudButton OnClick="AddKeywordData" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Main Phrase</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Analysis</MudTh>
+            <MudTh>Main Phrase</MudTh>
+            <MudTh>Source</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Analysis">@context.MainPhrase.Analysis.Name</MudTd>
+            <MudTd DataLabel="Main Phrase">@context.MainPhrase.Name</MudTd>
+            <MudTd DataLabel="Source">@context.Source.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditKeywordData(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<KeywordDataModel> KeywordDataData { get; set; }
+
+    private async void AddKeywordData()
+    {
+        var result = await DialogService.Show<KeywordDataDialog>(null, new DialogParameters { ["Title"] = "Add Keyword Data" }).Result;
+
+        ProcessKeywordDataDialogResult(result);
+    }
+
+    private async void EditKeywordData(long id)
+    {
+        var result = await DialogService.Show<KeywordDataDialog>(null, new DialogParameters { ["Title"] = "Edit Keyword Data", ["IsEdit"] = true, ["KeywordDataId"] = id }).Result;
+
+        ProcessKeywordDataDialogResult(result);
+    }
+
+    private void ProcessKeywordDataDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            KeywordDataData = KeywordDataService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        KeywordDataData = KeywordDataService.GetAll();
+    }
+}
