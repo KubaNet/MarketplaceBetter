@@ -5,12 +5,12 @@
 @inject IKeywordDataService KeywordDataService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3">Main Phrases</MudText>
+<MudText Typo="Typo.h3">Keyword Data</MudText>
 
 <MainBody>
     <MudTable Items="@KeywordDataData" Dense="true">
         <ToolBarContent>
-            <MudButton OnClick="AddKeywordData" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Main Phrase</MudButton>
+            <MudButton OnClick="AddKeywordData" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Keyword Data</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Id</MudTh>
@@ -24,7 +24,7 @@
             <MudTd DataLabel="Analysis">@context.MainPhrase.Analysis.Name</MudTd>
             <MudTd DataLabel="Main Phrase">@context.MainPhrase.Name</MudTd>
             <MudTd DataLabel="Source">@context.Source.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditKeywordData(context.Id))">Edit</MudButton></MudTd>
+            <MudTd></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager />
@@ -38,13 +38,6 @@
     private async void AddKeywordData()
     {
         var result = await DialogService.Show<KeywordDataDialog>(null, new DialogParameters { ["Title"] = "Add Keyword Data" }).Result;
-
-        ProcessKeywordDataDialogResult(result);
-    }
-
-    private async void EditKeywordData(long id)
-    {
-        var result = await DialogService.Show<KeywordDataDialog>(null, new DialogParameters { ["Title"] = "Edit Keyword Data", ["IsEdit"] = true, ["KeywordDataId"] = id }).Result;
 
         ProcessKeywordDataDialogResult(result);
     }

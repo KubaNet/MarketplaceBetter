@@ -1,11 +1,13 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon
 @using MarketplaceBetter.Services.Domain.Amazon.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.Interfaces
+@using System.IO
 
 @inject IKeywordDataService KeywordDataService
 @inject IKeywordDataValidator KeywordDataValidator
 @inject IKeywordAnalysisService KeywordAnalysisService
 @inject IMainPhraseService MainPhraseService
+@inject IKeywordDataSourceService KeywordDataSourceService
 @inject ISnackbar Snackbar
 
 <EditForm Model="KeywordData" OnValidSubmit="@HandleValidSubmit">
@@ -18,27 +20,35 @@
                 <MudSelectItem Value="analysis">@analysis.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="MainPhraseModel" @bind-Value="KeywordData.MainPhrase" Label="Status" For="() => KeywordData.MainPhrase" Disabled="MainPhraseSelectDisabled">
+        <MudSelect T="MainPhraseModel" @bind-Value="KeywordData.MainPhrase" Label="Main Phrase" For="() => KeywordData.MainPhrase" Disabled="MainPhraseSelectDisabled">
             @foreach (var mainPhrase in MainPhrases)
             {
                 <MudSelectItem Value="mainPhrase">@mainPhrase.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect T="KeywordDataSourceModel" @bind-Value="KeywordData.Source" Label="Source" For="() => KeywordData.Source">
+            @foreach (var source in Sources)
+            {
+                <MudSelectItem Value="source">@source.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <InputFile id="DataFile" OnChange="UploadFile" hidden accept=".csv, .txt" />
+        <MudButton for="DataFile" HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Filled.CloudUpload">Upload file</MudButton>
     </FormDialog>
 </EditForm>
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
-    [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long KeywordDataId { get; set; }
 
     CustomValidation CustomValidation = new();
     KeywordDataModel KeywordData = new();
     KeywordAnalysisModel Analysis;
+    string DataFilePath;
 
     IList<KeywordAnalysisModel> Analyses;
     IList<MainPhraseModel> MainPhrases = new List<MainPhraseModel>();
+    IList<KeywordDataSourceModel> Sources;
 
     bool MainPhraseSelectDisabled = true;
 
@@ -47,11 +57,7 @@
         base.OnInitialized();
 
         Analyses = KeywordAnalysisService.GetAll();
-
-        if (IsEdit)
-        {
-            SetInitialValues();
-        }
+        Sources = KeywordDataSourceService.GetAll();
     }
 
     private void HandleAnalysisChanged(KeywordAnalysisModel analysis)
@@ -62,7 +68,7 @@
         ActivateMainPhrase(analysis.Id);
     }
 
-        private void ResetMainPhrase()
+    private void ResetMainPhrase()
     {
         KeywordData.MainPhrase = null;
         MainPhraseSelectDisabled = true;
@@ -75,29 +81,14 @@
         MainPhrases = MainPhraseService.GetForAnalysis(analysisId).OrderBy(p => p.Name).ToList();
     }
 
-    private void SetInitialValues()
-    {
-        KeywordData = KeywordDataService.Get(KeywordDataId);
-        Analysis = Analyses.Single(a => a.Id == KeywordData.MainPhrase.Analysis.Id);
-        KeywordData.MainPhrase = MainPhrases.Single(s => s.Id == KeywordData.MainPhrase.Id);
-    }
-
     private void HandleValidSubmit()
     {
         ValidationResult result = KeywordDataValidator.Validate(KeywordData);
 
         if (result.IsValid)
         {
-            if (IsEdit)
-            {
-                KeywordDataService.Update(KeywordData);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Main Phrase"));
-            }
-            else
-            {
-                KeywordDataService.Add(KeywordData);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Main Phrase"));
-            }
+            KeywordDataService.Add(KeywordData);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Main Phrase"));
 
             MudDialog.Close();
         }
@@ -105,5 +96,14 @@
         {
             CustomValidation.DisplayErrors(result.Errors);
         }
+    }
+
+    private async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        DataFilePath = Path.GetTempFileName();
+
+        await using FileStream dataFileStream = new(DataFilePath, FileMode.Create);
+
+        await e.File.OpenReadStream().CopyToAsync(dataFileStream);
     }
 }
