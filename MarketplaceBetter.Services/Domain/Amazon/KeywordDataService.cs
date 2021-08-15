@@ -5,6 +5,7 @@ using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Amazon.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<KeywordDataModel> GetAll() => _mapper.Map<IList<KeywordDataModel>>(_repository.GetAll().OrderByDescending(d => d.Id));
 
-        public void Add(KeywordDataModel data)
+        public void Add(KeywordDataModel data, FileStream dataFile)
         {
             KeywordData dataToAdd = new();
 

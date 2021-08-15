@@ -1,6 +1,7 @@
 ﻿using MarketplaceBetter.Domain.Model.Amazon;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<KeywordDataModel> GetAll();
 
-        void Add(KeywordDataModel data);
+        void Add(KeywordDataModel data, FileStream dataFile);
 
         void Update(KeywordDataModel data);
     }

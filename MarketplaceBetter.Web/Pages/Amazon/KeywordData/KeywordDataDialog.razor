@@ -78,23 +78,36 @@
     private void ActivateMainPhrase(long analysisId)
     {
         MainPhraseSelectDisabled = false;
-        MainPhrases = MainPhraseService.GetForAnalysis(analysisId).OrderBy(p => p.Name).ToList();
+        MainPhrases = MainPhraseService.GetForAnalysis(analysisId).ToList();
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = KeywordDataValidator.Validate(KeywordData);
+        ValidationResult entityValidation = KeywordDataValidator.Validate(KeywordData);
 
-        if (result.IsValid)
+        if (entityValidation.IsValid)
         {
-            KeywordDataService.Add(KeywordData);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Main Phrase"));
+            using FileStream dataFileStream = new(DataFilePath, FileMode.Open);
 
-            MudDialog.Close();
+            ValidationResult dataFileValidation = KeywordDataValidator.ValidateDataFile(dataFileStream, KeywordData.Source.SystemName);
+
+            if (dataFileValidation.IsValid)
+            {
+                KeywordDataService.Add(KeywordData, dataFileStream);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Keyword Data"));
+
+                File.Delete(DataFilePath);
+
+                MudDialog.Close();
+            }
+            else
+            {
+                File.Delete(DataFilePath);
+            }
         }
         else
         {
-            CustomValidation.DisplayErrors(result.Errors);
+            CustomValidation.DisplayErrors(entityValidation.Errors);
         }
     }
 
@@ -105,5 +118,7 @@
         await using FileStream dataFileStream = new(DataFilePath, FileMode.Create);
 
         await e.File.OpenReadStream().CopyToAsync(dataFileStream);
+
+        dataFileStream.Seek(0, SeekOrigin.Begin);
     }
 }
