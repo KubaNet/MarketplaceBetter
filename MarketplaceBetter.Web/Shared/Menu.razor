@@ -8,35 +8,27 @@
 				<MudNavLink Href="/products">Products</MudNavLink>
 				<MudNavLink Href="/productvariants">Variants</MudNavLink>
 				<MudNavLink Href="/collections">Collections</MudNavLink>
+				<MudNavLink Href="/brands">Brands</MudNavLink>
 			</MudNavGroup>
 		}
 		else
 		{
 			<MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
 		}
-		@if (IsColorsModule())
+
+		@if (IsColorsOrSizesModule())
 		{
-			<MudNavGroup Title="Colors" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
+			<MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/colors">Colors</MudNavLink>
-				<MudNavLink Href="/colorgroups">Groups</MudNavLink>
-			</MudNavGroup>
-		}
-		else
-		{
-			<MudNavLink Href="/colors" Icon="@Icons.Filled.Palette">Colors</MudNavLink>
-		}
-		@if (IsSizesModule())
-		{
-			<MudNavGroup Title="Sizes" Icon="@Icons.Filled.SettingsEthernet" Expanded="true" HideExpandIcon="true">
+				<MudNavLink Href="/colorgroups">Color Groups</MudNavLink>
 				<MudNavLink Href="/sizes">Sizes</MudNavLink>
-				<MudNavLink Href="/sizegroups">Groups</MudNavLink>
+				<MudNavLink Href="/sizegroups">Size Groups</MudNavLink>
 			</MudNavGroup>
 		}
 		else
 		{
-			<MudNavLink Href="/sizes" Icon="@Icons.Filled.SettingsEthernet">Sizes</MudNavLink>
+			<MudNavLink Href="/colors" Icon="@Icons.Filled.Palette">Colors & Sizes</MudNavLink>
 		}
-		<MudNavLink Href="/brands" Icon="@Icons.Filled.Stars">Brands</MudNavLink>
 	</MudNavGroup>
 	<MudNavGroup Title="Amazon" Icon="@Icons.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
 		@if (IsAmazonInventoryModule())
@@ -70,7 +62,8 @@
 	{
 		if (NavigationManager.Uri.Contains("products")
 			|| NavigationManager.Uri.Contains("productvariants")
-			|| NavigationManager.Uri.Contains("collections"))
+			|| NavigationManager.Uri.Contains("collections")
+			|| NavigationManager.Uri.Contains("brands"))
 		{
 			return true;
 		}
@@ -78,20 +71,11 @@
 		return false;
 	}
 
-	private bool IsColorsModule()
+	private bool IsColorsOrSizesModule()
 	{
 		if (NavigationManager.Uri.Contains("colors")
-			|| NavigationManager.Uri.Contains("colorgroups"))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	private bool IsSizesModule()
-	{
-		if (NavigationManager.Uri.Contains("sizes")
+			|| NavigationManager.Uri.Contains("colorgroups")
+			|| NavigationManager.Uri.Contains("sizes")
 			|| NavigationManager.Uri.Contains("sizegroups"))
 		{
 			return true;
