@@ -9,137 +9,99 @@
 @inject IColorGroupService ColorGroupService
 @inject ISizeGroupService SizeGroupService
 
-<div class="d-flex justify-space-between">
-    <MudText Typo="Typo.h4">Products</MudText>
-    <MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Product</MudButton>
-</div>
-
+<MudText Typo="Typo.h3">Products</MudText>
 
 <MainBody>
-    <MudCard Class="mb-4">
-        <MudCardContent>
-            <MudGrid>
-                <MudItem xs="2">
-                    <MudTextField Label="Name" @bind-Value="ListRequest.Name" Margin="Margin.Dense" />
-                </MudItem>
-                <MudItem xs="2">
-                    <MudTextField Label="Code" @bind-Value="ListRequest.Code" Margin="Margin.Dense" />
-                </MudItem>
-                <MudItem xs="2">
-                    <MudSelect Label="Brand" T="BrandModel" @bind-Value="ListRequest.Brand">
-                        @foreach (var brand in Brands)
-                        {
-                            <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-                <MudItem xs="2">
-                    <MudSelect Label="Color group" T="ColorGroupModel" @bind-Value="ListRequest.ColorGroup">
-                        @foreach (var colorGroup in ColorGroups)
-                        {
-                            <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-                <MudItem xs="2">
-                    <MudSelect Label="Size group" T="SizeGroupModel" @bind-Value="ListRequest.SizeGroup">
-                        @foreach (var sizeGroup in SizeGroups)
-                        {
-                            <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-                <MudItem xs="2">
-                    <MudButton OnClick="FilterProducts" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Secondary">Filter</MudButton>
-                </MudItem>
-            </MudGrid>
-        </MudCardContent>
-    </MudCard>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(ReloadProducts))" Dense="true" Hover="true">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortLabel="id" T="ProductModel">Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="name" T="ProductModel">Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="code" T="ProductModel">Code</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="brand" T="ProductModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="color_group" T="ProductModel">Color group</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="size_group" T="ProductModel">Size group</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
-            <MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
-            <MudTd DataLabel="Size group">@context.SizeGroup.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
+	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(ReloadProducts))" Dense="true" Hover="true">
+		<ToolBarContent>
+			<MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Product</MudButton>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="ProductModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="name" T="ProductModel">Name</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="code" T="ProductModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="brand" T="ProductModel">Brand</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="collection" T="ProductModel">Collection</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="color_group" T="ProductModel">Color group</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="size_group" T="ProductModel">Size group</MudTableSortLabel></MudTh>
+			<MudTh Style="width: 100px;">Actions</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Name">@context.Name</MudTd>
+			<MudTd DataLabel="Code">@context.Code</MudTd>
+			<MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
+			<MudTd DataLabel="Brand">@context.Collection.Name</MudTd>
+			<MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
+			<MudTd DataLabel="Size group">@context.SizeGroup.Name</MudTd>
+			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
 </MainBody>
 
 @code {
-    private MudTable<ProductModel> Table;
-    private ProductListRequest ListRequest = new();
+	private MudTable<ProductModel> Table;
+	private ProductListRequest ListRequest = new();
 
-    private IList<BrandModel> Brands;
-    IList<ColorGroupModel> ColorGroups;
-    IList<SizeGroupModel> SizeGroups;
+	private IList<BrandModel> Brands;
+	IList<ColorGroupModel> ColorGroups;
+	IList<SizeGroupModel> SizeGroups;
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
 
-        Brands = BrandService.GetAll();
-        ColorGroups = ColorGroupService.GetAll();
-        SizeGroups = SizeGroupService.GetAll();
-    }
+		Brands = BrandService.GetAll();
+		ColorGroups = ColorGroupService.GetAll();
+		SizeGroups = SizeGroupService.GetAll();
+	}
 
-    private Task<TableData<ProductModel>> ReloadProducts(TableState state)
-    {
-        PupulateListRequest(state);
+	private Task<TableData<ProductModel>> ReloadProducts(TableState state)
+	{
+		PupulateListRequest(state);
 
-        IList<ProductModel> products = ProductService.GetForListRequest(ListRequest);
+		IList<ProductModel> products = ProductService.GetForListRequest(ListRequest);
 
-        return Task.FromResult(new TableData<ProductModel>() { TotalItems = products.Count, Items = products });
-    }
+		return Task.FromResult(new TableData<ProductModel>() { TotalItems = products.Count, Items = products });
+	}
 
-    private void PupulateListRequest(TableState state)
-    {
-        ListRequest.SortBy = state.SortLabel;
-        ListRequest.SortDirection = state.SortDirection;
-        ListRequest.Page = state.Page;
-        ListRequest.PageSize = state.PageSize;
-    }
+	private void PupulateListRequest(TableState state)
+	{
+		ListRequest.SortBy = state.SortLabel;
+		ListRequest.SortDirection = state.SortDirection;
+		ListRequest.Page = state.Page;
+		ListRequest.PageSize = state.PageSize;
+	}
 
-    private void FilterProducts()
-    {
-        Table.ReloadServerData();
+	private void FilterProducts()
+	{
+		Table.ReloadServerData();
 
-        StateHasChanged();
-    }
+		StateHasChanged();
+	}
 
-    private async void AddProduct()
-    {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add Product" }).Result;
+	private async void AddProduct()
+	{
+		var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add Product" }).Result;
 
-        ProcessProductDialogResult(result);
-    }
+		ProcessProductDialogResult(result);
+	}
 
-    private async void EditProduct(long id)
-    {
-        var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit Product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
+	private async void EditProduct(long id)
+	{
+		var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit Product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
 
-        ProcessProductDialogResult(result);
-    }
+		ProcessProductDialogResult(result);
+	}
 
-    private void ProcessProductDialogResult(DialogResult result)
-    {
-        if (!result.Cancelled)
-        {
-            Table.ReloadServerData();
-        }
-    }
+	private void ProcessProductDialogResult(DialogResult result)
+	{
+		if (!result.Cancelled)
+		{
+			Table.ReloadServerData();
+		}
+	}
 }

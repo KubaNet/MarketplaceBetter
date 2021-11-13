@@ -69,7 +69,8 @@
 	private bool IsProductsModule()
 	{
 		if (NavigationManager.Uri.Contains("products")
-			|| NavigationManager.Uri.Contains("productvariants"))
+			|| NavigationManager.Uri.Contains("productvariants")
+			|| NavigationManager.Uri.Contains("collections"))
 		{
 			return true;
 		}

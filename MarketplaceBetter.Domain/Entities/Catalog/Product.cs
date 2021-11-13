@@ -16,6 +16,10 @@ namespace MarketplaceBetter.Domain.Entities.Catalog
 
         public virtual Brand Brand { get; set; }
 
+        public long CollectionId { get; set; }
+
+        public virtual Collection Collection { get; set; }
+
         public long ColorGroupId { get; set; }
 
         public virtual ColorGroup ColorGroup { get; set; }

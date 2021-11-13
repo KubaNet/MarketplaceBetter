@@ -15,25 +15,25 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect T="BrandModel" Value="Brand" Label="Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ProductModel" Value="ProductVariant.Product" Label="Product" For="() => ProductVariant.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+        <MudSelect Label="Product" T="ProductModel" Value="ProductVariant.Product" For="() => ProductVariant.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ColorModel" Value="ProductVariant.Color" Label="Color" For="() => ProductVariant.Color" ValueChanged="HandleColorChanged" Disabled="ColorSelectDisabled">
+        <MudSelect Label="Color" T="ColorModel" Value="ProductVariant.Color" For="() => ProductVariant.Color" ValueChanged="HandleColorChanged" Disabled="ColorSelectDisabled">
             @foreach (var color in Colors)
             {
                 <MudSelectItem Value="color">@color.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="SizeModel" Value="ProductVariant.Size" Label="Size" For="() => ProductVariant.Size" ValueChanged="HandleSizeChanged" Disabled="SizeSelectDisabled">
+        <MudSelect Label="Size" T="SizeModel" Value="ProductVariant.Size" For="() => ProductVariant.Size" ValueChanged="HandleSizeChanged" Disabled="SizeSelectDisabled">
             @foreach (var size in Sizes)
             {
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
@@ -77,16 +77,13 @@
     private void SetInitialValues()
     {
         ProductVariant = ProductVariantService.Get(ProductVariantId);
-
         Brand = Brands.Single(b => b.Id == ProductVariant.Product.Brand.Id);
 
         ActivateProduct(Brand.Id);
-
-        ProductVariant.Product = Products.Single(p => p.Id == ProductVariant.Product.Id);
-
         ActivateColor(ProductVariant.Product.ColorGroup.Id);
         ActivateSize(ProductVariant.Product.SizeGroup.Id);
 
+        ProductVariant.Product = Products.Single(p => p.Id == ProductVariant.Product.Id);
         ProductVariant.Color = Colors.Single(c => c.Id == ProductVariant.Color.Id);
         ProductVariant.Size = Sizes.Single(s => s.Id == ProductVariant.Size.Id);
     }

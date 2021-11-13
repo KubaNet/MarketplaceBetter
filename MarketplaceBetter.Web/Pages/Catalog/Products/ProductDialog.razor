@@ -5,6 +5,7 @@
 @inject IProductService ProductService
 @inject IProductValidator ProductValidator
 @inject IBrandService BrandService
+@inject ICollectionService CollectionService
 @inject IColorGroupService ColorGroupService
 @inject ISizeGroupService SizeGroupService
 @inject ISnackbar Snackbar
@@ -15,10 +16,16 @@
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
         <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
-        <MudSelect Label="Brand" T="BrandModel" @bind-Value="Product.Brand" For="() => Product.Brand">
+        <MudSelect Label="Brand" T="BrandModel" Value="Product.Brand" For="() => Product.Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Collection" T="CollectionModel" @bind-Value="Product.Collection" For="() => Product.Collection" Disabled="CollectionSelectDisabled">
+            @foreach (var collection in Collections)
+            {
+                <MudSelectItem Value="collection">@collection.Name</MudSelectItem>
             }
         </MudSelect>
         <MudSelect Label="Color group" T="ColorGroupModel" @bind-Value="Product.ColorGroup" For="() => Product.ColorGroup">
@@ -44,9 +51,13 @@
 
     CustomValidation CustomValidation = new();
     ProductModel Product = new();
+
     IList<BrandModel> Brands;
+    IList<CollectionModel> Collections = new List<CollectionModel>();
     IList<ColorGroupModel> ColorGroups;
     IList<SizeGroupModel> SizeGroups;
+
+    bool CollectionSelectDisabled = true;
 
     protected override void OnInitialized()
     {
@@ -68,6 +79,31 @@
         Product.Brand = Brands.Single(b => b.Id == Product.Brand.Id);
         Product.ColorGroup = ColorGroups.Single(g => g.Id == Product.ColorGroup.Id);
         Product.SizeGroup = SizeGroups.Single(g => g.Id == Product.SizeGroup.Id);
+
+        ActivateCollection(Product.Brand.Id);
+
+        Product.Collection = Collections.Single(c => c.Id == Product.Collection.Id);
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Product.Brand = brand;
+
+        ResetCollection();
+        ActivateCollection(brand.Id);
+    }
+
+    private void ResetCollection()
+    {
+        Product.Collection = null;
+        CollectionSelectDisabled = true;
+        Collections = new List<CollectionModel>();
+    }
+
+    private void ActivateCollection(long brandId)
+    {
+        CollectionSelectDisabled = false;
+        Collections = CollectionService.GetAllForBrand(brandId);
     }
 
     private void HandleValidSubmit()

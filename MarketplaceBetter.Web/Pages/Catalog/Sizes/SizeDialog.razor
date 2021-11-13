@@ -13,7 +13,7 @@
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Size.Name" For="() => Size.Name" />
         <MudTextField Label="Code" @bind-Value="Size.Code" For="() => Size.Code" />
-        <MudSelect T="SizeGroupModel" @bind-Value="Size.Group" Label="Group" For="() => Size.Group">
+        <MudSelect Label="Group" T="SizeGroupModel" @bind-Value="Size.Group" For="() => Size.Group">
             @foreach (var group in Groups)
             {
                 <MudSelectItem Value="group">@group.Name</MudSelectItem>

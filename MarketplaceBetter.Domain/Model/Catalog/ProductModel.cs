@@ -24,6 +24,9 @@ namespace MarketplaceBetter.Domain.Model.Catalog
         public BrandModel Brand { get; set; }
 
         [Required]
+        public CollectionModel Collection { get; set; }
+
+        [Required]
         public ColorGroupModel ColorGroup { get; set; }
 
         [Required]

@@ -19,19 +19,19 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect T="BrandModel" Value="Brand" Label="Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ProductModel" Value="AmazonParent.Product" Label="Product" For="() => AmazonParent.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+        <MudSelect Label="Product" T="ProductModel" Value="AmazonParent.Product" For="() => AmazonParent.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="InstanceModel" Value="AmazonParent.Instance" Label="Instance" For="() => AmazonParent.Instance" ValueChanged="HandleInstanceChanged">
+        <MudSelect Label="Instance" T="InstanceModel" Value="AmazonParent.Instance" For="() => AmazonParent.Instance" ValueChanged="HandleInstanceChanged">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>

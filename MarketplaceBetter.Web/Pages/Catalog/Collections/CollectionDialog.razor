@@ -12,7 +12,7 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Collection.Name" For="() => Collection.Name" />
-        <MudSelect T="BrandModel" @bind-Value="Collection.Brand" Label="Brand" For="() => Collection.Brand">
+        <MudSelect Label="Brand" T="BrandModel" @bind-Value="Collection.Brand" For="() => Collection.Brand">
             @foreach (var group in Brands)
             {
                 <MudSelectItem Value="group">@group.Name</MudSelectItem>
@@ -29,6 +29,7 @@
 
     CustomValidation CustomValidation = new();
     CollectionModel Collection = new();
+
     IList<BrandModel> Brands;
 
     protected override void OnInitialized()

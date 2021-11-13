@@ -81,6 +81,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             toProduct.Name = fromProduct.Name;
             toProduct.Code = fromProduct.Code;
             toProduct.BrandId = fromProduct.Brand.Id;
+            toProduct.CollectionId = fromProduct.Collection.Id;
             toProduct.ColorGroupId = fromProduct.ColorGroup.Id;
             toProduct.SizeGroupId = fromProduct.SizeGroup.Id;
         }
@@ -130,6 +131,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
                     "code" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Code) : products.OrderByDescending(p => p.Code),
                     "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Brand.Name) : products.OrderByDescending(p => p.Brand.Name),
+                    "collection" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Collection.Name) : products.OrderByDescending(p => p.Collection.Name),
                     "color_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ColorGroup.Name) : products.OrderByDescending(p => p.ColorGroup.Name),
                     "size_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.SizeGroup.Name) : products.OrderByDescending(p => p.SizeGroup.Name),
                     _ => throw new UnrecognizedSortingException<ProductListRequest>(request.SortBy)

@@ -20,25 +20,25 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect T="BrandModel" Value="Brand" Label="Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" ValueChanged="HandleInstanceChanged">
+        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" ValueChanged="HandleInstanceChanged">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="AmazonParentModel" Value="AmazonChild.Parent" Label="Parent" For="() => AmazonChild.Parent" ValueChanged="HandleParentChanged" Disabled="ParentSelectDisabled">
+        <MudSelect Label="Parent" T="AmazonParentModel" Value="AmazonChild.Parent" For="() => AmazonChild.Parent" ValueChanged="HandleParentChanged" Disabled="ParentSelectDisabled">
             @foreach (var parent in Parents)
             {
                 <MudSelectItem Value="parent">@parent.Sku</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="ProductVariantModel" Value="AmazonChild.ProductVariant" Label="Product Variant" For="() => AmazonChild.ProductVariant" ValueChanged="HandleProductVariantChanged" Disabled="ProductVariantDisabled">
+        <MudSelect Label="Product Variant" T="ProductVariantModel" Value="AmazonChild.ProductVariant" For="() => AmazonChild.ProductVariant" ValueChanged="HandleProductVariantChanged" Disabled="ProductVariantDisabled">
             @foreach (var productVariant in ProductVariants)
             {
                 <MudSelectItem Value="productVariant">@productVariant.Sku</MudSelectItem>
