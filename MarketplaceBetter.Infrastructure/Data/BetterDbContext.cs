@@ -36,12 +36,6 @@ namespace MarketplaceBetter.Infrastructure.Data
         // Amazon
         public DbSet<AmazonParent> AmazonParent { get; set; }
         public DbSet<AmazonChild> AmazonChild { get; set; }
-        public DbSet<KeywordAnalysis> KeywordAnalysis { get; set; }
-        public DbSet<MainPhraseStatus> MainPhraseStatus { get; set; }
-        public DbSet<MainPhrase> MainPhrase { get; set; }
-        public DbSet<KeywordDataSource> KeywordDataSource { get; set; }
-        public DbSet<KeywordData> KeywordData { get; set; }
-        public DbSet<PhraseData> PhraseData { get; set; }
 
         //public override int SaveChanges()
         //{

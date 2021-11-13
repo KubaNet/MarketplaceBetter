@@ -49,18 +49,6 @@
         {
             <MudNavLink Href="/amazonparents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
         }
-        @if (IsKeywordsModule())
-        {
-            <MudNavGroup Title="Keywords" Icon="@Icons.Filled.VpnKey" Expanded="true" HideExpandIcon="true">
-                <MudNavLink Href="/keywordanalyses">Analyses</MudNavLink>
-                <MudNavLink Href="/mainphrases">Main Phrases</MudNavLink>
-                <MudNavLink Href="/keyworddata">Data</MudNavLink>
-            </MudNavGroup>
-        }
-        else
-        {
-            <MudNavLink Href="/keywordanalyses" Icon="@Icons.Filled.VpnKey">Keywords</MudNavLink>
-        }
     </MudNavGroup>
 </MudNavMenu>
 
@@ -114,18 +102,6 @@
     {
         if (NavigationManager.Uri.Contains("amazonparents") ||
             NavigationManager.Uri.Contains("amazonchildren"))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool IsKeywordsModule()
-    {
-        if (NavigationManager.Uri.Contains("keywordanalyses") ||
-            NavigationManager.Uri.Contains("mainphrases") ||
-            NavigationManager.Uri.Contains("keyworddata"))
         {
             return true;
         }

@@ -81,17 +81,10 @@
     <None Include="Scripts\Inserts\01_Countries.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonParent.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonChild.sql" />
-    <Build Include="dbo\Tables\Amazon\KeywordAnalysis.sql" />
-    <Build Include="dbo\Tables\Amazon\MainPhraseStatus.sql" />
-    <None Include="Scripts\Inserts\07_MainPhraseStatuses.sql" />
-    <Build Include="dbo\Tables\Amazon\MainPhrase.sql" />
-    <None Include="Scripts\Inserts\08_KeywordDataSources.sql" />
-    <Build Include="dbo\Tables\Amazon\KeywordDataSource.sql" />
-    <Build Include="dbo\Tables\Amazon\KeywordData.sql" />
-    <Build Include="dbo\Tables\Amazon\PhraseData.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />
     <None Include="Scripts\Inserts\05_SalesChannels.sql" />
+    <None Include="SchemaCompare\ProductionSchemaCompare.scmp" />
   </ItemGroup>
 </Project>
