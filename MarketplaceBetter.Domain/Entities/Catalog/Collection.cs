@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Catalog
 {
-    public class Color : Entity
+    public class Collection : Entity
     {
         public string Name { get; set; }
 
-        public string Code { get; set; }
+        public long BrandId { get; set; }
 
-        public long GroupId { get; set; }
-
-        public virtual ColorGroup Group { get; set; }
+        public virtual Brand Brand { get; set; }
 
         public override string ToString()
         {

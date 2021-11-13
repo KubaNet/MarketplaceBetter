@@ -1,0 +1,76 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject ICollectionService CollectionService
+@inject IBrandService BrandService
+@inject ICollectionValidator CollectionValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="Collection" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="Collection.Name" For="() => Collection.Name" />
+        <MudSelect T="BrandModel" @bind-Value="Collection.Brand" Label="Brand" For="() => Collection.Brand">
+            @foreach (var group in Brands)
+            {
+                <MudSelectItem Value="group">@group.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long CollectionId { get; set; }
+
+    CustomValidation CustomValidation = new();
+    CollectionModel Collection = new();
+    IList<BrandModel> Brands;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        Collection = CollectionService.Get(CollectionId);
+        Collection.Brand = Brands.Single(g => g.Id == Collection.Brand.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = CollectionValidator.Validate(Collection);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                CollectionService.Update(Collection);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Collection"));
+            }
+            else
+            {
+                CollectionService.Add(Collection);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Collection"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}
