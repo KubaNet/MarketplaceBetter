@@ -44,23 +44,23 @@
 </EditForm>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
     [Parameter] public long ProductVariantId { get; set; }
 
-    CustomValidation CustomValidation = new();
-    ProductVariantModel ProductVariant = new();
-    BrandModel Brand;
+    private CustomValidation CustomValidation = new();
+    private ProductVariantModel ProductVariant = new();
+    private BrandModel Brand;
 
-    IList<BrandModel> Brands;
-    IList<ProductModel> Products = new List<ProductModel>();
-    IList<ColorModel> Colors = new List<ColorModel>();
-    IList<SizeModel> Sizes = new List<SizeModel>();
+    private IList<BrandModel> Brands;
+    private IList<ProductModel> Products = new List<ProductModel>();
+    private IList<ColorModel> Colors = new List<ColorModel>();
+    private IList<SizeModel> Sizes = new List<SizeModel>();
 
-    bool ProductSelectDisabled = true;
-    bool ColorSelectDisabled = true;
-    bool SizeSelectDisabled = true;
+    private bool ProductSelectDisabled = true;
+    private bool ColorSelectDisabled = true;
+    private bool SizeSelectDisabled = true;
 
     protected override void OnInitialized()
     {
