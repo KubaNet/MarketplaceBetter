@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
+using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
 using MarketplaceBetter.Services.Model;
 using Microsoft.EntityFrameworkCore;
@@ -81,14 +82,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog
         {
             if (!string.IsNullOrWhiteSpace(request.SearchString))
             {
-                int parsedId = 0;
-                int.TryParse(request.SearchString, out parsedId);
+                IList<string> searchStrings = request.SearchString.SplitForFiltering();
 
-                variants = variants.Where(p => p.Id == parsedId
-                    || p.Sku.Contains(request.SearchString)
-                    || p.Product.Name.Contains(request.SearchString)
-                    || p.Color.Name.Contains(request.SearchString)
-                    || p.Size.Name.Contains(request.SearchString));
+                foreach (string searchString in searchStrings)
+                {
+                    variants = variants.Where(p => p.Id == searchString.ParseToIntOrDefault()
+                        || p.Sku.Contains(searchString)
+                        || p.Product.Name.Contains(searchString)
+                        || p.Color.Name.Contains(searchString)
+                        || p.Size.Name.Contains(searchString));
+                }
             }
 
             return variants;

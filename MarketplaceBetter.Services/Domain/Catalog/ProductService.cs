@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
+using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
 using MarketplaceBetter.Services.Model;
 using Microsoft.EntityFrameworkCore;
@@ -90,16 +91,18 @@ namespace MarketplaceBetter.Services.Domain.Catalog
         {
             if (!string.IsNullOrWhiteSpace(request.SearchString))
             {
-                int parsedId = 0;
-                int.TryParse(request.SearchString, out parsedId);
+                IList<string> searchStrings = request.SearchString.SplitForFiltering();
 
-                products = products.Where(p => p.Id == parsedId
-                    || p.Name.Contains(request.SearchString)
-                    || p.Code.Contains(request.SearchString)
-                    || p.Brand.Name.Contains(request.SearchString)
-                    || p.Collection.Name.Contains(request.SearchString)
-                    || p.ColorGroup.Name.Contains(request.SearchString)
-                    || p.SizeGroup.Name.Contains(request.SearchString));
+                foreach (string searchString in searchStrings)
+                {
+                    products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
+                        || p.Name.Contains(searchString)
+                        || p.Code.Contains(searchString)
+                        || p.Brand.Name.Contains(searchString)
+                        || p.Collection.Name.Contains(searchString)
+                        || p.ColorGroup.Name.Contains(searchString)
+                        || p.SizeGroup.Name.Contains(searchString));
+                }
             }
 
             return products;
