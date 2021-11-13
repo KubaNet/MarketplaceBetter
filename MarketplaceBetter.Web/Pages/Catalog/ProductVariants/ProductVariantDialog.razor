@@ -47,6 +47,7 @@
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public bool AddingSimilar { get; set; }
     [Parameter] public long ProductVariantId { get; set; }
 
     private CustomValidation CustomValidation = new();
@@ -68,7 +69,7 @@
 
         Brands = BrandService.GetAll();
 
-        if (IsEdit)
+        if (IsEdit || AddingSimilar)
         {
             SetInitialValues();
         }
@@ -77,6 +78,11 @@
     private void SetInitialValues()
     {
         ProductVariant = ProductVariantService.Get(ProductVariantId);
+        if (AddingSimilar)
+        {
+            ProductVariant.Id = 0;
+        }
+
         Brand = Brands.Single(b => b.Id == ProductVariant.Product.Brand.Id);
 
         ActivateProduct(Brand.Id);

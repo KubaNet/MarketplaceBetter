@@ -111,6 +111,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
+            else
+            {
+                variants = variants.OrderBy(v => v.Id);
+            }
 
             return variants;
         }

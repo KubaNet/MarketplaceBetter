@@ -21,7 +21,7 @@
 			<MudTh><MudTableSortLabel SortLabel="product" T="ProductVariantModel">Product</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="color" T="ProductVariantModel">Color</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="size" T="ProductVariantModel">Size</MudTableSortLabel></MudTh>
-			<MudTh Style="width: 100px;">Actions</MudTh>
+			<MudTh Style="width: 170px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
@@ -29,7 +29,10 @@
 			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
 			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
 			<MudTd DataLabel="Size">@context.Size.Name</MudTd>
-			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductVariant(context.Id))">Edit</MudButton></MudTd>
+			<MudTd>
+				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarProductVariant(context.Id))">Add</MudButton>
+				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductVariant(context.Id))">Edit</MudButton>
+			</MudTd>
 		</RowTemplate>
 		<PagerContent>
 			<MudTablePager />
@@ -63,6 +66,13 @@
 	private async void AddProductVariant()
 	{
 		var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add Product Variant" }).Result;
+
+		ProcessProductVariantDialogResult(result);
+	}
+
+	private async void AddSimilarProductVariant(long id)
+	{
+		var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add Product Variant", ["AddingSimilar"] = true, ["ProductVariantId"] = id }).Result;
 
 		ProcessProductVariantDialogResult(result);
 	}
