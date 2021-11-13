@@ -1,5 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Catalog;
-using MarketplaceBetter.Services.Model.ListRequests.Catalog;
+using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +16,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<ProductModel> GetForBrand(long brandId);
 
-        int CountForListRequest(ProductListRequest request);
+        int CountForListRequest(ListRequest request);
 
-        IList<ProductModel> GetForListRequest(ProductListRequest request);
+        IList<ProductModel> GetForListRequest(ListRequest request);
 
         void Add(ProductModel product);
 

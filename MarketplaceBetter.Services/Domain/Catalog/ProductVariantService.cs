@@ -4,7 +4,7 @@ using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
-using MarketplaceBetter.Services.Model.ListRequests.Catalog;
+using MarketplaceBetter.Services.Model;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using System;
@@ -36,9 +36,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ProductVariantModel> GetForProduct(long productId) => _mapper.Map<IList<ProductVariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
 
-        public int CountForListRequest(ProductVariantListRequest request) => _repository.GetQuery().Count();
+        public int CountForListRequest(ListRequest request) => _repository.GetQuery().Count();
 
-        public IList<ProductVariantModel> GetForListRequest(ProductVariantListRequest request)
+        public IList<ProductVariantModel> GetForListRequest(ListRequest request)
         {
             IQueryable<ProductVariant> variants = _repository.GetQuery();
 
@@ -77,37 +77,24 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             toVariant.SizeId = fromVariant.Size.Id;
         }
 
-        private IQueryable<ProductVariant> ApplyFilter(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        private IQueryable<ProductVariant> ApplyFilter(IQueryable<ProductVariant> variants, ListRequest request)
         {
-            if (request.Id.HasValue)
+            if (!string.IsNullOrWhiteSpace(request.SearchString))
             {
-                variants = variants.Where(p => p.Id == request.Id.Value);
-            }
+                int parsedId = 0;
+                int.TryParse(request.SearchString, out parsedId);
 
-            if (!string.IsNullOrWhiteSpace(request.Sku))
-            {
-                variants = variants.Where(p => p.Sku.Contains(request.Sku));
-            }
-
-            if (request.Product != null)
-            {
-                variants = variants.Where(p => p.ProductId == request.Product.Id);
-            }
-
-            if (request.Color != null)
-            {
-                variants = variants.Where(p => p.ColorId == request.Color.Id);
-            }
-
-            if (request.Size != null)
-            {
-                variants = variants.Where(p => p.SizeId == request.Size.Id);
+                variants = variants.Where(p => p.Id == parsedId
+                    || p.Sku.Contains(request.SearchString)
+                    || p.Product.Name.Contains(request.SearchString)
+                    || p.Color.Name.Contains(request.SearchString)
+                    || p.Size.Name.Contains(request.SearchString));
             }
 
             return variants;
         }
 
-        private IQueryable<ProductVariant> ApplySorting(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        private IQueryable<ProductVariant> ApplySorting(IQueryable<ProductVariant> variants, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -118,14 +105,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
                     "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
-                    _ => throw new UnrecognizedSortingException<ProductVariantListRequest>(request.SortBy)
+                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
             return variants;
         }
 
-        private IQueryable<ProductVariant> ApplyPaging(IQueryable<ProductVariant> variants, ProductVariantListRequest request)
+        private IQueryable<ProductVariant> ApplyPaging(IQueryable<ProductVariant> variants, ListRequest request)
         {
             return variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }

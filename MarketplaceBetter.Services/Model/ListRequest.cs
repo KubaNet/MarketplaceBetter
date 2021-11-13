@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Model.ListRequests
+namespace MarketplaceBetter.Services.Model
 {
     public class ListRequest
     {
+        public string SearchString { get; set; }
+
         public string SortBy { get; set; }
 
         public SortDirection SortDirection { get; set; }

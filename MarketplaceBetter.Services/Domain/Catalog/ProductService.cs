@@ -4,7 +4,7 @@ using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
-using MarketplaceBetter.Services.Model.ListRequests.Catalog;
+using MarketplaceBetter.Services.Model;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using System;
@@ -36,7 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ProductModel> GetForBrand(long brandId) => _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId));
 
-        public int CountForListRequest(ProductListRequest request)
+        public int CountForListRequest(ListRequest request)
         {
             IQueryable<Product> products = _repository.GetQuery();
 
@@ -45,7 +45,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             return products.Count();
         }
 
-        public IList<ProductModel> GetForListRequest(ProductListRequest request)
+        public IList<ProductModel> GetForListRequest(ListRequest request)
         {
             IQueryable<Product> products = _repository.GetQuery();
 
@@ -86,42 +86,26 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             toProduct.SizeGroupId = fromProduct.SizeGroup.Id;
         }
 
-        private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ProductListRequest request)
+        private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
         {
-            if (request.Id.HasValue)
+            if (!string.IsNullOrWhiteSpace(request.SearchString))
             {
-                products = products.Where(p => p.Id == request.Id.Value);
-            }
+                int parsedId = 0;
+                int.TryParse(request.SearchString, out parsedId);
 
-            if (!string.IsNullOrWhiteSpace(request.Name))
-            {
-                products = products.Where(p => p.Name.Contains(request.Name));
-            }
-
-            if (!string.IsNullOrWhiteSpace(request.Code))
-            {
-                products = products.Where(p => p.Code.Contains(request.Code));
-            }
-
-            if (request.Brand != null)
-            {
-                products = products.Where(p => p.BrandId == request.Brand.Id);
-            }
-
-            if (request.ColorGroup != null)
-            {
-                products = products.Where(p => p.ColorGroupId == request.ColorGroup.Id);
-            }
-
-            if (request.SizeGroup != null)
-            {
-                products = products.Where(p => p.SizeGroupId == request.SizeGroup.Id);
+                products = products.Where(p => p.Id == parsedId
+                    || p.Name.Contains(request.SearchString)
+                    || p.Code.Contains(request.SearchString)
+                    || p.Brand.Name.Contains(request.SearchString)
+                    || p.Collection.Name.Contains(request.SearchString)
+                    || p.ColorGroup.Name.Contains(request.SearchString)
+                    || p.SizeGroup.Name.Contains(request.SearchString));
             }
 
             return products;
         }
 
-        private IQueryable<Product> ApplySorting(IQueryable<Product> products, ProductListRequest request)
+        private IQueryable<Product> ApplySorting(IQueryable<Product> products, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -134,14 +118,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     "collection" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Collection.Name) : products.OrderByDescending(p => p.Collection.Name),
                     "color_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ColorGroup.Name) : products.OrderByDescending(p => p.ColorGroup.Name),
                     "size_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.SizeGroup.Name) : products.OrderByDescending(p => p.SizeGroup.Name),
-                    _ => throw new UnrecognizedSortingException<ProductListRequest>(request.SortBy)
+                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
             return products;
         }
 
-        private IQueryable<Product> ApplyPaging(IQueryable<Product> products, ProductListRequest request)
+        private IQueryable<Product> ApplyPaging(IQueryable<Product> products, ListRequest request)
         {
             return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }

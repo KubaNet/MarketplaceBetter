@@ -1,6 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
-@using MarketplaceBetter.Services.Model.ListRequests.Catalog
+@using MarketplaceBetter.Services.Model;
 
 @page "/productvariants"
 @inject IProductVariantService ProductVariantService
@@ -9,73 +9,76 @@
 <MudText Typo="Typo.h3">Product Variants</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductVariantModel>>>(ReloadProductVariants))" Dense="true" Hover="true">
-        <ToolBarContent>
-            <MudButton OnClick="AddProductVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add product variant</MudButton>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortLabel="id" T="ProductVariantModel">Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="sku" T="ProductVariantModel">SKU</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="product" T="ProductVariantModel">Product</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="color" T="ProductVariantModel">Color</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="size" T="ProductVariantModel">Size</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Sku">@context.Sku</MudTd>
-            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
-            <MudTd DataLabel="Color">@context.Color.Name</MudTd>
-            <MudTd DataLabel="Size">@context.Size.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductVariant(context.Id))">Edit</MudButton></MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
+	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductVariantModel>>>(ReloadProductVariants))" Dense="true" Hover="true">
+		<ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterProductVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+			<MudButton OnClick="AddProductVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add product variant</MudButton>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="ProductVariantModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="sku" T="ProductVariantModel">SKU</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="product" T="ProductVariantModel">Product</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="color" T="ProductVariantModel">Color</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="size" T="ProductVariantModel">Size</MudTableSortLabel></MudTh>
+			<MudTh Style="width: 100px;">Actions</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Sku">@context.Sku</MudTd>
+			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
+			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
+			<MudTd DataLabel="Size">@context.Size.Name</MudTd>
+			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductVariant(context.Id))">Edit</MudButton></MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
 </MainBody>
 
 @code {
-    private MudTable<ProductVariantModel> Table;
-    private ProductVariantListRequest ListRequest = new();
+	private MudTable<ProductVariantModel> Table;
+	private ListRequest ListRequest = new();
 
-    private Task<TableData<ProductVariantModel>> ReloadProductVariants(TableState state)
-    {
-        PupulateListRequest(state);
+	private Task<TableData<ProductVariantModel>> ReloadProductVariants(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
 
-        int totalItems = ProductVariantService.CountForListRequest(ListRequest);
-        IList<ProductVariantModel> productVariants = ProductVariantService.GetForListRequest(ListRequest);
+		int totalItems = ProductVariantService.CountForListRequest(ListRequest);
+		IList<ProductVariantModel> productVariants = ProductVariantService.GetForListRequest(ListRequest);
 
-        return Task.FromResult(new TableData<ProductVariantModel>() { TotalItems = totalItems, Items = productVariants });
-    }
+		return Task.FromResult(new TableData<ProductVariantModel>() { TotalItems = totalItems, Items = productVariants });
+	}
 
-    private void PupulateListRequest(TableState state)
-    {
-        ListRequest.SortBy = state.SortLabel;
-        ListRequest.SortDirection = state.SortDirection;
-        ListRequest.Page = state.Page;
-        ListRequest.PageSize = state.PageSize;
-    }
+	private void FilterProductVariants(string searchString)
+	{
+		ListRequest.SearchString = searchString;
 
-    private async void AddProductVariant()
-    {
-        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add Product Variant" }).Result;
+		Table.ReloadServerData();
 
-        ProcessProductVariantDialogResult(result);
-    }
+		StateHasChanged();
+	}
 
-    private async void EditProductVariant(long id)
-    {
-        var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Edit Product Variant", ["IsEdit"] = true, ["ProductVariantId"] = id }).Result;
+	private async void AddProductVariant()
+	{
+		var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add Product Variant" }).Result;
 
-        ProcessProductVariantDialogResult(result);
-    }
+		ProcessProductVariantDialogResult(result);
+	}
 
-    private void ProcessProductVariantDialogResult(DialogResult result)
-    {
-        if (!result.Cancelled)
-        {
-            Table.ReloadServerData();
-        }
-    }
+	private async void EditProductVariant(long id)
+	{
+		var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Edit Product Variant", ["IsEdit"] = true, ["ProductVariantId"] = id }).Result;
+
+		ProcessProductVariantDialogResult(result);
+	}
+
+	private void ProcessProductVariantDialogResult(DialogResult result)
+	{
+		if (!result.Cancelled)
+		{
+			Table.ReloadServerData();
+		}
+	}
 }
