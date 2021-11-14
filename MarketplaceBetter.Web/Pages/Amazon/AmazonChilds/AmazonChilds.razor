@@ -2,11 +2,11 @@
 @using MarketplaceBetter.Services.Domain.Amazon.Interfaces
 @using MarketplaceBetter.Services.Model
 
-@page "/amazonchildren"
+@page "/amazonchilds"
 @inject IAmazonChildService AmazonChildService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3">Amazon Children</MudText>
+<MudText Typo="Typo.h3">Amazon Childs</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonChildModel>>>(ReloadChilds))" Dense="true" Hover="true">
