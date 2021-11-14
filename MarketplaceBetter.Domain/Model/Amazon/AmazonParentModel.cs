@@ -20,10 +20,18 @@ namespace MarketplaceBetter.Domain.Model.Amazon
         [Required]
         public InstanceModel Instance { get; set; }
 
+        [Display(Name = "SKU")]
         [Required]
+        [BetterLength]
         public string Sku { get; set; }
 
+        [Display(Name = "ASIN")]
         [BetterMaxLength]
         public string Asin { get; set; }
+
+        [Display(Name = "Child SKU")]
+        [Required]
+        [BetterLength]
+        public string ChildSku { get; set; }
     }
 }

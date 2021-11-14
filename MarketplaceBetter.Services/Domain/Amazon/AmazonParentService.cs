@@ -3,7 +3,12 @@ using MarketplaceBetter.Domain.Entities.Amazon;
 using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Amazon;
 using MarketplaceBetter.Infrastructure.Data;
+using MarketplaceBetter.Infrastructure.Exceptions;
+using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Amazon.Interfaces;
+using MarketplaceBetter.Services.Helpers;
+using MarketplaceBetter.Services.Model;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +39,26 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         public IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId) => _mapper.Map<IList<AmazonParentModel>>(
                 _repository.GetQuery().Where(p => p.Product.BrandId == brandId && p.InstanceId == instanceId));
 
+        public int CountForListRequest(ListRequest request)
+        {
+            IQueryable<AmazonParent> products = _repository.GetQuery();
+
+            ApplyFilter(products, request);
+
+            return products.Count();
+        }
+
+        public IList<AmazonParentModel> GetForListRequest(ListRequest request)
+        {
+            IQueryable<AmazonParent> parents = _repository.GetQuery();
+
+            parents = ApplyFilter(parents, request);
+            parents = ApplySorting(parents, request);
+            parents = ApplyPaging(parents, request);
+
+            return _mapper.Map<IList<AmazonParentModel>>(parents);
+        }
+
         public void Add(AmazonParentModel parent)
         {
             AmazonParent parentToAdd = new();
@@ -60,6 +85,72 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             toParent.InstanceId = fromParent.Instance.Id;
             toParent.Sku = fromParent.Sku;
             toParent.Asin = fromParent.Asin;
+            toParent.ChildSku = fromParent.ChildSku;
+        }
+
+        private IQueryable<AmazonParent> ApplyFilter(IQueryable<AmazonParent> products, ListRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.SearchString))
+            {
+                return products;
+            }
+
+            IList<string> searchStrings = request.SearchString.SplitForFiltering();
+
+            foreach (string searchString in searchStrings)
+            {
+                string[] searchFieldNames = new[] { "id", "sku", "instance", "product", "asin", "child_sku" };
+                SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
+
+                if (searchField != null)
+                {
+                    products = searchField.Name switch
+                    {
+                        "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
+                        "sku" => products.Where(p => p.Sku.Contains(searchField.Value)),
+                        "instance" => products.Where(p => p.Instance.Name.Contains(searchField.Value)),
+                        "product" => products.Where(p => p.Product.Name.Contains(searchField.Value)),
+                        "asin" => products.Where(p => p.Asin.Contains(searchField.Value)),
+                        "child_sku" => products.Where(p => p.ChildSku.Contains(searchField.Value)),
+                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
+                    };
+                }
+                else
+                {
+                    products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
+                        || p.Sku.Contains(searchString)
+                        || p.Instance.Name.Contains(searchString)
+                        || p.Product.Name.Contains(searchString)
+                        || p.Asin.Contains(searchString)
+                        || p.ChildSku.Contains(searchString));
+                }
+            }
+
+            return products;
+        }
+
+        private IQueryable<AmazonParent> ApplySorting(IQueryable<AmazonParent> products, ListRequest request)
+        {
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+            {
+                products = request.SortBy switch
+                {
+                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
+                    "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Sku) : products.OrderByDescending(p => p.Sku),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Instance.Name) : products.OrderByDescending(p => p.Instance.Name),
+                    "product" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Product.Name) : products.OrderByDescending(p => p.Product.Name),
+                    "asin" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Asin) : products.OrderByDescending(p => p.Asin),
+                    "child_sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ChildSku) : products.OrderByDescending(p => p.ChildSku),
+                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
+                };
+            }
+
+            return products;
+        }
+
+        private IQueryable<AmazonParent> ApplyPaging(IQueryable<AmazonParent> products, ListRequest request)
+        {
+            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

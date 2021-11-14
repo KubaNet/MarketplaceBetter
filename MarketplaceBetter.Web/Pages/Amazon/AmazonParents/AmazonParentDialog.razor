@@ -19,6 +19,12 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
+        <MudSelect Label="Instance" T="InstanceModel" Value="AmazonParent.Instance" For="() => AmazonParent.Instance" ValueChanged="HandleInstanceChanged">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
         <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
@@ -31,14 +37,9 @@
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Instance" T="InstanceModel" Value="AmazonParent.Instance" For="() => AmazonParent.Instance" ValueChanged="HandleInstanceChanged">
-            @foreach (var instance in Instances)
-            {
-                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-            }
-        </MudSelect>
         <MudTextField Label="SKU" @bind-Value="AmazonParent.Sku" For="() => AmazonParent.Sku" />
         <MudTextField Label="ASIN" @bind-Value="AmazonParent.Asin" For="() => AmazonParent.Asin" />
+        <MudTextField Label="Child SKU" @bind-Value="AmazonParent.ChildSku" For="() => AmazonParent.ChildSku" />
     </FormDialog>
 </EditForm>
 

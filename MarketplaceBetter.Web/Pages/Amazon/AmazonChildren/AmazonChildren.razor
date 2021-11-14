@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon
 @using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+@using MarketplaceBetter.Services.Model
 
 @page "/amazonchildren"
 @inject IAmazonChildService AmazonChildService
@@ -8,22 +9,25 @@
 <MudText Typo="Typo.h3">Amazon Children</MudText>
 
 <MainBody>
-    <MudTable Items="@AmazonChildrenData" Dense="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonChildModel>>>(ReloadChilds))" Dense="true" Hover="true">
         <ToolBarContent>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterChilds" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="AddAmazonChild" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Child</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>SKU</MudTh>
-            <MudTh>Parent</MudTh>
-            <MudTh>Product Variant</MudTh>
-            <MudTh>ASIN</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="AmazonChildModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sku" T="AmazonChildModel">SKU</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="AmazonChildModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="parent" T="AmazonChildModel">Parent</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product_variant" T="AmazonChildModel">Product Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="asin" T="AmazonChildModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">@context.Sku</MudTd>
+            <MudTd DataLabel="Instance">@context.Parent.Instance.Name</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Product Variant">@context.ProductVariant.Sku</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
@@ -36,7 +40,26 @@
 </MainBody>
 
 @code {
-    private IList<AmazonChildModel> AmazonChildrenData { get; set; }
+    private MudTable<AmazonChildModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<AmazonChildModel>> ReloadChilds(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<AmazonChildModel> childs = AmazonChildService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<AmazonChildModel>() { TotalItems = childs.Count, Items = childs });
+	}
+
+    private void FilterChilds(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
 
     private async void AddAmazonChild()
     {
@@ -56,16 +79,7 @@
     {
         if (!result.Cancelled)
         {
-            AmazonChildrenData = AmazonChildService.GetAll();
-
-            StateHasChanged();
+            Table.ReloadServerData();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        AmazonChildrenData = AmazonChildService.GetAll();
     }
 }

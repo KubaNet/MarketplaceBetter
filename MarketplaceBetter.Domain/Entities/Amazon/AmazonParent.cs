@@ -21,5 +21,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon
         public string Sku { get; set; }
 
         public string Asin { get; set; }
+
+        public string ChildSku { get; set; }
     }
 }

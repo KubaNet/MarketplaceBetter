@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon
 @using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+@using MarketplaceBetter.Services.Model
 
 @page "/amazonparents"
 @inject IAmazonParentService AmazonParentService
@@ -8,25 +9,28 @@
 <MudText Typo="Typo.h3">Amazon Parents</MudText>
 
 <MainBody>
-    <MudTable Items="@AmazonParentsData" Dense="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonParentModel>>>(ReloadParents))" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudSpacer />
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterParents" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
             <MudButton OnClick="AddAmazonParent" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Parent</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>SKU</MudTh>
-            <MudTh>Product</MudTh>
-            <MudTh>Instance</MudTh>
-            <MudTh>ASIN</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="AmazonParentModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sku" T="AmazonParentModel">SKU</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="AmazonParentModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="AmazonParentModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="asin" T="AmazonParentModel">ASIN</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="child_sku" T="AmazonParentModel">Child SKU</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">@context.Sku</MudTd>
-            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
+            <MudTd DataLabel="Child SKU">@context.ChildSku</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonParent(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
@@ -36,7 +40,26 @@
 </MainBody>
 
 @code {
-    private IList<AmazonParentModel> AmazonParentsData { get; set; }
+    private MudTable<AmazonParentModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<AmazonParentModel>> ReloadParents(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<AmazonParentModel> parents = AmazonParentService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<AmazonParentModel>() { TotalItems = parents.Count, Items = parents });
+	}
+
+    private void FilterParents(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
 
     private async void AddAmazonParent()
     {
@@ -56,16 +79,7 @@
     {
         if (!result.Cancelled)
         {
-            AmazonParentsData = AmazonParentService.GetAll();
-
-            StateHasChanged();
+            Table.ReloadServerData();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        AmazonParentsData = AmazonParentService.GetAll();
     }
 }

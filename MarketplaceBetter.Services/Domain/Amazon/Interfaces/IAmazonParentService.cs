@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Amazon;
+using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
         IList<AmazonParentModel> GetAll();
 
         IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId);
+
+        int CountForListRequest(ListRequest request);
+
+        IList<AmazonParentModel> GetForListRequest(ListRequest request);
 
         void Add(AmazonParentModel parent);
 

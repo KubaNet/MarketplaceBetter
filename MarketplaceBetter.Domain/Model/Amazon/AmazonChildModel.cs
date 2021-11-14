@@ -16,13 +16,16 @@ namespace MarketplaceBetter.Domain.Model.Amazon
         [Required]
         public AmazonParentModel Parent { get; set; }
 
+        [Display(Name = "Product Variant")]
         [Required]
         public ProductVariantModel ProductVariant { get; set; }
 
+        [Display(Name = "SKU")]
         [Required]
         [StringLength(40, MinimumLength = 2)]
         public string Sku { get; set; }
 
+        [Display(Name = "ASIN")]
         [BetterMaxLength]
         public string Asin { get; set; }
     }

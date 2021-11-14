@@ -20,16 +20,16 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
-            @foreach (var brand in Brands)
-            {
-                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
-            }
-        </MudSelect>
         <MudSelect Label="Instance" T="InstanceModel" Value="Instance" ValueChanged="HandleInstanceChanged">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
         <MudSelect Label="Parent" T="AmazonParentModel" Value="AmazonChild.Parent" For="() => AmazonChild.Parent" ValueChanged="HandleParentChanged" Disabled="ParentSelectDisabled">
@@ -171,7 +171,11 @@
 
         if (Instance != null && AmazonChild.ProductVariant != null)
         {
-            AmazonChild.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(Instance.SystemName), GetSkuForProductVariant(AmazonChild.ProductVariant));
+            AmazonChild.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(Instance.SystemName), GetSkuForProductVariant(AmazonChild.Parent, AmazonChild.ProductVariant));
+        }
+        else if (Instance != null && AmazonChild.Parent != null)
+        {
+            AmazonChild.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(Instance.SystemName), AmazonChild.Parent.ChildSku);
         }
         else if (Instance != null)
         {
@@ -179,13 +183,13 @@
         }
         else if (AmazonChild.ProductVariant != null)
         {
-            AmazonChild.Sku = GetSkuForProductVariant(AmazonChild.ProductVariant);
+            AmazonChild.Sku = GetSkuForProductVariant(AmazonChild.Parent, AmazonChild.ProductVariant);
         }
     }
 
-    private string GetSkuForProductVariant(ProductVariantModel productVariant)
+    private string GetSkuForProductVariant(AmazonParentModel parent, ProductVariantModel productVariant)
     {
-        return string.Format("{0}_{1}_{2}", productVariant.Product.Code, productVariant.Color.Code, productVariant.Size.Code);
+        return string.Format("{0}_{1}_{2}", parent.ChildSku, productVariant.Color.Code, productVariant.Size.Code);
     }
 
     private void HandleValidSubmit()
