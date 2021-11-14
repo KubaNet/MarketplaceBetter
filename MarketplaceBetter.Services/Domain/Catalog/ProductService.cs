@@ -5,6 +5,7 @@ using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
+using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -89,11 +90,33 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
         {
-            if (!string.IsNullOrWhiteSpace(request.SearchString))
+            if (string.IsNullOrWhiteSpace(request.SearchString))
             {
-                IList<string> searchStrings = request.SearchString.SplitForFiltering();
+                return products;
+            }
 
-                foreach (string searchString in searchStrings)
+            IList<string> searchStrings = request.SearchString.SplitForFiltering();
+
+            foreach (string searchString in searchStrings)
+            {
+                string[] searchFieldNames = new[] { "id", "name", "code", "brand", "collection", "color_group", "size_group" };
+                SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
+
+                if (searchField != null)
+                {
+                    products = searchField.Name switch
+                    {
+                        "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
+                        "name" => products.Where(p => p.Name.Contains(searchField.Value)),
+                        "code" => products.Where(p => p.Code.Contains(searchField.Value)),
+                        "brand" => products.Where(p => p.Brand.Name.Contains(searchField.Value)),
+                        "collection" => products.Where(p => p.Collection.Name.Contains(searchField.Value)),
+                        "color_group" => products.Where(p => p.ColorGroup.Name.Contains(searchField.Value)),
+                        "size_group" => products.Where(p => p.SizeGroup.Name.Contains(searchField.Value)),
+                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
+                    };
+                }
+                else
                 {
                     products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Name.Contains(searchString)

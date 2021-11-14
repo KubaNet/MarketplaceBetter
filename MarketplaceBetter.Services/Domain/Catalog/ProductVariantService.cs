@@ -5,6 +5,7 @@ using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
+using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -80,17 +81,37 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         private IQueryable<ProductVariant> ApplyFilter(IQueryable<ProductVariant> variants, ListRequest request)
         {
-            if (!string.IsNullOrWhiteSpace(request.SearchString))
+            if (string.IsNullOrWhiteSpace(request.SearchString))
             {
-                IList<string> searchStrings = request.SearchString.SplitForFiltering();
+                return variants;
+            }
 
-                foreach (string searchString in searchStrings)
+            IList<string> searchStrings = request.SearchString.SplitForFiltering();
+
+            foreach (string searchString in searchStrings)
+            {
+                string[] searchFieldNames = new[] { "id", "sku", "product", "color", "size" };
+                SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
+
+                if (searchField != null)
+                {
+                    variants = searchField.Name switch
+                    {
+                        "id" => variants.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
+                        "sku" => variants.Where(p => p.Sku.Contains(searchField.Value)),
+                        "product" => variants.Where(p => p.Product.Name.Contains(searchField.Value)),
+                        "color" => variants.Where(p => p.Color.Name.Contains(searchField.Value)),
+                        "size" => variants.Where(p => p.Size.Name.Contains(searchField.Value)),
+                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
+                    };
+                }
+                else
                 {
                     variants = variants.Where(p => p.Id == searchString.ParseToIntOrDefault()
-                        || p.Sku.Contains(searchString)
-                        || p.Product.Name.Contains(searchString)
-                        || p.Color.Name.Contains(searchString)
-                        || p.Size.Name.Contains(searchString));
+                      || p.Sku.Contains(searchString)
+                      || p.Product.Name.Contains(searchString)
+                      || p.Color.Name.Contains(searchString)
+                      || p.Size.Name.Contains(searchString));
                 }
             }
 
