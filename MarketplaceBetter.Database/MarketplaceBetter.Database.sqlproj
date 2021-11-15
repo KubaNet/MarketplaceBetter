@@ -82,6 +82,7 @@
     <Build Include="dbo\Tables\Amazon\AmazonParent.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonChild.sql" />
     <Build Include="dbo\Tables\Catalog\Collection.sql" />
+    <Build Include="dbo\Tables\Catalog\ColorTranslation.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />

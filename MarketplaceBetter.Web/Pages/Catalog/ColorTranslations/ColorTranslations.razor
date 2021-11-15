@@ -1,0 +1,71 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+
+@page "/colortranslations"
+@inject IColorTranslationService ColorTranslationService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Color Translations</MudText>
+
+<MainBody>
+    <MudTable Items="@ColorTranslationsData" Dense="true">
+        <ToolBarContent>
+            <MudSpacer />
+            <MudButton OnClick="AddColorTranslation" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Color Translation</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Translation</MudTh>
+            <MudTh>Mapping</MudTh>
+            <MudTh>Color</MudTh>
+            <MudTh>Instance</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Translation</MudTd>
+            <MudTd DataLabel="Name">@context.Mapping</MudTd>
+            <MudTd DataLabel="Code">@context.Color.Name</MudTd>
+            <MudTd DataLabel="Group">@context.Instance.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColorTranslation(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<ColorTranslationModel> ColorTranslationsData { get; set; }
+
+    private async void AddColorTranslation()
+    {
+        var result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Add Color Translation" }).Result;
+
+        ProcessColorTranslationDialogResult(result);
+    }
+
+    private async void EditColorTranslation(long id)
+    {
+        var result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Edit Color Translation", ["IsEdit"] = true, ["ColorTranslationId"] = id }).Result;
+
+        ProcessColorTranslationDialogResult(result);
+    }
+
+    private void ProcessColorTranslationDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            ColorTranslationsData = ColorTranslationService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ColorTranslationsData = ColorTranslationService.GetAll();
+    }
+}

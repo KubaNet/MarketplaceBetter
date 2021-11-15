@@ -20,6 +20,7 @@
 		{
 			<MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/colors">Colors</MudNavLink>
+				<MudNavLink Href="/colortranslations">Color Translations</MudNavLink>
 				<MudNavLink Href="/colorgroups">Color Groups</MudNavLink>
 				<MudNavLink Href="/sizes">Sizes</MudNavLink>
 				<MudNavLink Href="/sizegroups">Size Groups</MudNavLink>
@@ -74,6 +75,7 @@
 	private bool IsColorsOrSizesModule()
 	{
 		if (NavigationManager.Uri.Contains("colors")
+			|| NavigationManager.Uri.Contains("colortranslations")
 			|| NavigationManager.Uri.Contains("colorgroups")
 			|| NavigationManager.Uri.Contains("sizes")
 			|| NavigationManager.Uri.Contains("sizegroups"))

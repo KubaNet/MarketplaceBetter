@@ -1,0 +1,89 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject IColorTranslationService ColorTranslationService
+@inject IInstanceService InstanceService
+@inject IColorService ColorService
+@inject IColorTranslationValidator ColorTranslationValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="ColorTranslation" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudSelect Label="Intance" T="InstanceModel" @bind-Value="ColorTranslation.Instance" For="() => ColorTranslation.Instance">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Color" T="ColorModel" @bind-Value="ColorTranslation.Color" For="() => ColorTranslation.Color">
+            @foreach (var color in Colors)
+            {
+                <MudSelectItem Value="color">@color.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Translation" @bind-Value="ColorTranslation.Translation" For="() => ColorTranslation.Translation" />
+        <MudTextField Label="Mapping" @bind-Value="ColorTranslation.Mapping" For="() => ColorTranslation.Mapping" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long ColorTranslationId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private ColorTranslationModel ColorTranslation = new();
+    private IList<InstanceModel> Instances;
+    private IList<ColorModel> Colors;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Instances = InstanceService.GetAll();
+        Colors = ColorService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        ColorTranslation = ColorTranslationService.Get(ColorTranslationId);
+        ColorTranslation.Instance = Instances.Single(i => i.Id == ColorTranslation.Instance.Id);
+        ColorTranslation.Color = Colors.Single(c => c.Id == ColorTranslation.Color.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ColorTranslationValidator.Validate(ColorTranslation);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                ColorTranslationService.Update(ColorTranslation);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color Translation"));
+            }
+            else
+            {
+                ColorTranslationService.Add(ColorTranslation);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color Translation"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

@@ -50,9 +50,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _unitOfWork.Save();
         }
 
-        private void TransferValues(ColorGroup toGroup, ColorGroupModel gromGroup)
+        private void TransferValues(ColorGroup toGroup, ColorGroupModel fromGroup)
         {
-            toGroup.Name = gromGroup.Name;
+            toGroup.Name = fromGroup.Name;
         }
     }
 }
