@@ -39,6 +39,11 @@ namespace MarketplaceBetter.Services.Validation.Amazon
                 result.AddErrorFor<AmazonParentModel>(p => p.Asin, ValidationMessages.PropertyNotUnique, "Amazon Parent", "ASIN");
             }
 
+            if (parent.Asin.Length != 10 && parent.Asin.Length != 0)
+            {
+                result.AddErrorFor<AmazonParentModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
+            }
+
             return result;
         }
     }
