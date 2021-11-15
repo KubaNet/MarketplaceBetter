@@ -11,5 +11,9 @@ namespace MarketplaceBetter.Domain.Constants
         public const int StringMinLength = 2;
 
         public const int StringMaxLength = 255;
+
+        public const int AmazonSkuMaxLength = 40;
+
+        public const int AmazonAsinLength = 10;
     }
 }

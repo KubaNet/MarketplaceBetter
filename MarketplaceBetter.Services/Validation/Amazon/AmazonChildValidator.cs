@@ -31,7 +31,12 @@ namespace MarketplaceBetter.Services.Validation.Amazon
 
             if (_repository.Any(c => c.Id != child.Id && c.Sku == child.Sku))
             {
-                result.AddErrorFor<AmazonChildModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Amazon Child", "Sku");
+                result.AddErrorFor<AmazonChildModel>(c => c.Sku, ValidationMessages.PropertyNotUnique, "Amazon Child", "Sku");
+            }
+
+            if (child.Asin.Length != 10 && child.Asin.Length != 0)
+            {
+                result.AddErrorFor<AmazonChildModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
             }
 
             return result;

@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog;
+﻿using MarketplaceBetter.Domain.Constants;
+using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Domain.Validation.Attributes;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,11 @@ namespace MarketplaceBetter.Domain.Model.Amazon
 
         [Display(Name = "SKU")]
         [Required]
-        [StringLength(40, MinimumLength = 2)]
+        [StringLength(Standard.AmazonSkuMaxLength, MinimumLength = 2)]
         public string Sku { get; set; }
 
         [Display(Name = "ASIN")]
-        [BetterMaxLength]
+        [StringLength(Standard.AmazonAsinLength, MinimumLength = 0)]
         public string Asin { get; set; }
     }
 }
