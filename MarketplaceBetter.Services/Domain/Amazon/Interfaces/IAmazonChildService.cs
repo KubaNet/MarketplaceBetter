@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Amazon;
+using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
         void Add(AmazonChildModel child);
 
         void Update(AmazonChildModel child);
+
+        string GetAsinForProductVariant(ProductVariantModel productVariant);
     }
 }

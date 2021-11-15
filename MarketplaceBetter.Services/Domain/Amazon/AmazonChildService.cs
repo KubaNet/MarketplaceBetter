@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon;
 using MarketplaceBetter.Domain.Model.Amazon;
+using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -63,6 +64,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             _repository.Add(childToAdd);
             _unitOfWork.Save();
+
+            UpdateAsinsOfSimilarChilds(childToAdd);
         }
 
         public void Update(AmazonChildModel child)
@@ -73,6 +76,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             _repository.Update(childToUpdate);
             _unitOfWork.Save();
+
+            UpdateAsinsOfSimilarChilds(childToUpdate);
+        }
+
+        public string GetAsinForProductVariant(ProductVariantModel productVariant)
+        {
+            AmazonChild child = _repository.GetQuery().FirstOrDefault(c => c.ProductVariantId == productVariant.Id);
+
+            if (child != null)
+            {
+                return child.Asin;
+            }
+
+            return null;
         }
 
         private void TransferValues(AmazonChild toChild, AmazonChildModel fromChild)
@@ -81,6 +98,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             toChild.ProductVariantId = fromChild.ProductVariant.Id;
             toChild.Sku = fromChild.Sku;
             toChild.Asin = fromChild.Asin;
+        }
+
+        private void UpdateAsinsOfSimilarChilds(AmazonChild child)
+        {
+            IList<AmazonChild> similarChilds = _repository.Where(c => c.ProductVariantId == child.ProductVariant.Id && c.Id != child.Id).ToList();
+            foreach (AmazonChild similarChild in similarChilds)
+            {
+                similarChild.Asin = child.Asin;
+
+                _repository.Update(similarChild);
+            }
+
+            _unitOfWork.Save();
         }
 
         private IQueryable<AmazonChild> ApplyFilter(IQueryable<AmazonChild> childs, ListRequest request)

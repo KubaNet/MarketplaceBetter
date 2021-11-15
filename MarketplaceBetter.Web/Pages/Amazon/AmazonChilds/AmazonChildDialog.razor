@@ -133,6 +133,9 @@
     {
         AmazonChild.ProductVariant = productVariant;
 
+        string asin = AmazonChildService.GetAsinForProductVariant(productVariant);
+        AmazonChild.Asin = asin;
+
         SetChildSku();
     }
 
