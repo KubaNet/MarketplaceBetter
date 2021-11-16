@@ -9,9 +9,9 @@
 <MudText Typo="Typo.h3">Product Variants</MudText>
 
 <MainBody>
-	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductVariantModel>>>(ReloadProductVariants))" Dense="true" Hover="true">
+	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductVariantModel>>>(ReloadVariants))" Dense="true" Hover="true">
 		<ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterProductVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
 			<MudButton OnClick="AddProductVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add product variant</MudButton>
 		</ToolBarContent>
@@ -44,17 +44,16 @@
 	private MudTable<ProductVariantModel> Table;
 	private ListRequest ListRequest = new();
 
-	private Task<TableData<ProductVariantModel>> ReloadProductVariants(TableState state)
+	private Task<TableData<ProductVariantModel>> ReloadVariants(TableState state)
 	{
 		state.PopulateListRequest(ListRequest);
 
-		int totalItems = ProductVariantService.CountForListRequest(ListRequest);
-		IList<ProductVariantModel> productVariants = ProductVariantService.GetForListRequest(ListRequest);
+		IList<ProductVariantModel> variants = ProductVariantService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<ProductVariantModel>() { TotalItems = totalItems, Items = productVariants });
+		return Task.FromResult(new TableData<ProductVariantModel>() { TotalItems = ProductVariantService.CountForListRequest(ListRequest), Items = variants });
 	}
 
-	private void FilterProductVariants(string searchString)
+	private void FilterVariants(string searchString)
 	{
 		ListRequest.SearchString = searchString;
 

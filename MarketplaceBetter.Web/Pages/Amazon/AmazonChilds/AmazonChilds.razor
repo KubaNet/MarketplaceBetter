@@ -49,7 +49,7 @@
 
 		IList<AmazonChildModel> childs = AmazonChildService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<AmazonChildModel>() { TotalItems = childs.Count, Items = childs });
+		return Task.FromResult(new TableData<AmazonChildModel>() { TotalItems = AmazonChildService.CountForListRequest(ListRequest), Items = childs });
 	}
 
     private void FilterChilds(string searchString)

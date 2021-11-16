@@ -16,9 +16,9 @@
             <MudButton OnClick="AddSizeGroup" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add size group</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Brand</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="SizeGroupModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="SizeGroupModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="SizeGroupModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>

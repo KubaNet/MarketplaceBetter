@@ -16,9 +16,9 @@
             <MudButton OnClick="AddColorGroup" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add color group</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Brand</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ColorGroupModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="ColorGroupModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ColorGroupModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>

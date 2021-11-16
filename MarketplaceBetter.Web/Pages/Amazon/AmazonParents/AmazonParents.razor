@@ -49,7 +49,7 @@
 
 		IList<AmazonParentModel> parents = AmazonParentService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<AmazonParentModel>() { TotalItems = parents.Count, Items = parents });
+		return Task.FromResult(new TableData<AmazonParentModel>() { TotalItems = AmazonParentService.CountForListRequest(ListRequest), Items = parents });
 	}
 
     private void FilterParents(string searchString)
