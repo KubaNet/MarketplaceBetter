@@ -2,7 +2,12 @@
 using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
+using MarketplaceBetter.Infrastructure.Exceptions;
+using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
+using MarketplaceBetter.Services.Helpers;
+using MarketplaceBetter.Services.Model;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +35,26 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<SizeGroupModel> GetAll() => _mapper.Map<IList<SizeGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
+        public int CountForListRequest(ListRequest request)
+        {
+            IQueryable<SizeGroup> groups = _repository.GetQuery();
+
+            ApplyFilter(groups, request);
+
+            return groups.Count();
+        }
+
+        public IList<SizeGroupModel> GetForListRequest(ListRequest request)
+        {
+            IQueryable<SizeGroup> groups = _repository.GetQuery();
+
+            groups = ApplyFilter(groups, request);
+            groups = ApplySorting(groups, request);
+            groups = ApplyPaging(groups, request);
+
+            return _mapper.Map<IList<SizeGroupModel>>(groups);
+        }
+
         public void Add(SizeGroupModel group)
         {
             SizeGroup groupToAdd = new();
@@ -50,9 +75,66 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             _unitOfWork.Save();
         }
 
-        private void TransferValues(SizeGroup toGroup, SizeGroupModel gromGroup)
+        private void TransferValues(SizeGroup toGroup, SizeGroupModel fromGroup)
         {
-            toGroup.Name = gromGroup.Name;
+            toGroup.Name = fromGroup.Name;
+            toGroup.BrandId = fromGroup.Brand.Id;
+        }
+
+        private IQueryable<SizeGroup> ApplyFilter(IQueryable<SizeGroup> groups, ListRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.SearchString))
+            {
+                return groups;
+            }
+
+            IList<string> searchStrings = request.SearchString.SplitForFiltering();
+
+            foreach (string searchString in searchStrings)
+            {
+                string[] searchFieldNames = new[] { "id", "name", "brand" };
+                SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
+
+                if (searchField != null)
+                {
+                    groups = searchField.Name switch
+                    {
+                        "id" => groups.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
+                        "name" => groups.Where(p => p.Name.Contains(searchField.Value)),
+                        "brand" => groups.Where(p => p.Brand.Name.Contains(searchField.Value)),
+                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
+                    };
+                }
+                else
+                {
+                    groups = groups.Where(p => p.Id == searchString.ParseToIntOrDefault()
+                        || p.Name.Contains(searchString)
+                        || p.Brand.Name.Contains(searchString));
+                }
+            }
+
+            return groups;
+        }
+
+        private IQueryable<SizeGroup> ApplySorting(IQueryable<SizeGroup> products, ListRequest request)
+        {
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+            {
+                products = request.SortBy switch
+                {
+                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Brand.Name) : products.OrderByDescending(p => p.Brand.Name),
+                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
+                };
+            }
+
+            return products;
+        }
+
+        private IQueryable<SizeGroup> ApplyPaging(IQueryable<SizeGroup> products, ListRequest request)
+        {
+            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

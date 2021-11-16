@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Model
 
 @page "/sizegroups"
 @inject ISizeGroupService SizeGroupService
@@ -8,9 +9,10 @@
 <MudText Typo="Typo.h3">Size Groups</MudText>
 
 <MainBody>
-    <MudTable Items="@SizeGroupsData" Dense="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<SizeGroupModel>>>(ReloadGroups))" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudSpacer />
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterGroups" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
             <MudButton OnClick="AddSizeGroup" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add size group</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -32,7 +34,26 @@
 </MainBody>
 
 @code {
-    private IList<SizeGroupModel> SizeGroupsData { get; set; }
+    private MudTable<SizeGroupModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<SizeGroupModel>> ReloadGroups(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<SizeGroupModel> groups = SizeGroupService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<SizeGroupModel>() { TotalItems = SizeGroupService.CountForListRequest(ListRequest), Items = groups });
+	}
+
+	private void FilterGroups(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
 
     private async void AddSizeGroup()
     {
@@ -50,18 +71,9 @@
 
     private void ProcessSizeGroupDialogResult(DialogResult result)
     {
-        if (!result.Cancelled)
-        {
-            SizeGroupsData = SizeGroupService.GetAll();
-
-            StateHasChanged();
-        }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        SizeGroupsData = SizeGroupService.GetAll();
+		if (!result.Cancelled)
+		{
+			Table.ReloadServerData();
+		}
     }
 }

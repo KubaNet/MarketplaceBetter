@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Catalog;
+using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
         SizeGroupModel Get(long id);
 
         IList<SizeGroupModel> GetAll();
+
+        int CountForListRequest(ListRequest request);
+
+        IList<SizeGroupModel> GetForListRequest(ListRequest request);
 
         void Add(SizeGroupModel group);
 

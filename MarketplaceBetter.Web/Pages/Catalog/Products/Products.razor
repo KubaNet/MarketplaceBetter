@@ -54,7 +54,7 @@
 
 		IList<ProductModel> products = ProductService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<ProductModel>() { TotalItems = products.Count, Items = products });
+		return Task.FromResult(new TableData<ProductModel>() { TotalItems = ProductService.CountForListRequest(ListRequest), Items = products });
 	}
 
 	private void FilterProducts(string searchString)

@@ -2,7 +2,12 @@
 using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
+using MarketplaceBetter.Infrastructure.Exceptions;
+using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
+using MarketplaceBetter.Services.Helpers;
+using MarketplaceBetter.Services.Model;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +35,26 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ColorGroupModel> GetAll() => _mapper.Map<IList<ColorGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
+        public int CountForListRequest(ListRequest request)
+        {
+            IQueryable<ColorGroup> groups = _repository.GetQuery();
+
+            ApplyFilter(groups, request);
+
+            return groups.Count();
+        }
+
+        public IList<ColorGroupModel> GetForListRequest(ListRequest request)
+        {
+            IQueryable<ColorGroup> groups = _repository.GetQuery();
+
+            groups = ApplyFilter(groups, request);
+            groups = ApplySorting(groups, request);
+            groups = ApplyPaging(groups, request);
+
+            return _mapper.Map<IList<ColorGroupModel>>(groups);
+        }
+
         public void Add(ColorGroupModel group)
         {
             ColorGroup groupToAdd = new();
@@ -53,6 +78,62 @@ namespace MarketplaceBetter.Services.Domain.Catalog
         private void TransferValues(ColorGroup toGroup, ColorGroupModel fromGroup)
         {
             toGroup.Name = fromGroup.Name;
+        }
+
+        private IQueryable<ColorGroup> ApplyFilter(IQueryable<ColorGroup> groups, ListRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.SearchString))
+            {
+                return groups;
+            }
+
+            IList<string> searchStrings = request.SearchString.SplitForFiltering();
+
+            foreach (string searchString in searchStrings)
+            {
+                string[] searchFieldNames = new[] { "id", "name", "brand" };
+                SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
+
+                if (searchField != null)
+                {
+                    groups = searchField.Name switch
+                    {
+                        "id" => groups.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
+                        "name" => groups.Where(p => p.Name.Contains(searchField.Value)),
+                        "brand" => groups.Where(p => p.Brand.Name.Contains(searchField.Value)),
+                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
+                    };
+                }
+                else
+                {
+                    groups = groups.Where(p => p.Id == searchString.ParseToIntOrDefault()
+                        || p.Name.Contains(searchString)
+                        || p.Brand.Name.Contains(searchString));
+                }
+            }
+
+            return groups;
+        }
+
+        private IQueryable<ColorGroup> ApplySorting(IQueryable<ColorGroup> products, ListRequest request)
+        {
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+            {
+                products = request.SortBy switch
+                {
+                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Brand.Name) : products.OrderByDescending(p => p.Brand.Name),
+                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
+                };
+            }
+
+            return products;
+        }
+
+        private IQueryable<ColorGroup> ApplyPaging(IQueryable<ColorGroup> products, ListRequest request)
+        {
+            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }
