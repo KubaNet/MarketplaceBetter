@@ -3,8 +3,8 @@
 @using MarketplaceBetter.Services.Validation.Catalog.Interfaces
 
 @inject IColorService ColorService
-@inject IColorGroupService GroupService
 @inject IColorValidator ColorValidator
+@inject IColorGroupService GroupService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Color" OnValidSubmit="@HandleValidSubmit">

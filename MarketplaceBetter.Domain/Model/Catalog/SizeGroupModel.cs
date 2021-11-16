@@ -15,5 +15,8 @@ namespace MarketplaceBetter.Domain.Model.Catalog
         [Required]
         [BetterLength]
         public string Name { get; set; }
+
+        [Required]
+        public BrandModel Brand { get; set; }
     }
 }

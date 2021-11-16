@@ -14,7 +14,7 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudSelect Label="Intance" T="InstanceModel" @bind-Value="ColorTranslation.Instance" For="() => ColorTranslation.Instance">
+        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="ColorTranslation.Instance" For="() => ColorTranslation.Instance">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>

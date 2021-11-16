@@ -4,12 +4,19 @@
 
 @inject IColorGroupService ColorGroupService
 @inject IColorGroupValidator ColorGroupValidator
+@inject IBrandService BrandService
 @inject ISnackbar Snackbar
 
 <EditForm Model="ColorGroup" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
+        <MudSelect Label="Brand" T="BrandModel" @bind-Value="ColorGroup.Brand" For="() => ColorGroup.Brand">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
         <MudTextField Label="Name" @bind-Value="ColorGroup.Name" For="() => ColorGroup.Name" />
     </FormDialog>
 </EditForm>
@@ -22,15 +29,24 @@
 
     private CustomValidation CustomValidation = new();
     private ColorGroupModel ColorGroup = new();
+    private IList<BrandModel> Brands;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
+        Brands = BrandService.GetAll();
+
         if (IsEdit)
         {
-            ColorGroup = ColorGroupService.Get(ColorGroupId);
+            SetInitialValues();
         }
+    }
+
+    private void SetInitialValues()
+    {
+        ColorGroup = ColorGroupService.Get(ColorGroupId);
+        ColorGroup.Brand = Brands.Single(b => b.Id == ColorGroup.Brand.Id);
     }
 
     private void HandleValidSubmit()
