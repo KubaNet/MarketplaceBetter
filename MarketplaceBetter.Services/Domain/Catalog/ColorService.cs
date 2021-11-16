@@ -103,48 +103,48 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                 {
                     colors = searchField.Name switch
                     {
-                        "id" => colors.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
-                        "name" => colors.Where(p => p.Name.Contains(searchField.Value)),
-                        "code" => colors.Where(p => p.Code.Contains(searchField.Value)),
-                        "group" => colors.Where(p => p.Group.Name.Contains(searchField.Value)),
-                        "brand" => colors.Where(p => p.Group.Brand.Name.Contains(searchField.Value)),
+                        "id" => colors.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
+                        "name" => colors.Where(c => c.Name.Contains(searchField.Value)),
+                        "code" => colors.Where(c => c.Code.Contains(searchField.Value)),
+                        "group" => colors.Where(c => c.Group.Name.Contains(searchField.Value)),
+                        "brand" => colors.Where(c => c.Group.Brand.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    colors = colors.Where(p => p.Id == searchString.ParseToIntOrDefault()
-                        || p.Name.Contains(searchString)
-                        || p.Code.Contains(searchString)
-                        || p.Group.Name.Contains(searchString)
-                        || p.Group.Brand.Name.Contains(searchString));
+                    colors = colors.Where(c => c.Id == searchString.ParseToIntOrDefault()
+                        || c.Name.Contains(searchString)
+                        || c.Code.Contains(searchString)
+                        || c.Group.Name.Contains(searchString)
+                        || c.Group.Brand.Name.Contains(searchString));
                 }
             }
 
             return colors;
         }
 
-        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> ApplySorting(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> products, ListRequest request)
+        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> ApplySorting(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> colors, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
-                products = request.SortBy switch
+                colors = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
-                    "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
-                    "code" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Code) : products.OrderByDescending(p => p.Code),
-                    "group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Group.Name) : products.OrderByDescending(p => p.Group.Name),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Group.Brand.Name) : products.OrderByDescending(p => p.Group.Brand.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Id) : colors.OrderByDescending(c => c.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Name) : colors.OrderByDescending(c => c.Name),
+                    "code" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Code) : colors.OrderByDescending(c => c.Code),
+                    "group" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Group.Name) : colors.OrderByDescending(c => c.Group.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Group.Brand.Name) : colors.OrderByDescending(c => c.Group.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
-            return products;
+            return colors;
         }
 
-        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> ApplyPaging(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> products, ListRequest request)
+        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> ApplyPaging(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> colors, ListRequest request)
         {
-            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return colors.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }
