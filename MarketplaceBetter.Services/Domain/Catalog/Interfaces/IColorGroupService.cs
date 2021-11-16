@@ -14,6 +14,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
 
         IList<ColorGroupModel> GetAll();
 
+        IList<ColorGroupModel> GetForBrand(long brandId);
+
         int CountForListRequest(ListRequest request);
 
         IList<ColorGroupModel> GetForListRequest(ListRequest request);

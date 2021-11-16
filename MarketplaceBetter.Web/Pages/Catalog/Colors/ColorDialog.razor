@@ -4,74 +4,112 @@
 
 @inject IColorService ColorService
 @inject IColorValidator ColorValidator
-@inject IColorGroupService GroupService
+@inject IBrandService BrandService
+@inject IColorGroupService ColorGroupService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Color" OnValidSubmit="@HandleValidSubmit">
-    <CustomValidation @ref="CustomValidation" />
-    <FormDialog Title=@Title>
-        <DataAnnotationsValidator />
-        <MudTextField Label="Name" @bind-Value="Color.Name" For="() => Color.Name" />
-        <MudTextField Label="Code" @bind-Value="Color.Code" For="() => Color.Code" />
-        <MudSelect Label="Group" T="ColorGroupModel" @bind-Value="Color.Group" For="() => Color.Group">
-            @foreach (var group in Groups)
-            {
-                <MudSelectItem Value="group">@group.Name</MudSelectItem>
-            }
-        </MudSelect>
-    </FormDialog>
+	<CustomValidation @ref="CustomValidation" />
+	<FormDialog Title=@Title>
+		<DataAnnotationsValidator />
+		<MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+			@foreach (var brand in Brands)
+			{
+				<MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+			}
+		</MudSelect>
+		<MudSelect Label="Group" T="ColorGroupModel" @bind-Value="Color.Group" For="() => Color.Group" Disabled="ColorGroupSelectDisabled">
+			@foreach (var group in ColorGroups)
+			{
+				<MudSelectItem Value="group">@group.Name</MudSelectItem>
+			}
+		</MudSelect>
+		<MudTextField Label="Name" @bind-Value="Color.Name" For="() => Color.Name" />
+		<MudTextField Label="Code" @bind-Value="Color.Code" For="() => Color.Code" />
+	</FormDialog>
 </EditForm>
 
 @code {
-    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
-    [Parameter] public string Title { get; set; }
-    [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long ColorId { get; set; }
+	[CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+	[Parameter] public string Title { get; set; }
+	[Parameter] public bool IsEdit { get; set; }
+	[Parameter] public long ColorId { get; set; }
 
-    private CustomValidation CustomValidation = new();
-    private ColorModel Color = new();
-    private IList<ColorGroupModel> Groups;
+	private CustomValidation CustomValidation = new();
+	private ColorModel Color = new();
+	private BrandModel Brand;
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
+	private IList<BrandModel> Brands;
+	private IList<ColorGroupModel> ColorGroups = new List<ColorGroupModel>();
 
-        Groups = GroupService.GetAll();
+	private bool ColorGroupSelectDisabled = true;
 
-        if (IsEdit)
-        {
-            SetInitialValues();
-        }
-    }
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
 
-    private void SetInitialValues()
-    {
-        Color = ColorService.Get(ColorId);
-        Color.Group = Groups.Single(g => g.Id == Color.Group.Id);
-    }
+		Brands = BrandService.GetAll();
 
-    private void HandleValidSubmit()
-    {
-        ValidationResult result = ColorValidator.Validate(Color);
+		if (IsEdit)
+		{
+			SetInitialValues();
+		}
+	}
 
-        if (result.IsValid)
-        {
-            if (IsEdit)
-            {
-                ColorService.Update(Color);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color"));
-            }
-            else
-            {
-                ColorService.Add(Color);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color"));
-            }
+	private void HandleBrandChanged(BrandModel brand)
+	{
+		Brand = brand;
 
-            MudDialog.Close();
-        }
-        else
-        {
-            CustomValidation.DisplayErrors(result.Errors);
-        }
-    }
+		ResetColorGroup();
+		ActivateColorGroup(brand.Id);
+	}
+
+	private void ResetColorGroup()
+	{
+		Color.Group = null;
+		ColorGroupSelectDisabled = true;
+		ColorGroups = new List<ColorGroupModel>();
+	}
+
+	private void ActivateColorGroup(long brandId)
+	{
+		ColorGroupSelectDisabled = false;
+		ColorGroups = ColorGroupService.GetForBrand(brandId);
+	}
+
+	private void SetInitialValues()
+	{
+		Color = ColorService.Get(ColorId);
+
+		Brand = Brands.Single(b => b.Id == Color.Group.Brand.Id);
+
+		ActivateColorGroup(Brand.Id);
+
+		Color.Group = ColorGroups.Single(g => g.Id == Color.Group.Id);
+	}
+
+	private void HandleValidSubmit()
+	{
+		ValidationResult result = ColorValidator.Validate(Color);
+
+		if (result.IsValid)
+		{
+			if (IsEdit)
+			{
+				ColorService.Update(Color);
+				Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color"));
+			}
+			else
+			{
+				ColorService.Add(Color);
+				Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color"));
+			}
+
+			MudDialog.Close();
+		}
+		else
+		{
+			CustomValidation.DisplayErrors(result.Errors);
+		}
+	}
 }

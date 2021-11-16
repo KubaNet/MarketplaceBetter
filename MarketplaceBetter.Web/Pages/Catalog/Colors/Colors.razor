@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Model
 
 @page "/colors"
 @inject IColorService ColorService
@@ -8,16 +9,18 @@
 <MudText Typo="Typo.h3">Colors</MudText>
 
 <MainBody>
-    <MudTable Items="@ColorsData" Dense="true">
+<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorModel>>>(ReloadColors))" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudSpacer />
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterColors" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
             <MudButton OnClick="AddColor" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Color</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Code</MudTh>
-            <MudTh>Group</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ColorGroupModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="ColorGroupModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="code" T="ColorGroupModel">Code</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="group" T="ColorGroupModel">Group</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ColorGroupModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -25,6 +28,7 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
             <MudTd DataLabel="Group">@context.Group.Name</MudTd>
+            <MudTd DataLabel="Group">@context.Group.Brand.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColor(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
@@ -34,7 +38,26 @@
 </MainBody>
 
 @code {
-    private IList<ColorModel> ColorsData { get; set; }
+    private MudTable<ColorModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<ColorModel>> ReloadColors(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<ColorModel> colors = ColorService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<ColorModel>() { TotalItems = ColorService.CountForListRequest(ListRequest), Items = colors });
+	}
+
+	private void FilterColors(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
 
     private async void AddColor()
     {
@@ -54,16 +77,7 @@
     {
         if (!result.Cancelled)
         {
-            ColorsData = ColorService.GetAll();
-
-            StateHasChanged();
+            Table.ReloadServerData();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        ColorsData = ColorService.GetAll();
     }
 }

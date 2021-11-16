@@ -35,6 +35,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ColorGroupModel> GetAll() => _mapper.Map<IList<ColorGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
+        public IList<ColorGroupModel> GetForBrand(long brandId) => _mapper.Map<IList<ColorGroupModel>>(_repository.Where(g => g.BrandId == brandId).OrderBy(g => g.Name));
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<ColorGroup> groups = _repository.GetQuery();
@@ -78,6 +80,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
         private void TransferValues(ColorGroup toGroup, ColorGroupModel fromGroup)
         {
             toGroup.Name = fromGroup.Name;
+            toGroup.BrandId = fromGroup.Brand.Id;
         }
 
         private IQueryable<ColorGroup> ApplyFilter(IQueryable<ColorGroup> groups, ListRequest request)

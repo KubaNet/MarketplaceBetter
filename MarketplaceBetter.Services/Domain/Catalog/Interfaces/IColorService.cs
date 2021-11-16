@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Catalog;
+using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Interfaces
         IList<ColorModel> GetAll();
 
         IList<ColorModel> GetAllForGroup(long groupId);
+
+        int CountForListRequest(ListRequest request);
+
+        IList<ColorModel> GetForListRequest(ListRequest request);
 
         void Add(ColorModel color);
 
