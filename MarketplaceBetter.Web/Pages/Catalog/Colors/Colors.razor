@@ -9,7 +9,7 @@
 <MudText Typo="Typo.h3">Colors</MudText>
 
 <MainBody>
-<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorModel>>>(ReloadColors))" Dense="true" Hover="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorModel>>>(ReloadColors))" Dense="true" Hover="true">
         <ToolBarContent>
 			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterColors" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />

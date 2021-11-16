@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Model
 
 @page "/colortranslations"
 @inject IColorTranslationService ColorTranslationService
@@ -8,25 +9,30 @@
 <MudText Typo="Typo.h3">Color Translations</MudText>
 
 <MainBody>
-    <MudTable Items="@ColorTranslationsData" Dense="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorTranslationModel>>>(ReloadTranslations))" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudSpacer />
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterTranslations" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
             <MudButton OnClick="AddColorTranslation" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Color Translation</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Translation</MudTh>
-            <MudTh>Mapping</MudTh>
-            <MudTh>Color</MudTh>
-            <MudTh>Instance</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ColorTranslationModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="ColorTranslationModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="translation" T="ColorTranslationModel">Translation</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="mapping" T="ColorTranslationModel">Mapping</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="color" T="ColorTranslationModel">Color</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="color_group" T="ColorTranslationModel">Color Group</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ColorTranslationModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Translation</MudTd>
-            <MudTd DataLabel="Name">@context.Mapping</MudTd>
-            <MudTd DataLabel="Code">@context.Color.Name</MudTd>
-            <MudTd DataLabel="Group">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Translation">@context.Translation</MudTd>
+            <MudTd DataLabel="Mapping">@context.Mapping</MudTd>
+            <MudTd DataLabel="Color">@context.Color.Name</MudTd>
+            <MudTd DataLabel="Color Group">@context.Color.Group.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Color.Group.Brand.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColorTranslation(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
@@ -36,7 +42,26 @@
 </MainBody>
 
 @code {
-    private IList<ColorTranslationModel> ColorTranslationsData { get; set; }
+    private MudTable<ColorTranslationModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<ColorTranslationModel>> ReloadTranslations(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<ColorTranslationModel> translations = ColorTranslationService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<ColorTranslationModel>() { TotalItems = ColorTranslationService.CountForListRequest(ListRequest), Items = translations });
+	}
+
+	private void FilterTranslations(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
 
     private async void AddColorTranslation()
     {
@@ -56,16 +81,7 @@
     {
         if (!result.Cancelled)
         {
-            ColorTranslationsData = ColorTranslationService.GetAll();
-
-            StateHasChanged();
+            Table.ReloadServerData();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        ColorTranslationsData = ColorTranslationService.GetAll();
     }
 }

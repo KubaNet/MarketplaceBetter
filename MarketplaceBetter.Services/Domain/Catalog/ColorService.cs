@@ -40,11 +40,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> groups = _repository.GetQuery();
+            IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Color> colors = _repository.GetQuery();
 
-            ApplyFilter(groups, request);
+            ApplyFilter(colors, request);
 
-            return groups.Count();
+            return colors.Count();
         }
 
         public IList<ColorModel> GetForListRequest(ListRequest request)
