@@ -83,12 +83,11 @@
             ProductVariant.Id = 0;
         }
 
-        Brand = Brands.Single(b => b.Id == ProductVariant.Product.Brand.Id);
-
-        ActivateProduct(Brand.Id);
+        ActivateProduct(ProductVariant.Product.Brand.Id);
         ActivateColor(ProductVariant.Product.ColorGroup.Id);
         ActivateSize(ProductVariant.Product.SizeGroup.Id);
 
+        Brand = Brands.Single(b => b.Id == ProductVariant.Product.Brand.Id);
         ProductVariant.Product = Products.Single(p => p.Id == ProductVariant.Product.Id);
         ProductVariant.Color = Colors.Single(c => c.Id == ProductVariant.Color.Id);
         ProductVariant.Size = Sizes.Single(s => s.Id == ProductVariant.Size.Id);
@@ -103,7 +102,6 @@
         ResetSize();
 
         ActivateProduct(brand.Id);
-        SetVariantSku();
 
         ProductVariant.Sku = brand.Code;
     }

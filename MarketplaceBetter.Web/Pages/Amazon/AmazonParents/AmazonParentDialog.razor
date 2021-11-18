@@ -76,12 +76,11 @@
     {
         AmazonParent = AmazonParentService.Get(AmazonParentId);
 
-        Brand = Brands.Single(b => b.Id == AmazonParent.Product.Brand.Id);
+        ActivateProduct(AmazonParent.Product.Brand.Id);
 
-        ActivateProduct(Brand.Id);
-
-        AmazonParent.Product = Products.Single(p => p.Id == AmazonParent.Product.Id);
         AmazonParent.Instance = Instances.Single(i => i.Id == AmazonParent.Instance.Id);
+        Brand = Brands.Single(b => b.Id == AmazonParent.Product.Brand.Id);
+        AmazonParent.Product = Products.Single(p => p.Id == AmazonParent.Product.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)

@@ -26,7 +26,7 @@ namespace MarketplaceBetter.Services.Validation.Catalog
 
             if (_repository.Any(t => t.Id != color.Id && t.InstanceId == color.Instance.Id && t.ColorId == color.Color.Id))
             {
-                result.AddErrorFor<ColorTranslationModel>(t => t.Color, "There already exists translation of this Color on selected Instance.");
+                result.AddErrorFor<ColorTranslationModel>(t => t.Color, "There already exists translation of this Color for selected Instance.");
             }
 
             return result;

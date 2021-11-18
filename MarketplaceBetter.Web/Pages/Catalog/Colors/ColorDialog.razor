@@ -56,6 +56,16 @@
 		}
 	}
 
+	private void SetInitialValues()
+	{
+		Color = ColorService.Get(ColorId);
+
+		ActivateColorGroup(Color.Group.Brand.Id);
+
+		Brand = Brands.Single(b => b.Id == Color.Group.Brand.Id);
+		Color.Group = ColorGroups.Single(g => g.Id == Color.Group.Id);
+	}
+
 	private void HandleBrandChanged(BrandModel brand)
 	{
 		Brand = brand;
@@ -74,18 +84,7 @@
 	private void ActivateColorGroup(long brandId)
 	{
 		ColorGroupSelectDisabled = false;
-		ColorGroups = ColorGroupService.GetForBrand(brandId);
-	}
-
-	private void SetInitialValues()
-	{
-		Color = ColorService.Get(ColorId);
-
-		Brand = Brands.Single(b => b.Id == Color.Group.Brand.Id);
-
-		ActivateColorGroup(Brand.Id);
-
-		Color.Group = ColorGroups.Single(g => g.Id == Color.Group.Id);
+		ColorGroups = ColorGroupService.GetAllForBrand(brandId);
 	}
 
 	private void HandleValidSubmit()

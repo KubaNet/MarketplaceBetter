@@ -36,7 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ProductVariantModel> GetAll() => _mapper.Map<IList<ProductVariantModel>>(_repository.GetAll().OrderBy(g => g.Sku));
 
-        public IList<ProductVariantModel> GetForProduct(long productId) => _mapper.Map<IList<ProductVariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
+        public IList<ProductVariantModel> GetAllForProduct(long productId) => _mapper.Map<IList<ProductVariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
 
         public int CountForListRequest(ListRequest request) => _repository.GetQuery().Count();
 
@@ -90,7 +90,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "product", "color", "size" };
+                string[] searchFieldNames = new[] { "id", "sku", "product", "brand", "color", "size" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -100,6 +100,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                         "id" => variants.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => variants.Where(p => p.Sku.Contains(searchField.Value)),
                         "product" => variants.Where(p => p.Product.Name.Contains(searchField.Value)),
+                        "brand" => variants.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
                         "color" => variants.Where(p => p.Color.Name.Contains(searchField.Value)),
                         "size" => variants.Where(p => p.Size.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -110,6 +111,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     variants = variants.Where(p => p.Id == searchString.ParseToIntOrDefault()
                       || p.Sku.Contains(searchString)
                       || p.Product.Name.Contains(searchString)
+                      || p.Product.Brand.Name.Contains(searchString)
                       || p.Color.Name.Contains(searchString)
                       || p.Size.Name.Contains(searchString));
                 }
@@ -127,6 +129,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     "id" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Id) : variants.OrderByDescending(v => v.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Sku) : variants.OrderByDescending(v => v.Sku),
                     "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Brand.Name) : variants.OrderByDescending(v => v.Product.Brand.Name),
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
                     "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)

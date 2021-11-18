@@ -20,6 +20,7 @@
             <MudTh><MudTableSortLabel SortLabel="sku" T="AmazonParentModel">SKU</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="AmazonParentModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="product" T="AmazonParentModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="AmazonParentModel">Brand</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="asin" T="AmazonParentModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="child_sku" T="AmazonParentModel">Child SKU</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
@@ -29,6 +30,7 @@
             <MudTd DataLabel="SKU">@context.Sku</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Child SKU">@context.ChildSku</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonParent(context.Id))">Edit</MudButton></MudTd>

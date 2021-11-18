@@ -35,7 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<ColorGroupModel> GetAll() => _mapper.Map<IList<ColorGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
 
-        public IList<ColorGroupModel> GetForBrand(long brandId) => _mapper.Map<IList<ColorGroupModel>>(_repository.Where(g => g.BrandId == brandId).OrderBy(g => g.Name));
+        public IList<ColorGroupModel> GetAllForBrand(long brandId) => _mapper.Map<IList<ColorGroupModel>>(_repository.Where(g => g.BrandId == brandId).OrderBy(g => g.Name));
 
         public int CountForListRequest(ListRequest request)
         {

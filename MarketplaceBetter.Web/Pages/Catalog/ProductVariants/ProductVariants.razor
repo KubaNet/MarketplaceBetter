@@ -19,6 +19,7 @@
 			<MudTh><MudTableSortLabel SortLabel="id" T="ProductVariantModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="sku" T="ProductVariantModel">SKU</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="product" T="ProductVariantModel">Product</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="brand" T="ProductVariantModel">Brand</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="color" T="ProductVariantModel">Color</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="size" T="ProductVariantModel">Size</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 170px;">Actions</MudTh>
@@ -27,6 +28,7 @@
 			<MudTd DataLabel="Id">@context.Id</MudTd>
 			<MudTd DataLabel="Sku">@context.Sku</MudTd>
 			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
+			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
 			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
 			<MudTd DataLabel="Size">@context.Size.Name</MudTd>
 			<MudTd>

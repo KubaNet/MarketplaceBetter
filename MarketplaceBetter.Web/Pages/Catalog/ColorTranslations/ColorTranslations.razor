@@ -23,7 +23,7 @@
             <MudTh><MudTableSortLabel SortLabel="color" T="ColorTranslationModel">Color</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="color_group" T="ColorTranslationModel">Color Group</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ColorTranslationModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
+            <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -33,7 +33,10 @@
             <MudTd DataLabel="Color">@context.Color.Name</MudTd>
             <MudTd DataLabel="Color Group">@context.Color.Group.Name</MudTd>
             <MudTd DataLabel="Brand">@context.Color.Group.Brand.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColorTranslation(context.Id))">Edit</MudButton></MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarColorTranslation(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColorTranslation(context.Id))">Edit</MudButton>
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager />
@@ -66,6 +69,13 @@
     private async void AddColorTranslation()
     {
         var result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Add Color Translation" }).Result;
+
+        ProcessColorTranslationDialogResult(result);
+    }
+
+    private async void AddSimilarColorTranslation(long id)
+    {
+        var result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Add Color Translation", ["AddingSimilar"] = true, ["ColorTranslationId"] = id }).Result;
 
         ProcessColorTranslationDialogResult(result);
     }

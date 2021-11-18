@@ -151,7 +151,7 @@
         if (Brand != null && Instance != null)
         {
             ParentSelectDisabled = false;
-            Parents = AmazonParentService.GetAllForBrandAndInstance(Brand.Id, Instance.Id).OrderBy(p => p.Sku).ToList();
+            Parents = AmazonParentService.GetAllForBrandAndInstance(Brand.Id, Instance.Id);
         }
     }
 
@@ -165,7 +165,7 @@
     private void ActivateProductVariant(long productId)
     {
         ProductVariantDisabled = false;
-        ProductVariants = ProductVariantService.GetForProduct(productId);
+        ProductVariants = ProductVariantService.GetAllForProduct(productId);
     }
 
     private void SetChildSku()
