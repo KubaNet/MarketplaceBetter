@@ -8,14 +8,18 @@ namespace MarketplaceBetter.Domain.Entities.Amazon
 {
     public class AmazonTargeting : Entity
     {
-        public string Targeting { get; set; }
-
-        public long StatusId { get; set; }
-
-        public virtual AmazonTargetingStatus Status { get; set; }
+        public string Value { get; set; }
 
         public long CampaignId { get; set; }
 
         public virtual AmazonCampaign Campaign { get; set; }
+
+        public long TypeId { get; set; }
+
+        public virtual AmazonTargetingType Type { get; set; }
+
+        public long StatusId { get; set; }
+
+        public virtual AmazonTargetingStatus Status { get; set; }
     }
 }

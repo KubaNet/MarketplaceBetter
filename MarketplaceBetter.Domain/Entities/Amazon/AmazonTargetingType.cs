@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon
 {
-    public enum AmazonTargetingStatusEnum
+    public class AmazonTargetingType : Entity
     {
-        None = 0,
+        public string Name { get; set; }
 
-        New = 1,
-
-        Active = 2,
-
-        Negative = 3,
+        public AmazonTargetingTypeEnum SystemName { get; set; }
     }
 }

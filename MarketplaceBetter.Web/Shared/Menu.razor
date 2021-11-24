@@ -48,7 +48,7 @@
 		{
 			<MudNavGroup Title="Inventory" Icon="@Icons.Filled.AppRegistration" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/amazoncampaigns">Campaigns</MudNavLink>
-				<MudNavLink Href="/amazontargets">Targets</MudNavLink>
+				<MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
 			</MudNavGroup>
 		}
 		else
@@ -112,7 +112,7 @@
 	private bool IsAmazonCampaignsModule()
 	{
 		if (NavigationManager.Uri.Contains("amazoncampaigns") ||
-			NavigationManager.Uri.Contains("amazontargets"))
+			NavigationManager.Uri.Contains("amazontargeting"))
 		{
 			return true;
 		}

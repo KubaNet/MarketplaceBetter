@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon
 {
-    public enum AmazonTargetingStatusEnum
+    public enum AmazonTargetingTypeEnum
     {
         None = 0,
 
-        New = 1,
+        Unknown = 1,
 
-        Active = 2,
+        Keyword = 2,
 
-        Negative = 3,
+        Product = 3,
     }
 }

@@ -1,0 +1,83 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/amazontargeting"
+@inject IAmazonTargetingService AmazonTargetingService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Amazon Targeting</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonTargetingModel>>>(ReloadTargetings))" Dense="true" Hover="true">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterTargetings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+            <MudButton OnClick="AddAmazonTargeting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Targeting</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="AmazonTargetingModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="value" T="AmazonTargetingModel">Value</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="campaign" T="AmazonTargetingModel">Campaign</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="type" T="AmazonTargetingModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="AmazonTargetingModel">Status</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Value">@context.Value</MudTd>
+            <MudTd DataLabel="Campaign">@context.Campaign.Name</MudTd>
+            <MudTd DataLabel="Type">@context.Type.Name</MudTd>
+            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonTargeting(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<AmazonTargetingModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<AmazonTargetingModel>> ReloadTargetings(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<AmazonTargetingModel> parents = AmazonTargetingService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<AmazonTargetingModel>() { TotalItems = AmazonTargetingService.CountForListRequest(ListRequest), Items = parents });
+	}
+
+    private void FilterTargetings(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddAmazonTargeting()
+    {
+        var result = await DialogService.Show<AmazonTargetingDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Targeting" }).Result;
+
+        ProcessAmazonTargetingDialogResult(result);
+    }
+
+    private async void EditAmazonTargeting(long id)
+    {
+        var result = await DialogService.Show<AmazonTargetingDialog>(null, new DialogParameters { ["Title"] = "Edit Amazon Targeting", ["IsEdit"] = true, ["AmazonTargetingId"] = id }).Result;
+
+        ProcessAmazonTargetingDialogResult(result);
+    }
+
+    private void ProcessAmazonTargetingDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

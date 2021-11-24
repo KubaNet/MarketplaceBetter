@@ -34,7 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public ProductModel Get(long id) => _mapper.Map<ProductModel>(_repository.Get(id));
 
-        public IList<ProductModel> GetAll() => _mapper.Map<IList<ProductModel>>(_repository.GetAll().OrderBy(g => g.Name));
+        public IList<ProductModel> GetAll() => _mapper.Map<IList<ProductModel>>(_repository.GetQuery().OrderBy(g => g.Name));
 
         public IList<ProductModel> GetForBrand(long brandId) => _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId).OrderBy(p => p.Name));
 

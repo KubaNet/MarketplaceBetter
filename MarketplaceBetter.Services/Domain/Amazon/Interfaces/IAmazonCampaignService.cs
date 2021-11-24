@@ -14,6 +14,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<AmazonCampaignModel> GetAll();
 
+        IList<AmazonCampaignModel> GetForInstance(long instanceId);
+
         int CountForListRequest(ListRequest request);
 
         IList<AmazonCampaignModel> GetForListRequest(ListRequest request);

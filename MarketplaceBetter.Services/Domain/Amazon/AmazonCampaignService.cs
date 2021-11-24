@@ -34,7 +34,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public AmazonCampaignModel Get(long id) => _mapper.Map<AmazonCampaignModel>(_repository.Get(id));
 
-        public IList<AmazonCampaignModel> GetAll() => _mapper.Map<IList<AmazonCampaignModel>>(_repository.GetAll().OrderBy(g => g.Name));
+        public IList<AmazonCampaignModel> GetAll() => _mapper.Map<IList<AmazonCampaignModel>>(_repository.GetQuery().OrderBy(g => g.Name));
+
+        public IList<AmazonCampaignModel> GetForInstance(long instanceId) => _mapper.Map<IList<AmazonCampaignModel>>(_repository.GetQuery().Where(c => c.InstanceId == instanceId).OrderBy(g => g.Name));
 
         public int CountForListRequest(ListRequest request)
         {

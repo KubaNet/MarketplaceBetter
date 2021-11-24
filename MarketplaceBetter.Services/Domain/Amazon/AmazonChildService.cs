@@ -34,7 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public AmazonChildModel Get(long id) => _mapper.Map<AmazonChildModel>(_repository.Get(id));
 
-        public IList<AmazonChildModel> GetAll() => _mapper.Map<IList<AmazonChildModel>>(_repository.GetAll().OrderBy(g => g.Sku));
+        public IList<AmazonChildModel> GetAll() => _mapper.Map<IList<AmazonChildModel>>(_repository.GetQuery().OrderBy(g => g.Sku));
 
         public int CountForListRequest(ListRequest request)
         {

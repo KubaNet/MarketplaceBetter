@@ -87,6 +87,8 @@
     <Build Include="dbo\Tables\Amazon\AmazonTargetingStatus.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonTargeting.sql" />
     <None Include="Scripts\Inserts\04_AmazonTargetingStatuses.sql" />
+    <None Include="Scripts\Inserts\05_AmazonTargetingTypes.sql" />
+    <Build Include="dbo\Tables\Amazon\AmazonTargetingType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />

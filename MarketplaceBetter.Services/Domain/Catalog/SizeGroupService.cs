@@ -33,7 +33,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public SizeGroupModel Get(long id) => _mapper.Map<SizeGroupModel>(_repository.Get(id));
 
-        public IList<SizeGroupModel> GetAll() => _mapper.Map<IList<SizeGroupModel>>(_repository.GetAll().OrderBy(g => g.Name));
+        public IList<SizeGroupModel> GetAll() => _mapper.Map<IList<SizeGroupModel>>(_repository.GetQuery().OrderBy(g => g.Name));
 
         public int CountForListRequest(ListRequest request)
         {

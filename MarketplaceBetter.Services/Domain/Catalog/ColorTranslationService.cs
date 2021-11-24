@@ -33,7 +33,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public ColorTranslationModel Get(long id) => _mapper.Map<ColorTranslationModel>(_repository.Get(id));
 
-        public IList<ColorTranslationModel> GetAll() => _mapper.Map<IList<ColorTranslationModel>>(_repository.GetAll());
+        public IList<ColorTranslationModel> GetAll() => _mapper.Map<IList<ColorTranslationModel>>(_repository.GetQuery());
 
         public int CountForListRequest(ListRequest request)
         {
