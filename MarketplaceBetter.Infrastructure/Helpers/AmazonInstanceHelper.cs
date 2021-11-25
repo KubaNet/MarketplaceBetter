@@ -14,8 +14,15 @@ namespace MarketplaceBetter.Infrastructure.Helpers
         {
             return instance switch
             {
+                InstanceEnum.AmazonUS => "us",
+                InstanceEnum.AmazonCA => "ca",
                 InstanceEnum.AmazonUK => "uk",
                 InstanceEnum.AmazonDE => "de",
+                InstanceEnum.AmazonFR => "fr",
+                InstanceEnum.AmazonIT => "it",
+                InstanceEnum.AmazonES => "es",
+                InstanceEnum.AmazonNL => "nl",
+                InstanceEnum.AmazonSE => "se",
                 _ => throw new UnrecognizedEnumValue<InstanceEnum>(instance)
             };
         }

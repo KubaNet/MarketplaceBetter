@@ -190,18 +190,18 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 CampaignId = campaign.Id,
                 Value = targetingValue,
                 Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.New),
-                Type = targetingValue.StartsWith("b0") ? _typeRepository.Single(t => t.SystemName == AmazonTargetingTypeEnum.Product) : _typeRepository.Single(t => t.SystemName == AmazonTargetingTypeEnum.Keyword)
+                Type = targetingValue.ToLower().StartsWith("b0") ? _typeRepository.Single(t => t.SystemName == AmazonTargetingTypeEnum.Product) : _typeRepository.Single(t => t.SystemName == AmazonTargetingTypeEnum.Keyword)
             };
 
             _repository.Add(targeting);
             _unitOfWork.Save();
         }
 
-        private IQueryable<AmazonTargeting> ApplyFilter(IQueryable<AmazonTargeting> products, ListRequest request)
+        private IQueryable<AmazonTargeting> ApplyFilter(IQueryable<AmazonTargeting> targeting, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
-                return products;
+                return targeting;
             }
 
             IList<string> searchStrings = request.SearchString.SplitForFiltering();
@@ -213,19 +213,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
                 if (searchField != null)
                 {
-                    products = searchField.Name switch
+                    targeting = searchField.Name switch
                     {
-                        "id" => products.Where(t => t.Id == searchField.Value.ParseToIntOrDefault()),
-                        "value" => products.Where(t => t.Value.Contains(searchField.Value)),
-                        "campaign" => products.Where(t => t.Campaign.Name.Contains(searchField.Value)),
-                        "type" => products.Where(t => t.Type.Name.Contains(searchField.Value)),
-                        "status" => products.Where(t => t.Status.Name.Contains(searchField.Value)),
+                        "id" => targeting.Where(t => t.Id == searchField.Value.ParseToIntOrDefault()),
+                        "value" => targeting.Where(t => t.Value.Contains(searchField.Value)),
+                        "campaign" => targeting.Where(t => t.Campaign.Name.Contains(searchField.Value)),
+                        "type" => targeting.Where(t => t.Type.Name.Contains(searchField.Value)),
+                        "status" => targeting.Where(t => t.Status.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    products = products.Where(t => t.Id == searchString.ParseToIntOrDefault()
+                    targeting = targeting.Where(t => t.Id == searchString.ParseToIntOrDefault()
                         || t.Value.Contains(searchString)
                         || t.Campaign.Name.Contains(searchString)
                         || t.Type.Name.Contains(searchString)
@@ -233,30 +233,30 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 }
             }
 
-            return products;
+            return targeting;
         }
 
-        private IQueryable<AmazonTargeting> ApplySorting(IQueryable<AmazonTargeting> products, ListRequest request)
+        private IQueryable<AmazonTargeting> ApplySorting(IQueryable<AmazonTargeting> tageting, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
-                products = request.SortBy switch
+                tageting = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(t => t.Id) : products.OrderByDescending(t => t.Id),
-                    "value" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(t => t.Value) : products.OrderByDescending(t => t.Value),
-                    "campaign" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(t => t.Campaign.Name) : products.OrderByDescending(t => t.Campaign.Name),
-                    "type" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(t => t.Type.Name) : products.OrderByDescending(t => t.Type.Name),
-                    "status" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(t => t.Status.Name) : products.OrderByDescending(t => t.Status.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? tageting.OrderBy(t => t.Id) : tageting.OrderByDescending(t => t.Id),
+                    "value" => request.SortDirection == SortDirection.Ascending ? tageting.OrderBy(t => t.Value) : tageting.OrderByDescending(t => t.Value),
+                    "campaign" => request.SortDirection == SortDirection.Ascending ? tageting.OrderBy(t => t.Campaign.Name) : tageting.OrderByDescending(t => t.Campaign.Name),
+                    "type" => request.SortDirection == SortDirection.Ascending ? tageting.OrderBy(t => t.Type.Name) : tageting.OrderByDescending(t => t.Type.Name),
+                    "status" => request.SortDirection == SortDirection.Ascending ? tageting.OrderBy(t => t.Status.Name) : tageting.OrderByDescending(t => t.Status.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
-            return products;
+            return tageting;
         }
 
-        private IQueryable<AmazonTargeting> ApplyPaging(IQueryable<AmazonTargeting> products, ListRequest request)
+        private IQueryable<AmazonTargeting> ApplyPaging(IQueryable<AmazonTargeting> targeting, ListRequest request)
         {
-            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return targeting.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }
