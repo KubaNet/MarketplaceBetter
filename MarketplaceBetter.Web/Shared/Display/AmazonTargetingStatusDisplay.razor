@@ -1,0 +1,21 @@
+﻿@using MarketplaceBetter.Domain.Entities.Amazon
+@using MarketplaceBetter.Domain.Model.Amazon
+
+@{
+    switch (Status.SystemName)
+    {
+        case AmazonTargetingStatusEnum.New:
+            <text><MudChip>@Status.Name</MudChip></text>
+            break;
+        case AmazonTargetingStatusEnum.Active:
+            <text><MudChip Color="Color.Success">@Status.Name</MudChip></text>
+            break;
+        case AmazonTargetingStatusEnum.Negative:
+            <text><MudChip Color="Color.Error">@Status.Name</MudChip></text>
+            break;
+    }
+}
+
+@code {
+    [Parameter] public AmazonTargetingStatusModel Status { get; set; }
+}

@@ -1,35 +1,39 @@
-﻿@using MarketplaceBetter.Domain.Model.Amazon
+﻿@using MarketplaceBetter.Domain.Entities.Amazon
+@using MarketplaceBetter.Domain.Model.Amazon
 @using MarketplaceBetter.Services.Domain.Amazon.Interfaces
 @using MarketplaceBetter.Services.Model
 
 @page "/amazontargeting"
 @inject IAmazonTargetingService AmazonTargetingService
+@inject IAmazonTargetingStatusService AmazonTargetingStatusService
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h3">Amazon Targeting</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonTargetingModel>>>(ReloadTargetings))" Dense="true" Hover="true">
+    <MudTable T="AmazonTargetingModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonTargetingModel>>>(ReloadTargetings))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
         <ToolBarContent>
 			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterTargetings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-            <MudButton OnClick="AddAmazonTargeting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Targeting</MudButton>
+            <MudButton OnClick="SetAsActive" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success" Disabled="NoneSelected" Class="ml-2">Active</MudButton>
+            <MudButton OnClick="SetAsNegative" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Negative</MudButton>
+            <MudButton OnClick="AddAmazonTargeting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="AmazonTargetingModel">Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="value" T="AmazonTargetingModel">Value</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="campaign" T="AmazonTargetingModel">Campaign</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="type" T="AmazonTargetingModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="value" T="AmazonTargetingModel">Value</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="status" T="AmazonTargetingModel">Status</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="campaign" T="AmazonTargetingModel">Campaign</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Value">@context.Value</MudTd>
-            <MudTd DataLabel="Campaign">@context.Campaign.Name</MudTd>
             <MudTd DataLabel="Type">@context.Type.Name</MudTd>
-            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonTargeting(context.Id))">Edit</MudButton></MudTd>
+            <MudTd DataLabel="Value">@context.Value</MudTd>
+            <MudTd DataLabel="Status">
+                <AmazonTargetingStatusDisplay Status="@context.Status" />
+            </MudTd>
+            <MudTd DataLabel="Campaign">@context.Campaign.Name</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager />
@@ -41,23 +45,26 @@
     private MudTable<AmazonTargetingModel> Table;
     private ListRequest ListRequest = new();
 
+    private HashSet<AmazonTargetingModel> SelectedTargeting = new HashSet<AmazonTargetingModel>();
+    private bool NoneSelected = true;
+
     private Task<TableData<AmazonTargetingModel>> ReloadTargetings(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<AmazonTargetingModel> parents = AmazonTargetingService.GetForListRequest(ListRequest);
+        IList<AmazonTargetingModel> parents = AmazonTargetingService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<AmazonTargetingModel>() { TotalItems = AmazonTargetingService.CountForListRequest(ListRequest), Items = parents });
-	}
+        return Task.FromResult(new TableData<AmazonTargetingModel>() { TotalItems = AmazonTargetingService.CountForListRequest(ListRequest), Items = parents });
+    }
 
     private void FilterTargetings(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
     private async void AddAmazonTargeting()
     {
@@ -79,5 +86,43 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<AmazonTargetingModel> selectedTargeting)
+    {
+        SelectedTargeting = selectedTargeting;
+
+        if (SelectedTargeting.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+
+    private void SetAsActive()
+    {
+        AmazonTargetingService.SetAsActive(SelectedTargeting.ToList());
+
+        foreach (var targeting in SelectedTargeting)
+        {
+            targeting.Status = AmazonTargetingStatusService.GetBySystemName(AmazonTargetingStatusEnum.Active);
+        }
+
+        SelectedTargeting.Clear();
+    }
+
+    private void SetAsNegative()
+    {
+        AmazonTargetingService.SetAsNegative(SelectedTargeting.ToList());
+
+        foreach (var targeting in SelectedTargeting)
+        {
+            targeting.Status = AmazonTargetingStatusService.GetBySystemName(AmazonTargetingStatusEnum.Negative);
+        }
+
+        SelectedTargeting.Clear();
     }
 }

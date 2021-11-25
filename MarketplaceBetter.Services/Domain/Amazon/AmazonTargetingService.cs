@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CsvHelper;
+using CsvHelper.Configuration;
 using MarketplaceBetter.Domain.Entities.Amazon;
 using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Amazon;
@@ -11,6 +13,8 @@ using MarketplaceBetter.Services.Model;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +25,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonTargeting> _repository;
+        private readonly IRepository<AmazonTargetingStatus> _statusRepository;
+        private readonly IRepository<AmazonTargetingType> _typeRepository;
         private readonly IMapper _mapper;
 
         public AmazonTargetingService(
@@ -29,6 +35,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         {
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonTargeting>();
+            _statusRepository = unitOfWork.GetRepository<AmazonTargetingStatus>();
+            _typeRepository = unitOfWork.GetRepository<AmazonTargetingType>();
             _mapper = mapper;
         }
 
@@ -56,28 +64,78 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             return _mapper.Map<IList<AmazonTargetingModel>>(targeting);
         }
 
-        public void Add(AmazonTargetingModel targeting)
+        public void Add(AmazonTargetingModel targeting, Stream file)
         {
-            AmazonTargeting targetingToAdd = new();
+            ReadAndSaveTargeting(targeting.Campaign, file);
+        }
 
-            TransferValues(targetingToAdd, targeting);
+        public void SetAsNegative(IList<AmazonTargetingModel> targeting)
+        {
+            foreach (var singleTargeting in targeting)
+            {
+                AmazonTargeting amzTargeting = _repository.Get(singleTargeting.Id);
 
-            _repository.Add(targetingToAdd);
+                amzTargeting.Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.Negative);
+
+                _repository.Update(amzTargeting);
+            }
+
             _unitOfWork.Save();
         }
 
-        public void Update(AmazonTargetingModel targeting)
+        public void SetAsActive(IList<AmazonTargetingModel> targeting)
         {
-            AmazonTargeting targetingToUpdate = _repository.Get(targeting.Id);
+            foreach (var singleTargeting in targeting)
+            {
+                AmazonTargeting amzTargeting = _repository.Get(singleTargeting.Id);
 
-            TransferValues(targetingToUpdate, targeting);
+                amzTargeting.Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.Active);
 
-            _repository.Update(targetingToUpdate);
+                _repository.Update(amzTargeting);
+            }
+
             _unitOfWork.Save();
         }
 
-        private void TransferValues(AmazonTargeting toTargeting, AmazonTargetingModel fromTargeting)
+        private void ReadAndSaveTargeting(AmazonCampaignModel campaign, Stream file)
         {
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ",",
+            };
+
+            using var reader = new StreamReader(file);
+            using var csv = new CsvReader(reader, config);
+
+            csv.Read();
+            csv.ReadHeader();
+
+            while (csv.Read())
+            {
+                string targeting = csv.GetField(0);
+
+                ProcessTargeting(campaign, targeting);
+            }
+        }
+
+        private void ProcessTargeting(AmazonCampaignModel campaign, string targetingValue)
+        {
+            AmazonTargeting targeting = _repository.SingleOrDefault(t => t.CampaignId == campaign.Id && t.Value == targetingValue);
+            if (targeting != null)
+            {
+                return;
+            }
+
+            targeting = new AmazonTargeting
+            {
+                CampaignId = campaign.Id,
+                Value = targetingValue,
+                Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.New),
+                Type = targetingValue.StartsWith("b0") ? _typeRepository.Single(t => t.SystemName == AmazonTargetingTypeEnum.Product) : _typeRepository.Single(t => t.SystemName == AmazonTargetingTypeEnum.Keyword)
+            };
+
+            _repository.Add(targeting);
+            _unitOfWork.Save();
         }
 
         private IQueryable<AmazonTargeting> ApplyFilter(IQueryable<AmazonTargeting> products, ListRequest request)
@@ -91,7 +149,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "value", "campaign", "type", "status"};
+                string[] searchFieldNames = new[] { "id", "value", "campaign", "type", "status" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)

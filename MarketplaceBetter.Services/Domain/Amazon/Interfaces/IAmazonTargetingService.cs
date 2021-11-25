@@ -2,6 +2,7 @@
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,8 +19,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<AmazonTargetingModel> GetForListRequest(ListRequest request);
 
-        void Add(AmazonTargetingModel Targeting);
+        void Add(AmazonTargetingModel Targeting, Stream file);
 
-        void Update(AmazonTargetingModel Targeting);
+        void SetAsNegative(IList<AmazonTargetingModel> targeting);
+
+        void SetAsActive(IList<AmazonTargetingModel> targeting);
     }
 }
