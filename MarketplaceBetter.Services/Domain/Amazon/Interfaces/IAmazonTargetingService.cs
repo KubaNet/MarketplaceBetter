@@ -24,5 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
         void SetAsNegative(IList<AmazonTargetingModel> targeting);
 
         void SetAsActive(IList<AmazonTargetingModel> targeting);
+
+        Stream ExportTargeting(ListRequest request);
     }
 }

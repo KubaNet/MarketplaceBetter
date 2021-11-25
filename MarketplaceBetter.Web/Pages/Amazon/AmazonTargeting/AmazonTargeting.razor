@@ -2,8 +2,10 @@
 @using MarketplaceBetter.Domain.Model.Amazon
 @using MarketplaceBetter.Services.Domain.Amazon.Interfaces
 @using MarketplaceBetter.Services.Model
+@using System.IO
 
 @page "/amazontargeting"
+@inject IJSRuntime JS
 @inject IAmazonTargetingService AmazonTargetingService
 @inject IAmazonTargetingStatusService AmazonTargetingStatusService
 @inject IDialogService DialogService
@@ -13,11 +15,12 @@
 <MainBody>
     <MudTable T="AmazonTargetingModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonTargetingModel>>>(ReloadTargetings))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterTargetings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterTargetings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
             <MudButton OnClick="SetAsActive" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success" Disabled="NoneSelected" Class="ml-2">Active</MudButton>
             <MudButton OnClick="SetAsNegative" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Negative</MudButton>
-            <MudButton OnClick="AddAmazonTargeting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add</MudButton>
+            <MudButton OnClick="ExportTargeting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Secondary" Class="ml-2">Export</MudButton>
+            <MudButton OnClick="AddTargeting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="AmazonTargetingModel">Id</MudTableSortLabel></MudTh>
@@ -66,16 +69,9 @@
         StateHasChanged();
     }
 
-    private async void AddAmazonTargeting()
+    private async void AddTargeting()
     {
         var result = await DialogService.Show<AmazonTargetingDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Targeting" }).Result;
-
-        ProcessAmazonTargetingDialogResult(result);
-    }
-
-    private async void EditAmazonTargeting(long id)
-    {
-        var result = await DialogService.Show<AmazonTargetingDialog>(null, new DialogParameters { ["Title"] = "Edit Amazon Targeting", ["IsEdit"] = true, ["AmazonTargetingId"] = id }).Result;
 
         ProcessAmazonTargetingDialogResult(result);
     }
@@ -124,5 +120,14 @@
         }
 
         SelectedTargeting.Clear();
+    }
+
+    private async Task ExportTargeting()
+    {
+        Stream fileStream = AmazonTargetingService.ExportTargeting(ListRequest);
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", "Targeting.csv", streamRef);
     }
 }

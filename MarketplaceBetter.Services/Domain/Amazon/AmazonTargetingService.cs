@@ -97,6 +97,37 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
+        public Stream ExportTargeting(ListRequest request)
+        {
+            IQueryable<AmazonTargeting> targeting = _repository.GetQuery();
+
+            targeting = ApplyFilter(targeting, request);
+
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ",",
+                Encoding = Encoding.UTF8,
+                HasHeaderRecord = false,
+            };
+
+            CsvWriter csv = new CsvWriter(writer, config);
+
+            foreach (var amzTargeting in targeting)
+            {
+                csv.WriteField(amzTargeting.Value);
+                csv.NextRecord();
+            }
+
+            writer.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
+        }
+
         private void ReadAndSaveTargeting(AmazonCampaignModel campaign, Stream file)
         {
             CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
