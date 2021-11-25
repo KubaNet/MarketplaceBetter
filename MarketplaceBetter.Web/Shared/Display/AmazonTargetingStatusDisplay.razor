@@ -1,21 +1,49 @@
 ﻿@using MarketplaceBetter.Domain.Entities.Amazon
 @using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+
+@inject IAmazonTargetingService TargetingService
+@inject IAmazonTargetingStatusService TargetingStatusService
 
 @{
-    switch (Status.SystemName)
+    switch (Targeting.Status.SystemName)
     {
         case AmazonTargetingStatusEnum.New:
-            <text><MudChip>@Status.Name</MudChip></text>
+            <text>
+                <MudIconButton Icon="@Icons.Material.Filled.Check" Color="@Color.Success" OnClick="SetAsActive"></MudIconButton>
+                <MudChip>@Targeting.Status.Name</MudChip>
+                <MudIconButton Icon="@Icons.Material.Filled.Block" Color="@Color.Error" OnClick="SetAsNegative"></MudIconButton>
+            </text>
             break;
         case AmazonTargetingStatusEnum.Active:
-            <text><MudChip Color="Color.Success">@Status.Name</MudChip></text>
+            <text>
+                <MudChip Color="Color.Success">@Targeting.Status.Name</MudChip>
+                <MudIconButton Icon="@Icons.Material.Filled.Block" Color="@Color.Error" OnClick="SetAsNegative"></MudIconButton>
+            </text>
             break;
         case AmazonTargetingStatusEnum.Negative:
-            <text><MudChip Color="Color.Error">@Status.Name</MudChip></text>
+            <text>
+                <MudIconButton Icon="@Icons.Material.Filled.Check" Color="@Color.Success" OnClick="SetAsActive"></MudIconButton>
+                <MudChip Color="Color.Error">@Targeting.Status.Name</MudChip>
+            </text>
             break;
     }
 }
 
 @code {
-    [Parameter] public AmazonTargetingStatusModel Status { get; set; }
+    [Parameter] public AmazonTargetingModel Targeting { get; set; }
+
+    private void SetAsActive()
+    {
+        TargetingService.SetAsActive(Targeting);
+
+        Targeting.Status = TargetingStatusService.GetBySystemName(AmazonTargetingStatusEnum.Active);
+    }
+
+    private void SetAsNegative()
+    {
+        TargetingService.SetAsNegative(Targeting);
+
+        Targeting.Status = TargetingStatusService.GetBySystemName(AmazonTargetingStatusEnum.Negative);
+    }
 }

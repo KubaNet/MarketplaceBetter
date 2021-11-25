@@ -69,17 +69,31 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             ReadAndSaveTargeting(targeting.Campaign, file);
         }
 
+        public void SetAsNegative(AmazonTargetingModel targeting)
+        {
+            AmazonTargeting amzTargeting = _repository.Get(targeting.Id);
+
+            amzTargeting.Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.Negative);
+
+            _repository.Update(amzTargeting);
+            _unitOfWork.Save();
+        }
+
         public void SetAsNegative(IList<AmazonTargetingModel> targeting)
         {
             foreach (var singleTargeting in targeting)
             {
-                AmazonTargeting amzTargeting = _repository.Get(singleTargeting.Id);
-
-                amzTargeting.Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.Negative);
-
-                _repository.Update(amzTargeting);
+                SetAsNegative(singleTargeting);
             }
+        }
 
+        public void SetAsActive(AmazonTargetingModel targeting)
+        {
+            AmazonTargeting amzTargeting = _repository.Get(targeting.Id);
+
+            amzTargeting.Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.Active);
+
+            _repository.Update(amzTargeting);
             _unitOfWork.Save();
         }
 
@@ -87,13 +101,27 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         {
             foreach (var singleTargeting in targeting)
             {
-                AmazonTargeting amzTargeting = _repository.Get(singleTargeting.Id);
-
-                amzTargeting.Status = _statusRepository.Single(s => s.SystemName == AmazonTargetingStatusEnum.Active);
-
-                _repository.Update(amzTargeting);
+                SetAsActive(singleTargeting);
             }
+        }
 
+        public void SetAsKeyword(AmazonTargetingModel targeting)
+        {
+            AmazonTargeting amzTargeting = _repository.Get(targeting.Id);
+
+            amzTargeting.Type = _typeRepository.Single(s => s.SystemName == AmazonTargetingTypeEnum.Keyword);
+
+            _repository.Update(amzTargeting);
+            _unitOfWork.Save();
+        }
+
+        public void SetAsProduct(AmazonTargetingModel targeting)
+        {
+            AmazonTargeting amzTargeting = _repository.Get(targeting.Id);
+
+            amzTargeting.Type = _typeRepository.Single(s => s.SystemName == AmazonTargetingTypeEnum.Product);
+
+            _repository.Update(amzTargeting);
             _unitOfWork.Save();
         }
 

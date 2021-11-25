@@ -10,8 +10,22 @@ namespace MarketplaceBetter.Domain.Entities.Sales
     {
         None = 0,
 
-        AmazonUK = 1,
+        AmazonUS = 1,
 
-        AmazonDE = 2,
+        AmazonCA = 2,
+
+        AmazonUK = 3,
+
+        AmazonDE = 4,
+
+        AmazonFR = 5,
+
+        AmazonIT = 6,
+
+        AmazonES = 7,
+
+        AmazonNL = 8,
+
+        AmazonSE = 9,
     }
 }

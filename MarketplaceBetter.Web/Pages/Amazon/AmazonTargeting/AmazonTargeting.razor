@@ -31,10 +31,12 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Type">@context.Type.Name</MudTd>
+            <MudTd DataLabel="Type">
+                <AmazonTargetingTypeDisplay Targeting="@context" />
+            </MudTd>
             <MudTd DataLabel="Value">@context.Value</MudTd>
             <MudTd DataLabel="Status">
-                <AmazonTargetingStatusDisplay Status="@context.Status" />
+                <AmazonTargetingStatusDisplay Targeting="@context" />
             </MudTd>
             <MudTd DataLabel="Campaign">@context.Campaign.Name</MudTd>
         </RowTemplate>
