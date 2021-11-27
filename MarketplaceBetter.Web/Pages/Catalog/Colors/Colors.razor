@@ -19,16 +19,16 @@
             <MudTh><MudTableSortLabel SortLabel="id" T="ColorModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="name" T="ColorModel">Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="code" T="ColorModel">Code</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="group" T="ColorModel">Group</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ColorModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="group" T="ColorModel">Group</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Group">@context.Group.Name</MudTd>
             <MudTd DataLabel="Brand">@context.Group.Brand.Name</MudTd>
+            <MudTd DataLabel="Group">@context.Group.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColor(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>

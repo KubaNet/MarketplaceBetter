@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog
 @using MarketplaceBetter.Services.Domain.Catalog.Interfaces
+@using MarketplaceBetter.Services.Model
 
 @page "/sizes"
 @inject ISizeService SizeService
@@ -8,22 +9,25 @@
 <MudText Typo="Typo.h3">Sizes</MudText>
 
 <MainBody>
-    <MudTable Items="@SizesData" Dense="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<SizeModel>>>(ReloadSizes))" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudSpacer />
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterSizes" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
             <MudButton OnClick="AddSize" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Size</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Code</MudTh>
-            <MudTh>Group</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="SizeModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="SizeModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="code" T="SizeModel">Code</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ColorModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="group" T="SizeModel">Group</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
+            <MudTd DataLabel="Brand">@context.Group.Brand.Name</MudTd>
             <MudTd DataLabel="Group">@context.Group.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditSize(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
@@ -34,7 +38,26 @@
 </MainBody>
 
 @code {
-    private IList<SizeModel> SizesData { get; set; }
+    private MudTable<SizeModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<SizeModel>> ReloadSizes(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<SizeModel> colors = SizeService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<SizeModel>() { TotalItems = SizeService.CountForListRequest(ListRequest), Items = colors });
+	}
+
+	private void FilterSizes(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
 
     private async void AddSize()
     {
@@ -54,16 +77,7 @@
     {
         if (!result.Cancelled)
         {
-            SizesData = SizeService.GetAll();
-
-            StateHasChanged();
+            Table.ReloadServerData();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        SizesData = SizeService.GetAll();
     }
 }

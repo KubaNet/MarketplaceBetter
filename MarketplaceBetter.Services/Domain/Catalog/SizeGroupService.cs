@@ -35,6 +35,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
         public IList<SizeGroupModel> GetAll() => _mapper.Map<IList<SizeGroupModel>>(_repository.GetQuery().OrderBy(g => g.Name));
 
+        public IList<SizeGroupModel> GetAllForBrand(long brandId) => _mapper.Map<IList<SizeGroupModel>>(_repository.Where(g => g.BrandId == brandId).OrderBy(g => g.Name));
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<SizeGroup> groups = _repository.GetQuery();

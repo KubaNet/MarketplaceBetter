@@ -96,7 +96,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "code", "group", "brand" };
+                string[] searchFieldNames = new[] { "id", "name", "code", "brand", "group" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -106,8 +106,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                         "id" => colors.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
                         "name" => colors.Where(c => c.Name.Contains(searchField.Value)),
                         "code" => colors.Where(c => c.Code.Contains(searchField.Value)),
-                        "group" => colors.Where(c => c.Group.Name.Contains(searchField.Value)),
                         "brand" => colors.Where(c => c.Group.Brand.Name.Contains(searchField.Value)),
+                        "group" => colors.Where(c => c.Group.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -116,8 +116,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     colors = colors.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Name.Contains(searchString)
                         || c.Code.Contains(searchString)
-                        || c.Group.Name.Contains(searchString)
-                        || c.Group.Brand.Name.Contains(searchString));
+                        || c.Group.Brand.Name.Contains(searchString)
+                        || c.Group.Name.Contains(searchString));
                 }
             }
 
@@ -133,8 +133,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
                     "id" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Id) : colors.OrderByDescending(c => c.Id),
                     "name" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Name) : colors.OrderByDescending(c => c.Name),
                     "code" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Code) : colors.OrderByDescending(c => c.Code),
-                    "group" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Group.Name) : colors.OrderByDescending(c => c.Group.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Group.Brand.Name) : colors.OrderByDescending(c => c.Group.Brand.Name),
+                    "group" => request.SortDirection == SortDirection.Ascending ? colors.OrderBy(c => c.Group.Name) : colors.OrderByDescending(c => c.Group.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
