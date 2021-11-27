@@ -19,12 +19,6 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect Label="Instance" T="InstanceModel" Value="AmazonParent.Instance" For="() => AmazonParent.Instance" ValueChanged="HandleInstanceChanged">
-            @foreach (var instance in Instances)
-            {
-                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-            }
-        </MudSelect>
         <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
@@ -38,7 +32,6 @@
             }
         </MudSelect>
         <MudTextField Label="SKU" @bind-Value="AmazonParent.Sku" For="() => AmazonParent.Sku" />
-        <MudTextField Label="ASIN" @bind-Value="AmazonParent.Asin" For="() => AmazonParent.Asin" />
         <MudTextField Label="Child SKU" @bind-Value="AmazonParent.ChildSku" For="() => AmazonParent.ChildSku" />
     </FormDialog>
 </EditForm>
@@ -55,7 +48,6 @@
 
     private IList<BrandModel> Brands;
     private IList<ProductModel> Products = new List<ProductModel>();
-    private IList<InstanceModel> Instances;
 
     private bool ProductSelectDisabled = true;
 
@@ -64,7 +56,6 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAllForAmazon();
 
         if (IsEdit)
         {
@@ -78,7 +69,6 @@
 
         ActivateProduct(AmazonParent.Product.Brand.Id);
 
-        AmazonParent.Instance = Instances.Single(i => i.Id == AmazonParent.Instance.Id);
         Brand = Brands.Single(b => b.Id == AmazonParent.Product.Brand.Id);
         AmazonParent.Product = Products.Single(p => p.Id == AmazonParent.Product.Id);
     }
@@ -95,12 +85,6 @@
     private void HandleProductChanged(ProductModel product)
     {
         AmazonParent.Product = product;
-        SetParentSku();
-    }
-
-    private void HandleInstanceChanged(InstanceModel instance)
-    {
-        AmazonParent.Instance = instance;
         SetParentSku();
     }
 
@@ -121,17 +105,9 @@
     {
         AmazonParent.Sku = null;
 
-        if (AmazonParent.Product != null && AmazonParent.Instance != null)
-        {
-            AmazonParent.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(AmazonParent.Instance.SystemName), AmazonParent.Product.Name.ToLower().Replace(" ", "_"));
-        }
-        else if (AmazonParent.Product != null)
+        if (AmazonParent.Product != null)
         {
             AmazonParent.Sku = AmazonParent.Product.Name.ToLower().Replace(" ", "_");
-        }
-        else if (AmazonParent.Instance != null)
-        {
-            AmazonParent.Sku = AmazonInstanceHelper.GetCodeFor(AmazonParent.Instance.SystemName);
         }
     }
 

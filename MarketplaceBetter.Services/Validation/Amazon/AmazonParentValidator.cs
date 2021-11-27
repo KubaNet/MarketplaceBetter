@@ -24,24 +24,14 @@ namespace MarketplaceBetter.Services.Validation.Amazon
         {
             ValidationResult result = new();
 
-            if (_repository.Any(p => p.Id != parent.Id && p.InstanceId == parent.Instance.Id && p.ProductId == parent.Product.Id))
+            if (_repository.Any(p => p.Id != parent.Id && p.ProductId == parent.Product.Id))
             {
-                result.AddError("There already exists an Amazon Parent for this Instance and Product.");
+                result.AddError("There already exists an Amazon Parent for this Product.");
             }
 
             if (_repository.Any(p => p.Id != parent.Id && p.Sku == parent.Sku))
             {
                 result.AddErrorFor<AmazonParentModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Amazon Parent", "SKU");
-            }
-
-            if (_repository.Any(p => p.Id != parent.Id && p.Asin != null && p.Asin == parent.Asin))
-            {
-                result.AddErrorFor<AmazonParentModel>(p => p.Asin, ValidationMessages.PropertyNotUnique, "Amazon Parent", "ASIN");
-            }
-
-            if (parent.Asin.Length != 10 && parent.Asin.Length != 0)
-            {
-                result.AddErrorFor<AmazonParentModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
             }
 
             return result;

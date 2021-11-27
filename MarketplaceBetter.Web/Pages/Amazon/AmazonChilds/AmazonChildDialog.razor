@@ -86,7 +86,6 @@
         AmazonChild = AmazonChildService.Get(AmazonChildId);
 
         Brand = Brands.Single(b => b.Id == AmazonChild.Parent.Product.Brand.Id);
-        Instance = Instances.Single(i => i.Id == AmazonChild.Parent.Instance.Id);
 
         ActivateParent();
         ActivateProductVariant(AmazonChild.Parent.Product.Id);
@@ -151,7 +150,7 @@
         if (Brand != null && Instance != null)
         {
             ParentSelectDisabled = false;
-            Parents = AmazonParentService.GetAllForBrandAndInstance(Brand.Id, Instance.Id);
+            Parents = AmazonParentService.GetAllForBrand(Brand.Id, Instance.Id);
         }
     }
 

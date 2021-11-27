@@ -11,21 +11,23 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon
 {
-    public class AmazonParentModel
+    public class AmazonParentInstanceModel
     {
         public long Id { get; set; }
 
         [Required]
-        public ProductModel Product { get; set; }
+        public AmazonParentModel Parent { get; set; }
+
+        [Required]
+        public InstanceModel Instance { get; set; }
 
         [Display(Name = "SKU")]
         [Required]
         [StringLength(Standard.AmazonSkuMaxLength, MinimumLength = 2)]
         public string Sku { get; set; }
 
-        [Display(Name = "Child SKU")]
-        [Required]
-        [BetterLength]
-        public string ChildSku { get; set; }
+        [Display(Name = "ASIN")]
+        [StringLength(Standard.AmazonAsinLength, MinimumLength = 0)]
+        public string Asin { get; set; }
     }
 }

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon
 {
-    public class AmazonParent : Entity
+    public class AmazonParentInstance : Entity
     {
-        public long ProductId { get; set; }
+        public long ParentId { get; set; }
 
-        public virtual Product Product { get; set; }
+        public virtual AmazonParent Parent { get; set; }
 
         public string Sku { get; set; }
 
-        public string ChildSku { get; set; }
+        public string Asin { get; set; }
     }
 }

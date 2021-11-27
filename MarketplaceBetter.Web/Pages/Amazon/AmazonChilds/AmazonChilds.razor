@@ -18,7 +18,6 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="AmazonChildModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="AmazonChildModel">SKU</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="instance" T="AmazonChildModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="parent" T="AmazonChildModel">Parent</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="product_variant" T="AmazonChildModel">Product Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="asin" T="AmazonChildModel">ASIN</MudTableSortLabel></MudTh>
@@ -27,7 +26,6 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">@context.Sku</MudTd>
-            <MudTd DataLabel="Instance">@context.Parent.Instance.Name</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Product Variant">@context.ProductVariant.Sku</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>

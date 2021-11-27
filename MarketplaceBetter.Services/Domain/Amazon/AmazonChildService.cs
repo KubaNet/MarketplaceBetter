@@ -133,7 +133,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     {
                         "id" => childs.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => childs.Where(c => c.Sku.Contains(searchField.Value)),
-                        "instance" => childs.Where(c => c.Parent.Instance.Name.Contains(searchField.Value)),
                         "parent" => childs.Where(c => c.Parent.Sku.Contains(searchField.Value)),
                         "product_variant" => childs.Where(c => c.ProductVariant.Sku.Contains(searchField.Value)),
                         "asin" => childs.Where(c => c.Asin.Contains(searchField.Value)),
@@ -144,7 +143,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     childs = childs.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Sku.Contains(searchString)
-                        || c.Parent.Instance.Name.Contains(searchString)
                         || c.Parent.Sku.Contains(searchString)
                         || c.ProductVariant.Sku.Contains(searchString)
                         || c.Asin.Contains(searchString));
@@ -162,7 +160,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Id) : products.OrderByDescending(c => c.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Sku) : products.OrderByDescending(c => c.Sku),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Parent.Instance.Name) : products.OrderByDescending(c => c.Parent.Instance.Name),
                     "parent" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Parent.Sku) : products.OrderByDescending(c => c.Parent.Sku),
                     "product_variant" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.ProductVariant.Sku) : products.OrderByDescending(c => c.ProductVariant.Sku),
                     "asin" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Asin) : products.OrderByDescending(c => c.Asin),

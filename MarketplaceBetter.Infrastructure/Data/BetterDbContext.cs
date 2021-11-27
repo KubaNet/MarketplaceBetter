@@ -37,6 +37,7 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         // Amazon
         public DbSet<AmazonParent> AmazonParent { get; set; }
+        public DbSet<AmazonParentInstance> AmazonParentInstance { get; set; }
         public DbSet<AmazonChild> AmazonChild { get; set; }
         public DbSet<AmazonCampaign> AmazonCampaign { get; set; }
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }

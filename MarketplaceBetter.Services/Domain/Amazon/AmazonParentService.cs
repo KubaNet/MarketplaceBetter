@@ -36,8 +36,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<AmazonParentModel> GetAll() => _mapper.Map<IList<AmazonParentModel>>(_repository.GetQuery().OrderBy(g => g.Sku));
 
-        public IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId) => _mapper.Map<IList<AmazonParentModel>>(
-                _repository.GetQuery().Where(p => p.Product.BrandId == brandId && p.InstanceId == instanceId).OrderBy(p => p.Sku));
+        public IList<AmazonParentModel> GetAllForBrand(long brandId, long instanceId) => _mapper.Map<IList<AmazonParentModel>>(
+                _repository.GetQuery().Where(p => p.Product.BrandId == brandId).OrderBy(p => p.Sku));
 
         public int CountForListRequest(ListRequest request)
         {
@@ -82,9 +82,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         private void TransferValues(AmazonParent toParent, AmazonParentModel fromParent)
         {
             toParent.ProductId = fromParent.Product.Id;
-            toParent.InstanceId = fromParent.Instance.Id;
             toParent.Sku = fromParent.Sku;
-            toParent.Asin = fromParent.Asin;
             toParent.ChildSku = fromParent.ChildSku;
         }
 
@@ -108,10 +106,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     {
                         "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => products.Where(p => p.Sku.Contains(searchField.Value)),
-                        "instance" => products.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "product" => products.Where(p => p.Product.Name.Contains(searchField.Value)),
                         "brand" => products.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
-                        "asin" => products.Where(p => p.Asin.Contains(searchField.Value)),
                         "child_sku" => products.Where(p => p.ChildSku.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -120,10 +116,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Sku.Contains(searchString)
-                        || p.Instance.Name.Contains(searchString)
                         || p.Product.Name.Contains(searchString)
                         || p.Product.Brand.Name.Contains(searchString)
-                        || p.Asin.Contains(searchString)
                         || p.ChildSku.Contains(searchString));
                 }
             }
@@ -139,10 +133,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Sku) : products.OrderByDescending(p => p.Sku),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Instance.Name) : products.OrderByDescending(p => p.Instance.Name),
                     "product" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Product.Name) : products.OrderByDescending(p => p.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Product.Brand.Name) : products.OrderByDescending(p => p.Product.Brand.Name),
-                    "asin" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Asin) : products.OrderByDescending(p => p.Asin),
                     "child_sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ChildSku) : products.OrderByDescending(p => p.ChildSku),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };

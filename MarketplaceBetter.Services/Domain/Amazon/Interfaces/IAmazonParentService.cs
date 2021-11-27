@@ -14,7 +14,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<AmazonParentModel> GetAll();
 
-        IList<AmazonParentModel> GetAllForBrandAndInstance(long brandId, long instanceId);
+        IList<AmazonParentModel> GetAllForBrand(long brandId, long instanceId);
 
         int CountForListRequest(ListRequest request);
 
