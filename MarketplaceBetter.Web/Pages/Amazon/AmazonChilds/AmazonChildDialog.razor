@@ -20,12 +20,6 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" ValueChanged="HandleInstanceChanged">
-            @foreach (var instance in Instances)
-            {
-                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-            }
-        </MudSelect>
         <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
@@ -58,10 +52,8 @@
     private CustomValidation CustomValidation = new();
     private AmazonChildModel AmazonChild = new();
     private BrandModel Brand;
-    private InstanceModel Instance;
 
     private IList<BrandModel> Brands;
-    private IList<InstanceModel> Instances;
     private IList<AmazonParentModel> Parents = new List<AmazonParentModel>();
     private IList<ProductVariantModel> ProductVariants = new List<ProductVariantModel>();
 
@@ -73,7 +65,6 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAllForAmazon();
 
         if (IsEdit)
         {
@@ -97,18 +88,6 @@
     private void HandleBrandChanged(BrandModel brand)
     {
         Brand = brand;
-
-        ResetParent();
-        ActivateParent();
-
-        ResetProductVariant();
-
-        SetChildSku();
-    }
-
-    private void HandleInstanceChanged(InstanceModel instance)
-    {
-        Instance = instance;
 
         ResetParent();
         ActivateParent();
@@ -147,10 +126,10 @@
 
     private void ActivateParent()
     {
-        if (Brand != null && Instance != null)
+        if (Brand != null)
         {
             ParentSelectDisabled = false;
-            Parents = AmazonParentService.GetAllForBrand(Brand.Id, Instance.Id);
+            Parents = AmazonParentService.GetAllForBrand(Brand.Id);
         }
     }
 
@@ -171,27 +150,14 @@
     {
         AmazonChild.Sku = null;
 
-        if (Instance != null && AmazonChild.ProductVariant != null)
+        if (AmazonChild.ProductVariant != null)
         {
-            AmazonChild.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(Instance.SystemName), GetSkuForProductVariant(AmazonChild.Parent, AmazonChild.ProductVariant));
+            AmazonChild.Sku = string.Format("{0}_{1}_{2}", AmazonChild.Parent.ChildSku, AmazonChild.ProductVariant.Color.Code, AmazonChild.ProductVariant.Size.Code);
         }
-        else if (Instance != null && AmazonChild.Parent != null)
+        else if (AmazonChild.Parent != null)
         {
-            AmazonChild.Sku = string.Format("{0}_{1}", AmazonInstanceHelper.GetCodeFor(Instance.SystemName), AmazonChild.Parent.ChildSku);
+            AmazonChild.Sku = string.Format("{0}", AmazonChild.Parent.ChildSku);
         }
-        else if (Instance != null)
-        {
-            AmazonChild.Sku = AmazonInstanceHelper.GetCodeFor(Instance.SystemName);
-        }
-        else if (AmazonChild.ProductVariant != null)
-        {
-            AmazonChild.Sku = GetSkuForProductVariant(AmazonChild.Parent, AmazonChild.ProductVariant);
-        }
-    }
-
-    private string GetSkuForProductVariant(AmazonParentModel parent, ProductVariantModel productVariant)
-    {
-        return string.Format("{0}_{1}_{2}", parent.ChildSku, productVariant.Color.Code, productVariant.Size.Code);
     }
 
     private void HandleValidSubmit()

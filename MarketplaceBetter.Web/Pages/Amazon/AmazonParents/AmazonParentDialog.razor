@@ -98,7 +98,7 @@
     private void ActivateProduct(long brandId)
     {
         ProductSelectDisabled = false;
-        Products = ProductService.GetForBrand(brandId);
+        Products = ProductService.GetAllForBrand(brandId);
     }
 
     private void SetParentSku()

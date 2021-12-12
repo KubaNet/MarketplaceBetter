@@ -34,7 +34,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon
                 result.AddErrorFor<AmazonChildModel>(c => c.Sku, ValidationMessages.PropertyNotUnique, "Amazon Child", "Sku");
             }
 
-            if (child.Asin.Length != 10 && child.Asin.Length != 0)
+            if (child.Asin != null && child.Asin.Length != 0 && child.Asin.Length != 10)
             {
                 result.AddErrorFor<AmazonChildModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
             }

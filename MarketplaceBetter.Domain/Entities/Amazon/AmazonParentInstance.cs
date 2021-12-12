@@ -14,6 +14,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon
 
         public virtual AmazonParent Parent { get; set; }
 
+        public long InstanceId { get; set; }
+
+        public virtual Instance Instance { get; set; }
+
         public string Sku { get; set; }
 
         public string Asin { get; set; }

@@ -36,8 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<AmazonParentModel> GetAll() => _mapper.Map<IList<AmazonParentModel>>(_repository.GetQuery().OrderBy(g => g.Sku));
 
-        public IList<AmazonParentModel> GetAllForBrand(long brandId, long instanceId) => _mapper.Map<IList<AmazonParentModel>>(
-                _repository.GetQuery().Where(p => p.Product.BrandId == brandId).OrderBy(p => p.Sku));
+        public IList<AmazonParentModel> GetAllForBrand(long brandId) => _mapper.Map<IList<AmazonParentModel>>(_repository.GetQuery().Where(p => p.Product.BrandId == brandId).OrderBy(p => p.Sku));
 
         public int CountForListRequest(ListRequest request)
         {
@@ -97,7 +96,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "instance", "product", "brand", "asin", "child_sku" };
+                string[] searchFieldNames = new[] { "id", "sku", "instance", "product", "brand", "child_sku" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
