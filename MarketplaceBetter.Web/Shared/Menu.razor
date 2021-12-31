@@ -38,6 +38,7 @@
 				<MudNavLink Href="/amazonparents">Parents</MudNavLink>
 				<MudNavLink Href="/amazonparentinstances">Parent Instances</MudNavLink>
 				<MudNavLink Href="/amazonchilds">Childs</MudNavLink>
+				<MudNavLink Href="/amazonchildinstances">Child Instances</MudNavLink>
 			</MudNavGroup>
 		}
 		else
@@ -103,7 +104,8 @@
 	{
 		if (NavigationManager.Uri.Contains("amazonparents") ||
 			NavigationManager.Uri.Contains("amazonparentinstances") ||
-			NavigationManager.Uri.Contains("amazonchilds"))
+			NavigationManager.Uri.Contains("amazonchilds") ||
+			NavigationManager.Uri.Contains("amazonchildinstances"))
 		{
 			return true;
 		}

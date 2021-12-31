@@ -136,7 +136,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Sku) : products.OrderByDescending(p => p.Sku),
                     "product" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Parent.Product.Name) : products.OrderByDescending(p => p.Parent.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Parent.Product.Brand.Name) : products.OrderByDescending(p => p.Parent.Product.Brand.Name),
-                    "child_sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Asin) : products.OrderByDescending(p => p.Asin),
+                    "asin" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Asin) : products.OrderByDescending(p => p.Asin),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
