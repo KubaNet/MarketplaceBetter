@@ -18,17 +18,17 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="AmazonParentInstanceModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="AmazonParentInstanceModel">SKU</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="product" T="AmazonParentInstanceModel">Product</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="brand" T="AmazonParentInstanceModel">Brand</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="asin" T="AmazonParentInstanceModel">ASIN</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="parent" T="AmazonParentInstanceModel">Parent</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="AmazonParentInstanceModel">Instance</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">@context.Sku</MudTd>
-            <MudTd DataLabel="Product">@context.Parent.Product.Name</MudTd>
-            <MudTd DataLabel="Brand">@context.Parent.Product.Brand.Name</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
+            <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonParentInstance(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>

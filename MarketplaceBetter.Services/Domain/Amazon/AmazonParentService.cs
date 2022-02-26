@@ -96,7 +96,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "instance", "product", "brand", "child_sku" };
+                string[] searchFieldNames = new[] { "id", "sku", "child_sku", "product", "brand" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -105,9 +105,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     {
                         "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => products.Where(p => p.Sku.Contains(searchField.Value)),
+                        "child_sku" => products.Where(p => p.ChildSku.Contains(searchField.Value)),
                         "product" => products.Where(p => p.Product.Name.Contains(searchField.Value)),
                         "brand" => products.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
-                        "child_sku" => products.Where(p => p.ChildSku.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -115,9 +115,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Sku.Contains(searchString)
+                        || p.ChildSku.Contains(searchString)
                         || p.Product.Name.Contains(searchString)
-                        || p.Product.Brand.Name.Contains(searchString)
-                        || p.ChildSku.Contains(searchString));
+                        || p.Product.Brand.Name.Contains(searchString));
                 }
             }
 
@@ -132,9 +132,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Sku) : products.OrderByDescending(p => p.Sku),
+                    "child_sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ChildSku) : products.OrderByDescending(p => p.ChildSku),
                     "product" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Product.Name) : products.OrderByDescending(p => p.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Product.Brand.Name) : products.OrderByDescending(p => p.Product.Brand.Name),
-                    "child_sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ChildSku) : products.OrderByDescending(p => p.ChildSku),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
