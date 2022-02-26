@@ -15,6 +15,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<AmazonChildModel> GetAll();
 
+        IList<AmazonChildModel> GetAllForParent(long parentId);
+
         int CountForListRequest(ListRequest request);
 
         IList<AmazonChildModel> GetForListRequest(ListRequest request);

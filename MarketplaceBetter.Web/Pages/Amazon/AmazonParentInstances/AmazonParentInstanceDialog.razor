@@ -94,13 +94,12 @@
     private void HandleInstanceChanged(InstanceModel instance)
     {
         AmazonParentInstance.Instance = instance;
-
         SetParentInstanceSku();
     }
 
-    private void HandleParentChanged(AmazonParentModel product)
+    private void HandleParentChanged(AmazonParentModel parent)
     {
-        AmazonParentInstance.Parent = product;
+        AmazonParentInstance.Parent = parent;
         SetParentInstanceSku();
     }
 

@@ -34,7 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public AmazonParentInstanceModel Get(long id) => _mapper.Map<AmazonParentInstanceModel>(_repository.Get(id));
 
-        public IList<AmazonParentInstanceModel> GetAll() => _mapper.Map<IList<AmazonParentInstanceModel>>(_repository.GetQuery().OrderBy(g => g.Sku));
+        public IList<AmazonParentInstanceModel> GetAll() => _mapper.Map<IList<AmazonParentInstanceModel>>(_repository.GetQuery().OrderBy(p => p.Sku));
 
         public IList<AmazonParentInstanceModel> GetAllForBrand(long brandId, long instanceId) => _mapper.Map<IList<AmazonParentInstanceModel>>(
                 _repository.GetQuery().Where(p => p.Parent.Product.BrandId == brandId).OrderBy(p => p.Sku));
