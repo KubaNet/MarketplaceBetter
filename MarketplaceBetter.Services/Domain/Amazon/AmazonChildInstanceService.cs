@@ -50,13 +50,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
         public IList<AmazonChildInstanceModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<AmazonChildInstance> ChildInstances = _repository.GetQuery();
+            IQueryable<AmazonChildInstance> childInstances = _repository.GetQuery();
 
-            ChildInstances = ApplyFilter(ChildInstances, request);
-            ChildInstances = ApplySorting(ChildInstances, request);
-            ChildInstances = ApplyPaging(ChildInstances, request);
+            childInstances = ApplyFilter(childInstances, request);
+            childInstances = ApplySorting(childInstances, request);
+            childInstances = ApplyPaging(childInstances, request);
 
-            return _mapper.Map<IList<AmazonChildInstanceModel>>(ChildInstances);
+            return _mapper.Map<IList<AmazonChildInstanceModel>>(childInstances);
         }
 
         public void Add(AmazonChildInstanceModel ChildInstance)
@@ -97,7 +97,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "product", "brand" };
+                string[] searchFieldNames = new[] { "id", "sku", "instance", "child", "brand" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -106,7 +106,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     {
                         "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => products.Where(p => p.Sku.Contains(searchField.Value)),
-                        "product" => products.Where(p => p.Child.Parent.Product.Name.Contains(searchField.Value)),
+                        "instance" => products.Where(p => p.Instance.Name.Contains(searchField.Value)),
+                        "child" => products.Where(p => p.Child.Sku.Contains(searchField.Value)),
                         "brand" => products.Where(p => p.Child.Parent.Product.Brand.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -115,7 +116,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Sku.Contains(searchString)
-                        || p.Child.Parent.Product.Name.Contains(searchString)
+                        || p.Instance.Name.Contains(searchString)
+                        || p.Child.Sku.Contains(searchString)
                         || p.Child.Parent.Product.Brand.Name.Contains(searchString));
                 }
             }
@@ -131,7 +133,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Sku) : products.OrderByDescending(p => p.Sku),
-                    "product" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Child.Parent.Product.Name) : products.OrderByDescending(p => p.Child.Parent.Product.Name),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Instance.Name) : products.OrderByDescending(p => p.Instance.Name),
+                    "child" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Child.Sku) : products.OrderByDescending(p => p.Child.Sku),
                     "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Child.Parent.Product.Brand.Name) : products.OrderByDescending(p => p.Child.Parent.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };

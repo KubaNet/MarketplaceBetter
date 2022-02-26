@@ -124,7 +124,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "instance", "parent", "product_variant", "asin" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "product_variant", "parent", "brand" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -133,9 +133,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     {
                         "id" => childs.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => childs.Where(c => c.Sku.Contains(searchField.Value)),
-                        "parent" => childs.Where(c => c.Parent.Sku.Contains(searchField.Value)),
-                        "product_variant" => childs.Where(c => c.ProductVariant.Sku.Contains(searchField.Value)),
                         "asin" => childs.Where(c => c.Asin.Contains(searchField.Value)),
+                        "product_variant" => childs.Where(c => c.ProductVariant.Sku.Contains(searchField.Value)),
+                        "parent" => childs.Where(c => c.Parent.Sku.Contains(searchField.Value)),
+                        "brand" => childs.Where(c => c.Parent.Product.Brand.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -143,9 +144,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     childs = childs.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Sku.Contains(searchString)
-                        || c.Parent.Sku.Contains(searchString)
+                        || c.Asin.Contains(searchString)
                         || c.ProductVariant.Sku.Contains(searchString)
-                        || c.Asin.Contains(searchString));
+                        || c.Parent.Sku.Contains(searchString)
+                        || c.Parent.Product.Brand.Name.Contains(searchString));
                 }
             }
 
@@ -160,9 +162,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Id) : products.OrderByDescending(c => c.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Sku) : products.OrderByDescending(c => c.Sku),
-                    "parent" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Parent.Sku) : products.OrderByDescending(c => c.Parent.Sku),
-                    "product_variant" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.ProductVariant.Sku) : products.OrderByDescending(c => c.ProductVariant.Sku),
                     "asin" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Asin) : products.OrderByDescending(c => c.Asin),
+                    "product_variant" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.ProductVariant.Sku) : products.OrderByDescending(c => c.ProductVariant.Sku),
+                    "parent" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Parent.Sku) : products.OrderByDescending(c => c.Parent.Sku),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Parent.Product.Brand.Name) : products.OrderByDescending(c => c.Parent.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
