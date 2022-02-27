@@ -19,17 +19,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 {
     public class AmazonChildInstanceService : IAmazonChildInstanceService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonChildInstance> _repository;
-        private readonly IMapper _mapper;
+        private readonly IRepository<Instance> _instanceRepository;
 
         public AmazonChildInstanceService(
-            IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonChildInstance>();
-            _mapper = mapper;
+            _instanceRepository = unitOfWork.GetRepository<Instance>();
         }
 
         public AmazonChildInstanceModel Get(long id) => _mapper.Map<AmazonChildInstanceModel>(_repository.Get(id));
@@ -59,23 +61,27 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             return _mapper.Map<IList<AmazonChildInstanceModel>>(childInstances);
         }
 
-        public void Add(AmazonChildInstanceModel ChildInstance)
+        public void Add(AmazonChildInstanceModel childInstance)
         {
-            AmazonChildInstance ChildInstanceToAdd = new();
+            AmazonChildInstance childInstanceToAdd = new();
 
-            TransferValues(ChildInstanceToAdd, ChildInstance);
+            TransferValues(childInstanceToAdd, childInstance);
 
-            _repository.Add(ChildInstanceToAdd);
+            _repository.Add(childInstanceToAdd);
             _unitOfWork.Save();
         }
 
-        public void Update(AmazonChildInstanceModel ChildInstance)
+        public void AddForChild(long parentId)
         {
-            AmazonChildInstance ChildInstanceToUpdate = _repository.Get(ChildInstance.Id);
+        }
 
-            TransferValues(ChildInstanceToUpdate, ChildInstance);
+        public void Update(AmazonChildInstanceModel childInstance)
+        {
+            AmazonChildInstance childInstanceToUpdate = _repository.Get(childInstance.Id);
 
-            _repository.Update(ChildInstanceToUpdate);
+            TransferValues(childInstanceToUpdate, childInstance);
+
+            _repository.Update(childInstanceToUpdate);
             _unitOfWork.Save();
         }
 

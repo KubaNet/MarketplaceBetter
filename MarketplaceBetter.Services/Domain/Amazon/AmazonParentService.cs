@@ -19,17 +19,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 {
     public class AmazonParentService : IAmazonParentService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonParent> _repository;
-        private readonly IMapper _mapper;
+        private readonly IAmazonParentInstanceService _amazonParentInstanceService;
 
         public AmazonParentService(
+            IMapper mapper,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IAmazonParentInstanceService amazonParentInstanceService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonParent>();
-            _mapper = mapper;
+            _amazonParentInstanceService = amazonParentInstanceService;
         }
 
         public AmazonParentModel Get(long id) => _mapper.Map<AmazonParentModel>(_repository.Get(id));
@@ -66,6 +69,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             _repository.Add(parentToAdd);
             _unitOfWork.Save();
+
+            _amazonParentInstanceService.AddForParent(parentToAdd.Id);
         }
 
         public void Update(AmazonParentModel parent)
@@ -76,6 +81,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             _repository.Update(parentToUpdate);
             _unitOfWork.Save();
+
+            _amazonParentInstanceService.AddForParent(parentToUpdate.Id);
         }
 
         private void TransferValues(AmazonParent toParent, AmazonParentModel fromParent)

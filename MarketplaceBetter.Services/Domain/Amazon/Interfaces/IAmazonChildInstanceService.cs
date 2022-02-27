@@ -20,8 +20,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<AmazonChildInstanceModel> GetForListRequest(ListRequest request);
 
-        void Add(AmazonChildInstanceModel Child);
+        void Add(AmazonChildInstanceModel child);
 
-        void Update(AmazonChildInstanceModel Child);
+        void AddForChild(long childId);
+
+        void Update(AmazonChildInstanceModel child);
     }
 }

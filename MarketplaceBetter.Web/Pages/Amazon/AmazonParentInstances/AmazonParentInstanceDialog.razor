@@ -118,20 +118,7 @@
 
     private void SetParentInstanceSku()
     {
-        AmazonParentInstance.Sku = null;
-
-        if (AmazonParentInstance.Instance != null && AmazonParentInstance.Parent != null)
-        {
-            AmazonParentInstance.Sku = string.Format("{0}_{1}",AmazonInstanceHelper.GetCodeFor(AmazonParentInstance.Instance.SystemName), AmazonParentInstance.Parent.Sku);
-        }
-        else if (AmazonParentInstance.Parent != null)
-        {
-            AmazonParentInstance.Sku = AmazonParentInstance.Parent.Sku;
-        }
-        else if (AmazonParentInstance.Instance != null)
-        {
-            AmazonParentInstance.Sku = string.Format("{0}_", AmazonInstanceHelper.GetCodeFor(AmazonParentInstance.Instance.SystemName));
-        }
+        AmazonParentInstance.Sku = AmazonParentInstanceService.GetSkuFor(AmazonParentInstance.Parent?.Id, AmazonParentInstance.Instance?.Id);
     }
 
     private void HandleValidSubmit()
