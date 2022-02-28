@@ -25,5 +25,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
         void AddForChild(long childId);
 
         void Update(AmazonChildInstanceModel child);
+
+        string GetSkuFor(long? childId, long? instanceId);
     }
 }

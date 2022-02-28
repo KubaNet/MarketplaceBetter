@@ -5,6 +5,7 @@ using MarketplaceBetter.Domain.Model.Amazon;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
+using MarketplaceBetter.Infrastructure.Helpers;
 using MarketplaceBetter.Services.Domain.Amazon.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -22,6 +23,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonChildInstance> _repository;
+        private readonly IRepository<AmazonChild> _amazonChildRepository;
         private readonly IRepository<Instance> _instanceRepository;
 
         public AmazonChildInstanceService(
@@ -31,6 +33,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonChildInstance>();
+            _amazonChildRepository = unitOfWork.GetRepository<AmazonChild>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
         }
 
@@ -71,8 +74,26 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
-        public void AddForChild(long parentId)
+        public void AddForChild(long childId)
         {
+            foreach (var instance in _instanceRepository.GetAll())
+            {
+                if (_repository.Any(p => p.ChildId == childId && p.InstanceId == instance.Id))
+                {
+                    continue;
+                }
+
+                AmazonChildInstance childInstance = new AmazonChildInstance
+                {
+                    ChildId = childId,
+                    InstanceId = instance.Id,
+                    Sku = GetSkuFor(childId, instance.Id)
+                };
+
+                _repository.Add(childInstance);
+            }
+
+            _unitOfWork.Save();
         }
 
         public void Update(AmazonChildInstanceModel childInstance)
@@ -83,6 +104,31 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             _repository.Update(childInstanceToUpdate);
             _unitOfWork.Save();
+        }
+
+        public string GetSkuFor(long? childId, long? instanceId)
+        {
+            if (childId.HasValue && instanceId.HasValue)
+            {
+                AmazonChild child = _amazonChildRepository.Get(childId.Value);
+                Instance instance = _instanceRepository.Get(instanceId.Value);
+
+                return $"{AmazonInstanceHelper.GetCodeFor(instance.SystemName)}_{child.Sku}";
+            }
+            else if (childId.HasValue)
+            {
+                AmazonChild child = _amazonChildRepository.Get(childId.Value);
+
+                return child.Sku;
+            }
+            else if (instanceId.HasValue)
+            {
+                Instance instance = _instanceRepository.Get(instanceId.Value);
+
+                return $"{AmazonInstanceHelper.GetCodeFor(instance.SystemName)}_";
+            }
+
+            return null;
         }
 
         private void TransferValues(AmazonChildInstance toChildInstance, AmazonChildInstanceModel fromChildInstance)

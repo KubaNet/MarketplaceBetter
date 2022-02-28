@@ -19,17 +19,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 {
     public class AmazonChildService : IAmazonChildService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonChild> _repository;
-        private readonly IMapper _mapper;
+        private readonly IAmazonChildInstanceService _amazonChildInstanceService;
 
         public AmazonChildService(
+            IMapper mapper,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IAmazonChildInstanceService amazonChildInstanceService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonChild>();
-            _mapper = mapper;
+            _amazonChildInstanceService = amazonChildInstanceService;
         }
 
         public AmazonChildModel Get(long id) => _mapper.Map<AmazonChildModel>(_repository.Get(id));
@@ -67,7 +70,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _repository.Add(childToAdd);
             _unitOfWork.Save();
 
-            UpdateAsinsOfSimilarChilds(childToAdd);
+            _amazonChildInstanceService.AddForChild(childToAdd.Id);
         }
 
         public void Update(AmazonChildModel child)
@@ -79,7 +82,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _repository.Update(childToUpdate);
             _unitOfWork.Save();
 
-            UpdateAsinsOfSimilarChilds(childToUpdate);
+            _amazonChildInstanceService.AddForChild(childToUpdate.Id);
         }
 
         public string GetAsinForProductVariant(ProductVariantModel productVariant)
@@ -100,19 +103,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             toChild.ProductVariantId = fromChild.ProductVariant.Id;
             toChild.Sku = fromChild.Sku;
             toChild.Asin = fromChild.Asin;
-        }
-
-        private void UpdateAsinsOfSimilarChilds(AmazonChild child)
-        {
-            IList<AmazonChild> similarChilds = _repository.Where(c => c.ProductVariantId == child.ProductVariant.Id && c.Id != child.Id).ToList();
-            foreach (AmazonChild similarChild in similarChilds)
-            {
-                similarChild.Asin = child.Asin;
-
-                _repository.Update(similarChild);
-            }
-
-            _unitOfWork.Save();
         }
 
         private IQueryable<AmazonChild> ApplyFilter(IQueryable<AmazonChild> childs, ListRequest request)
