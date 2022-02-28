@@ -100,6 +100,31 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             }
         }
 
+        public void AddForProductVariant(long productVariantId)
+        {
+            ProductVariant productVariant = _productVariantRepository.Get(productVariantId);
+            AmazonParent parent = _parentRepository.SingleOrDefault(p => p.ProductId == productVariant.ProductId);
+
+            if (parent != null)
+            {
+                AmazonChild child = _repository.SingleOrDefault(c => c.ParentId == parent.Id 
+                    && c.ProductVariantId == productVariantId);
+
+                if (child != null)
+                {
+                    return;
+                }
+
+                child = new AmazonChild { ParentId = parent.Id, ProductVariantId = productVariantId,
+                    Sku = GetSkuFor(parent.Id, productVariantId) };
+
+                _repository.Add(child);
+                _unitOfWork.Save();
+
+                _childInstanceService.AddForChild(child.Id);
+            }
+        }
+
         public void Update(AmazonChildModel child)
         {
             AmazonChild childToUpdate = _repository.Get(child.Id);

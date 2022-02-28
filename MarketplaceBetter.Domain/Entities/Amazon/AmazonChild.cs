@@ -10,6 +10,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon
 {
     public class AmazonChild : Entity
     {
+        public string Sku { get; set; }
+
+        public string Asin { get; set; }
+
         public long ParentId { get; set; }
 
         public virtual AmazonParent Parent { get; set; }
@@ -18,8 +22,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon
 
         public virtual ProductVariant ProductVariant { get; set; }
 
-        public string Sku { get; set; }
-
-        public string Asin { get; set; }
+        public override string ToString()
+        {
+            return Sku;
+        }
     }
 }

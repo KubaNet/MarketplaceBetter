@@ -25,6 +25,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         void AddForParent(long parentId);
 
+        void AddForProductVariant(long productVariantId);
+
         void Update(AmazonChildModel child);
 
         string GetSkuFor(long? parentId, long? productVariantId);

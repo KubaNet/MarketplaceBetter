@@ -21,5 +21,10 @@ namespace MarketplaceBetter.Domain.Entities.Catalog
         public long SizeId { get; set; }
 
         public virtual Size Size { get; set; }
+
+        public override string ToString()
+        {
+            return Sku;
+        }
     }
 }

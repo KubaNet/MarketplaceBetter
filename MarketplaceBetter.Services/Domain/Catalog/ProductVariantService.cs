@@ -4,6 +4,7 @@ using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
+using MarketplaceBetter.Services.Domain.Amazon.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -19,17 +20,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 {
     public class ProductVariantService : IProductVariantService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<ProductVariant> _repository;
-        private readonly IMapper _mapper;
+        private readonly IAmazonChildService _amazonChildService;
 
         public ProductVariantService(
+            IMapper mapper,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IAmazonChildService amazonChildService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ProductVariant>();
-            _mapper = mapper;
+            _amazonChildService = amazonChildService;
         }
 
         public ProductVariantModel Get(long id) => _mapper.Map<ProductVariantModel>(_repository.Get(id));
@@ -59,6 +63,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
             _repository.Add(variantToAdd);
             _unitOfWork.Save();
+
+            _amazonChildService.AddForProductVariant(variantToAdd.Id);
         }
 
         public void Update(ProductVariantModel variant)
@@ -69,6 +75,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog
 
             _repository.Update(variantToUpdate);
             _unitOfWork.Save();
+
+            _amazonChildService.AddForProductVariant(variantToUpdate.Id);
         }
 
         private void TransferValues(ProductVariant toVariant, ProductVariantModel fromVariant)

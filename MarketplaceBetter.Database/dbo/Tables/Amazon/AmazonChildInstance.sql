@@ -1,9 +1,9 @@
 ﻿CREATE TABLE [dbo].[AmazonChildInstance]
 (
 	[Id]				BIGINT								NOT NULL	IDENTITY,
+	[Sku]				NVARCHAR(255)						NOT NULL,
 	[ChildId]			BIGINT								NOT NULL,
 	[InstanceId]		BIGINT								NOT NULL,
-	[Sku]				NVARCHAR(255)						NOT NULL,
 	CONSTRAINT			[PK_AmazonChildInstance]			PRIMARY KEY ([Id]),
 	CONSTRAINT			[FK_AmazonChildInstance_Child]		FOREIGN KEY ([ChildId])		REFERENCES [dbo].[AmazonChild] ([Id]),
 	CONSTRAINT			[FK_AmazonChildInstance_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
