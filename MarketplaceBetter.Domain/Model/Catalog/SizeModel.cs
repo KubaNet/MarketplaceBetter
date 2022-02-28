@@ -20,6 +20,8 @@ namespace MarketplaceBetter.Domain.Model.Catalog
         [StringLength(255, MinimumLength = 1)]
         public string Code { get; set; }
 
+        public bool IsOneSize { get; set; }
+
         [Required]
         public SizeGroupModel Group { get; set; }
     }

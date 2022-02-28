@@ -12,6 +12,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog
 
         public string Code { get; set; }
 
+        public bool IsOneSize { get; set; }
+
         public long GroupId { get; set; }
 
         public virtual SizeGroup Group { get; set; }

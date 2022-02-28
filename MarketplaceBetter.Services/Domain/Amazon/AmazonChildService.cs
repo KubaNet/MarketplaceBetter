@@ -144,7 +144,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 AmazonParent parent = _parentRepository.Get(parentId.Value);
                 ProductVariant productVariant = _productVariantRepository.Get(productVariantId.Value);
 
-                return $"{parent.ChildSku}_{productVariant.Color.Code}_{productVariant.Size.Code}";
+                if (productVariant.Size.IsOneSize)
+                {
+                    return $"{parent.ChildSku}_{productVariant.Color.Code}";
+                }
+                else
+                {
+                    return $"{parent.ChildSku}_{productVariant.Color.Code}_{productVariant.Size.Code}";
+                }
             }
             else if (parentId.HasValue)
             {

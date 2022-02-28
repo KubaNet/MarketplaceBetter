@@ -12,20 +12,21 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-		<MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
-			@foreach (var brand in Brands)
-			{
-				<MudSelectItem Value="brand">@brand.Name</MudSelectItem>
-			}
-		</MudSelect>
-		<MudSelect Label="Group" T="SizeGroupModel" @bind-Value="Size.Group" For="() => Size.Group" Disabled="SizeGroupSelectDisabled">
-			@foreach (var group in SizeGroups)
-			{
-				<MudSelectItem Value="group">@group.Name</MudSelectItem>
-			}
-		</MudSelect>
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Group" T="SizeGroupModel" @bind-Value="Size.Group" For="() => Size.Group" Disabled="SizeGroupSelectDisabled">
+            @foreach (var group in SizeGroups)
+            {
+                <MudSelectItem Value="group">@group.Name</MudSelectItem>
+            }
+        </MudSelect>
         <MudTextField Label="Name" @bind-Value="Size.Name" For="() => Size.Name" />
         <MudTextField Label="Code" @bind-Value="Size.Code" For="() => Size.Code" />
+        <MudCheckBox Label="Is One Size" @bind-Checked="Size.IsOneSize" For="() => Size.IsOneSize" Color="Color.Primary"></MudCheckBox>
     </FormDialog>
 </EditForm>
 
@@ -37,10 +38,10 @@
 
     private CustomValidation CustomValidation = new();
     private SizeModel Size = new();
-	private BrandModel Brand;
+    private BrandModel Brand;
 
-	private IList<BrandModel> Brands;
-	private IList<SizeGroupModel> SizeGroups = new List<SizeGroupModel>();
+    private IList<BrandModel> Brands;
+    private IList<SizeGroupModel> SizeGroups = new List<SizeGroupModel>();
 
     private bool SizeGroupSelectDisabled = true;
 
@@ -48,44 +49,44 @@
     {
         base.OnInitialized();
 
-		Brands = BrandService.GetAll();
+        Brands = BrandService.GetAll();
 
-		if (IsEdit)
-		{
-			SetInitialValues();
-		}
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
     }
 
     private void SetInitialValues()
     {
         Size = SizeService.Get(SizeId);
 
-		ActivateSizeGroup(Size.Group.Brand.Id);
+        ActivateSizeGroup(Size.Group.Brand.Id);
 
-		Brand = Brands.Single(b => b.Id == Size.Group.Brand.Id);
-		Size.Group = SizeGroups.Single(g => g.Id == Size.Group.Id);
+        Brand = Brands.Single(b => b.Id == Size.Group.Brand.Id);
+        Size.Group = SizeGroups.Single(g => g.Id == Size.Group.Id);
     }
 
-	private void HandleBrandChanged(BrandModel brand)
-	{
-		Brand = brand;
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Brand = brand;
 
-		ResetSizeGroup();
-		ActivateSizeGroup(brand.Id);
-	}
+        ResetSizeGroup();
+        ActivateSizeGroup(brand.Id);
+    }
 
-	private void ResetSizeGroup()
-	{
-		Size.Group = null;
-		SizeGroupSelectDisabled = true;
-		SizeGroups = new List<SizeGroupModel>();
-	}
+    private void ResetSizeGroup()
+    {
+        Size.Group = null;
+        SizeGroupSelectDisabled = true;
+        SizeGroups = new List<SizeGroupModel>();
+    }
 
-	private void ActivateSizeGroup(long brandId)
-	{
-		SizeGroupSelectDisabled = false;
-		SizeGroups = SizeGroupService.GetAllForBrand(brandId);
-	}
+    private void ActivateSizeGroup(long brandId)
+    {
+        SizeGroupSelectDisabled = false;
+        SizeGroups = SizeGroupService.GetAllForBrand(brandId);
+    }
 
     private void HandleValidSubmit()
     {

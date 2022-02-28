@@ -3,6 +3,7 @@
 	[Id]		BIGINT				NOT NULL	IDENTITY,
 	[Name]		NVARCHAR (255)		NOT NULL,
 	[Code]		NVARCHAR (255)		NOT NULL,
+	[IsOneSize]	BIT					NOT NULL,
 	[GroupId]	BIGINT				NOT NULL,
 	CONSTRAINT	[PK_Size]			PRIMARY KEY ([Id]),
 	CONSTRAINT  [FK_Size_Group]		FOREIGN KEY ([GroupId])	REFERENCES [dbo].[SizeGroup] ([Id]),
