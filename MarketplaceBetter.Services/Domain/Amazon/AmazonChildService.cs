@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon;
+using MarketplaceBetter.Domain.Entities.Catalog;
 using MarketplaceBetter.Domain.Model.Amazon;
 using MarketplaceBetter.Domain.Model.Catalog;
 using MarketplaceBetter.Infrastructure.Data;
@@ -22,17 +23,21 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonChild> _repository;
-        private readonly IAmazonChildInstanceService _amazonChildInstanceService;
+        private readonly IRepository<AmazonParent> _parentRepository;
+        private readonly IRepository<ProductVariant> _productVariantRepository;
+        private readonly IAmazonChildInstanceService _childInstanceService;
 
         public AmazonChildService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IAmazonChildInstanceService amazonChildInstanceService)
+            IAmazonChildInstanceService childInstanceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonChild>();
-            _amazonChildInstanceService = amazonChildInstanceService;
+            _parentRepository = unitOfWork.GetRepository<AmazonParent>();
+            _productVariantRepository = unitOfWork.GetRepository<ProductVariant>();
+            _childInstanceService = childInstanceService;
         }
 
         public AmazonChildModel Get(long id) => _mapper.Map<AmazonChildModel>(_repository.Get(id));
@@ -70,7 +75,29 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _repository.Add(childToAdd);
             _unitOfWork.Save();
 
-            _amazonChildInstanceService.AddForChild(childToAdd.Id);
+            _childInstanceService.AddForChild(childToAdd.Id);
+        }
+
+        public void AddForParent(long parentId)
+        {
+            AmazonParent parent = _parentRepository.Get(parentId);
+
+            IList<ProductVariant> productVariants = _productVariantRepository.GetQuery().Where(v => v.ProductId == parent.ProductId).ToList();
+            foreach (var productVariant in productVariants)
+            {
+                if (_repository.Any(c => c.ParentId == parentId && c.ProductVariantId == productVariant.Id))
+                {
+                    continue;
+                }
+
+                AmazonChild child = new AmazonChild { ParentId = parentId, ProductVariantId = productVariant.Id, 
+                    Sku = GetSkuFor(parentId, productVariant.Id) };
+
+                _repository.Add(child);
+                _unitOfWork.Save();
+
+                _childInstanceService.AddForChild(child.Id);
+            }
         }
 
         public void Update(AmazonChildModel child)
@@ -82,16 +109,23 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _repository.Update(childToUpdate);
             _unitOfWork.Save();
 
-            _amazonChildInstanceService.AddForChild(childToUpdate.Id);
+            _childInstanceService.AddForChild(childToUpdate.Id);
         }
 
-        public string GetAsinForProductVariant(ProductVariantModel productVariant)
+        public string GetSkuFor(long? parentId, long? productVariantId)
         {
-            AmazonChild child = _repository.GetQuery().FirstOrDefault(c => c.ProductVariantId == productVariant.Id);
-
-            if (child != null)
+            if (parentId.HasValue && productVariantId.HasValue)
             {
-                return child.Asin;
+                AmazonParent parent = _parentRepository.Get(parentId.Value);
+                ProductVariant productVariant = _productVariantRepository.Get(productVariantId.Value);
+
+                return $"{parent.ChildSku}_{productVariant.Color.Code}_{productVariant.Size.Code}";
+            }
+            else if (parentId.HasValue)
+            {
+                AmazonParent parent = _parentRepository.Get(parentId.Value);
+
+                return $"{parent.ChildSku}";
             }
 
             return null;

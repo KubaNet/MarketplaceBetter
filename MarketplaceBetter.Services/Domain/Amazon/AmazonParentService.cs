@@ -22,17 +22,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonParent> _repository;
-        private readonly IAmazonParentInstanceService _amazonParentInstanceService;
+        private readonly IAmazonParentInstanceService _parentInstanceService;
+        private readonly IAmazonChildService _childService;
 
         public AmazonParentService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IAmazonParentInstanceService amazonParentInstanceService)
+            IAmazonParentInstanceService parentInstanceService,
+            IAmazonChildService childService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonParent>();
-            _amazonParentInstanceService = amazonParentInstanceService;
+            _parentInstanceService = parentInstanceService;
+            _childService = childService;
         }
 
         public AmazonParentModel Get(long id) => _mapper.Map<AmazonParentModel>(_repository.Get(id));
@@ -70,7 +73,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _repository.Add(parentToAdd);
             _unitOfWork.Save();
 
-            _amazonParentInstanceService.AddForParent(parentToAdd.Id);
+            _parentInstanceService.AddForParent(parentToAdd.Id);
+            _childService.AddForParent(parentToAdd.Id);
         }
 
         public void Update(AmazonParentModel parent)
@@ -82,7 +86,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _repository.Update(parentToUpdate);
             _unitOfWork.Save();
 
-            _amazonParentInstanceService.AddForParent(parentToUpdate.Id);
+            _parentInstanceService.AddForParent(parentToUpdate.Id);
+            _childService.AddForParent(parentToUpdate.Id);
         }
 
         private void TransferValues(AmazonParent toParent, AmazonParentModel fromParent)

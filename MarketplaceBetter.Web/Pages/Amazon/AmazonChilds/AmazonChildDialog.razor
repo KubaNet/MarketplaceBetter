@@ -111,9 +111,6 @@
     {
         AmazonChild.ProductVariant = productVariant;
 
-        string asin = AmazonChildService.GetAsinForProductVariant(productVariant);
-        AmazonChild.Asin = asin;
-
         SetChildSku();
     }
 
@@ -126,11 +123,8 @@
 
     private void ActivateParent()
     {
-        if (Brand != null)
-        {
-            ParentSelectDisabled = false;
-            Parents = AmazonParentService.GetAllForBrand(Brand.Id);
-        }
+        ParentSelectDisabled = false;
+        Parents = AmazonParentService.GetAllForBrand(Brand.Id);
     }
 
     private void ResetProductVariant()
@@ -148,16 +142,7 @@
 
     private void SetChildSku()
     {
-        AmazonChild.Sku = null;
-
-        if (AmazonChild.ProductVariant != null)
-        {
-            AmazonChild.Sku = string.Format("{0}_{1}_{2}", AmazonChild.Parent.ChildSku, AmazonChild.ProductVariant.Color.Code, AmazonChild.ProductVariant.Size.Code);
-        }
-        else if (AmazonChild.Parent != null)
-        {
-            AmazonChild.Sku = string.Format("{0}", AmazonChild.Parent.ChildSku);
-        }
+        AmazonChild.Sku = AmazonChildService.GetSkuFor(AmazonChild.Parent?.Id, AmazonChild.ProductVariant?.Id);
     }
 
     private void HandleValidSubmit()

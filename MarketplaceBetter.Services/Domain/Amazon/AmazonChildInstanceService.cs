@@ -91,9 +91,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 };
 
                 _repository.Add(childInstance);
+                _unitOfWork.Save();
             }
-
-            _unitOfWork.Save();
         }
 
         public void Update(AmazonChildInstanceModel childInstance)

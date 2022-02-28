@@ -87,9 +87,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     ParentId = parentId, InstanceId = instance.Id, Sku = GetSkuFor(parentId, instance.Id) };
 
                 _repository.Add(parentInstance);
+                _unitOfWork.Save();
             }
-
-            _unitOfWork.Save();
         }
 
         public void Update(AmazonParentInstanceModel parentInstance)
