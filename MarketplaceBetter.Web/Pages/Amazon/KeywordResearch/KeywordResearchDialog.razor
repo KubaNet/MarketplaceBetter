@@ -1,0 +1,60 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Interfaces
+
+@inject IKeywordResearchService KeywordResearchService
+@inject IKeywordResearchValidator KeywordResearchValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="KeywordResearch" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="KeywordResearch.Name" For="() => KeywordResearch.Name" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long KeywordResearchId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private KeywordResearchModel KeywordResearch = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (IsEdit)
+        {
+            KeywordResearch = KeywordResearchService.Get(KeywordResearchId);
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = KeywordResearchValidator.Validate(KeywordResearch);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                KeywordResearchService.Update(KeywordResearch);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Keyword Research"));
+            }
+            else
+            {
+                KeywordResearchService.Add(KeywordResearch);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Keyword Research"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

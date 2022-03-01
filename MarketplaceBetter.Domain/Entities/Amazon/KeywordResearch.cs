@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Entities.General
+namespace MarketplaceBetter.Domain.Entities.Amazon
 {
-    public enum CountryEnum
+    public class KeywordResearch : Entity
     {
-        None = 0,
-
-        GreatBritain = 1
+        public string Name { get; set; }
     }
 }

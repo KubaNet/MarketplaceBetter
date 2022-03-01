@@ -118,25 +118,25 @@ namespace MarketplaceBetter.Services.Domain.Catalog
             return groups;
         }
 
-        private IQueryable<ColorGroup> ApplySorting(IQueryable<ColorGroup> products, ListRequest request)
+        private IQueryable<ColorGroup> ApplySorting(IQueryable<ColorGroup> groups, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
-                products = request.SortBy switch
+                groups = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
-                    "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Brand.Name) : products.OrderByDescending(p => p.Brand.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(p => p.Id) : groups.OrderByDescending(p => p.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(p => p.Name) : groups.OrderByDescending(p => p.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(p => p.Brand.Name) : groups.OrderByDescending(p => p.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
-            return products;
+            return groups;
         }
 
-        private IQueryable<ColorGroup> ApplyPaging(IQueryable<ColorGroup> products, ListRequest request)
+        private IQueryable<ColorGroup> ApplyPaging(IQueryable<ColorGroup> groups, ListRequest request)
         {
-            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return groups.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

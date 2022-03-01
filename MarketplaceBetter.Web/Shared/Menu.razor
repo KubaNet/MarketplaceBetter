@@ -48,7 +48,7 @@
 
 		@if (IsAmazonCampaignsModule())
 		{
-			<MudNavGroup Title="Inventory" Icon="@Icons.Filled.AppRegistration" Expanded="true" HideExpandIcon="true">
+			<MudNavGroup Title="Campaigns" Icon="@Icons.Filled.AppRegistration" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/amazoncampaigns">Campaigns</MudNavLink>
 				<MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
 			</MudNavGroup>
@@ -56,6 +56,17 @@
 		else
 		{
 			<MudNavLink Href="/amazoncampaigns" Icon="@Icons.Filled.AppRegistration">Campaigns</MudNavLink>
+		}
+
+		@if (IsKeywordsModule())
+		{
+			<MudNavGroup Title="Keywords" Icon="@Icons.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
+				<MudNavLink Href="/keywordresearches">Keyword Researches</MudNavLink>
+			</MudNavGroup>
+		}
+		else
+		{
+			<MudNavLink Href="/keywordresearches" Icon="@Icons.Filled.ManageSearch">Keywords</MudNavLink>
 		}
 	</MudNavGroup>
 </MudNavMenu>
@@ -117,6 +128,16 @@
 	{
 		if (NavigationManager.Uri.Contains("amazoncampaigns") ||
 			NavigationManager.Uri.Contains("amazontargeting"))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	private bool IsKeywordsModule()
+	{
+		if (NavigationManager.Uri.Contains("keywordresearch"))
 		{
 			return true;
 		}

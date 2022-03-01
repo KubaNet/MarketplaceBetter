@@ -134,11 +134,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             toParentInstance.Asin = fromParentInstance.Asin;
         }
 
-        private IQueryable<AmazonParentInstance> ApplyFilter(IQueryable<AmazonParentInstance> products, ListRequest request)
+        private IQueryable<AmazonParentInstance> ApplyFilter(IQueryable<AmazonParentInstance> parents, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
-                return products;
+                return parents;
             }
 
             IList<string> searchStrings = request.SearchString.SplitForFiltering();
@@ -150,21 +150,21 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
                 if (searchField != null)
                 {
-                    products = searchField.Name switch
+                    parents = searchField.Name switch
                     {
-                        "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
-                        "sku" => products.Where(p => p.Sku.Contains(searchField.Value)),
-                        "asin" => products.Where(p => p.Asin.Contains(searchField.Value)),
-                        "instance" => products.Where(p => p.Instance.Name.Contains(searchField.Value)),
-                        "parent" => products.Where(p => p.Parent.Sku.Contains(searchField.Value)),
-                        "product" => products.Where(p => p.Parent.Product.Name.Contains(searchField.Value)),
-                        "brand" => products.Where(p => p.Parent.Product.Brand.Name.Contains(searchField.Value)),
+                        "id" => parents.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
+                        "sku" => parents.Where(p => p.Sku.Contains(searchField.Value)),
+                        "asin" => parents.Where(p => p.Asin.Contains(searchField.Value)),
+                        "instance" => parents.Where(p => p.Instance.Name.Contains(searchField.Value)),
+                        "parent" => parents.Where(p => p.Parent.Sku.Contains(searchField.Value)),
+                        "product" => parents.Where(p => p.Parent.Product.Name.Contains(searchField.Value)),
+                        "brand" => parents.Where(p => p.Parent.Product.Brand.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
+                    parents = parents.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Sku.Contains(searchString)
                         || p.Asin.Contains(searchString)
                         || p.Instance.Name.Contains(searchString)
@@ -174,32 +174,32 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 }
             }
 
-            return products;
+            return parents;
         }
 
-        private IQueryable<AmazonParentInstance> ApplySorting(IQueryable<AmazonParentInstance> products, ListRequest request)
+        private IQueryable<AmazonParentInstance> ApplySorting(IQueryable<AmazonParentInstance> parents, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
-                products = request.SortBy switch
+                parents = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
-                    "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Sku) : products.OrderByDescending(p => p.Sku),
-                    "asin" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Asin) : products.OrderByDescending(p => p.Asin),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Instance.Name) : products.OrderByDescending(p => p.Instance.Name),
-                    "parent" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Parent.Sku) : products.OrderByDescending(p => p.Parent.Sku),
-                    "product" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Parent.Product.Name) : products.OrderByDescending(p => p.Parent.Product.Name),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Parent.Product.Brand.Name) : products.OrderByDescending(p => p.Parent.Product.Brand.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Id) : parents.OrderByDescending(p => p.Id),
+                    "sku" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Sku) : parents.OrderByDescending(p => p.Sku),
+                    "asin" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Asin) : parents.OrderByDescending(p => p.Asin),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Instance.Name) : parents.OrderByDescending(p => p.Instance.Name),
+                    "parent" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Sku) : parents.OrderByDescending(p => p.Parent.Sku),
+                    "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Product.Name) : parents.OrderByDescending(p => p.Parent.Product.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Product.Brand.Name) : parents.OrderByDescending(p => p.Parent.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
-            return products;
+            return parents;
         }
 
-        private IQueryable<AmazonParentInstance> ApplyPaging(IQueryable<AmazonParentInstance> products, ListRequest request)
+        private IQueryable<AmazonParentInstance> ApplyPaging(IQueryable<AmazonParentInstance> parents, ListRequest request)
         {
-            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return parents.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

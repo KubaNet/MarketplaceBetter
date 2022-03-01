@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Catalog
 {
-    public class BrandValidator : IBrandValidator
+    public class KeywordResearchValidator : IBrandValidator
     {
         private readonly IRepository<Brand> _repository;
 
-        public BrandValidator(IUnitOfWork unitOfWork)
+        public KeywordResearchValidator(IUnitOfWork unitOfWork)
         {
             _repository = unitOfWork.GetRepository<Brand>();
         }

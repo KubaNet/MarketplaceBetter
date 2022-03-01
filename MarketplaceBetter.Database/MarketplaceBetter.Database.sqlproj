@@ -62,7 +62,7 @@
     <Folder Include="dbo\Tables\Sales" />
     <Folder Include="Scripts" />
     <Folder Include="Scripts\Inserts" />
-    <Folder Include="dbo\Tables\General" />
+    <Folder Include="dbo\Tables\Base" />
     <Folder Include="dbo\Tables\Amazon" />
   </ItemGroup>
   <ItemGroup>
@@ -77,7 +77,7 @@
     <Build Include="dbo\Tables\Sales\SalesChannel.sql" />
     <Build Include="dbo\Tables\Sales\Instance.sql" />
     <None Include="Scripts\Inserts\03_Instances.sql" />
-    <Build Include="dbo\Tables\General\Country.sql" />
+    <Build Include="dbo\Tables\Base\Country.sql" />
     <None Include="Scripts\Inserts\01_Countries.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonParent.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonChild.sql" />
@@ -91,6 +91,7 @@
     <Build Include="dbo\Tables\Amazon\AmazonTargetingType.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonParentInstance.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonChildInstance.sql" />
+    <Build Include="dbo\Tables\Amazon\KeywordResearch.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />

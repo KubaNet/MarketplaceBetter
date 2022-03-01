@@ -212,28 +212,28 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             return childs;
         }
 
-        private IQueryable<AmazonChild> ApplySorting(IQueryable<AmazonChild> products, ListRequest request)
+        private IQueryable<AmazonChild> ApplySorting(IQueryable<AmazonChild> childs, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
-                products = request.SortBy switch
+                childs = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Id) : products.OrderByDescending(c => c.Id),
-                    "sku" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Sku) : products.OrderByDescending(c => c.Sku),
-                    "asin" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Asin) : products.OrderByDescending(c => c.Asin),
-                    "product_variant" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.ProductVariant.Sku) : products.OrderByDescending(c => c.ProductVariant.Sku),
-                    "parent" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Parent.Sku) : products.OrderByDescending(c => c.Parent.Sku),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Parent.Product.Brand.Name) : products.OrderByDescending(c => c.Parent.Product.Brand.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Id) : childs.OrderByDescending(c => c.Id),
+                    "sku" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Sku) : childs.OrderByDescending(c => c.Sku),
+                    "asin" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Asin) : childs.OrderByDescending(c => c.Asin),
+                    "product_variant" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.ProductVariant.Sku) : childs.OrderByDescending(c => c.ProductVariant.Sku),
+                    "parent" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Parent.Sku) : childs.OrderByDescending(c => c.Parent.Sku),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Parent.Product.Brand.Name) : childs.OrderByDescending(c => c.Parent.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
-            return products;
+            return childs;
         }
 
-        private IQueryable<AmazonChild> ApplyPaging(IQueryable<AmazonChild> products, ListRequest request)
+        private IQueryable<AmazonChild> ApplyPaging(IQueryable<AmazonChild> childs, ListRequest request)
         {
-            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return childs.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }
