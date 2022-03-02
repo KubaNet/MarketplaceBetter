@@ -11,9 +11,10 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<KeywordResearchTargetModel>>>(ReloadKeywordResearchTarget))" Dense="true" Hover="true">
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterKeywordResearchTarget" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
-            <MudButton OnClick="AddKeywordResearchTarget" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Research Target</MudButton>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterKeywordResearchTarget" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
+            <MudButton OnClick="AddResearchTarget" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Research Target</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="KeywordResearchTargetModel">Id</MudTableSortLabel></MudTh>
@@ -38,24 +39,31 @@
     private ListRequest ListRequest = new();
 
     private Task<TableData<KeywordResearchTargetModel>> ReloadKeywordResearchTarget(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<KeywordResearchTargetModel> parents = KeywordResearchTargetService.GetForListRequest(ListRequest);
+        IList<KeywordResearchTargetModel> parents = KeywordResearchTargetService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<KeywordResearchTargetModel>() { TotalItems = KeywordResearchTargetService.CountForListRequest(ListRequest), Items = parents });
-	}
+        return Task.FromResult(new TableData<KeywordResearchTargetModel>() { TotalItems = KeywordResearchTargetService.CountForListRequest(ListRequest), Items = parents });
+    }
 
     private void FilterKeywordResearchTarget(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
-    private async void AddKeywordResearchTarget()
+    private async void AddFromFile()
+    {
+        var result = await DialogService.Show<KeywordResearchTargetFromFileDialog>(null, new DialogParameters { ["Title"] = "Add Research Target from file" }).Result;
+
+        ProcessKeywordResearchTargetDialogResult(result);
+    }
+
+    private async void AddResearchTarget()
     {
         var result = await DialogService.Show<KeywordResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Add Research Target" }).Result;
 
