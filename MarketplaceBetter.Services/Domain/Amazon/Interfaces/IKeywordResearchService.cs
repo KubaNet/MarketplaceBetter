@@ -18,8 +18,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Interfaces
 
         IList<KeywordResearchModel> GetForListRequest(ListRequest request);
 
-        void Add(KeywordResearchModel parent);
+        void Add(KeywordResearchModel research);
 
-        void Update(KeywordResearchModel parent);
+        void Update(KeywordResearchModel research);
     }
 }

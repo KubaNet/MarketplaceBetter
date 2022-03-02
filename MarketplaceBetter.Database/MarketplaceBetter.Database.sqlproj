@@ -92,6 +92,7 @@
     <Build Include="dbo\Tables\Amazon\AmazonParentInstance.sql" />
     <Build Include="dbo\Tables\Amazon\AmazonChildInstance.sql" />
     <Build Include="dbo\Tables\Amazon\KeywordResearch.sql" />
+    <Build Include="dbo\Tables\Amazon\KeywordResearchTarget.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />

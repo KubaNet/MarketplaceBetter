@@ -80,11 +80,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             toResearch.Name = fromResearch.Name;
         }
 
-        private IQueryable<KeywordResearch> ApplyFilter(IQueryable<KeywordResearch> products, ListRequest request)
+        private IQueryable<KeywordResearch> ApplyFilter(IQueryable<KeywordResearch> researches, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
-                return products;
+                return researches;
             }
 
             IList<string> searchStrings = request.SearchString.SplitForFiltering();
@@ -96,36 +96,36 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
                 if (searchField != null)
                 {
-                    products = searchField.Name switch
+                    researches = searchField.Name switch
                     {
-                        "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
-                        "name" => products.Where(p => p.Name.Contains(searchField.Value)),
+                        "id" => researches.Where(r => r.Id == searchField.Value.ParseToIntOrDefault()),
+                        "name" => researches.Where(r => r.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
-                        || p.Name.Contains(searchString));
+                    researches = researches.Where(r => r.Id == searchString.ParseToIntOrDefault()
+                        || r.Name.Contains(searchString));
                 }
             }
 
-            return products;
+            return researches;
         }
 
-        private IQueryable<KeywordResearch> ApplySorting(IQueryable<KeywordResearch> products, ListRequest request)
+        private IQueryable<KeywordResearch> ApplySorting(IQueryable<KeywordResearch> researches, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
-                products = request.SortBy switch
+                researches = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
-                    "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? researches.OrderBy(r => r.Id) : researches.OrderByDescending(r => r.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? researches.OrderBy(r => r.Name) : researches.OrderByDescending(r => r.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
-            return products;
+            return researches;
         }
 
         private IQueryable<KeywordResearch> ApplyPaging(IQueryable<KeywordResearch> researches, ListRequest request)

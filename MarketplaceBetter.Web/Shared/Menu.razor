@@ -61,7 +61,8 @@
 		@if (IsKeywordsModule())
 		{
 			<MudNavGroup Title="Keywords" Icon="@Icons.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/keywordresearches">Keyword Researches</MudNavLink>
+				<MudNavLink Href="/keywordresearches">Researches</MudNavLink>
+				<MudNavLink Href="/keywordresearchtargets">Targets</MudNavLink>
 			</MudNavGroup>
 		}
 		else
@@ -137,7 +138,8 @@
 
 	private bool IsKeywordsModule()
 	{
-		if (NavigationManager.Uri.Contains("keywordresearch"))
+		if (NavigationManager.Uri.Contains("keywordresearch") ||
+			NavigationManager.Uri.Contains("keywordresearchtargets"))
 		{
 			return true;
 		}

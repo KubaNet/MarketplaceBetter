@@ -47,7 +47,7 @@
     private void SetInitialValues()
     {
         Collection = CollectionService.Get(CollectionId);
-        Collection.Brand = Brands.Single(g => g.Id == Collection.Brand.Id);
+        Collection.Brand = Brands.Single(b => b.Id == Collection.Brand.Id);
     }
 
     private void HandleValidSubmit()

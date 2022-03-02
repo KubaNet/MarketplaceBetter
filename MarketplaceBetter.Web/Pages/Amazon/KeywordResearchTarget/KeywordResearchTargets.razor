@@ -1,0 +1,79 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon
+@using MarketplaceBetter.Services.Domain.Amazon.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/keywordresearchtargets"
+@inject IKeywordResearchTargetService KeywordResearchTargetService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Research Targets</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<KeywordResearchTargetModel>>>(ReloadKeywordResearchTarget))" Dense="true" Hover="true">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterKeywordResearchTarget" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+            <MudButton OnClick="AddKeywordResearchTarget" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Research Target</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="KeywordResearchTargetModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="KeywordResearchTargetModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="research" T="KeywordResearchTargetModel">Research</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Research">@context.Research.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditKeywordResearchTarget(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<KeywordResearchTargetModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<KeywordResearchTargetModel>> ReloadKeywordResearchTarget(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<KeywordResearchTargetModel> parents = KeywordResearchTargetService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<KeywordResearchTargetModel>() { TotalItems = KeywordResearchTargetService.CountForListRequest(ListRequest), Items = parents });
+	}
+
+    private void FilterKeywordResearchTarget(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddKeywordResearchTarget()
+    {
+        var result = await DialogService.Show<KeywordResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Add Research Target" }).Result;
+
+        ProcessKeywordResearchTargetDialogResult(result);
+    }
+
+    private async void EditKeywordResearchTarget(long id)
+    {
+        var result = await DialogService.Show<KeywordResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Edit Research Target", ["IsEdit"] = true, ["KeywordResearchTargetId"] = id }).Result;
+
+        ProcessKeywordResearchTargetDialogResult(result);
+    }
+
+    private void ProcessKeywordResearchTargetDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

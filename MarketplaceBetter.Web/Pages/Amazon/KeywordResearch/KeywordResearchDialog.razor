@@ -29,8 +29,13 @@
 
         if (IsEdit)
         {
-            KeywordResearch = KeywordResearchService.Get(KeywordResearchId);
+            SetInitialValues();
         }
+    }
+
+    private void SetInitialValues()
+    {
+        KeywordResearch = KeywordResearchService.Get(KeywordResearchId);
     }
 
     private void HandleValidSubmit()

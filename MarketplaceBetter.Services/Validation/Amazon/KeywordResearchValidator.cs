@@ -24,7 +24,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon
         {
             ValidationResult result = new();
 
-            if (_repository.Any(b => b.Id != research.Id && b.Name == research.Name))
+            if (_repository.Any(r => r.Id != research.Id && r.Name == research.Name))
             {
                 result.AddErrorFor<KeywordResearchModel>(b => b.Name, ValidationMessages.NameNotUnique, "Keyword Research");
             }
