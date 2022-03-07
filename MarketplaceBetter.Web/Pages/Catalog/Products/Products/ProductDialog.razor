@@ -1,0 +1,135 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject IProductService ProductService
+@inject IProductValidator ProductValidator
+@inject IBrandService BrandService
+@inject ICollectionService CollectionService
+@inject IColorGroupService ColorGroupService
+@inject ISizeGroupService SizeGroupService
+@inject ISnackbar Snackbar
+
+<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
+        <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
+        <MudSelect Label="Brand" T="BrandModel" Value="Product.Brand" For="() => Product.Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Collection" T="CollectionModel" @bind-Value="Product.Collection" For="() => Product.Collection" Disabled="CollectionSelectDisabled">
+            @foreach (var collection in Collections)
+            {
+                <MudSelectItem Value="collection">@collection.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Color group" T="ColorGroupModel" @bind-Value="Product.ColorGroup" For="() => Product.ColorGroup">
+            @foreach (var colorGroup in ColorGroups)
+            {
+                <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Size group" T="SizeGroupModel" @bind-Value="Product.SizeGroup" For="() => Product.SizeGroup">
+            @foreach (var sizeGroup in SizeGroups)
+            {
+                <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long ProductId { get; set; }
+
+    CustomValidation CustomValidation = new();
+    ProductModel Product = new();
+
+    IList<BrandModel> Brands;
+    IList<CollectionModel> Collections = new List<CollectionModel>();
+    IList<ColorGroupModel> ColorGroups;
+    IList<SizeGroupModel> SizeGroups;
+
+    bool CollectionSelectDisabled = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+        ColorGroups = ColorGroupService.GetAll();
+        SizeGroups = SizeGroupService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        Product = ProductService.Get(ProductId);
+        Product.Brand = Brands.Single(b => b.Id == Product.Brand.Id);
+        Product.ColorGroup = ColorGroups.Single(g => g.Id == Product.ColorGroup.Id);
+        Product.SizeGroup = SizeGroups.Single(g => g.Id == Product.SizeGroup.Id);
+
+        ActivateCollection(Product.Brand.Id);
+
+        Product.Collection = Collections.Single(c => c.Id == Product.Collection.Id);
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Product.Brand = brand;
+
+        ResetCollection();
+        ActivateCollection(brand.Id);
+    }
+
+    private void ResetCollection()
+    {
+        Product.Collection = null;
+        CollectionSelectDisabled = true;
+        Collections = new List<CollectionModel>();
+    }
+
+    private void ActivateCollection(long brandId)
+    {
+        CollectionSelectDisabled = false;
+        Collections = CollectionService.GetAllForBrand(brandId);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ProductValidator.Validate(Product);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                ProductService.Update(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product"));
+            }
+            else
+            {
+                ProductService.Add(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

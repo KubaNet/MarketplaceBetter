@@ -1,0 +1,79 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/sizegroups"
+@inject ISizeGroupService SizeGroupService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Size Groups</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<SizeGroupModel>>>(ReloadGroups))" Dense="true" Hover="true">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterGroups" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+            <MudButton OnClick="AddSizeGroup" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add size group</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="SizeGroupModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="SizeGroupModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="SizeGroupModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditSizeGroup(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<SizeGroupModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<SizeGroupModel>> ReloadGroups(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<SizeGroupModel> groups = SizeGroupService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<SizeGroupModel>() { TotalItems = SizeGroupService.CountForListRequest(ListRequest), Items = groups });
+	}
+
+	private void FilterGroups(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddSizeGroup()
+    {
+        var result = await DialogService.Show<SizeGroupDialog>(null, new DialogParameters { ["Title"] = "Add Size Group" }).Result;
+
+        ProcessSizeGroupDialogResult(result);
+    }
+
+    private async void EditSizeGroup(long id)
+    {
+        var result = await DialogService.Show<SizeGroupDialog>(null, new DialogParameters { ["Title"] = "Edit Size Group", ["IsEdit"] = true, ["SizeGroupId"] = id }).Result;
+
+        ProcessSizeGroupDialogResult(result);
+    }
+
+    private void ProcessSizeGroupDialogResult(DialogResult result)
+    {
+		if (!result.Cancelled)
+		{
+			Table.ReloadServerData();
+		}
+    }
+}

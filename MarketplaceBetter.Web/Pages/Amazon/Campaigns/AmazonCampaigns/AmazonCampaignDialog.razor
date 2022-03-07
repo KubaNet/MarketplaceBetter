@@ -1,0 +1,160 @@
+﻿@using MarketplaceBetter.Domain.Entities.Sales
+@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
+
+@inject IAmazonCampaignService AmazonCampaignService
+@inject IAmazonCampaignValidator AmazonCampaignValidator
+@inject IBrandService BrandService
+@inject IProductService ProductService
+@inject IInstanceService InstanceService
+@inject ISnackbar Snackbar
+
+<EditForm Model="AmazonCampaign" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Label="Instance" T="InstanceModel" Value="AmazonCampaign.Instance" For="() => AmazonCampaign.Instance" ValueChanged="HandleInstanceChanged">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Product" T="ProductModel" Value="AmazonCampaign.Product" For="() => AmazonCampaign.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+            @foreach (var product in Products)
+            {
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Name" @bind-Value="AmazonCampaign.Name" For="() => AmazonCampaign.Name" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long AmazonCampaignId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private AmazonCampaignModel AmazonCampaign = new();
+    private BrandModel Brand;
+
+    private IList<BrandModel> Brands;
+    private IList<ProductModel> Products = new List<ProductModel>();
+    private IList<InstanceModel> Instances;
+
+    private bool ProductSelectDisabled = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+        Instances = InstanceService.GetAllForAmazon();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        AmazonCampaign = AmazonCampaignService.Get(AmazonCampaignId);
+
+        ActivateProduct(AmazonCampaign.Product.Brand.Id);
+
+        AmazonCampaign.Instance = Instances.Single(i => i.Id == AmazonCampaign.Instance.Id);
+        Brand = Brands.Single(b => b.Id == AmazonCampaign.Product.Brand.Id);
+        AmazonCampaign.Product = Products.Single(p => p.Id == AmazonCampaign.Product.Id);
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Brand = brand;
+
+        ResetProduct();
+        ActivateProduct(brand.Id);
+    }
+
+    private void HandleProductChanged(ProductModel product)
+    {
+        AmazonCampaign.Product = product;
+        SetCampaignName();
+    }
+
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        AmazonCampaign.Instance = instance;
+        SetCampaignName();
+    }
+
+    private void ResetProduct()
+    {
+        AmazonCampaign.Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
+    }
+
+    private void ActivateProduct(long brandId)
+    {
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId);
+    }
+
+    private void SetCampaignName()
+    {
+        AmazonCampaign.Name = null;
+
+        if (AmazonCampaign.Product != null && AmazonCampaign.Instance != null)
+        {
+            AmazonCampaign.Name = string.Format("{0}_{1}_{2}_AUTO", AmazonInstanceHelper.GetCodeFor(AmazonCampaign.Instance.SystemName), AmazonCampaign.Product.Brand.Code, AmazonCampaign.Product.Name.Replace(" ", "_"));
+        }
+        else if (AmazonCampaign.Product != null)
+        {
+            AmazonCampaign.Name = string.Format("{0}_{1}_AUTO", AmazonCampaign.Product.Brand.Code, AmazonCampaign.Product.Name.Replace(" ", "_"));
+        }
+        else if (AmazonCampaign.Instance != null)
+        {
+            AmazonCampaign.Name = AmazonInstanceHelper.GetCodeFor(AmazonCampaign.Instance.SystemName);
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = AmazonCampaignValidator.Validate(AmazonCampaign);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                AmazonCampaignService.Update(AmazonCampaign);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Amazon Campaign"));
+            }
+            else
+            {
+                AmazonCampaignService.Add(AmazonCampaign);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Amazon Campaign"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

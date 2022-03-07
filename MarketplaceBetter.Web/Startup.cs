@@ -1,7 +1,6 @@
 using Autofac;
 using MarketplaceBetter.Infrastructure.Data;
-using MarketplaceBetter.Services.Domain.Catalog;
-using MarketplaceBetter.Services.Domain.Catalog.Interfaces;
+using MarketplaceBetter.Services.Domain.Catalog.Products;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;

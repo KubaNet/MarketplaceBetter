@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog;
+﻿using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Validation;
 using System;
 using System.Collections.Generic;

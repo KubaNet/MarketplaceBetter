@@ -1,0 +1,95 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Model;
+
+@page "/productvariants"
+@inject IProductVariantService ProductVariantService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Product Variants</MudText>
+
+<MainBody>
+	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductVariantModel>>>(ReloadVariants))" Dense="true" Hover="true">
+		<ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+			<MudButton OnClick="AddProductVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add product variant</MudButton>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="ProductVariantModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="sku" T="ProductVariantModel">SKU</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="product" T="ProductVariantModel">Product</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="brand" T="ProductVariantModel">Brand</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="color" T="ProductVariantModel">Color</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="size" T="ProductVariantModel">Size</MudTableSortLabel></MudTh>
+			<MudTh Style="width: 170px;">Actions</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Sku">@context.Sku</MudTd>
+			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
+			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
+			<MudTd DataLabel="Size">@context.Size.Name</MudTd>
+			<MudTd>
+				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarProductVariant(context.Id))">Add</MudButton>
+				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductVariant(context.Id))">Edit</MudButton>
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+</MainBody>
+
+@code {
+	private MudTable<ProductVariantModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<ProductVariantModel>> ReloadVariants(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<ProductVariantModel> variants = ProductVariantService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<ProductVariantModel>() { TotalItems = ProductVariantService.CountForListRequest(ListRequest), Items = variants });
+	}
+
+	private void FilterVariants(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+	private async void AddProductVariant()
+	{
+		var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add Product Variant" }).Result;
+
+		ProcessProductVariantDialogResult(result);
+	}
+
+	private async void AddSimilarProductVariant(long id)
+	{
+		var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Add Product Variant", ["AddingSimilar"] = true, ["ProductVariantId"] = id }).Result;
+
+		ProcessProductVariantDialogResult(result);
+	}
+
+	private async void EditProductVariant(long id)
+	{
+		var result = await DialogService.Show<ProductVariantDialog>(null, new DialogParameters { ["Title"] = "Edit Product Variant", ["IsEdit"] = true, ["ProductVariantId"] = id }).Result;
+
+		ProcessProductVariantDialogResult(result);
+	}
+
+	private void ProcessProductVariantDialogResult(DialogResult result)
+	{
+		if (!result.Cancelled)
+		{
+			Table.ReloadServerData();
+		}
+	}
+}

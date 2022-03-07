@@ -16,7 +16,7 @@
 			<MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
 		}
 
-		@if (IsColorsOrSizesModule())
+		@if (IsColorsAndSizesModule())
 		{
 			<MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/colors">Colors</MudNavLink>
@@ -98,7 +98,7 @@
 		return false;
 	}
 
-	private bool IsColorsOrSizesModule()
+	private bool IsColorsAndSizesModule()
 	{
 		if (NavigationManager.Uri.Contains("colors")
 			|| NavigationManager.Uri.Contains("colortranslations")

@@ -1,5 +1,8 @@
-﻿using MarketplaceBetter.Domain.Entities.Amazon;
-using MarketplaceBetter.Domain.Entities.Catalog;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
+using MarketplaceBetter.Domain.Entities.Amazon.Catalog;
+using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -44,7 +47,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }
         public DbSet<KeywordResearch> KeywordResearch { get; set; }
-        public DbSet<KeywordResearchTarget> KeywordResearchTarget { get; set; }
+        public DbSet<KeywordTarget> KeywordResearchTarget { get; set; }
 
         //public override int SaveChanges()
         //{

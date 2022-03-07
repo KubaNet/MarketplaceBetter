@@ -1,0 +1,78 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject IColorGroupService ColorGroupService
+@inject IColorGroupValidator ColorGroupValidator
+@inject IBrandService BrandService
+@inject ISnackbar Snackbar
+
+<EditForm Model="ColorGroup" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudSelect Label="Brand" T="BrandModel" @bind-Value="ColorGroup.Brand" For="() => ColorGroup.Brand">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Name" @bind-Value="ColorGroup.Name" For="() => ColorGroup.Name" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long ColorGroupId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private ColorGroupModel ColorGroup = new();
+    private IList<BrandModel> Brands;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        ColorGroup = ColorGroupService.Get(ColorGroupId);
+        ColorGroup.Brand = Brands.Single(b => b.Id == ColorGroup.Brand.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ColorGroupValidator.Validate(ColorGroup);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                ColorGroupService.Update(ColorGroup);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color Group"));
+            }
+            else
+            {
+                ColorGroupService.Add(ColorGroup);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color Group"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

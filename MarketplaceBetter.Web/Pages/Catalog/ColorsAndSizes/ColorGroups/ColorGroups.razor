@@ -1,0 +1,79 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/colorgroups"
+@inject IColorGroupService ColorGroupService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Color Groups</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorGroupModel>>>(ReloadGroups))" Dense="true" Hover="true">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterGroups" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+            <MudButton OnClick="AddColorGroup" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add color group</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ColorGroupModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="ColorGroupModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ColorGroupModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColorGroup(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<ColorGroupModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<ColorGroupModel>> ReloadGroups(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<ColorGroupModel> groups = ColorGroupService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<ColorGroupModel>() { TotalItems = ColorGroupService.CountForListRequest(ListRequest), Items = groups });
+	}
+
+	private void FilterGroups(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddColorGroup()
+    {
+        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Add Color Group" }).Result;
+
+        ProcessColorGroupDialogResult(result);
+    }
+
+    private async void EditColorGroup(long id)
+    {
+        var result = await DialogService.Show<ColorGroupDialog>(null, new DialogParameters { ["Title"] = "Edit Color Group", ["IsEdit"] = true, ["ColorGroupId"] = id }).Result;
+
+        ProcessColorGroupDialogResult(result);
+    }
+
+    private void ProcessColorGroupDialogResult(DialogResult result)
+    {
+		if (!result.Cancelled)
+		{
+			Table.ReloadServerData();
+		}
+    }
+}

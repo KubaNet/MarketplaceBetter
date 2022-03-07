@@ -1,5 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog;
-using MarketplaceBetter.Domain.Model.Catalog;
+﻿using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Validation.Catalog.Interfaces;

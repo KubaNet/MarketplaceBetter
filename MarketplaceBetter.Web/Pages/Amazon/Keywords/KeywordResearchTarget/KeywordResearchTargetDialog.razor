@@ -1,0 +1,76 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Keywords
+@using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces
+
+@inject IKeywordTargetService KeywordResearchTargetService
+@inject IKeywordResearchTargetValidator KeywordResearchTargetValidator
+@inject IKeywordResearchService KeywordResearchService
+@inject ISnackbar Snackbar
+
+<EditForm Model="KeywordResearchTarget" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudSelect Label="Research" T="KeywordResearchModel" @bind-Value="KeywordResearchTarget.Research" For="() => KeywordResearchTarget.Research">
+            @foreach (var research in KeywordResearches)
+            {
+                <MudSelectItem Value="research">@research.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Name" @bind-Value="KeywordResearchTarget.Name" For="() => KeywordResearchTarget.Name" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long KeywordResearchTargetId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private KeywordTargetModel KeywordResearchTarget = new();
+    private IList<KeywordResearchModel> KeywordResearches = new List<KeywordResearchModel>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        KeywordResearches = KeywordResearchService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        KeywordResearchTarget = KeywordResearchTargetService.Get(KeywordResearchTargetId);
+        KeywordResearchTarget.Research = KeywordResearches.Single(r => r.Id == KeywordResearchTarget.Research.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = KeywordResearchTargetValidator.Validate(KeywordResearchTarget);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                KeywordResearchTargetService.Update(KeywordResearchTarget);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Research Target"));
+            }
+            else
+            {
+                KeywordResearchTargetService.Add(KeywordResearchTarget);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Research Target"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

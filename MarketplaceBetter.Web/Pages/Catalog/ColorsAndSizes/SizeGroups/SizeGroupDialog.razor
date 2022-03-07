@@ -1,0 +1,78 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+
+@inject ISizeGroupService SizeGroupService
+@inject ISizeGroupValidator SizeGroupValidator
+@inject IBrandService BrandService
+@inject ISnackbar Snackbar
+
+<EditForm Model="SizeGroup" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <MudSelect Label="Brand" T="BrandModel" @bind-Value="SizeGroup.Brand" For="() => SizeGroup.Brand">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Name" @bind-Value="SizeGroup.Name" For="() => SizeGroup.Name" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long SizeGroupId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private SizeGroupModel SizeGroup = new();
+    private IList<BrandModel> Brands;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        SizeGroup = SizeGroupService.Get(SizeGroupId);
+        SizeGroup.Brand = Brands.Single(b => b.Id == SizeGroup.Brand.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = SizeGroupValidator.Validate(SizeGroup);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                SizeGroupService.Update(SizeGroup);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Size Group"));
+            }
+            else
+            {
+                SizeGroupService.Add(SizeGroup);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Size Group"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

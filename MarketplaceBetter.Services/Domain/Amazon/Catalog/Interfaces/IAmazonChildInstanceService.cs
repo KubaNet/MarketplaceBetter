@@ -1,0 +1,31 @@
+﻿using MarketplaceBetter.Domain.Model.Amazon.Catalog;
+using MarketplaceBetter.Services.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MarketplaceBetter.Services.Domain.Amazon.Catalog.Interfaces
+{
+    public interface IAmazonChildInstanceService
+    {
+        AmazonChildInstanceModel Get(long id);
+
+        IList<AmazonChildInstanceModel> GetAll();
+
+        IList<AmazonChildInstanceModel> GetAllForBrand(long brandId, long instanceId);
+
+        int CountForListRequest(ListRequest request);
+
+        IList<AmazonChildInstanceModel> GetForListRequest(ListRequest request);
+
+        void Add(AmazonChildInstanceModel child);
+
+        void AddForChild(long childId);
+
+        void Update(AmazonChildInstanceModel child);
+
+        string GetSkuFor(long? childId, long? instanceId);
+    }
+}

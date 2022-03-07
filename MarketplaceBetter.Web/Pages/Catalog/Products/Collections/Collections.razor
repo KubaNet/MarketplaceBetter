@@ -1,0 +1,67 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+
+@page "/collections"
+@inject ICollectionService CollectionService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Collections</MudText>
+
+<MainBody>
+    <MudTable Items="@CollectionsData" Dense="true">
+        <ToolBarContent>
+            <MudSpacer />
+            <MudButton OnClick="AddCollection" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Collection</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Brand</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditCollection(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private IList<CollectionModel> CollectionsData { get; set; }
+
+    private async void AddCollection()
+    {
+        var result = await DialogService.Show<CollectionDialog>(null, new DialogParameters { ["Title"] = "Add Collection" }).Result;
+
+        ProcessCollectionDialogResult(result);
+    }
+
+    private async void EditCollection(long id)
+    {
+        var result = await DialogService.Show<CollectionDialog>(null, new DialogParameters { ["Title"] = "Edit Collection", ["IsEdit"] = true, ["CollectionId"] = id }).Result;
+
+        ProcessCollectionDialogResult(result);
+    }
+
+    private void ProcessCollectionDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            CollectionsData = CollectionService.GetAll();
+
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        CollectionsData = CollectionService.GetAll();
+    }
+}
