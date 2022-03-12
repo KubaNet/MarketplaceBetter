@@ -1,5 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
-using MarketplaceBetter.Domain.Entities.Amazon.Catalog;
+using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;

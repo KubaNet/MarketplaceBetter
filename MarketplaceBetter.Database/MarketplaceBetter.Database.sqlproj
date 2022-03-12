@@ -64,39 +64,46 @@
     <Folder Include="Scripts\Inserts" />
     <Folder Include="dbo\Tables\Base" />
     <Folder Include="dbo\Tables\Amazon" />
+    <Folder Include="dbo\Tables\Amazon\Campaigns" />
+    <Folder Include="dbo\Tables\Amazon\Inventory" />
+    <Folder Include="dbo\Tables\Amazon\Keywords" />
+    <Folder Include="dbo\Tables\Catalog\ColorsAndSizes" />
+    <Folder Include="dbo\Tables\Catalog\Products" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\Catalog\Brand.sql" />
     <Build Include="dbo\Tables\Template.sql" />
-    <Build Include="dbo\Tables\Catalog\Product.sql" />
-    <Build Include="dbo\Tables\Catalog\ColorGroup.sql" />
-    <Build Include="dbo\Tables\Catalog\Color.sql" />
-    <Build Include="dbo\Tables\Catalog\SizeGroup.sql" />
-    <Build Include="dbo\Tables\Catalog\Size.sql" />
-    <Build Include="dbo\Tables\Catalog\ProductVariant.sql" />
     <Build Include="dbo\Tables\Sales\SalesChannel.sql" />
     <Build Include="dbo\Tables\Sales\Instance.sql" />
     <None Include="Scripts\Inserts\03_Instances.sql" />
     <Build Include="dbo\Tables\Base\Country.sql" />
     <None Include="Scripts\Inserts\01_Countries.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonParent.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonChild.sql" />
-    <Build Include="dbo\Tables\Catalog\Collection.sql" />
-    <Build Include="dbo\Tables\Catalog\ColorTranslation.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonCampaign.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonTargetingStatus.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonTargeting.sql" />
     <None Include="Scripts\Inserts\04_AmazonTargetingStatuses.sql" />
     <None Include="Scripts\Inserts\05_AmazonTargetingTypes.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonTargetingType.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonParentInstance.sql" />
-    <Build Include="dbo\Tables\Amazon\AmazonChildInstance.sql" />
-    <Build Include="dbo\Tables\Amazon\KeywordResearch.sql" />
-    <Build Include="dbo\Tables\Amazon\KeywordResearchTarget.sql" />
+    <Build Include="dbo\Tables\Amazon\Keywords\KeywordResearchTarget.sql" />
+    <Build Include="dbo\Tables\Amazon\Keywords\KeywordResearch.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\AmazonChild.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\AmazonChildInstance.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\AmazonParent.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\AmazonParentInstance.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\AmazonCampaign.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\AmazonTargeting.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\AmazonTargetingStatus.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\AmazonTargetingType.sql" />
+    <Build Include="dbo\Tables\Catalog\ColorsAndSizes\Color.sql" />
+    <Build Include="dbo\Tables\Catalog\ColorsAndSizes\ColorGroup.sql" />
+    <Build Include="dbo\Tables\Catalog\ColorsAndSizes\ColorTranslation.sql" />
+    <Build Include="dbo\Tables\Catalog\ColorsAndSizes\Size.sql" />
+    <Build Include="dbo\Tables\Catalog\ColorsAndSizes\SizeGroup.sql" />
+    <Build Include="dbo\Tables\Catalog\Products\Brand.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\LocalSchemaCompare.scmp" />
     <None Include="Scripts\Inserts\02_SalesChannels.sql" />
     <None Include="SchemaCompare\ProductionSchemaCompare.scmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\Catalog\Products\Collection.sql" />
+    <Build Include="dbo\Tables\Catalog\Products\Product.sql" />
+    <Build Include="dbo\Tables\Catalog\Products\ProductVariant.sql" />
   </ItemGroup>
 </Project>

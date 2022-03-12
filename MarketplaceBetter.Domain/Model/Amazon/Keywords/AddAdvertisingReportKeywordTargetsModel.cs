@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Amazon.Catalog;
+﻿using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

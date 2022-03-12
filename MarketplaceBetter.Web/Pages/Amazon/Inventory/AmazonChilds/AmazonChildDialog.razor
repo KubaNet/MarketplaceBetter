@@ -1,0 +1,174 @@
+﻿@using MarketplaceBetter.Domain.Entities.Sales
+@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces
+
+@inject IAmazonChildService AmazonChildService
+@inject IAmazonChildValidator AmazonChildValidator
+@inject IBrandService BrandService
+@inject IInstanceService InstanceService
+@inject IAmazonParentService AmazonParentService
+@inject IProductVariantService ProductVariantService
+@inject ISnackbar Snackbar
+
+<EditForm Model="AmazonChild" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Parent" T="AmazonParentModel" Value="AmazonChild.Parent" For="() => AmazonChild.Parent" ValueChanged="HandleParentChanged" Disabled="ParentSelectDisabled">
+            @foreach (var parent in Parents)
+            {
+                <MudSelectItem Value="parent">@parent.Sku</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Product Variant" T="ProductVariantModel" Value="AmazonChild.ProductVariant" For="() => AmazonChild.ProductVariant" ValueChanged="HandleProductVariantChanged" Disabled="ProductVariantDisabled">
+            @foreach (var productVariant in ProductVariants)
+            {
+                <MudSelectItem Value="productVariant">@productVariant.Sku</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="SKU" @bind-Value="AmazonChild.Sku" For="() => AmazonChild.Sku" />
+        <MudTextField Label="ASIN" @bind-Value="AmazonChild.Asin" For="() => AmazonChild.Asin" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long AmazonChildId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private AmazonChildModel AmazonChild = new();
+    private BrandModel Brand;
+
+    private IList<BrandModel> Brands;
+    private IList<AmazonParentModel> Parents = new List<AmazonParentModel>();
+    private IList<ProductVariantModel> ProductVariants = new List<ProductVariantModel>();
+
+    private bool ParentSelectDisabled = true;
+    private bool ProductVariantDisabled = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        AmazonChild = AmazonChildService.Get(AmazonChildId);
+
+        Brand = Brands.Single(b => b.Id == AmazonChild.Parent.Product.Brand.Id);
+
+        ActivateParent();
+        ActivateProductVariant(AmazonChild.Parent.Product.Id);
+
+        AmazonChild.Parent = Parents.Single(p => p.Id == AmazonChild.Parent.Id);
+        AmazonChild.ProductVariant = ProductVariants.Single(v => v.Id == AmazonChild.ProductVariant.Id);
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Brand = brand;
+
+        ResetParent();
+        ActivateParent();
+
+        ResetProductVariant();
+
+        SetChildSku();
+    }
+
+    private void HandleParentChanged(AmazonParentModel parent)
+    {
+        AmazonChild.Parent = parent;
+
+        ResetProductVariant();
+        ActivateProductVariant(parent.Product.Id);
+
+        SetChildSku();
+    }
+
+    private void HandleProductVariantChanged(ProductVariantModel productVariant)
+    {
+        AmazonChild.ProductVariant = productVariant;
+
+        SetChildSku();
+    }
+
+    private void ResetParent()
+    {
+        AmazonChild.Parent = null;
+        ParentSelectDisabled = true;
+        Parents = new List<AmazonParentModel>();
+    }
+
+    private void ActivateParent()
+    {
+        ParentSelectDisabled = false;
+        Parents = AmazonParentService.GetAllForBrand(Brand.Id);
+    }
+
+    private void ResetProductVariant()
+    {
+        AmazonChild.ProductVariant = null;
+        ProductVariantDisabled = true;
+        ProductVariants = new List<ProductVariantModel>();
+    }
+
+    private void ActivateProductVariant(long productId)
+    {
+        ProductVariantDisabled = false;
+        ProductVariants = ProductVariantService.GetAllForProduct(productId);
+    }
+
+    private void SetChildSku()
+    {
+        AmazonChild.Sku = AmazonChildService.GetSkuFor(AmazonChild.Parent?.Id, AmazonChild.ProductVariant?.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = AmazonChildValidator.Validate(AmazonChild);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                AmazonChildService.Update(AmazonChild);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Amazon Child"));
+            }
+            else
+            {
+                AmazonChildService.Add(AmazonChild);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Amazon Child"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

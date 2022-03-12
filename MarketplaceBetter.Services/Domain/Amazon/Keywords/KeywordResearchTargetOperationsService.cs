@@ -1,6 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using MarketplaceBetter.Domain.Model.Amazon.Catalog;
+using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Amazon.Keywords;
 using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces;
 using System;
