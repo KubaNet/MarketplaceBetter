@@ -97,9 +97,10 @@
     <Build Include="dbo\Tables\Catalog\Products\Brand.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SchemaCompare\LocalSchemaCompare.scmp" />
+    <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
     <None Include="Scripts\Inserts\02_SalesChannels.sql" />
-    <None Include="SchemaCompare\ProductionSchemaCompare.scmp" />
+    <None Include="SchemaCompare\Production_SchemaCompare.scmp" />
+    <None Include="SchemaCompare\Test_SchemaCompare.scmp" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Products\Collection.sql" />

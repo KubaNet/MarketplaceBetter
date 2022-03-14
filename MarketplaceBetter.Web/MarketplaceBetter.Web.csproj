@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <StartupObject>MarketplaceBetter.Web.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
