@@ -1,8 +1,12 @@
 using Autofac;
+using Blazored.SessionStorage;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog.Products;
+using MarketplaceBetter.Web.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +40,8 @@ namespace MarketplaceBetter.Web
             services.AddMudServices();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<BetterDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BetterConnection")));
+            services.AddScoped<AuthenticationStateProvider, BetterAuthenticationStateProvider>();
+            services.AddBlazoredSessionStorage();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -64,6 +70,9 @@ namespace MarketplaceBetter.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
