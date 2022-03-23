@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MarketplaceBetter.Domain.Entities.Catalog.Products
+{
+    public class VariantStatus : Entity
+    {
+        public string Name { get; set; }
+
+        public VariantStatusEnum SystemName { get; set; }
+    }
+}

@@ -1,4 +1,5 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+﻿@using MarketplaceBetter.Domain.Entities.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
@@ -7,6 +8,7 @@
 @inject IVariantService VariantService
 @inject IVariantValidator VariantValidator
 @inject IBrandService BrandService
+@inject IVariantStatusService StatusService
 @inject IProductService ProductService
 @inject IColorService ColorService
 @inject ISizeService SizeService
@@ -41,6 +43,12 @@
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect Label="Status" T="VariantStatusModel" @bind-Value="Variant.Status" For="() => Variant.Status">
+            @foreach (var status in Statuses)
+            {
+                <MudSelectItem Value="status">@status.Name</MudSelectItem>
+            }
+        </MudSelect>
         <MudTextField Label="Sku" @bind-Value="Variant.Sku" For="() => Variant.Sku" />
     </FormDialog>
 </EditForm>
@@ -57,6 +65,7 @@
     private BrandModel Brand;
 
     private IList<BrandModel> Brands;
+    private IList<VariantStatusModel> Statuses = new List<VariantStatusModel>();
     private IList<ProductModel> Products = new List<ProductModel>();
     private IList<ColorModel> Colors = new List<ColorModel>();
     private IList<SizeModel> Sizes = new List<SizeModel>();
@@ -70,6 +79,9 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
+        Statuses = StatusService.GetAll();
+
+        Variant.Status = Statuses.Single(s => s.SystemName == VariantStatusEnum.Active);
 
         if (IsEdit || AddingSimilar)
         {
@@ -93,6 +105,7 @@
         Variant.Product = Products.Single(p => p.Id == Variant.Product.Id);
         Variant.Color = Colors.Single(c => c.Id == Variant.Color.Id);
         Variant.Size = Sizes.Single(s => s.Id == Variant.Size.Id);
+        Variant.Status = Statuses.Single(s => s.Id == Variant.Status.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)

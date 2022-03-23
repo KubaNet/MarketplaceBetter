@@ -25,5 +25,8 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
 
         [Required]
         public SizeModel Size { get; set; }
+
+        [Required]
+        public VariantStatusModel Status { get; set; }
     }
 }

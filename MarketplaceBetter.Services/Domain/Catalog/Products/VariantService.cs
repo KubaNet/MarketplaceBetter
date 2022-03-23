@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -8,13 +7,13 @@ using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -22,7 +21,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> _repository;
+        private readonly IRepository<Variant> _repository;
         private readonly IAmazonChildService _amazonChildService;
 
         public VariantService(
@@ -32,7 +31,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _repository = unitOfWork.GetRepository<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant>();
+            _repository = unitOfWork.GetRepository<Variant>();
             _amazonChildService = amazonChildService;
         }
 
@@ -46,7 +45,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public IList<VariantModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants = _repository.GetQuery();
+            IQueryable<Variant> variants = _repository.GetQuery();
 
             variants = ApplyFilter(variants, request);
             variants = ApplySorting(variants, request);
@@ -57,7 +56,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public void Add(VariantModel variant)
         {
-            MarketplaceBetter.Domain.Entities.Catalog.Products.Variant variantToAdd = new();
+            Variant variantToAdd = new();
 
             TransferValues(variantToAdd, variant);
 
@@ -69,7 +68,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public void Update(VariantModel variant)
         {
-            MarketplaceBetter.Domain.Entities.Catalog.Products.Variant variantToUpdate = _repository.Get(variant.Id);
+            Variant variantToUpdate = _repository.Get(variant.Id);
 
             TransferValues(variantToUpdate, variant);
 
@@ -79,15 +78,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _amazonChildService.AddForVariant(variantToUpdate.Id);
         }
 
-        private void TransferValues(MarketplaceBetter.Domain.Entities.Catalog.Products.Variant toVariant, VariantModel fromVariant)
+        private void TransferValues(Variant toVariant, VariantModel fromVariant)
         {
             toVariant.Sku = fromVariant.Sku;
+            toVariant.StatusId = fromVariant.Status.Id;
             toVariant.ProductId = fromVariant.Product.Id;
             toVariant.ColorId = fromVariant.Color.Id;
             toVariant.SizeId = fromVariant.Size.Id;
         }
 
-        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> ApplyFilter(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants, ListRequest request)
+        private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
@@ -98,7 +98,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "product", "brand", "color", "size" };
+                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "brand", "color", "size" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -107,6 +107,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     {
                         "id" => variants.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => variants.Where(p => p.Sku.Contains(searchField.Value)),
+                        "status" => variants.Where(p => p.Status.Name.Contains(searchField.Value)),
                         "product" => variants.Where(p => p.Product.Name.Contains(searchField.Value)),
                         "brand" => variants.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
                         "color" => variants.Where(p => p.Color.Name.Contains(searchField.Value)),
@@ -118,6 +119,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 {
                     variants = variants.Where(p => p.Id == searchString.ParseToIntOrDefault()
                       || p.Sku.Contains(searchString)
+                      || p.Status.Name.Contains(searchString)
                       || p.Product.Name.Contains(searchString)
                       || p.Product.Brand.Name.Contains(searchString)
                       || p.Color.Name.Contains(searchString)
@@ -128,7 +130,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             return variants;
         }
 
-        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> ApplySorting(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants, ListRequest request)
+        private IQueryable<Variant> ApplySorting(IQueryable<Variant> variants, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -136,6 +138,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Id) : variants.OrderByDescending(v => v.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Sku) : variants.OrderByDescending(v => v.Sku),
+                    "status" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Status.Name) : variants.OrderByDescending(v => v.Status.Name),
                     "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Brand.Name) : variants.OrderByDescending(v => v.Product.Brand.Name),
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
@@ -151,7 +154,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             return variants;
         }
 
-        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> ApplyPaging(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants, ListRequest request)
+        private IQueryable<Variant> ApplyPaging(IQueryable<Variant> variants, ListRequest request)
         {
             return variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }

@@ -18,6 +18,7 @@
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="VariantModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="sku" T="VariantModel">SKU</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="status" T="VariantModel">Status</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="product" T="VariantModel">Product</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="brand" T="VariantModel">Brand</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="color" T="VariantModel">Color</MudTableSortLabel></MudTh>
@@ -27,6 +28,7 @@
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
 			<MudTd DataLabel="Sku">@context.Sku</MudTd>
+			<MudTd DataLabel="Status">@context.Status.Name</MudTd>
 			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
 			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
 			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
