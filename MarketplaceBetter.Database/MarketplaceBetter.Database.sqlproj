@@ -105,6 +105,6 @@
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Products\Collection.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Product.sql" />
-    <Build Include="dbo\Tables\Catalog\Products\ProductVariant.sql" />
+    <Build Include="dbo\Tables\Catalog\Products\Variant.sql" />
   </ItemGroup>
 </Project>

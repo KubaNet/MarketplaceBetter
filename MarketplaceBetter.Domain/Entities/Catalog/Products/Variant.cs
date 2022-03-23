@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Catalog.Products
 {
-    public class ProductVariant : Entity
+    public class Variant : Entity
     {
         public string Sku { get; set; }
 

@@ -6,7 +6,7 @@
 		{
 			<MudNavGroup Title="Products" Icon="@Icons.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/products">Products</MudNavLink>
-				<MudNavLink Href="/productvariants">Variants</MudNavLink>
+				<MudNavLink Href="/variants">Variants</MudNavLink>
 				<MudNavLink Href="/collections">Collections</MudNavLink>
 				<MudNavLink Href="/brands">Brands</MudNavLink>
 			</MudNavGroup>
@@ -88,7 +88,7 @@
 	private bool IsProductsModule()
 	{
 		if (NavigationManager.Uri.Contains("products")
-			|| NavigationManager.Uri.Contains("productvariants")
+			|| NavigationManager.Uri.Contains("variants")
 			|| NavigationManager.Uri.Contains("collections")
 			|| NavigationManager.Uri.Contains("brands"))
 		{

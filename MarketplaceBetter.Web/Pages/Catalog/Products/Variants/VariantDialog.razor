@@ -4,15 +4,15 @@
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Validation.Catalog.Interfaces
 
-@inject IProductVariantService ProductVariantService
-@inject IProductVariantValidator ProductVariantValidator
+@inject IVariantService VariantService
+@inject IVariantValidator VariantValidator
 @inject IBrandService BrandService
 @inject IProductService ProductService
 @inject IColorService ColorService
 @inject ISizeService SizeService
 @inject ISnackbar Snackbar
 
-<EditForm Model="ProductVariant" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Variant" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
@@ -23,25 +23,25 @@
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Product" T="ProductModel" Value="ProductVariant.Product" For="() => ProductVariant.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+        <MudSelect Label="Product" T="ProductModel" Value="Variant.Product" For="() => Variant.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Color" T="ColorModel" Value="ProductVariant.Color" For="() => ProductVariant.Color" ValueChanged="HandleColorChanged" Disabled="ColorSelectDisabled">
+        <MudSelect Label="Color" T="ColorModel" Value="Variant.Color" For="() => Variant.Color" ValueChanged="HandleColorChanged" Disabled="ColorSelectDisabled">
             @foreach (var color in Colors)
             {
                 <MudSelectItem Value="color">@color.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Size" T="SizeModel" Value="ProductVariant.Size" For="() => ProductVariant.Size" ValueChanged="HandleSizeChanged" Disabled="SizeSelectDisabled">
+        <MudSelect Label="Size" T="SizeModel" Value="Variant.Size" For="() => Variant.Size" ValueChanged="HandleSizeChanged" Disabled="SizeSelectDisabled">
             @foreach (var size in Sizes)
             {
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="Sku" @bind-Value="ProductVariant.Sku" For="() => ProductVariant.Sku" />
+        <MudTextField Label="Sku" @bind-Value="Variant.Sku" For="() => Variant.Sku" />
     </FormDialog>
 </EditForm>
 
@@ -50,10 +50,10 @@
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
     [Parameter] public bool AddingSimilar { get; set; }
-    [Parameter] public long ProductVariantId { get; set; }
+    [Parameter] public long VariantId { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private ProductVariantModel ProductVariant = new();
+    private VariantModel Variant = new();
     private BrandModel Brand;
 
     private IList<BrandModel> Brands;
@@ -79,20 +79,20 @@
 
     private void SetInitialValues()
     {
-        ProductVariant = ProductVariantService.Get(ProductVariantId);
+        Variant = VariantService.Get(VariantId);
         if (AddingSimilar)
         {
-            ProductVariant.Id = 0;
+            Variant.Id = 0;
         }
 
-        ActivateProduct(ProductVariant.Product.Brand.Id);
-        ActivateColor(ProductVariant.Product.ColorGroup.Id);
-        ActivateSize(ProductVariant.Product.SizeGroup.Id);
+        ActivateProduct(Variant.Product.Brand.Id);
+        ActivateColor(Variant.Product.ColorGroup.Id);
+        ActivateSize(Variant.Product.SizeGroup.Id);
 
-        Brand = Brands.Single(b => b.Id == ProductVariant.Product.Brand.Id);
-        ProductVariant.Product = Products.Single(p => p.Id == ProductVariant.Product.Id);
-        ProductVariant.Color = Colors.Single(c => c.Id == ProductVariant.Color.Id);
-        ProductVariant.Size = Sizes.Single(s => s.Id == ProductVariant.Size.Id);
+        Brand = Brands.Single(b => b.Id == Variant.Product.Brand.Id);
+        Variant.Product = Products.Single(p => p.Id == Variant.Product.Id);
+        Variant.Color = Colors.Single(c => c.Id == Variant.Color.Id);
+        Variant.Size = Sizes.Single(s => s.Id == Variant.Size.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)
@@ -105,12 +105,12 @@
 
         ActivateProduct(brand.Id);
 
-        ProductVariant.Sku = brand.Code;
+        Variant.Sku = brand.Code;
     }
 
     private void HandleProductChanged(ProductModel product)
     {
-        ProductVariant.Product = product;
+        Variant.Product = product;
 
         ResetColor();
         ResetSize();
@@ -123,21 +123,21 @@
 
     private void HandleColorChanged(ColorModel color)
     {
-        ProductVariant.Color = color;
+        Variant.Color = color;
 
         SetVariantSku();
     }
 
     private void HandleSizeChanged(SizeModel size)
     {
-        ProductVariant.Size = size;
+        Variant.Size = size;
 
         SetVariantSku();
     }
 
     private void ResetProduct()
     {
-        ProductVariant.Product = null;
+        Variant.Product = null;
         ProductSelectDisabled = true;
         Products = new List<ProductModel>();
     }
@@ -150,7 +150,7 @@
 
     private void ResetColor()
     {
-        ProductVariant.Color = null;
+        Variant.Color = null;
         ColorSelectDisabled = true;
         Colors = new List<ColorModel>();
     }
@@ -163,7 +163,7 @@
 
     private void ResetSize()
     {
-        ProductVariant.Size = null;
+        Variant.Size = null;
         SizeSelectDisabled = true;
         Sizes = new List<SizeModel>();
     }
@@ -176,17 +176,17 @@
 
     private void SetVariantSku()
     {
-        if (ProductVariant.Product != null)
+        if (Variant.Product != null)
         {
-            ProductVariant.Sku = string.Format("{0}_{1}", ProductVariant.Product.Brand.Code, ProductVariant.Product.Code);
+            Variant.Sku = string.Format("{0}_{1}", Variant.Product.Brand.Code, Variant.Product.Code);
 
-            if (ProductVariant.Color != null)
+            if (Variant.Color != null)
             {
-                ProductVariant.Sku += string.Format("_{0}", ProductVariant.Color.Code);
+                Variant.Sku += string.Format("_{0}", Variant.Color.Code);
 
-                if (ProductVariant.Size != null)
+                if (Variant.Size != null)
                 {
-                    ProductVariant.Sku += string.Format("_{0}", ProductVariant.Size.Code);
+                    Variant.Sku += string.Format("_{0}", Variant.Size.Code);
                 }
             }
         }
@@ -194,19 +194,19 @@
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = ProductVariantValidator.Validate(ProductVariant);
+        ValidationResult result = VariantValidator.Validate(Variant);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                ProductVariantService.Update(ProductVariant);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product Variant"));
+                VariantService.Update(Variant);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Variant"));
             }
             else
             {
-                ProductVariantService.Add(ProductVariant);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product Variant"));
+                VariantService.Add(Variant);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Variant"));
             }
 
             MudDialog.Close();

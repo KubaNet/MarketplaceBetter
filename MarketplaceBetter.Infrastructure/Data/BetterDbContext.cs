@@ -31,7 +31,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<Brand> Brand { get; set; }
         public DbSet<Collection> Collection { get; set; }
         public DbSet<Product> Product { get; set; }
-        public DbSet<ProductVariant> ProductVariant { get; set; }
+        public DbSet<Variant> Variant { get; set; }
         public DbSet<Color> Color { get; set; }
         public DbSet<ColorTranslation> ColorTranslation { get; set; }
         public DbSet<ColorGroup> ColorGroup { get; set; }

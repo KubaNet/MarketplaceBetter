@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Catalog.Products
 {
-    public class ProductVariantProfile : Profile
+    public class VariantProfile : Profile
     {
-        public ProductVariantProfile()
+        public VariantProfile()
         {
-            CreateMap<ProductVariant, ProductVariantModel>();
+            CreateMap<Variant, VariantModel>();
         }
     }
 }

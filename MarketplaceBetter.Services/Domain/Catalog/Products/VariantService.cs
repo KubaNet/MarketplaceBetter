@@ -18,68 +18,68 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
-    public class ProductVariantService : IProductVariantService
+    public class VariantService : IVariantService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<ProductVariant> _repository;
+        private readonly IRepository<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> _repository;
         private readonly IAmazonChildService _amazonChildService;
 
-        public ProductVariantService(
+        public VariantService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IAmazonChildService amazonChildService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _repository = unitOfWork.GetRepository<ProductVariant>();
+            _repository = unitOfWork.GetRepository<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant>();
             _amazonChildService = amazonChildService;
         }
 
-        public ProductVariantModel Get(long id) => _mapper.Map<ProductVariantModel>(_repository.Get(id));
+        public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
 
-        public IList<ProductVariantModel> GetAll() => _mapper.Map<IList<ProductVariantModel>>(_repository.GetQuery().OrderBy(g => g.Sku));
+        public IList<VariantModel> GetAll() => _mapper.Map<IList<VariantModel>>(_repository.GetQuery().OrderBy(g => g.Sku));
 
-        public IList<ProductVariantModel> GetAllForProduct(long productId) => _mapper.Map<IList<ProductVariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
+        public IList<VariantModel> GetAllForProduct(long productId) => _mapper.Map<IList<VariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
 
         public int CountForListRequest(ListRequest request) => _repository.GetQuery().Count();
 
-        public IList<ProductVariantModel> GetForListRequest(ListRequest request)
+        public IList<VariantModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<ProductVariant> variants = _repository.GetQuery();
+            IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants = _repository.GetQuery();
 
             variants = ApplyFilter(variants, request);
             variants = ApplySorting(variants, request);
             variants = ApplyPaging(variants, request);
 
-            return _mapper.Map<IList<ProductVariantModel>>(variants);
+            return _mapper.Map<IList<VariantModel>>(variants);
         }
 
-        public void Add(ProductVariantModel variant)
+        public void Add(VariantModel variant)
         {
-            ProductVariant variantToAdd = new();
+            MarketplaceBetter.Domain.Entities.Catalog.Products.Variant variantToAdd = new();
 
             TransferValues(variantToAdd, variant);
 
             _repository.Add(variantToAdd);
             _unitOfWork.Save();
 
-            _amazonChildService.AddForProductVariant(variantToAdd.Id);
+            _amazonChildService.AddForVariant(variantToAdd.Id);
         }
 
-        public void Update(ProductVariantModel variant)
+        public void Update(VariantModel variant)
         {
-            ProductVariant variantToUpdate = _repository.Get(variant.Id);
+            MarketplaceBetter.Domain.Entities.Catalog.Products.Variant variantToUpdate = _repository.Get(variant.Id);
 
             TransferValues(variantToUpdate, variant);
 
             _repository.Update(variantToUpdate);
             _unitOfWork.Save();
 
-            _amazonChildService.AddForProductVariant(variantToUpdate.Id);
+            _amazonChildService.AddForVariant(variantToUpdate.Id);
         }
 
-        private void TransferValues(ProductVariant toVariant, ProductVariantModel fromVariant)
+        private void TransferValues(MarketplaceBetter.Domain.Entities.Catalog.Products.Variant toVariant, VariantModel fromVariant)
         {
             toVariant.Sku = fromVariant.Sku;
             toVariant.ProductId = fromVariant.Product.Id;
@@ -87,7 +87,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             toVariant.SizeId = fromVariant.Size.Id;
         }
 
-        private IQueryable<ProductVariant> ApplyFilter(IQueryable<ProductVariant> variants, ListRequest request)
+        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> ApplyFilter(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
@@ -128,7 +128,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             return variants;
         }
 
-        private IQueryable<ProductVariant> ApplySorting(IQueryable<ProductVariant> variants, ListRequest request)
+        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> ApplySorting(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -151,7 +151,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             return variants;
         }
 
-        private IQueryable<ProductVariant> ApplyPaging(IQueryable<ProductVariant> variants, ListRequest request)
+        private IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> ApplyPaging(IQueryable<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants, ListRequest request)
         {
             return variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }

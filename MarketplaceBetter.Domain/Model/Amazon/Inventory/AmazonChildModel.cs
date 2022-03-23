@@ -16,9 +16,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         [Required]
         public AmazonParentModel Parent { get; set; }
 
-        [Display(Name = "Product Variant")]
+        [Display(Name = "Variant")]
         [Required]
-        public ProductVariantModel ProductVariant { get; set; }
+        public VariantModel Variant { get; set; }
 
         [Display(Name = "SKU")]
         [Required]

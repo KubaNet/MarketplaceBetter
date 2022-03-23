@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Catalog.Interfaces
 {
-    public interface IProductVariantValidator
+    public interface IVariantValidator
     {
-        ValidationResult Validate(ProductVariantModel variant);
+        ValidationResult Validate(VariantModel variant);
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Catalog.Products
 {
-    public class ProductVariantModel
+    public class VariantModel
     {
         public long Id { get; set; }
 

@@ -14,7 +14,7 @@
 @inject IBrandService BrandService
 @inject IInstanceService InstanceService
 @inject IAmazonParentService AmazonParentService
-@inject IProductVariantService ProductVariantService
+@inject IVariantService VariantService
 @inject ISnackbar Snackbar
 
 <EditForm Model="AmazonChild" OnValidSubmit="@HandleValidSubmit">
@@ -34,10 +34,10 @@
                 <MudSelectItem Value="parent">@parent.Sku</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Product Variant" T="ProductVariantModel" Value="AmazonChild.ProductVariant" For="() => AmazonChild.ProductVariant" ValueChanged="HandleProductVariantChanged" Disabled="ProductVariantDisabled">
-            @foreach (var productVariant in ProductVariants)
+        <MudSelect Label="Variant" T="VariantModel" Value="AmazonChild.Variant" For="() => AmazonChild.Variant" ValueChanged="HandleVariantChanged" Disabled="VariantDisabled">
+            @foreach (var Variant in Variants)
             {
-                <MudSelectItem Value="productVariant">@productVariant.Sku</MudSelectItem>
+                <MudSelectItem Value="Variant">@Variant.Sku</MudSelectItem>
             }
         </MudSelect>
         <MudTextField Label="SKU" @bind-Value="AmazonChild.Sku" For="() => AmazonChild.Sku" />
@@ -57,10 +57,10 @@
 
     private IList<BrandModel> Brands;
     private IList<AmazonParentModel> Parents = new List<AmazonParentModel>();
-    private IList<ProductVariantModel> ProductVariants = new List<ProductVariantModel>();
+    private IList<VariantModel> Variants = new List<VariantModel>();
 
     private bool ParentSelectDisabled = true;
-    private bool ProductVariantDisabled = true;
+    private bool VariantDisabled = true;
 
     protected override void OnInitialized()
     {
@@ -81,10 +81,10 @@
         Brand = Brands.Single(b => b.Id == AmazonChild.Parent.Product.Brand.Id);
 
         ActivateParent();
-        ActivateProductVariant(AmazonChild.Parent.Product.Id);
+        ActivateVariant(AmazonChild.Parent.Product.Id);
 
         AmazonChild.Parent = Parents.Single(p => p.Id == AmazonChild.Parent.Id);
-        AmazonChild.ProductVariant = ProductVariants.Single(v => v.Id == AmazonChild.ProductVariant.Id);
+        AmazonChild.Variant = Variants.Single(v => v.Id == AmazonChild.Variant.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)
@@ -94,7 +94,7 @@
         ResetParent();
         ActivateParent();
 
-        ResetProductVariant();
+        ResetVariant();
 
         SetChildSku();
     }
@@ -103,15 +103,15 @@
     {
         AmazonChild.Parent = parent;
 
-        ResetProductVariant();
-        ActivateProductVariant(parent.Product.Id);
+        ResetVariant();
+        ActivateVariant(parent.Product.Id);
 
         SetChildSku();
     }
 
-    private void HandleProductVariantChanged(ProductVariantModel productVariant)
+    private void HandleVariantChanged(VariantModel Variant)
     {
-        AmazonChild.ProductVariant = productVariant;
+        AmazonChild.Variant = Variant;
 
         SetChildSku();
     }
@@ -129,22 +129,22 @@
         Parents = AmazonParentService.GetAllForBrand(Brand.Id);
     }
 
-    private void ResetProductVariant()
+    private void ResetVariant()
     {
-        AmazonChild.ProductVariant = null;
-        ProductVariantDisabled = true;
-        ProductVariants = new List<ProductVariantModel>();
+        AmazonChild.Variant = null;
+        VariantDisabled = true;
+        Variants = new List<VariantModel>();
     }
 
-    private void ActivateProductVariant(long productId)
+    private void ActivateVariant(long productId)
     {
-        ProductVariantDisabled = false;
-        ProductVariants = ProductVariantService.GetAllForProduct(productId);
+        VariantDisabled = false;
+        Variants = VariantService.GetAllForProduct(productId);
     }
 
     private void SetChildSku()
     {
-        AmazonChild.Sku = AmazonChildService.GetSkuFor(AmazonChild.Parent?.Id, AmazonChild.ProductVariant?.Id);
+        AmazonChild.Sku = AmazonChildService.GetSkuFor(AmazonChild.Parent?.Id, AmazonChild.Variant?.Id);
     }
 
     private void HandleValidSubmit()

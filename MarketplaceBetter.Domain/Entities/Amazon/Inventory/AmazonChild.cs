@@ -17,9 +17,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
 
         public virtual AmazonParent Parent { get; set; }
 
-        public long ProductVariantId { get; set; }
+        public long VariantId { get; set; }
 
-        public virtual ProductVariant ProductVariant { get; set; }
+        public virtual Variant Variant { get; set; }
 
         public override string ToString()
         {
