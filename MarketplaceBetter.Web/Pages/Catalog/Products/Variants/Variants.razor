@@ -28,7 +28,9 @@
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
 			<MudTd DataLabel="Sku">@context.Sku</MudTd>
-			<MudTd DataLabel="Status">@context.Status.Name</MudTd>
+			<MudTd DataLabel="Status">
+				<VariantStatusDisplay Status="@context.Status" />
+			</MudTd>
 			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
 			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
 			<MudTd DataLabel="Color">@context.Color.Name</MudTd>

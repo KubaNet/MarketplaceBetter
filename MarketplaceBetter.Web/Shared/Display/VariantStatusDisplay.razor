@@ -1,0 +1,29 @@
+﻿@using MarketplaceBetter.Domain.Entities.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+
+<MudChip Variant="MudBlazor.Variant.Text" Color="Color">@Status.Name</MudChip>
+
+
+@code {
+    [Parameter] public VariantStatusModel Status { get; set; }
+
+    private Color Color = Color.Success;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        switch (Status.SystemName)
+        {
+            case VariantStatusEnum.Withdrawn:
+                Color = Color.Error;
+                break;
+            case VariantStatusEnum.ToWithdrawn:
+                Color = Color.Warning;
+                break;
+            case VariantStatusEnum.ToAdd:
+                Color = Color.Info;
+                break;
+        }
+    }
+}
