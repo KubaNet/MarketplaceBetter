@@ -2,7 +2,7 @@
 
 @inject IDialogService Dialog
 
-<MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="OpenProductGoToDialog">@Product.Name</MudButton>
+<MudButton Variant="Variant.Text" Color="Color.Primary" Style="text-transform:none" OnClick="OpenProductGoToDialog">@Product.Name</MudButton>
 
 @code {
     [Parameter] public ProductModel Product { get; set; }
