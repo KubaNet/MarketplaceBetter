@@ -6,6 +6,7 @@
 		{
 			<MudNavGroup Title="Products" Icon="@Icons.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/products">Products</MudNavLink>
+				<MudNavLink Href="/product-colors">Product Colors</MudNavLink>
 				<MudNavLink Href="/variants">Variants</MudNavLink>
 				<MudNavLink Href="/collections">Collections</MudNavLink>
 				<MudNavLink Href="/brands">Brands</MudNavLink>
@@ -87,10 +88,13 @@
 
 	private bool IsProductsModule()
 	{
-		if (NavigationManager.Uri.Contains("products")
-			|| NavigationManager.Uri.Contains("variants")
-			|| NavigationManager.Uri.Contains("collections")
-			|| NavigationManager.Uri.Contains("brands"))
+		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+		if (path == "products"
+			|| path == "product-colors"
+			|| path == "variants"
+			|| path == "collections"
+			|| path == "brands")
 		{
 			return true;
 		}
@@ -100,11 +104,13 @@
 
 	private bool IsColorsAndSizesModule()
 	{
-		if (NavigationManager.Uri.Contains("colors")
-			|| NavigationManager.Uri.Contains("colortranslations")
-			|| NavigationManager.Uri.Contains("colorgroups")
-			|| NavigationManager.Uri.Contains("sizes")
-			|| NavigationManager.Uri.Contains("sizegroups"))
+		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+		if (path == "colors"
+			|| path == "colortranslations"
+			|| path == "colorgroups"
+			|| path == "sizes"
+			|| path == "sizegroups")
 		{
 			return true;
 		}
@@ -114,10 +120,12 @@
 
 	private bool IsAmazonInventoryModule()
 	{
-		if (NavigationManager.Uri.Contains("amazonparents") ||
-			NavigationManager.Uri.Contains("amazonparentinstances") ||
-			NavigationManager.Uri.Contains("amazonchilds") ||
-			NavigationManager.Uri.Contains("amazonchildinstances"))
+		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+		if (path == "amazonparents"
+			|| path == "amazonparentinstances"
+			|| path == "amazonchilds"
+			|| path == "amazonchildinstances")
 		{
 			return true;
 		}
@@ -127,8 +135,10 @@
 
 	private bool IsAmazonCampaignsModule()
 	{
-		if (NavigationManager.Uri.Contains("amazoncampaigns") ||
-			NavigationManager.Uri.Contains("amazontargeting"))
+		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+		if (path == "amazoncampaigns"
+			|| path == "amazontargeting")
 		{
 			return true;
 		}
@@ -138,8 +148,10 @@
 
 	private bool IsKeywordsModule()
 	{
-		if (NavigationManager.Uri.Contains("keywordresearch") ||
-			NavigationManager.Uri.Contains("keywordresearchtargets"))
+		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+		if (path == "keywordresearch"
+			|| path == "keywordresearchtargets")
 		{
 			return true;
 		}

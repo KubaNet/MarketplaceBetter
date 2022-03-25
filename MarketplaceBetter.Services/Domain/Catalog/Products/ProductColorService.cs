@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
-using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -13,33 +15,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
-    public class VariantService : IVariantService
+    public class ProductColorService : IProductColorService
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Variant> _repository;
-        private readonly IAmazonChildService _amazonChildService;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Color> _colorRepository;
+        private readonly IRepository<VariantStatus> _variantStatusRepository;
 
-        public VariantService(
+        public ProductColorService(
             IMapper mapper,
-            IUnitOfWork unitOfWork,
-            IAmazonChildService amazonChildService)
+            IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Variant>();
-            _amazonChildService = amazonChildService;
+            _productRepository = unitOfWork.GetRepository<Product>();
+            _colorRepository = unitOfWork.GetRepository<Color>();
+            _variantStatusRepository = unitOfWork.GetRepository<VariantStatus>();
         }
-
-        public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
-
-        public IList<VariantModel> GetAll() => _mapper.Map<IList<VariantModel>>(_repository.GetQuery().OrderBy(g => g.Sku));
-
-        public IList<VariantModel> GetAllForProduct(long productId) => _mapper.Map<IList<VariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
 
         public int CountForListRequest(ListRequest request)
         {
@@ -47,51 +45,29 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             variants = ApplyFilter(variants, request);
 
-            return variants.Count();
+            var groupedVariants = variants.GroupBy(v => new { v.ProductId, v.ColorId, v.StatusId });
+
+            return groupedVariants.Count();
         }
 
-        public IList<VariantModel> GetForListRequest(ListRequest request)
+        public IList<ProductColorModel> GetForListRequest(ListRequest request)
         {
             IQueryable<Variant> variants = _repository.GetQuery();
 
             variants = ApplyFilter(variants, request);
             variants = ApplySorting(variants, request);
-            variants = ApplyPaging(variants, request);
 
-            return _mapper.Map<IList<VariantModel>>(variants);
-        }
+            var groupedVariants = variants.ToList().GroupBy(v => new { v.ProductId, v.ColorId, v.StatusId });
 
-        public void Add(VariantModel variant)
-        {
-            Variant variantToAdd = new();
+            groupedVariants = groupedVariants.Skip(request.Page * request.PageSize).Take(request.PageSize);
 
-            TransferValues(variantToAdd, variant);
-
-            _repository.Add(variantToAdd);
-            _unitOfWork.Save();
-
-            _amazonChildService.AddForVariant(variantToAdd.Id);
-        }
-
-        public void Update(VariantModel variant)
-        {
-            Variant variantToUpdate = _repository.Get(variant.Id);
-
-            TransferValues(variantToUpdate, variant);
-
-            _repository.Update(variantToUpdate);
-            _unitOfWork.Save();
-
-            _amazonChildService.AddForVariant(variantToUpdate.Id);
-        }
-
-        private void TransferValues(Variant toVariant, VariantModel fromVariant)
-        {
-            toVariant.Sku = fromVariant.Sku;
-            toVariant.StatusId = fromVariant.Status.Id;
-            toVariant.ProductId = fromVariant.Product.Id;
-            toVariant.ColorId = fromVariant.Color.Id;
-            toVariant.SizeId = fromVariant.Size.Id;
+            return groupedVariants.Select(v => new ProductColorModel
+            {
+                Product = _mapper.Map<ProductModel>(v.First().Product),
+                Color = _mapper.Map<ColorModel>(v.First().Color),
+                Status = _mapper.Map<VariantStatusModel>(v.First().Status),
+                Sizes = _mapper.Map<IList<SizeModel>>(v.Select(g => g.Size))
+            }).ToList();
         }
 
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
@@ -105,20 +81,18 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "brand", "color", "size" };
+                string[] searchFieldNames = new[] { "product", "color", "status", "sizes", "brand", };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
                 {
                     variants = searchField.Name switch
                     {
-                        "id" => variants.Where(v => v.Id == searchField.Value.ParseToIntOrDefault()),
-                        "sku" => variants.Where(v => v.Sku.Contains(searchField.Value)),
                         "status" => variants.Where(v => v.Status.Name.Contains(searchField.Value)),
                         "product" => variants.Where(v => v.Product.Name.Contains(searchField.Value)),
                         "brand" => variants.Where(v => v.Product.Brand.Name.Contains(searchField.Value)),
                         "color" => variants.Where(v => v.Color.Name.Contains(searchField.Value)),
-                        "size" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
+                        "sizes" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -143,13 +117,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             {
                 variants = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Id) : variants.OrderByDescending(v => v.Id),
-                    "sku" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Sku) : variants.OrderByDescending(v => v.Sku),
-                    "status" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Status.Name) : variants.OrderByDescending(v => v.Status.Name),
                     "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Brand.Name) : variants.OrderByDescending(v => v.Product.Brand.Name),
+                    "status" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Status.Name) : variants.OrderByDescending(v => v.Status.Name),
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
-                    "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
+                    "sizes" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Brand.Name) : variants.OrderByDescending(v => v.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
@@ -159,11 +131,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             }
 
             return variants;
-        }
-
-        private IQueryable<Variant> ApplyPaging(IQueryable<Variant> variants, ListRequest request)
-        {
-            return variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

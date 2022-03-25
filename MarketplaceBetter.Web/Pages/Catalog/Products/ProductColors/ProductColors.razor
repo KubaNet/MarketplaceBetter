@@ -1,0 +1,59 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Model;
+
+@page "/product-colors"
+@inject IProductColorService ProductColorService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Product Colors</MudText>
+
+<MainBody>
+	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductColorModel>>>(ReloadProductColors))" Dense="true" Hover="true">
+		<ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterProductColors" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="product" T="ProductColorModel">Product</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="color" T="ProductColorModel">Color</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="status" T="ProductColorModel">Status</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="sizes" T="ProductColorModel">Sizes</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="brand" T="ProductColorModel">Brand</MudTableSortLabel></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
+			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
+			<MudTd DataLabel="Status">
+				<VariantStatusDisplay Status="@context.Status" />
+			</MudTd>
+			<MudTd DataLabel="Sizes">@string.Join("; ", context.Sizes.Select(s => s.Name))</MudTd>
+			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+</MainBody>
+
+@code {
+	private MudTable<ProductColorModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<ProductColorModel>> ReloadProductColors(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<ProductColorModel> productColors = ProductColorService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<ProductColorModel>() { TotalItems = ProductColorService.CountForListRequest(ListRequest), Items = productColors });
+	}
+
+	private void FilterProductColors(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+}

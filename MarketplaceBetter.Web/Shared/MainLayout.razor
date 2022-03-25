@@ -2,7 +2,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudThemeProvider />
+        <MudThemeProvider Theme="BetterTheme" />
         <MudDialogProvider />
         <MudSnackbarProvider />
 
@@ -25,3 +25,14 @@
         <LoginRedirect />
     </NotAuthorized>
 </AuthorizeView>
+
+@code{
+    MudTheme BetterTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = "#32ae70",
+            AppbarBackground = "32ae70",
+        }
+    };
+}
