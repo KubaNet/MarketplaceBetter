@@ -6,10 +6,10 @@
 @inject IChildService ChildService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3">Childs</MudText>
+<MudText Typo="Typo.h3" Class="mt-2">Childs</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(ReloadChilds))" Dense="true" Hover="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(ReloadChilds))" Dense="true" Hover="true" RowsPerPage="15">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterChilds" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -34,7 +34,7 @@
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChild(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
-            <MudTablePager />
+            <MudTablePager PageSizeOptions="new int[] { 25, 50 , 100 }" />
         </PagerContent>
     </MudTable>
 </MainBody>

@@ -48,7 +48,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         {
             IQueryable<ParentInstance> parentInstances = _repository.GetQuery();
 
-            ApplyFilter(parentInstances, request);
+            parentInstances = ApplyFilter(parentInstances, request);
 
             return parentInstances.Count();
         }

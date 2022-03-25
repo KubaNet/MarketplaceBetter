@@ -41,7 +41,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
         {
             IQueryable<ColorGroup> groups = _repository.GetQuery();
 
-            ApplyFilter(groups, request);
+            groups = ApplyFilter(groups, request);
 
             return groups.Count();
         }

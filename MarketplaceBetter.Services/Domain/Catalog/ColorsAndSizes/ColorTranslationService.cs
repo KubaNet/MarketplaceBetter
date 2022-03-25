@@ -39,7 +39,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
         {
             IQueryable<ColorTranslation> translations = _repository.GetQuery();
 
-            ApplyFilter(translations, request);
+            translations =  ApplyFilter(translations, request);
 
             return translations.Count();
         }

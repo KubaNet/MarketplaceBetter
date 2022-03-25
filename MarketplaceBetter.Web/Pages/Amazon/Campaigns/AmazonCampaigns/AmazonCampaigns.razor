@@ -6,10 +6,10 @@
 @inject IAmazonCampaignService AmazonCampaignService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3">Amazon Campaigns</MudText>
+<MudText Typo="Typo.h3" Class="mt-2">Amazon Campaigns</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonCampaignModel>>>(ReloadCampaigns))" Dense="true" Hover="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonCampaignModel>>>(ReloadCampaigns))" Dense="true" Hover="true" RowsPerPage="15">
         <ToolBarContent>
 			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterCampaigns" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
@@ -32,7 +32,7 @@
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonCampaign(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
-            <MudTablePager />
+            <MudTablePager PageSizeOptions="new int[] { 25, 50 , 100 }" />
         </PagerContent>
     </MudTable>
 </MainBody>

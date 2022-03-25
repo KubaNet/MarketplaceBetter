@@ -42,7 +42,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         {
             IQueryable<Product> products = _repository.GetQuery();
 
-            ApplyFilter(products, request);
+            products = ApplyFilter(products, request);
 
             return products.Count();
         }

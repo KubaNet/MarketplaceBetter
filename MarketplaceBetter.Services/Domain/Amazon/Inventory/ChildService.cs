@@ -49,7 +49,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         {
             IQueryable<Child> childs = _repository.GetQuery();
 
-            ApplyFilter(childs, request);
+            childs = ApplyFilter(childs, request);
 
             return childs.Count();
         }

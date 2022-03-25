@@ -46,11 +46,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<ChildInstance> ChildInstances = _repository.GetQuery();
+            IQueryable<ChildInstance> childInstances = _repository.GetQuery();
 
-            ApplyFilter(ChildInstances, request);
+            childInstances = ApplyFilter(childInstances, request);
 
-            return ChildInstances.Count();
+            return childInstances.Count();
         }
 
         public IList<ChildInstanceModel> GetForListRequest(ListRequest request)
