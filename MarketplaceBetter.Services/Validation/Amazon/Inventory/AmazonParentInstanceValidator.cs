@@ -6,16 +6,16 @@ using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Inventory
 {
-    public class AmazonParentInstanceValidator : IAmazonParentInstanceValidator
+    public class ParentInstanceValidator : IParentInstanceValidator
     {
-        private readonly IRepository<AmazonParentInstance> _repository;
+        private readonly IRepository<ParentInstance> _repository;
 
-        public AmazonParentInstanceValidator(IUnitOfWork unitOfWork)
+        public ParentInstanceValidator(IUnitOfWork unitOfWork)
         {
-            _repository = unitOfWork.GetRepository<AmazonParentInstance>();
+            _repository = unitOfWork.GetRepository<ParentInstance>();
         }
 
-        public ValidationResult Validate(AmazonParentInstanceModel parentInstance)
+        public ValidationResult Validate(ParentInstanceModel parentInstance)
         {
             ValidationResult result = new();
 
@@ -27,17 +27,17 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Inventory
 
             if (_repository.Any(p => p.Id != parentInstance.Id && p.Sku == parentInstance.Sku))
             {
-                result.AddErrorFor<AmazonParentInstanceModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Parent Instance", "SKU");
+                result.AddErrorFor<ParentInstanceModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Parent Instance", "SKU");
             }
 
             if (_repository.Any(p => p.Id != parentInstance.Id && p.Asin != null && p.Asin == parentInstance.Asin))
             {
-                result.AddErrorFor<AmazonParentInstanceModel>(p => p.Asin, ValidationMessages.PropertyNotUnique, "Parent Instance", "ASIN");
+                result.AddErrorFor<ParentInstanceModel>(p => p.Asin, ValidationMessages.PropertyNotUnique, "Parent Instance", "ASIN");
             }
 
             if (parentInstance.Asin != null && parentInstance.Asin.Length != 0 && parentInstance.Asin.Length != 10)
             {
-                result.AddErrorFor<AmazonParentInstanceModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
+                result.AddErrorFor<ParentInstanceModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
             }
 
             return result;

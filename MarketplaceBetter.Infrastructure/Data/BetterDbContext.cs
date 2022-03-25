@@ -39,10 +39,10 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<SizeGroup> SizeGroup { get; set; }
 
         // Amazon
-        public DbSet<AmazonParent> AmazonParent { get; set; }
-        public DbSet<AmazonParentInstance> AmazonParentInstance { get; set; }
-        public DbSet<AmazonChild> AmazonChild { get; set; }
-        public DbSet<AmazonChildInstance> AmazonChildInstance { get; set; }
+        public DbSet<Parent> Parent { get; set; }
+        public DbSet<ParentInstance> ParentInstance { get; set; }
+        public DbSet<Child> Child { get; set; }
+        public DbSet<ChildInstance> ChildInstance { get; set; }
         public DbSet<AmazonCampaign> AmazonCampaign { get; set; }
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }

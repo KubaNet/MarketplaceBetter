@@ -22,17 +22,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Variant> _repository;
-        private readonly IAmazonChildService _amazonChildService;
+        private readonly IChildService _childService;
 
         public VariantService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IAmazonChildService amazonChildService)
+            IChildService childService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Variant>();
-            _amazonChildService = amazonChildService;
+            _childService = childService;
         }
 
         public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
@@ -70,7 +70,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Add(variantToAdd);
             _unitOfWork.Save();
 
-            _amazonChildService.AddForVariant(variantToAdd.Id);
+            _childService.AddForVariant(variantToAdd.Id);
         }
 
         public void Update(VariantModel variant)
@@ -82,7 +82,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Update(variantToUpdate);
             _unitOfWork.Save();
 
-            _amazonChildService.AddForVariant(variantToUpdate.Id);
+            _childService.AddForVariant(variantToUpdate.Id);
         }
 
         private void TransferValues(Variant toVariant, VariantModel fromVariant)

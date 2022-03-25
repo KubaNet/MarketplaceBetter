@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces
 {
-    public interface IAmazonParentValidator
+    public interface IParentValidator
     {
-        ValidationResult Validate(AmazonParentModel parent);
+        ValidationResult Validate(ParentModel parent);
     }
 }

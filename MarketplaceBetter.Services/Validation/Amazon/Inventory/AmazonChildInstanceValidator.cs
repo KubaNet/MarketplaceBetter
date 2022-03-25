@@ -6,16 +6,16 @@ using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Inventory
 {
-    public class AmazonChildInstanceValidator : IAmazonChildInstanceValidator
+    public class ChildInstanceValidator : IChildInstanceValidator
     {
-        private readonly IRepository<AmazonChildInstance> _repository;
+        private readonly IRepository<ChildInstance> _repository;
 
-        public AmazonChildInstanceValidator(IUnitOfWork unitOfWork)
+        public ChildInstanceValidator(IUnitOfWork unitOfWork)
         {
-            _repository = unitOfWork.GetRepository<AmazonChildInstance>();
+            _repository = unitOfWork.GetRepository<ChildInstance>();
         }
 
-        public ValidationResult Validate(AmazonChildInstanceModel childInstance)
+        public ValidationResult Validate(ChildInstanceModel childInstance)
         {
             ValidationResult result = new();
 
@@ -27,7 +27,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Inventory
 
             if (_repository.Any(c => c.Id != childInstance.Id && c.Sku == childInstance.Sku))
             {
-                result.AddErrorFor<AmazonChildInstanceModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Child Instance", "SKU");
+                result.AddErrorFor<ChildInstanceModel>(p => p.Sku, ValidationMessages.PropertyNotUnique, "Child Instance", "SKU");
             }
 
             return result;

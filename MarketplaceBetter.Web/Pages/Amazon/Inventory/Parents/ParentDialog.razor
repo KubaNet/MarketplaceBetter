@@ -1,0 +1,141 @@
+﻿@using MarketplaceBetter.Domain.Entities.Sales
+@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces
+
+@inject IParentService ParentService
+@inject IParentValidator ParentValidator
+@inject IBrandService BrandService
+@inject IProductService ProductService
+@inject IInstanceService InstanceService
+@inject ISnackbar Snackbar
+
+<EditForm Model="Parent" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Product" T="ProductModel" Value="Parent.Product" For="() => Parent.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+            @foreach (var product in Products)
+            {
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="SKU" @bind-Value="Parent.Sku" For="() => Parent.Sku" />
+        <MudTextField Label="Child SKU" @bind-Value="Parent.ChildSku" For="() => Parent.ChildSku" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long ParentId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private ParentModel Parent = new();
+    private BrandModel Brand;
+
+    private IList<BrandModel> Brands;
+    private IList<ProductModel> Products = new List<ProductModel>();
+
+    private bool ProductSelectDisabled = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        Parent = ParentService.Get(ParentId);
+
+        ActivateProduct(Parent.Product.Brand.Id);
+
+        Brand = Brands.Single(b => b.Id == Parent.Product.Brand.Id);
+        Parent.Product = Products.Single(p => p.Id == Parent.Product.Id);
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Brand = brand;
+
+        ResetProduct();
+        ActivateProduct(brand.Id);
+        SetParentSku();
+    }
+
+    private void HandleProductChanged(ProductModel product)
+    {
+        Parent.Product = product;
+        SetParentSku();
+    }
+
+    private void ResetProduct()
+    {
+        Parent.Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
+    }
+
+    private void ActivateProduct(long brandId)
+    {
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId);
+    }
+
+    private void SetParentSku()
+    {
+        Parent.Sku = null;
+
+        if (Parent.Product != null)
+        {
+            Parent.Sku = Parent.Product.Name.ToLower().Replace(" ", "_");
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ParentValidator.Validate(Parent);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                ParentService.Update(Parent);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Parent"));
+            }
+            else
+            {
+                ParentService.Add(Parent);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Parent"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

@@ -21,10 +21,10 @@
 		{
 			<MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
 				<MudNavLink Href="/colors">Colors</MudNavLink>
-				<MudNavLink Href="/colortranslations">Color Translations</MudNavLink>
-				<MudNavLink Href="/colorgroups">Color Groups</MudNavLink>
+				<MudNavLink Href="/color-translations">Color Translations</MudNavLink>
+				<MudNavLink Href="/color-groups">Color Groups</MudNavLink>
 				<MudNavLink Href="/sizes">Sizes</MudNavLink>
-				<MudNavLink Href="/sizegroups">Size Groups</MudNavLink>
+				<MudNavLink Href="/size-groups">Size Groups</MudNavLink>
 			</MudNavGroup>
 		}
 		else
@@ -36,15 +36,15 @@
 		@if (IsAmazonInventoryModule())
 		{
 			<MudNavGroup Title="Inventory" Icon="@Icons.Filled.Inventory" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/amazonparents">Parents</MudNavLink>
-				<MudNavLink Href="/amazonparentinstances">Parent Instances</MudNavLink>
-				<MudNavLink Href="/amazonchilds">Childs</MudNavLink>
-				<MudNavLink Href="/amazonchildinstances">Child Instances</MudNavLink>
+				<MudNavLink Href="/parents">Parents</MudNavLink>
+				<MudNavLink Href="/parent-instances">Parent Instances</MudNavLink>
+				<MudNavLink Href="/childs">Childs</MudNavLink>
+				<MudNavLink Href="/child-instances">Child Instances</MudNavLink>
 			</MudNavGroup>
 		}
 		else
 		{
-			<MudNavLink Href="/amazonparents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
+			<MudNavLink Href="/parents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
 		}
 
 		@if (IsAmazonCampaignsModule())
@@ -107,10 +107,10 @@
 		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
 		if (path == "colors"
-			|| path == "colortranslations"
-			|| path == "colorgroups"
+			|| path == "color-translations"
+			|| path == "color-groups"
 			|| path == "sizes"
-			|| path == "sizegroups")
+			|| path == "size-groups")
 		{
 			return true;
 		}
@@ -122,10 +122,10 @@
 	{
 		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-		if (path == "amazonparents"
-			|| path == "amazonparentinstances"
-			|| path == "amazonchilds"
-			|| path == "amazonchildinstances")
+		if (path == "parents"
+			|| path == "parent-instances"
+			|| path == "childs"
+			|| path == "child-instances")
 		{
 			return true;
 		}

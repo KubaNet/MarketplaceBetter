@@ -81,10 +81,10 @@
     <None Include="Scripts\Inserts\05_AmazonTargetingTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\KeywordResearchTarget.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\KeywordResearch.sql" />
-    <Build Include="dbo\Tables\Amazon\Inventory\AmazonChild.sql" />
-    <Build Include="dbo\Tables\Amazon\Inventory\AmazonChildInstance.sql" />
-    <Build Include="dbo\Tables\Amazon\Inventory\AmazonParent.sql" />
-    <Build Include="dbo\Tables\Amazon\Inventory\AmazonParentInstance.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\Child.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\ChildInstance.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\Parent.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\ParentInstance.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\AmazonCampaign.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\AmazonTargeting.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\AmazonTargetingStatus.sql" />

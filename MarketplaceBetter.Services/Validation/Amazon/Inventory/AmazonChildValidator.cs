@@ -5,32 +5,32 @@ using MarketplaceBetter.Infrastructure.Data;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Inventory
 {
-    public class AmazonChildValidator : Interfaces.IAmazonChildValidator
+    public class ChildValidator : Interfaces.IChildValidator
     {
-        private readonly IRepository<AmazonChild> _repository;
+        private readonly IRepository<Child> _repository;
 
-        public AmazonChildValidator(IUnitOfWork unitOfWork)
+        public ChildValidator(IUnitOfWork unitOfWork)
         {
-            _repository = unitOfWork.GetRepository<AmazonChild>();
+            _repository = unitOfWork.GetRepository<Child>();
         }
 
-        public ValidationResult Validate(AmazonChildModel child)
+        public ValidationResult Validate(ChildModel child)
         {
             ValidationResult result = new();
 
             if (_repository.Any(c => c.Id != child.Id && c.ParentId == child.Parent.Id && c.VariantId == child.Variant.Id))
             {
-                result.AddError("There already exists an Amazon Child for this Parent and Variant.");
+                result.AddError("There already exists an Child for this Parent and Variant.");
             }
 
             if (_repository.Any(c => c.Id != child.Id && c.Sku == child.Sku))
             {
-                result.AddErrorFor<AmazonChildModel>(c => c.Sku, ValidationMessages.PropertyNotUnique, "Amazon Child", "Sku");
+                result.AddErrorFor<ChildModel>(c => c.Sku, ValidationMessages.PropertyNotUnique, "Child", "Sku");
             }
 
             if (child.Asin != null && child.Asin.Length != 0 && child.Asin.Length != 10)
             {
-                result.AddErrorFor<AmazonChildModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
+                result.AddErrorFor<ChildModel>(c => c.Asin, "ASIN should be exactly 10 characters long.");
             }
 
             return result;
