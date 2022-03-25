@@ -81,30 +81,29 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "product", "color", "status", "sizes", "brand", };
+                string[] searchFieldNames = new[] { "product", "color", "status", "sizes", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
                 {
                     variants = searchField.Name switch
                     {
-                        "status" => variants.Where(v => v.Status.Name.Contains(searchField.Value)),
                         "product" => variants.Where(v => v.Product.Name.Contains(searchField.Value)),
-                        "brand" => variants.Where(v => v.Product.Brand.Name.Contains(searchField.Value)),
+                        "status" => variants.Where(v => v.Status.Name.Contains(searchField.Value)),
                         "color" => variants.Where(v => v.Color.Name.Contains(searchField.Value)),
                         "sizes" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
+                        "brand" => variants.Where(v => v.Product.Brand.Name.Contains(searchField.Value)),
+                        "product_id" => variants.Where(v => v.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    variants = variants.Where(v => v.Id == searchString.ParseToIntOrDefault()
-                      || v.Sku.Contains(searchString)
+                    variants = variants.Where(v => v.Product.Name.Contains(searchString)
                       || v.Status.Name.Contains(searchString)
-                      || v.Product.Name.Contains(searchString)
-                      || v.Product.Brand.Name.Contains(searchString)
                       || v.Color.Name.Contains(searchString)
-                      || v.Size.Name.Contains(searchString));
+                      || v.Size.Name.Contains(searchString)
+                      || v.Product.Brand.Name.Contains(searchString));
                 }
             }
 
@@ -127,7 +126,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             }
             else
             {
-                variants = variants.OrderBy(v => v.Id);
+                variants = variants.OrderBy(v => v.Product.Id);
             }
 
             return variants;

@@ -42,7 +42,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         public IList<ChildInstanceModel> GetAll() => _mapper.Map<IList<ChildInstanceModel>>(_repository.GetQuery().OrderBy(c => c.Sku));
 
         public IList<ChildInstanceModel> GetAllForBrand(long brandId, long instanceId) => _mapper.Map<IList<ChildInstanceModel>>(
-                _repository.GetQuery().Where(p => p.Child.Parent.Product.BrandId == brandId).OrderBy(p => p.Sku));
+                _repository.GetQuery().Where(c => c.Child.Parent.Product.BrandId == brandId).OrderBy(c => c.Sku));
 
         public int CountForListRequest(ListRequest request)
         {
@@ -78,7 +78,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         {
             foreach (var instance in _instanceRepository.GetAll().OrderBy(i => i.Order))
             {
-                if (_repository.Any(p => p.ChildId == childId && p.InstanceId == instance.Id))
+                if (_repository.Any(c => c.ChildId == childId && c.InstanceId == instance.Id))
                 {
                     continue;
                 }
@@ -148,28 +148,29 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "instance", "child", "brand" };
+                string[] searchFieldNames = new[] { "id", "sku", "instance", "child", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
                 {
                     childs = searchField.Name switch
                     {
-                        "id" => childs.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
-                        "sku" => childs.Where(p => p.Sku.Contains(searchField.Value)),
-                        "instance" => childs.Where(p => p.Instance.Name.Contains(searchField.Value)),
-                        "child" => childs.Where(p => p.Child.Sku.Contains(searchField.Value)),
-                        "brand" => childs.Where(p => p.Child.Parent.Product.Brand.Name.Contains(searchField.Value)),
+                        "id" => childs.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
+                        "sku" => childs.Where(c => c.Sku.Contains(searchField.Value)),
+                        "instance" => childs.Where(c => c.Instance.Name.Contains(searchField.Value)),
+                        "child" => childs.Where(c => c.Child.Sku.Contains(searchField.Value)),
+                        "brand" => childs.Where(c => c.Child.Parent.Product.Brand.Name.Contains(searchField.Value)),
+                        "product_id" => childs.Where(c => c.Child.Parent.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    childs = childs.Where(p => p.Id == searchString.ParseToIntOrDefault()
-                        || p.Sku.Contains(searchString)
-                        || p.Instance.Name.Contains(searchString)
-                        || p.Child.Sku.Contains(searchString)
-                        || p.Child.Parent.Product.Brand.Name.Contains(searchString));
+                    childs = childs.Where(c => c.Id == searchString.ParseToIntOrDefault()
+                        || c.Sku.Contains(searchString)
+                        || c.Instance.Name.Contains(searchString)
+                        || c.Child.Sku.Contains(searchString)
+                        || c.Child.Parent.Product.Brand.Name.Contains(searchString));
                 }
             }
 
@@ -182,11 +183,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             {
                 childs = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(p => p.Id) : childs.OrderByDescending(p => p.Id),
-                    "sku" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(p => p.Sku) : childs.OrderByDescending(p => p.Sku),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(p => p.Instance.Name) : childs.OrderByDescending(p => p.Instance.Name),
-                    "child" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(p => p.Child.Sku) : childs.OrderByDescending(p => p.Child.Sku),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(p => p.Child.Parent.Product.Brand.Name) : childs.OrderByDescending(p => p.Child.Parent.Product.Brand.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Id) : childs.OrderByDescending(c => c.Id),
+                    "sku" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Sku) : childs.OrderByDescending(c => c.Sku),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Instance.Name) : childs.OrderByDescending(c => c.Instance.Name),
+                    "child" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Child.Sku) : childs.OrderByDescending(c => c.Child.Sku),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Child.Parent.Product.Brand.Name) : childs.OrderByDescending(c => c.Child.Parent.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

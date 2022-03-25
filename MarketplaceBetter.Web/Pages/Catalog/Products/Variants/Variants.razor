@@ -11,7 +11,7 @@
 <MainBody>
 	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" Dense="true" Hover="true">
 		<ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
 			<MudButton OnClick="AddVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Variant</MudButton>
 		</ToolBarContent>
@@ -47,8 +47,22 @@
 </MainBody>
 
 @code {
+	[Parameter]
+	[SupplyParameterFromQuery]
+	public long? ProductId { get; set; }
+
 	private MudTable<VariantModel> Table;
 	private ListRequest ListRequest = new();
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		if (ProductId.HasValue)
+		{
+			ListRequest.SearchString = $"product_id: {ProductId.Value}";
+		}
+	}
 
 	private Task<TableData<VariantModel>> ReloadVariants(TableState state)
 	{

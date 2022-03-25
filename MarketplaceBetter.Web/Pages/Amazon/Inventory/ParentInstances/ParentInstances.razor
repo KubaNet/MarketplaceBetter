@@ -11,8 +11,8 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ParentInstanceModel>>>(ReloadParentInstances))" Dense="true" Hover="true">
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterParentInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterParentInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
             <MudButton OnClick="AddParentInstance" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Parent Instance</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -40,26 +40,40 @@
 </MainBody>
 
 @code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public long? ProductId { get; set; }
+
     private MudTable<ParentInstanceModel> Table;
     private ListRequest ListRequest = new();
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+    }
+
     private Task<TableData<ParentInstanceModel>> ReloadParentInstances(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<ParentInstanceModel> parentInstances = ParentInstanceService.GetForListRequest(ListRequest);
+        IList<ParentInstanceModel> parentInstances = ParentInstanceService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<ParentInstanceModel>() { TotalItems = ParentInstanceService.CountForListRequest(ListRequest), Items = parentInstances });
-	}
+        return Task.FromResult(new TableData<ParentInstanceModel>() { TotalItems = ParentInstanceService.CountForListRequest(ListRequest), Items = parentInstances });
+    }
 
     private void FilterParentInstances(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
     private async void AddParentInstance()
     {

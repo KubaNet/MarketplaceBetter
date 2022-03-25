@@ -11,7 +11,7 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(ReloadChilds))" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterChilds" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterChilds" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="AddChild" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Child</MudButton>
         </ToolBarContent>
@@ -40,26 +40,40 @@
 </MainBody>
 
 @code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public long? ProductId { get; set; }
+
     private MudTable<ChildModel> Table;
     private ListRequest ListRequest = new();
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+    }
+
     private Task<TableData<ChildModel>> ReloadChilds(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<ChildModel> childs = ChildService.GetForListRequest(ListRequest);
+        IList<ChildModel> childs = ChildService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<ChildModel>() { TotalItems = ChildService.CountForListRequest(ListRequest), Items = childs });
-	}
+        return Task.FromResult(new TableData<ChildModel>() { TotalItems = ChildService.CountForListRequest(ListRequest), Items = childs });
+    }
 
     private void FilterChilds(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
     private async void AddChild()
     {

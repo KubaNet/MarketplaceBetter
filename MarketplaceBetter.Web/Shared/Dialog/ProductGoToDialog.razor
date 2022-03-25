@@ -5,16 +5,18 @@
     </TitleContent>
     <DialogContent>
         <MudList Clickable="true">
-            <MudListItem Text="Catalog">
+            <MudListItem Text="Catalog" InitiallyExpanded="true">
                 <NestedList>
                     <MudListItem Text="Product Colors" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ProductColorsLink" />
                     <MudListItem Text="Variants" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@VariantsLink" />
                 </NestedList>
             </MudListItem>
-            <MudListItem Text="Amazon">
+            <MudListItem Text="Amazon" InitiallyExpanded="true">
                 <NestedList>
-                    <MudListItem Text="Parents" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="parents" />
-                    <MudListItem Text="Childs" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="childs" />
+                    <MudListItem Text="Parents" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ParentsLink" />
+                    <MudListItem Text="Parent Instances" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ParentInstancesLink" />
+                    <MudListItem Text="Childs" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ChildsLink" />
+                    <MudListItem Text="Child Instances" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ChildInstancesLink" />
                 </NestedList>
             </MudListItem>
         </MudList>
@@ -27,12 +29,20 @@
 
     private string ProductColorsLink;
     private string VariantsLink;
+    private string ParentsLink;
+    private string ParentInstancesLink;
+    private string ChildsLink;
+    private string ChildInstancesLink;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         ProductColorsLink = $"product-colors?productId={Product.Id}";
-        VariantsLink = $"product-colors?productId={Product.Id}";
+        VariantsLink = $"variants?productId={Product.Id}";
+        ParentsLink = $"parents?productId={Product.Id}";
+        ParentInstancesLink = $"parent-instances?productId={Product.Id}";
+        ChildsLink = $"childs?productId={Product.Id}";
+        ChildInstancesLink = $"child-instances?productId={Product.Id}";
     }
 }

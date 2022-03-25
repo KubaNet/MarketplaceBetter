@@ -11,8 +11,8 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildInstanceModel>>>(ReloadChildInstances))" Dense="true" Hover="true">
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterChildInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterChildInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
             <MudButton OnClick="AddChildInstance" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Child Instance</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -38,26 +38,40 @@
 </MainBody>
 
 @code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public long? ProductId { get; set; }
+
     private MudTable<ChildInstanceModel> Table;
     private ListRequest ListRequest = new();
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+    }
+
     private Task<TableData<ChildInstanceModel>> ReloadChildInstances(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<ChildInstanceModel> childInstances = ChildInstanceService.GetForListRequest(ListRequest);
+        IList<ChildInstanceModel> childInstances = ChildInstanceService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<ChildInstanceModel>() { TotalItems = ChildInstanceService.CountForListRequest(ListRequest), Items = childInstances });
-	}
+        return Task.FromResult(new TableData<ChildInstanceModel>() { TotalItems = ChildInstanceService.CountForListRequest(ListRequest), Items = childInstances });
+    }
 
     private void FilterChildInstances(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
     private async void AddChildInstance()
     {

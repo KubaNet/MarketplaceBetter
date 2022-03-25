@@ -105,7 +105,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "brand", "color", "size" };
+                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "brand", "color", "size", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -119,6 +119,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         "brand" => variants.Where(v => v.Product.Brand.Name.Contains(searchField.Value)),
                         "color" => variants.Where(v => v.Color.Name.Contains(searchField.Value)),
                         "size" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
+                        "product_id" => variants.Where(v => v.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
