@@ -1,0 +1,16 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+
+@inject IDialogService Dialog
+
+<MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="OpenProductGoToDialog">@Product.Name</MudButton>
+
+@code {
+    [Parameter] public ProductModel Product { get; set; }
+
+    private void OpenProductGoToDialog()
+    {
+        DialogOptions options = new DialogOptions() { CloseButton = true };
+
+        Dialog.Show<ProductGoToDialog>(null, new DialogParameters { ["Product"] = Product }, options);
+    }
+}

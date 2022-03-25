@@ -1,0 +1,38 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+<MudDialog Style="min-width: 500px;">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Go to and filter for <span class="mud-primary-text">@Product.Name</span></MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudList Clickable="true">
+            <MudListItem Text="Catalog">
+                <NestedList>
+                    <MudListItem Text="Product Colors" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ProductColorsLink" />
+                    <MudListItem Text="Variants" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@VariantsLink" />
+                </NestedList>
+            </MudListItem>
+            <MudListItem Text="Amazon">
+                <NestedList>
+                    <MudListItem Text="Parents" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="parents" />
+                    <MudListItem Text="Childs" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="childs" />
+                </NestedList>
+            </MudListItem>
+        </MudList>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public ProductModel Product { get; set; }
+
+    private string ProductColorsLink;
+    private string VariantsLink;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProductColorsLink = $"product-colors?productId={Product.Id}";
+        VariantsLink = $"product-colors?productId={Product.Id}";
+    }
+}
