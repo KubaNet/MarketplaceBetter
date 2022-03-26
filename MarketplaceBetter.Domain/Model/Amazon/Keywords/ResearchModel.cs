@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Validation.Attributes;
+﻿using MarketplaceBetter.Domain.Model.Sales;
+using MarketplaceBetter.Domain.Validation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,9 +17,12 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Keywords
         [BetterLength]
         public string Name { get; set; }
 
+        [Required]
+        public InstanceModel Instance { get; set; }
+
         public override string ToString()
         {
-            return Name;
+            return $"{Name} ({Instance.ShortName})";
         }
     }
 }

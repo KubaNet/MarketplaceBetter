@@ -1,9 +1,12 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.Keywords
+@using MarketplaceBetter.Domain.Model.Sales
 @using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces
 
 @inject IResearchService ResearchService
 @inject IResearchValidator ResearchValidator
+@inject IInstanceService InstanceService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Research" OnValidSubmit="@HandleValidSubmit">
@@ -11,6 +14,12 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Research.Name" For="() => Research.Name" />
+        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Research.Instance" For="() => Research.Instance">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
     </FormDialog>
 </EditForm>
 
@@ -22,10 +31,13 @@
 
     private CustomValidation CustomValidation = new();
     private ResearchModel Research = new();
+    private IList<InstanceModel> Instances;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
+        Instances = InstanceService.GetAllForAmazon();
 
         if (IsEdit)
         {
@@ -36,6 +48,7 @@
     private void SetInitialValues()
     {
         Research = ResearchService.Get(ResearchId);
+        Research.Instance = Instances.Single(i => i.Id == Research.Instance.Id);
     }
 
     private void HandleValidSubmit()

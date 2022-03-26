@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarketplaceBetter.Domain.Entities.Sales;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Keywords
     public class Research : Entity
     {
         public string Name { get; set; }
+
+        public long InstanceId { get; set; }
+
+        public virtual Instance Instance { get; set; }
     }
 }

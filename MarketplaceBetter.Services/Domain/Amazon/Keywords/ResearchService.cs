@@ -78,6 +78,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         private void TransferValues(Research toResearch, ResearchModel fromResearch)
         {
             toResearch.Name = fromResearch.Name;
+            toResearch.InstanceId = fromResearch.Instance.Id;
         }
 
         private IQueryable<Research> ApplyFilter(IQueryable<Research> researches, ListRequest request)
@@ -91,7 +92,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name" };
+                string[] searchFieldNames = new[] { "id", "name", "instance" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -100,13 +101,15 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     {
                         "id" => researches.Where(r => r.Id == searchField.Value.ParseToIntOrDefault()),
                         "name" => researches.Where(r => r.Name.Contains(searchField.Value)),
+                        "instance" => researches.Where(r => r.Instance.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
                     researches = researches.Where(r => r.Id == searchString.ParseToIntOrDefault()
-                        || r.Name.Contains(searchString));
+                        || r.Name.Contains(searchString)
+                        || r.Instance.Name.Contains(searchString));
                 }
             }
 
@@ -121,6 +124,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? researches.OrderBy(r => r.Id) : researches.OrderByDescending(r => r.Id),
                     "name" => request.SortDirection == SortDirection.Ascending ? researches.OrderBy(r => r.Name) : researches.OrderByDescending(r => r.Name),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? researches.OrderBy(r => r.Instance.Name) : researches.OrderByDescending(r => r.Instance.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
