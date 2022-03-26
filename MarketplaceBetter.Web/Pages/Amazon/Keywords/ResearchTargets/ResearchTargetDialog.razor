@@ -2,22 +2,22 @@
 @using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces
 
-@inject IKeywordTargetService KeywordResearchTargetService
-@inject IKeywordResearchTargetValidator KeywordResearchTargetValidator
-@inject IKeywordResearchService KeywordResearchService
+@inject IResearchTargetService ResearchTargetService
+@inject IResearchTargetValidator ResearchTargetValidator
+@inject IResearchService ResearchService
 @inject ISnackbar Snackbar
 
-<EditForm Model="KeywordResearchTarget" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="ResearchTarget" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudSelect Label="Research" T="KeywordResearchModel" @bind-Value="KeywordResearchTarget.Research" For="() => KeywordResearchTarget.Research">
-            @foreach (var research in KeywordResearches)
+        <MudSelect Label="Research" T="ResearchModel" @bind-Value="ResearchTarget.Research" For="() => ResearchTarget.Research">
+            @foreach (var research in Researches)
             {
                 <MudSelectItem Value="research">@research.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="Name" @bind-Value="KeywordResearchTarget.Name" For="() => KeywordResearchTarget.Name" />
+        <MudTextField Label="Name" @bind-Value="ResearchTarget.Name" For="() => ResearchTarget.Name" />
     </FormDialog>
 </EditForm>
 
@@ -25,17 +25,17 @@
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long KeywordResearchTargetId { get; set; }
+    [Parameter] public long ResearchTargetId { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private KeywordTargetModel KeywordResearchTarget = new();
-    private IList<KeywordResearchModel> KeywordResearches = new List<KeywordResearchModel>();
+    private ResearchTargetModel ResearchTarget = new();
+    private IList<ResearchModel> Researches = new List<ResearchModel>();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        KeywordResearches = KeywordResearchService.GetAll();
+        Researches = ResearchService.GetAll();
 
         if (IsEdit)
         {
@@ -45,24 +45,24 @@
 
     private void SetInitialValues()
     {
-        KeywordResearchTarget = KeywordResearchTargetService.Get(KeywordResearchTargetId);
-        KeywordResearchTarget.Research = KeywordResearches.Single(r => r.Id == KeywordResearchTarget.Research.Id);
+        ResearchTarget = ResearchTargetService.Get(ResearchTargetId);
+        ResearchTarget.Research = Researches.Single(r => r.Id == ResearchTarget.Research.Id);
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = KeywordResearchTargetValidator.Validate(KeywordResearchTarget);
+        ValidationResult result = ResearchTargetValidator.Validate(ResearchTarget);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                KeywordResearchTargetService.Update(KeywordResearchTarget);
+                ResearchTargetService.Update(ResearchTarget);
                 Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Research Target"));
             }
             else
             {
-                KeywordResearchTargetService.Add(KeywordResearchTarget);
+                ResearchTargetService.Add(ResearchTarget);
                 Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Research Target"));
             }
 

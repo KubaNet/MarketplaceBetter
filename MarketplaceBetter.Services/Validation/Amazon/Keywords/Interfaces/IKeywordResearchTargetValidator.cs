@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces
 {
-    public interface IKeywordResearchTargetValidator
+    public interface IResearchTargetValidator
     {
-        ValidationResult Validate(KeywordTargetModel target);
+        ValidationResult Validate(ResearchTargetModel target);
     }
 }

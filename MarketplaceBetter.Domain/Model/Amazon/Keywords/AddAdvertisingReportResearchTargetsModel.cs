@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon.Keywords
 {
-    public class AddAdvertisingReportKeywordTargetsModel
+    public class AddAdvertisingReportResearchTargetsModel
     {
         [Required]
-        [Display(Name = "Research")]
-        public KeywordResearchModel KeywordResearch { get; set; }
+        public ResearchModel Research { get; set; }
 
-        public IList<AdvertisingReportKeywordTargetModel> Targets { get; set; } = new List<AdvertisingReportKeywordTargetModel>();
+        public IList<AdvertisingReportResearchTargetModel> Targets { get; set; } = new List<AdvertisingReportResearchTargetModel>();
     }
 }

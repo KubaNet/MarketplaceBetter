@@ -1,0 +1,98 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Keywords
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/research-targets"
+@inject IResearchTargetService ResearchTargetService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3" Class="mt-2">Research Targets</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchTargetModel>>>(ReloadResearchTarget))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterResearchTarget" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
+            <MudButton OnClick="AddResearchTarget" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Research Target</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ResearchTargetModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="ResearchTargetModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="research" T="ResearchTargetModel">Research</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Research">@context.Research.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditResearchTarget(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<ResearchTargetModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<ResearchTargetModel>> ReloadResearchTarget(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<ResearchTargetModel> parents = ResearchTargetService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<ResearchTargetModel>() { TotalItems = ResearchTargetService.CountForListRequest(ListRequest), Items = parents });
+    }
+
+    private void FilterResearchTarget(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private async void AddFromFile()
+    {
+        var result = await DialogService.Show<ResearchTargetFromFileDialog>().Result;
+
+        if (!result.Cancelled)
+        {
+            AddAdvertisingReportResearchTargetsModel fromAdvertisingReportModel = (AddAdvertisingReportResearchTargetsModel)result.Data;
+
+            //var fromAdvertisingReportDialogResult = await DialogService.Show<ResearchTargetsFromAdvertisingReportDialog>(null, new DialogOptions { FullScreen = true }).Result;
+
+            //if (!fromAdvertisingReportDialogResult.Cancelled)
+            //{
+            //    Table.ReloadServerData();
+            //}
+        }
+    }
+
+    private async void AddResearchTarget()
+    {
+        var result = await DialogService.Show<ResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Add Research Target" }).Result;
+
+        ProcessResearchTargetDialogResult(result);
+    }
+
+    private async void EditResearchTarget(long id)
+    {
+        var result = await DialogService.Show<ResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Edit Research Target", ["IsEdit"] = true, ["ResearchTargetId"] = id }).Result;
+
+        ProcessResearchTargetDialogResult(result);
+    }
+
+    private void ProcessResearchTargetDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

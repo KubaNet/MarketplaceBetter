@@ -1,0 +1,78 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Amazon.Keywords
+@using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/researches"
+@inject IResearchService ResearchService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3" Class="mt-2">Researches</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchModel>>>(ReloadResearch))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterResearch" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+            <MudButton OnClick="AddResearch" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Research</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ResearchModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="ResearchModel">Name</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditResearch(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<ResearchModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<ResearchModel>> ReloadResearch(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<ResearchModel> parents = ResearchService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<ResearchModel>() { TotalItems = ResearchService.CountForListRequest(ListRequest), Items = parents });
+	}
+
+    private void FilterResearch(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddResearch()
+    {
+        var result = await DialogService.Show<ResearchDialog>(null, new DialogParameters { ["Title"] = "Add Research" }).Result;
+
+        ProcessResearchDialogResult(result);
+    }
+
+    private async void EditResearch(long id)
+    {
+        var result = await DialogService.Show<ResearchDialog>(null, new DialogParameters { ["Title"] = "Edit Research", ["IsEdit"] = true, ["ResearchId"] = id }).Result;
+
+        ProcessResearchDialogResult(result);
+    }
+
+    private void ProcessResearchDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

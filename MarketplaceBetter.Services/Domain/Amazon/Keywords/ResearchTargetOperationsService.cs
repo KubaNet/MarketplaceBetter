@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Keywords
 {
-    public class KeywordResearchTargetOperationsService : IKeywordResearchTargetOperationsService
+    public class ResearchTargetOperationsService : IResearchTargetOperationsService
     {
-        public AddAdvertisingReportKeywordTargetsModel CreateTargetsFromAdvertisingReport(KeywordResearchModel research, Stream file)
+        public AddAdvertisingReportResearchTargetsModel CreateTargetsFromAdvertisingReport(ResearchModel research, Stream file)
         {
-            AddAdvertisingReportKeywordTargetsModel model = new AddAdvertisingReportKeywordTargetsModel { KeywordResearch = research };
+            AddAdvertisingReportResearchTargetsModel model = new AddAdvertisingReportResearchTargetsModel { Research = research };
 
             CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -32,7 +32,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Keywords
 
             while (csv.Read())
             {
-                AdvertisingReportKeywordTargetModel reportData = new AdvertisingReportKeywordTargetModel
+                AdvertisingReportResearchTargetModel reportData = new AdvertisingReportResearchTargetModel
                 {
                     Campaign = csv.GetField("Campaign Name"),
                     SearchTerm = csv.GetField("Customer Search Term")

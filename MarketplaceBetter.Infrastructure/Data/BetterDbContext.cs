@@ -46,8 +46,8 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<AmazonCampaign> AmazonCampaign { get; set; }
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }
-        public DbSet<KeywordResearch> KeywordResearch { get; set; }
-        public DbSet<KeywordTarget> KeywordResearchTarget { get; set; }
+        public DbSet<Research> Research { get; set; }
+        public DbSet<ResearchTarget> ResearchTarget { get; set; }
 
         //public override int SaveChanges()
         //{

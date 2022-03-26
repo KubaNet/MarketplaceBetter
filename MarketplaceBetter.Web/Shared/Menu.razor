@@ -62,13 +62,13 @@
 		@if (IsKeywordsModule())
 		{
 			<MudNavGroup Title="Keywords" Icon="@Icons.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/keywordresearches">Researches</MudNavLink>
-				<MudNavLink Href="/keywordresearchtargets">Targets</MudNavLink>
+				<MudNavLink Href="/researches">Researches</MudNavLink>
+				<MudNavLink Href="/research-targets">Research Targets</MudNavLink>
 			</MudNavGroup>
 		}
 		else
 		{
-			<MudNavLink Href="/keywordresearches" Icon="@Icons.Filled.ManageSearch">Keywords</MudNavLink>
+			<MudNavLink Href="/researches" Icon="@Icons.Filled.ManageSearch">Keywords</MudNavLink>
 		}
 	</MudNavGroup>
 </MudNavMenu>
@@ -150,8 +150,8 @@
 	{
 		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-		if (path == "keywordresearch"
-			|| path == "keywordresearchtargets")
+		if (path == "researches"
+			|| path == "research-targets")
 		{
 			return true;
 		}

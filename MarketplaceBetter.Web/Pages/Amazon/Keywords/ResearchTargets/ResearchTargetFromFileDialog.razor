@@ -3,16 +3,16 @@
 @using MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces
 @using System.IO
 
-@inject IKeywordResearchTargetOperationsService KeywordResearchTargetOperationsService
-@inject IKeywordResearchService KeywordResearchService
+@inject IResearchTargetOperationsService ResearchTargetOperationsService
+@inject IResearchService ResearchService
 @inject ISnackbar Snackbar
 
 <EditForm Model="AddTargetsModel" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title="Add Research Targets from file">
         <DataAnnotationsValidator />
-        <MudSelect Label="Research" T="KeywordResearchModel" @bind-Value="AddTargetsModel.KeywordResearch" For="() => AddTargetsModel.KeywordResearch">
-            @foreach (var research in KeywordResearches)
+        <MudSelect Label="Research" T="ResearchModel" @bind-Value="AddTargetsModel.Research" For="() => AddTargetsModel.Research">
+            @foreach (var research in Researches)
             {
                 <MudSelectItem Value="research">@research.Name</MudSelectItem>
             }
@@ -36,15 +36,15 @@
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private IList<KeywordResearchModel> KeywordResearches = new List<KeywordResearchModel>();
-    private AddAdvertisingReportKeywordTargetsModel AddTargetsModel = new ();
+    private IList<ResearchModel> Researches = new List<ResearchModel>();
+    private AddAdvertisingReportResearchTargetsModel AddTargetsModel = new ();
     private IBrowserFile File;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        KeywordResearches = KeywordResearchService.GetAll();
+        Researches = ResearchService.GetAll();
     }
 
     private void UploadFile(InputFileChangeEventArgs e)
@@ -58,7 +58,7 @@
         await File.OpenReadStream(maxAllowedSize:100000000).CopyToAsync(memoryStream);
         memoryStream.Seek(0, SeekOrigin.Begin);
 
-        AddAdvertisingReportKeywordTargetsModel model = KeywordResearchTargetOperationsService.CreateTargetsFromAdvertisingReport(AddTargetsModel.KeywordResearch, memoryStream);
+        AddAdvertisingReportResearchTargetsModel model = ResearchTargetOperationsService.CreateTargetsFromAdvertisingReport(AddTargetsModel.Research, memoryStream);
 
         MudDialog.Close(model);
     }

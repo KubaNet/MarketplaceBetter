@@ -79,8 +79,8 @@
     <None Include="Scripts\Inserts\01_Countries.sql" />
     <None Include="Scripts\Inserts\04_AmazonTargetingStatuses.sql" />
     <None Include="Scripts\Inserts\05_AmazonTargetingTypes.sql" />
-    <Build Include="dbo\Tables\Amazon\Keywords\KeywordResearchTarget.sql" />
-    <Build Include="dbo\Tables\Amazon\Keywords\KeywordResearch.sql" />
+    <Build Include="dbo\Tables\Amazon\Keywords\ResearchTarget.sql" />
+    <Build Include="dbo\Tables\Amazon\Keywords\Research.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\Child.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\ChildInstance.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\Parent.sql" />

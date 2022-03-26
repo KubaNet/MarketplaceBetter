@@ -16,48 +16,48 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon
 {
-    public class KeywordResearchService : IKeywordResearchService
+    public class ResearchService : IResearchService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<KeywordResearch> _repository;
+        private readonly IRepository<Research> _repository;
 
-        public KeywordResearchService(
+        public ResearchService(
             IMapper mapper,
             IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _repository = unitOfWork.GetRepository<KeywordResearch>();
+            _repository = unitOfWork.GetRepository<Research>();
         }
 
-        public KeywordResearchModel Get(long id) => _mapper.Map<KeywordResearchModel>(_repository.Get(id));
+        public ResearchModel Get(long id) => _mapper.Map<ResearchModel>(_repository.Get(id));
 
-        public IList<KeywordResearchModel> GetAll() => _mapper.Map<IList<KeywordResearchModel>>(_repository.GetQuery().OrderBy(r => r.Name));
+        public IList<ResearchModel> GetAll() => _mapper.Map<IList<ResearchModel>>(_repository.GetQuery().OrderBy(r => r.Name));
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<KeywordResearch> researches = _repository.GetQuery();
+            IQueryable<Research> researches = _repository.GetQuery();
 
             ApplyFilter(researches, request);
 
             return researches.Count();
         }
 
-        public IList<KeywordResearchModel> GetForListRequest(ListRequest request)
+        public IList<ResearchModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<KeywordResearch> researches = _repository.GetQuery();
+            IQueryable<Research> researches = _repository.GetQuery();
 
             researches = ApplyFilter(researches, request);
             researches = ApplySorting(researches, request);
             researches = ApplyPaging(researches, request);
 
-            return _mapper.Map<IList<KeywordResearchModel>>(researches);
+            return _mapper.Map<IList<ResearchModel>>(researches);
         }
 
-        public void Add(KeywordResearchModel research)
+        public void Add(ResearchModel research)
         {
-            KeywordResearch researchToAdd = new();
+            Research researchToAdd = new();
 
             TransferValues(researchToAdd, research);
 
@@ -65,9 +65,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
-        public void Update(KeywordResearchModel research)
+        public void Update(ResearchModel research)
         {
-            KeywordResearch researchToUpdate = _repository.Get(research.Id);
+            Research researchToUpdate = _repository.Get(research.Id);
 
             TransferValues(researchToUpdate, research);
 
@@ -75,12 +75,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
-        private void TransferValues(KeywordResearch toResearch, KeywordResearchModel fromResearch)
+        private void TransferValues(Research toResearch, ResearchModel fromResearch)
         {
             toResearch.Name = fromResearch.Name;
         }
 
-        private IQueryable<KeywordResearch> ApplyFilter(IQueryable<KeywordResearch> researches, ListRequest request)
+        private IQueryable<Research> ApplyFilter(IQueryable<Research> researches, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
@@ -113,7 +113,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             return researches;
         }
 
-        private IQueryable<KeywordResearch> ApplySorting(IQueryable<KeywordResearch> researches, ListRequest request)
+        private IQueryable<Research> ApplySorting(IQueryable<Research> researches, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -128,7 +128,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             return researches;
         }
 
-        private IQueryable<KeywordResearch> ApplyPaging(IQueryable<KeywordResearch> researches, ListRequest request)
+        private IQueryable<Research> ApplyPaging(IQueryable<Research> researches, ListRequest request)
         {
             return researches.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }

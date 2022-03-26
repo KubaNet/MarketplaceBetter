@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon.Keywords
 {
-    public class KeywordResearchModel
+    public class ResearchTargetModel
     {
         public long Id { get; set; }
 
@@ -16,9 +16,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Keywords
         [BetterLength]
         public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        [Required]
+        public ResearchModel Research { get; set; }
     }
 }

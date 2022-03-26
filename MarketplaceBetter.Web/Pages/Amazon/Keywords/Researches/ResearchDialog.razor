@@ -2,15 +2,15 @@
 @using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces
 
-@inject IKeywordResearchService KeywordResearchService
-@inject IKeywordResearchValidator KeywordResearchValidator
+@inject IResearchService ResearchService
+@inject IResearchValidator ResearchValidator
 @inject ISnackbar Snackbar
 
-<EditForm Model="KeywordResearch" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Research" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudTextField Label="Name" @bind-Value="KeywordResearch.Name" For="() => KeywordResearch.Name" />
+        <MudTextField Label="Name" @bind-Value="Research.Name" For="() => Research.Name" />
     </FormDialog>
 </EditForm>
 
@@ -18,10 +18,10 @@
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long KeywordResearchId { get; set; }
+    [Parameter] public long ResearchId { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private KeywordResearchModel KeywordResearch = new();
+    private ResearchModel Research = new();
 
     protected override void OnInitialized()
     {
@@ -35,24 +35,24 @@
 
     private void SetInitialValues()
     {
-        KeywordResearch = KeywordResearchService.Get(KeywordResearchId);
+        Research = ResearchService.Get(ResearchId);
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = KeywordResearchValidator.Validate(KeywordResearch);
+        ValidationResult result = ResearchValidator.Validate(Research);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                KeywordResearchService.Update(KeywordResearch);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Keyword Research"));
+                ResearchService.Update(Research);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Research"));
             }
             else
             {
-                KeywordResearchService.Add(KeywordResearch);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Keyword Research"));
+                ResearchService.Add(Research);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Research"));
             }
 
             MudDialog.Close();

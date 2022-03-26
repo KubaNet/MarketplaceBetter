@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
 {
-    public interface IKeywordResearchTargetOperationsService
+    public interface IResearchTargetOperationsService
     {
-        AddAdvertisingReportKeywordTargetsModel CreateTargetsFromAdvertisingReport(KeywordResearchModel research, Stream file);
+        AddAdvertisingReportResearchTargetsModel CreateTargetsFromAdvertisingReport(ResearchModel research, Stream file);
     }
 }

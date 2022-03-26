@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon.Keywords
 {
-    public class KeywordResearch : Entity
+    public class ResearchTarget : Entity
     {
         public string Name { get; set; }
+
+        public long ResearchId { get; set; }
+
+        public virtual Research Research { get; set; }
     }
 }

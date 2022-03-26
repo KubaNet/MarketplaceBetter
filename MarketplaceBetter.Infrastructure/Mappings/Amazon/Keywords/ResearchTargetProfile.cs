@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Keywords
+namespace MarketplaceBetter.Infrastructure.Mappings.Amazon
 {
-    public class KeywordResearchProfile : Profile
+    public class ResearchTargetProfile : Profile
     {
-        public KeywordResearchProfile()
+        public ResearchTargetProfile()
         {
-            CreateMap<KeywordResearch, KeywordResearchModel>();
+            CreateMap<ResearchTarget, ResearchTargetModel>();
         }
     }
 }

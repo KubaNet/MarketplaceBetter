@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon.Keywords
 {
-    public class AdvertisingReportKeywordTargetModel
+    public class AdvertisingReportResearchTargetModel
     {
         public string Campaign { get; set; }
 

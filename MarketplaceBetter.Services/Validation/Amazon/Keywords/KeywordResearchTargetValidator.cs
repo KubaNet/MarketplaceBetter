@@ -6,22 +6,22 @@ using MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Keywords
 {
-    public class KeywordResearchTargetValidator : IKeywordResearchTargetValidator
+    public class ResearchTargetValidator : IResearchTargetValidator
     {
-        private readonly IRepository<KeywordTarget> _repository;
+        private readonly IRepository<ResearchTarget> _repository;
 
-        public KeywordResearchTargetValidator(IUnitOfWork unitOfWork)
+        public ResearchTargetValidator(IUnitOfWork unitOfWork)
         {
-            _repository = unitOfWork.GetRepository<KeywordTarget>();
+            _repository = unitOfWork.GetRepository<ResearchTarget>();
         }
 
-        public ValidationResult Validate(KeywordTargetModel target)
+        public ValidationResult Validate(ResearchTargetModel target)
         {
             ValidationResult result = new();
 
             if (_repository.Any(t => t.Id != target.Id && t.Name == target.Name && t.ResearchId == target.Research.Id ))
             {
-                result.AddErrorFor<KeywordTargetModel>(b => b.Name, ValidationMessages.NameNotUniqueForSelected, "Keyword Research Target", "Research");
+                result.AddErrorFor<ResearchTargetModel>(b => b.Name, ValidationMessages.NameNotUniqueForSelected, "Research Target", "Research");
             }
 
             return result;

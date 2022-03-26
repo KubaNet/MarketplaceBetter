@@ -11,22 +11,22 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Keywords
 {
-    public class KeywordResearchValidator : IKeywordResearchValidator
+    public class ResearchValidator : IResearchValidator
     {
-        private readonly IRepository<KeywordResearch> _repository;
+        private readonly IRepository<Research> _repository;
 
-        public KeywordResearchValidator(IUnitOfWork unitOfWork)
+        public ResearchValidator(IUnitOfWork unitOfWork)
         {
-            _repository = unitOfWork.GetRepository<KeywordResearch>();
+            _repository = unitOfWork.GetRepository<Research>();
         }
 
-        public ValidationResult Validate(KeywordResearchModel research)
+        public ValidationResult Validate(ResearchModel research)
         {
             ValidationResult result = new();
 
             if (_repository.Any(r => r.Id != research.Id && r.Name == research.Name))
             {
-                result.AddErrorFor<KeywordResearchModel>(b => b.Name, ValidationMessages.NameNotUnique, "Keyword Research");
+                result.AddErrorFor<ResearchModel>(b => b.Name, ValidationMessages.NameNotUnique, "Research");
             }
 
             return result;
