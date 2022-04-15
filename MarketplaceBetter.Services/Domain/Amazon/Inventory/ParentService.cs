@@ -150,6 +150,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
+            else
+            {
+                parents = parents.OrderBy(p => p.Product.Order);
+            }
 
             return parents;
         }

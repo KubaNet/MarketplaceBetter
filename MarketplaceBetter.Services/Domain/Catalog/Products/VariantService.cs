@@ -92,6 +92,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             toVariant.ProductId = fromVariant.Product.Id;
             toVariant.ColorId = fromVariant.Color.Id;
             toVariant.SizeId = fromVariant.Size.Id;
+            toVariant.Ean = fromVariant.Ean;
         }
 
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
@@ -105,7 +106,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "brand", "color", "size", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "brand", "color", "size", "ean", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -119,6 +120,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         "brand" => variants.Where(v => v.Product.Brand.Name.Contains(searchField.Value)),
                         "color" => variants.Where(v => v.Color.Name.Contains(searchField.Value)),
                         "size" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
+                        "ean" => variants.Where(v => v.Ean.Contains(searchField.Value)),
                         "product_id" => variants.Where(v => v.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -131,7 +133,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                       || v.Product.Name.Contains(searchString)
                       || v.Product.Brand.Name.Contains(searchString)
                       || v.Color.Name.Contains(searchString)
-                      || v.Size.Name.Contains(searchString));
+                      || v.Size.Name.Contains(searchString)
+                      || v.Ean.Contains(searchString));
                 }
             }
 
@@ -151,6 +154,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     "brand" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Brand.Name) : variants.OrderByDescending(v => v.Product.Brand.Name),
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
                     "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
+                    "ean" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Ean) : variants.OrderByDescending(v => v.Ean),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

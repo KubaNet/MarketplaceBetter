@@ -23,5 +23,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
         void Add(ProductModel product);
 
         void Update(ProductModel product);
+
+        int GetMaxOrder();
     }
 }

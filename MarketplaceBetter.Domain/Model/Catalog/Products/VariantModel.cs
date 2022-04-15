@@ -13,6 +13,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
     {
         public long Id { get; set; }
 
+        [Display(Name = "SKU")]
         [Required]
         [BetterLength]
         public string Sku { get; set; }
@@ -28,5 +29,9 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
 
         [Required]
         public VariantStatusModel Status { get; set; }
+
+        [Display(Name = "EAN")]
+        [BetterMaxLength]
+        public string Ean { get; set; }
     }
 }

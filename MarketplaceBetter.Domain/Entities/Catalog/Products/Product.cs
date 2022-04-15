@@ -29,6 +29,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Products
 
         public virtual SizeGroup SizeGroup { get; set; }
 
+        public int Order { get; set; }
+
         public override string ToString()
         {
             return Name;

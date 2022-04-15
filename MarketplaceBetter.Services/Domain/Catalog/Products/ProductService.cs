@@ -78,6 +78,18 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork.Save();
         }
 
+        public int GetMaxOrder()
+        {
+            if (_repository.GetQuery().Any())
+            {
+                return _repository.GetQuery().Max(p => p.Order);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         private void TransferValues(Product toProduct, ProductModel fromProduct)
         {
             toProduct.Name = fromProduct.Name;
@@ -86,6 +98,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             toProduct.CollectionId = fromProduct.Collection.Id;
             toProduct.ColorGroupId = fromProduct.ColorGroup.Id;
             toProduct.SizeGroupId = fromProduct.SizeGroup.Id;
+            toProduct.Order = fromProduct.Order;
         }
 
         private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
@@ -144,8 +157,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     "collection" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Collection.Name) : products.OrderByDescending(p => p.Collection.Name),
                     "color_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ColorGroup.Name) : products.OrderByDescending(p => p.ColorGroup.Name),
                     "size_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.SizeGroup.Name) : products.OrderByDescending(p => p.SizeGroup.Name),
+                    "order" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Order) : products.OrderByDescending(p => p.Order),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
+            }
+            else
+            {
+                products = products.OrderBy(p => p.Order);
             }
 
             return products;

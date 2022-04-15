@@ -49,7 +49,8 @@
                 <MudSelectItem Value="status">@status.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="Sku" @bind-Value="Variant.Sku" For="() => Variant.Sku" />
+        <MudTextField Label="SKU" @bind-Value="Variant.Sku" For="() => Variant.Sku" />
+        <MudTextField Label="EAN" @bind-Value="Variant.Ean" For="() => Variant.Ean" />
     </FormDialog>
 </EditForm>
 

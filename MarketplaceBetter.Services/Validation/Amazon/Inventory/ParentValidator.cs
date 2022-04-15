@@ -21,7 +21,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Inventory
 
             if (_repository.Any(p => p.Id != parent.Id && p.ProductId == parent.Product.Id))
             {
-                result.AddError("There already exists an Parent for this Product.");
+                result.AddError("There already exists a Parent for this Product.");
             }
 
             if (_repository.Any(p => p.Id != parent.Id && p.Sku == parent.Sku))

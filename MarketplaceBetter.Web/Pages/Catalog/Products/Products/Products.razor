@@ -27,6 +27,7 @@
 			<MudTh><MudTableSortLabel SortLabel="collection" T="ProductModel">Collection</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="color_group" T="ProductModel">Color group</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="size_group" T="ProductModel">Size group</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="order" T="ProductModel">Order</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 100px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
@@ -39,6 +40,7 @@
 			<MudTd DataLabel="Brand">@context.Collection.Name</MudTd>
 			<MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
 			<MudTd DataLabel="Size group">@context.SizeGroup.Name</MudTd>
+			<MudTd DataLabel="Order">@context.Order</MudTd>
 			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>
 		</RowTemplate>
 		<PagerContent>

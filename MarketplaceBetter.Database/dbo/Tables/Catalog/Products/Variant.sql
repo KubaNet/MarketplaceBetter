@@ -6,6 +6,7 @@
 	[ColorId]	BIGINT					NOT NULL,
 	[SizeId]	BIGINT					NOT NULL,
 	[StatusId]	BIGINT					NOT NULL,
+	[Ean]		NVARCHAR (255)			NULL,
 	CONSTRAINT	[PK_Variant]			PRIMARY KEY ([Id]),
 	CONSTRAINT  [FK_Variant_Product]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
 	CONSTRAINT  [FK_Variant_Color]		FOREIGN KEY ([ColorId])		REFERENCES [dbo].[Color] ([Id]),

@@ -27,6 +27,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Products
 
         public virtual VariantStatus Status { get; set; }
 
+        public string Ean { get; set; }
+
         public override string ToString()
         {
             return Sku;

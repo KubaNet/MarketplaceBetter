@@ -27,10 +27,15 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         [Required]
         public CollectionModel Collection { get; set; }
 
+        [Display(Name = "Color group")]
         [Required]
         public ColorGroupModel ColorGroup { get; set; }
 
+        [Display(Name = "Size group")]
         [Required]
         public SizeGroupModel SizeGroup { get; set; }
+
+        [Required]
+        public int Order { get; set; }
     }
 }

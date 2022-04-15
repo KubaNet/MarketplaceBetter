@@ -42,6 +42,7 @@
                 <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudNumericField Label="Order" @bind-Value="Product.Order" For="() => Product.Order" Variant="Variant.Text" Min="1" />
     </FormDialog>
 </EditForm>
 
@@ -68,6 +69,8 @@
         Brands = BrandService.GetAll();
         ColorGroups = ColorGroupService.GetAll();
         SizeGroups = SizeGroupService.GetAll();
+
+        Product.Order = ProductService.GetMaxOrder() + 1;
 
         if (IsEdit)
         {
