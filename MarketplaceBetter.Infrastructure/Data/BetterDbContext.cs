@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
+using MarketplaceBetter.Domain.Entities.Amazon.Copywritings;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
@@ -28,10 +29,12 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<SalesChannel> SalesChannel { get; set; }
 
         // Catalog
+        // => Products
         public DbSet<Brand> Brand { get; set; }
         public DbSet<Collection> Collection { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Variant> Variant { get; set; }
+        // => Colors and Sizes
         public DbSet<Color> Color { get; set; }
         public DbSet<ColorTranslation> ColorTranslation { get; set; }
         public DbSet<ColorGroup> ColorGroup { get; set; }
@@ -39,15 +42,21 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<SizeGroup> SizeGroup { get; set; }
 
         // Amazon
+        // => Inventory
         public DbSet<Parent> Parent { get; set; }
         public DbSet<ParentInstance> ParentInstance { get; set; }
         public DbSet<Child> Child { get; set; }
         public DbSet<ChildInstance> ChildInstance { get; set; }
+        // => Campaigns
         public DbSet<AmazonCampaign> AmazonCampaign { get; set; }
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }
+        // => Keywords
         public DbSet<Research> Research { get; set; }
         public DbSet<ResearchTarget> ResearchTarget { get; set; }
+        // => Copywritings
+        public DbSet<Copywriting> Copywriting { get; set; }
+        public DbSet<CopywritingElement> CopywritingElement { get; set; }
 
         //public override int SaveChanges()
         //{

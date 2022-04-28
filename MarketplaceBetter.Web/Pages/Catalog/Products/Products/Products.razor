@@ -6,9 +6,6 @@
 @page "/products"
 @inject IProductService ProductService
 @inject IDialogService DialogService
-@inject IBrandService BrandService
-@inject IColorGroupService ColorGroupService
-@inject ISizeGroupService SizeGroupService
 
 <MudText Typo="Typo.h3" Class="mt-2">Products</MudText>
 
@@ -37,7 +34,7 @@
 			</MudTd>
 			<MudTd DataLabel="Code">@context.Code</MudTd>
 			<MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
-			<MudTd DataLabel="Brand">@context.Collection.Name</MudTd>
+			<MudTd DataLabel="Collection">@context.Collection.Name</MudTd>
 			<MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
 			<MudTd DataLabel="Size group">@context.SizeGroup.Name</MudTd>
 			<MudTd DataLabel="Order">@context.Order</MudTd>

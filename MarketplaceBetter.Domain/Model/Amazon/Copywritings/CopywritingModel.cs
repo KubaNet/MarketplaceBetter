@@ -10,6 +10,8 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Copywritings
 {
     public class CopywritingModel
     {
+        public long Id { get; set; }
+
         public ProductModel Product { get; set; }
 
         public InstanceModel Instance { get; set; }

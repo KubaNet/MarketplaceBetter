@@ -1,0 +1,83 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Copywritings
+@using MarketplaceBetter.Services.Domain.Amazon.Copywritings.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/copywritings"
+@inject ICopywritingService CopywritingService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3" Class="mt-2">Copywritings</MudText>
+
+<MainBody>
+	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CopywritingModel>>>(ReloadCopywritings))" Dense="true" Hover="true" RowsPerPage="15">
+		<ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterCopywritings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+			<MudButton OnClick="AddCopywriting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Copywriting</MudButton>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="CopywritingModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="product" T="CopywritingModel">Product</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="instance" T="CopywritingModel">Instance</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="element" T="CopywritingModel">Element</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="value" T="CopywritingModel">Value</MudTableSortLabel></MudTh>
+			<MudTh Style="width: 100px;">Actions</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Name">@context.Product.Name</MudTd>
+			<MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+			<MudTd DataLabel="Element">@context.Element.Name</MudTd>
+			<MudTd DataLabel="Value">@context.Value</MudTd>
+			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditCopywriting(context.Id))">Edit</MudButton></MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+		</PagerContent>
+	</MudTable>
+</MainBody>
+
+@code {
+	private MudTable<CopywritingModel> Table;
+	private ListRequest ListRequest = new();
+
+	private Task<TableData<CopywritingModel>> ReloadCopywritings(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<CopywritingModel> copywritings = CopywritingService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<CopywritingModel>() { TotalItems = CopywritingService.CountForListRequest(ListRequest), Items = copywritings });
+	}
+
+	private void FilterCopywritings(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+	private async void AddCopywriting()
+	{
+		var result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Add Copywriting" }).Result;
+
+		ProcessCopywritingDialogResult(result);
+	}
+
+	private async void EditCopywriting(long id)
+	{
+		var result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Edit Copywriting", ["IsEdit"] = true, ["CopywritingId"] = id }).Result;
+
+		ProcessCopywritingDialogResult(result);
+	}
+
+	private void ProcessCopywritingDialogResult(DialogResult result)
+	{
+		if (!result.Cancelled)
+		{
+			Table.ReloadServerData();
+		}
+	}
+}

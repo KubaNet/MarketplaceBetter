@@ -1,166 +1,168 @@
 ﻿@inject NavigationManager NavigationManager
 
 <MudNavMenu>
-	<MudNavGroup Title="Catalog" Icon="@Icons.Filled.Folder" Expanded="true" HideExpandIcon="true">
-		@if (IsProductsModule())
-		{
-			<MudNavGroup Title="Products" Icon="@Icons.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/products">Products</MudNavLink>
-				<MudNavLink Href="/product-colors">Product Colors</MudNavLink>
-				<MudNavLink Href="/variants">Variants</MudNavLink>
-				<MudNavLink Href="/collections">Collections</MudNavLink>
-				<MudNavLink Href="/brands">Brands</MudNavLink>
-			</MudNavGroup>
-		}
-		else
-		{
-			<MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
-		}
+    <MudNavGroup Title="Catalog" Icon="@Icons.Filled.Folder" Expanded="true" HideExpandIcon="true">
+        @if (IsProductsModule())
+        {
+            <MudNavGroup Title="Products" Icon="@Icons.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/products">Products</MudNavLink>
+                <MudNavLink Href="/product-colors">Product Colors</MudNavLink>
+                <MudNavLink Href="/variants">Variants</MudNavLink>
+                <MudNavLink Href="/collections">Collections</MudNavLink>
+                <MudNavLink Href="/brands">Brands</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
+        }
 
-		@if (IsColorsAndSizesModule())
-		{
-			<MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/colors">Colors</MudNavLink>
-				<MudNavLink Href="/color-translations">Color Translations</MudNavLink>
-				<MudNavLink Href="/color-groups">Color Groups</MudNavLink>
-				<MudNavLink Href="/sizes">Sizes</MudNavLink>
-				<MudNavLink Href="/size-groups">Size Groups</MudNavLink>
-			</MudNavGroup>
-		}
-		else
-		{
-			<MudNavLink Href="/colors" Icon="@Icons.Filled.Palette">Colors & Sizes</MudNavLink>
-		}
-	</MudNavGroup>
-	<MudNavGroup Title="Amazon" Icon="@Icons.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
-		@if (IsAmazonInventoryModule())
-		{
-			<MudNavGroup Title="Inventory" Icon="@Icons.Filled.Inventory" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/parents">Parents</MudNavLink>
-				<MudNavLink Href="/parent-instances">Parent Instances</MudNavLink>
-				<MudNavLink Href="/childs">Childs</MudNavLink>
-				<MudNavLink Href="/child-instances">Child Instances</MudNavLink>
-			</MudNavGroup>
-		}
-		else
-		{
-			<MudNavLink Href="/parents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
-		}
+        @if (IsColorsAndSizesModule())
+        {
+            <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/colors">Colors</MudNavLink>
+                <MudNavLink Href="/color-translations">Color Translations</MudNavLink>
+                <MudNavLink Href="/color-groups">Color Groups</MudNavLink>
+                <MudNavLink Href="/sizes">Sizes</MudNavLink>
+                <MudNavLink Href="/size-groups">Size Groups</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/colors" Icon="@Icons.Filled.Palette">Colors & Sizes</MudNavLink>
+        }
+    </MudNavGroup>
+    <MudNavGroup Title="Amazon" Icon="@Icons.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
+        @if (IsAmazonInventoryModule())
+        {
+            <MudNavGroup Title="Inventory" Icon="@Icons.Filled.Inventory" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/parents">Parents</MudNavLink>
+                <MudNavLink Href="/parent-instances">Parent Instances</MudNavLink>
+                <MudNavLink Href="/childs">Childs</MudNavLink>
+                <MudNavLink Href="/child-instances">Child Instances</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/parents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
+        }
 
-		@if (IsAmazonCampaignsModule())
-		{
-			<MudNavGroup Title="Campaigns" Icon="@Icons.Filled.AppRegistration" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/amazoncampaigns">Campaigns</MudNavLink>
-				<MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
-			</MudNavGroup>
-		}
-		else
-		{
-			<MudNavLink Href="/amazoncampaigns" Icon="@Icons.Filled.AppRegistration">Campaigns</MudNavLink>
-		}
+        <MudNavLink Href="/copywritings" Icon="@Icons.Filled.EditNote">Copywritngs</MudNavLink>
 
-		@if (IsKeywordsModule())
-		{
-			<MudNavGroup Title="Keywords" Icon="@Icons.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
-				<MudNavLink Href="/researches">Researches</MudNavLink>
-				<MudNavLink Href="/research-targets">Research Targets</MudNavLink>
-			</MudNavGroup>
-		}
-		else
-		{
-			<MudNavLink Href="/researches" Icon="@Icons.Filled.ManageSearch">Keywords</MudNavLink>
-		}
-	</MudNavGroup>
+        @if (IsAmazonCampaignsModule())
+        {
+            <MudNavGroup Title="Campaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/amazoncampaigns">Campaigns</MudNavLink>
+                <MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/amazoncampaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd">Campaigns</MudNavLink>
+        }
+
+        @if (IsKeywordsModule())
+        {
+            <MudNavGroup Title="Keywords" Icon="@Icons.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/researches">Researches</MudNavLink>
+                <MudNavLink Href="/research-targets">Research Targets</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/researches" Icon="@Icons.Filled.ManageSearch">Keywords</MudNavLink>
+        }
+    </MudNavGroup>
 </MudNavMenu>
 
 @code {
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		NavigationManager.LocationChanged += HandleLocationChanged;
-	}
+        NavigationManager.LocationChanged += HandleLocationChanged;
+    }
 
-	private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
-	{
-		StateHasChanged();
-	}
+    private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
 
-	private bool IsProductsModule()
-	{
-		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+    private bool IsProductsModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-		if (path == "products"
-			|| path == "product-colors"
-			|| path == "variants"
-			|| path == "collections"
-			|| path == "brands")
-		{
-			return true;
-		}
+        if (path == "products"
+            || path == "product-colors"
+            || path == "variants"
+            || path == "collections"
+            || path == "brands")
+        {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private bool IsColorsAndSizesModule()
-	{
-		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+    private bool IsColorsAndSizesModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-		if (path == "colors"
-			|| path == "color-translations"
-			|| path == "color-groups"
-			|| path == "sizes"
-			|| path == "size-groups")
-		{
-			return true;
-		}
+        if (path == "colors"
+            || path == "color-translations"
+            || path == "color-groups"
+            || path == "sizes"
+            || path == "size-groups")
+        {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private bool IsAmazonInventoryModule()
-	{
-		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+    private bool IsAmazonInventoryModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-		if (path == "parents"
-			|| path == "parent-instances"
-			|| path == "childs"
-			|| path == "child-instances")
-		{
-			return true;
-		}
+        if (path == "parents"
+            || path == "parent-instances"
+            || path == "childs"
+            || path == "child-instances")
+        {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private bool IsAmazonCampaignsModule()
-	{
-		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+    private bool IsAmazonCampaignsModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-		if (path == "amazoncampaigns"
-			|| path == "amazontargeting")
-		{
-			return true;
-		}
+        if (path == "amazoncampaigns"
+            || path == "amazontargeting")
+        {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private bool IsKeywordsModule()
-	{
-		string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+    private bool IsKeywordsModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-		if (path == "researches"
-			|| path == "research-targets")
-		{
-			return true;
-		}
+        if (path == "researches"
+            || path == "research-targets")
+        {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public void Dispose()
-	{
-		NavigationManager.LocationChanged -= HandleLocationChanged;
-	}
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= HandleLocationChanged;
+    }
 }
