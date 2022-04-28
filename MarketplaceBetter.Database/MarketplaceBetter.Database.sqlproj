@@ -69,6 +69,7 @@
     <Folder Include="dbo\Tables\Amazon\Keywords" />
     <Folder Include="dbo\Tables\Catalog\ColorsAndSizes" />
     <Folder Include="dbo\Tables\Catalog\Products" />
+    <Folder Include="dbo\Tables\Amazon\Copywritings" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Template.sql" />
@@ -96,6 +97,9 @@
     <Build Include="dbo\Tables\Catalog\ColorsAndSizes\SizeGroup.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Brand.sql" />
     <Build Include="dbo\Tables\Catalog\Products\VariantStatus.sql" />
+    <Build Include="dbo\Tables\Amazon\Copywritings\CopywritingElement.sql" />
+    <Build Include="dbo\Tables\Amazon\Copywritings\Copywriting.sql" />
+    <None Include="Scripts\Inserts\07_CopywritingElements.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
