@@ -47,7 +47,16 @@
             <MudNavLink Href="/parents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
         }
 
-        <MudNavLink Href="/copywritings" Icon="@Icons.Filled.EditNote">Copywritngs</MudNavLink>
+        @if (IsCopyAndMediaModule())
+        {
+            <MudNavGroup Title="Copy & Media" Icon="@Icons.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/copywriting" Icon="@Icons.Filled.PhotoLibrary">Copy & Media</MudNavLink>
+        }
 
         @if (IsAmazonCampaignsModule())
         {
@@ -128,6 +137,18 @@
             || path == "parent-instances"
             || path == "childs"
             || path == "child-instances")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool IsCopyAndMediaModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+        if (path == "copywriting")
         {
             return true;
         }

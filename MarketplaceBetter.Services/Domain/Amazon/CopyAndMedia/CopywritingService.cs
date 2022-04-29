@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Amazon.Copywritings;
-using MarketplaceBetter.Domain.Model.Amazon.Copywritings;
+using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
-using MarketplaceBetter.Services.Domain.Amazon.Copywritings.Interfaces;
+using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MudBlazor;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Domain.Amazon.Copywritings
+namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
     public class CopywritingService : ICopywritingService
     {

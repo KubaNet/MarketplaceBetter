@@ -1,12 +1,12 @@
-﻿@using MarketplaceBetter.Domain.Model.Amazon.Copywritings
-@using MarketplaceBetter.Services.Domain.Amazon.Copywritings.Interfaces
+﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Model
 
-@page "/copywritings"
+@page "/copywriting"
 @inject ICopywritingService CopywritingService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Copywritings</MudText>
+<MudText Typo="Typo.h3" Class="mt-2">Copywriting</MudText>
 
 <MainBody>
 	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CopywritingModel>>>(ReloadCopywritings))" Dense="true" Hover="true" RowsPerPage="15">

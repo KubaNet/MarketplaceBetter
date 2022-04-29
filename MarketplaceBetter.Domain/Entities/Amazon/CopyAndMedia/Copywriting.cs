@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Entities.Amazon.Copywritings
+namespace MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
 {
     public class Copywriting : Entity
     {

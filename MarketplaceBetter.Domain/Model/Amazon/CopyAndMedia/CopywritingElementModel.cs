@@ -1,11 +1,11 @@
-﻿using MarketplaceBetter.Domain.Entities.Amazon.Copywritings;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Model.Amazon.Copywritings
+namespace MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
 {
     public class CopywritingElementModel
     {
