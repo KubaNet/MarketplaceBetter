@@ -18,6 +18,7 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
+        <ValidationSummary />
         <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
@@ -36,6 +37,13 @@
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect Label="Element" T="CopywritingElementModel" @bind-Value="Copywriting.Element" For="() => Copywriting.Element">
+            @foreach (var element in Elements)
+            {
+                <MudSelectItem Value="element">@element.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Value" @bind-Value="Copywriting.Value" For="() => Copywriting.Value" />
     </FormDialog>
 </EditForm>
 
@@ -43,6 +51,7 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public bool AddingSimilar { get; set; }
     [Parameter] public long CopywritingId { get; set; }
 
     private CustomValidation CustomValidation = new();
@@ -52,6 +61,7 @@
     private IList<BrandModel> Brands;
     private IList<ProductModel> Products = new List<ProductModel>();
     private IList<InstanceModel> Instances;
+    private IList<CopywritingElementModel> Elements;
 
     private bool ProductSelectDisabled = true;
 
@@ -61,8 +71,9 @@
 
         Brands = BrandService.GetAll();
         Instances = InstanceService.GetAllForAmazon();
+        Elements = CopywritingElementService.GetAll();
 
-        if (IsEdit)
+        if (IsEdit || AddingSimilar)
         {
             SetInitialValues();
         }
@@ -71,10 +82,18 @@
     private void SetInitialValues()
     {
         Copywriting = CopywritingService.Get(CopywritingId);
-        Brand = Brands.Single(b => b.Id == Copywriting.Product.Brand.Id);
-        Copywriting.Instance = Instances.Single(i => i.Id == Copywriting.Instance.Id);
+        if (AddingSimilar)
+        {
+            Copywriting.Id = 0;
+            Copywriting.Value = null;
+        }
 
-        ActivateProduct(Brand.Id);
+        ActivateProduct(Copywriting.Product.Brand.Id);
+
+        Brand = Brands.Single(b => b.Id == Copywriting.Product.Brand.Id);
+        Copywriting.Product = Products.Single(p => p.Id == Copywriting.Product.Id);
+        Copywriting.Instance = Instances.Single(i => i.Id == Copywriting.Instance.Id);
+        Copywriting.Element = Elements.Single(e => e.Id == Copywriting.Element.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)
@@ -95,7 +114,7 @@
     private void ActivateProduct(long brandId)
     {
         ProductSelectDisabled = false;
-        Products = ProductService.GetAllForBrand(brandId).OrderBy(p => p.Name).ToList();
+        Products = ProductService.GetAllForBrand(brandId);
     }
 
     private void HandleValidSubmit()

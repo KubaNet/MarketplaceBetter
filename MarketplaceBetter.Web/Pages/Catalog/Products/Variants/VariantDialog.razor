@@ -159,7 +159,7 @@
     private void ActivateProduct(long brandId)
     {
         ProductSelectDisabled = false;
-        Products = ProductService.GetAllForBrand(brandId).OrderBy(p => p.Name).ToList();
+        Products = ProductService.GetAllForBrand(brandId);
     }
 
     private void ResetColor()
@@ -172,7 +172,7 @@
     private void ActivateColor(long colorGroupId)
     {
         ColorSelectDisabled = false;
-        Colors = ColorService.GetAllForGroup(colorGroupId).OrderBy(p => p.Name).ToList();
+        Colors = ColorService.GetAllForGroup(colorGroupId);
     }
 
     private void ResetSize()
@@ -185,7 +185,7 @@
     private void ActivateSize(long sizeGroupId)
     {
         SizeSelectDisabled = false;
-        Sizes = SizeService.GetAllForGroup(sizeGroupId).OrderBy(p => p.Name).ToList();
+        Sizes = SizeService.GetAllForGroup(sizeGroupId);
     }
 
     private void SetVariantSku()
