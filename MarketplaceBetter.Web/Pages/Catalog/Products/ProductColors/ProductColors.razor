@@ -9,65 +9,76 @@
 <MudText Typo="Typo.h3" Class="mt-2">Product Colors</MudText>
 
 <MainBody>
-	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductColorModel>>>(ReloadProductColors))" Dense="true" Hover="true" RowsPerPage="15">
-		<ToolBarContent>
-			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterProductColors" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-		</ToolBarContent>
-		<HeaderContent>
-			<MudTh><MudTableSortLabel SortLabel="product" T="ProductColorModel">Product</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="color" T="ProductColorModel">Color</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="status" T="ProductColorModel">Status</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="sizes" T="ProductColorModel">Sizes</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="brand" T="ProductColorModel">Brand</MudTableSortLabel></MudTh>
-		</HeaderContent>
-		<RowTemplate>
-			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
-			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
-			<MudTd DataLabel="Status">
-				<VariantStatusDisplay Status="@context.Status" />
-			</MudTd>
-			<MudTd DataLabel="Sizes">@string.Join("; ", context.Sizes.Select(s => s.Name))</MudTd>
-			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
-		</RowTemplate>
-		<PagerContent>
-			<MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
-		</PagerContent>
-	</MudTable>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductColorModel>>>(ReloadProductColors))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterProductColors" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="product" T="ProductColorModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="color" T="ProductColorModel">Color</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ProductColorModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sizes" T="ProductColorModel">Sizes</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ProductColorModel">Brand</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="Color">@context.Color.Name</MudTd>
+            <MudTd DataLabel="Status">
+                <VariantStatusDisplay Status="@context.Status" />
+            </MudTd>
+            <MudTd DataLabel="Sizes">@string.Join("; ", context.Sizes.Select(s => s.Name))</MudTd>
+            <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @if (!ShowAll.HasValue || ShowAll == false)
+            {
+                <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+            }
+        </PagerContent>
+    </MudTable>
 </MainBody>
 
 @code {
-	[Parameter]
-	[SupplyParameterFromQuery]
-	public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
 
-	private MudTable<ProductColorModel> Table;
-	private ListRequest ListRequest = new();
+    private MudTable<ProductColorModel> Table;
+    private ListRequest ListRequest = new();
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		if (ProductId.HasValue)
-		{
-			ListRequest.SearchString = $"product_id: {ProductId.Value}";
-		}
-	}
+        ProcessQueryParameters();
+    }
 
-	private Task<TableData<ProductColorModel>> ReloadProductColors(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    private void ProcessQueryParameters()
+    {
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+        if (ShowAll.HasValue)
+        {
+            ListRequest.ShowAll = ShowAll.Value;
+        }
+    }
 
-		IList<ProductColorModel> productColors = ProductColorService.GetForListRequest(ListRequest);
+    private Task<TableData<ProductColorModel>> ReloadProductColors(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<ProductColorModel>() { TotalItems = ProductColorService.CountForListRequest(ListRequest), Items = productColors });
-	}
+        IList<ProductColorModel> productColors = ProductColorService.GetForListRequest(ListRequest);
 
-	private void FilterProductColors(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+        return Task.FromResult(new TableData<ProductColorModel>() { TotalItems = ProductColorService.CountForListRequest(ListRequest), Items = productColors });
+    }
 
-		Table.ReloadServerData();
+    private void FilterProductColors(string searchString)
+    {
+        ListRequest.SearchString = searchString;
 
-		StateHasChanged();
-	}
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
 }

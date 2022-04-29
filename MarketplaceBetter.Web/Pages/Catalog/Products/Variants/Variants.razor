@@ -9,107 +9,118 @@
 <MudText Typo="Typo.h3" Class="mt-2">Variants</MudText>
 
 <MainBody>
-	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" Dense="true" Hover="true" RowsPerPage="15">
-		<ToolBarContent>
-			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
-			<MudButton OnClick="AddVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Variant</MudButton>
-		</ToolBarContent>
-		<HeaderContent>
-			<MudTh><MudTableSortLabel SortLabel="id" T="VariantModel">Id</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="sku" T="VariantModel">SKU</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="status" T="VariantModel">Status</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="product" T="VariantModel">Product</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="color" T="VariantModel">Color</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="size" T="VariantModel">Size</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="ean" T="VariantModel">EAN</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="brand" T="VariantModel">Brand</MudTableSortLabel></MudTh>
-			<MudTh Style="width: 170px;">Actions</MudTh>
-		</HeaderContent>
-		<RowTemplate>
-			<MudTd DataLabel="Id">@context.Id</MudTd>
-			<MudTd DataLabel="Sku">@context.Sku</MudTd>
-			<MudTd DataLabel="Status">
-				<VariantStatusDisplay Status="@context.Status" />
-			</MudTd>
-			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
-			<MudTd DataLabel="Color">@context.Color.Name</MudTd>
-			<MudTd DataLabel="Size">@context.Size.Name</MudTd>
-			<MudTd DataLabel="Size">@context.Ean</MudTd>
-			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
-			<MudTd>
-				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarVariant(context.Id))">Add</MudButton>
-				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditVariant(context.Id))">Edit</MudButton>
-			</MudTd>
-		</RowTemplate>
-		<PagerContent>
-			<MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
-		</PagerContent>
-	</MudTable>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="AddVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Variant</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="VariantModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sku" T="VariantModel">SKU</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="VariantModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="VariantModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="color" T="VariantModel">Color</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="size" T="VariantModel">Size</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="ean" T="VariantModel">EAN</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="VariantModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 170px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Sku">@context.Sku</MudTd>
+            <MudTd DataLabel="Status">
+                <VariantStatusDisplay Status="@context.Status" />
+            </MudTd>
+            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="Color">@context.Color.Name</MudTd>
+            <MudTd DataLabel="Size">@context.Size.Name</MudTd>
+            <MudTd DataLabel="Size">@context.Ean</MudTd>
+            <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarVariant(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditVariant(context.Id))">Edit</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @if (!ShowAll.HasValue || ShowAll == false)
+            {
+                <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+            }
+        </PagerContent>
+    </MudTable>
 </MainBody>
 
 @code {
-	[Parameter]
-	[SupplyParameterFromQuery]
-	public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
 
-	private MudTable<VariantModel> Table;
-	private ListRequest ListRequest = new();
+    private MudTable<VariantModel> Table;
+    private ListRequest ListRequest = new();
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		if (ProductId.HasValue)
-		{
-			ListRequest.SearchString = $"product_id: {ProductId.Value}";
-		}
-	}
+        ProcessQueryParameters();
+    }
 
-	private Task<TableData<VariantModel>> ReloadVariants(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    private void ProcessQueryParameters()
+    {
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+        if (ShowAll.HasValue)
+        {
+            ListRequest.ShowAll = ShowAll.Value;
+        }
+    }
 
-		IList<VariantModel> variants = VariantService.GetForListRequest(ListRequest);
+    private Task<TableData<VariantModel>> ReloadVariants(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<VariantModel>() { TotalItems = VariantService.CountForListRequest(ListRequest), Items = variants });
-	}
+        IList<VariantModel> variants = VariantService.GetForListRequest(ListRequest);
 
-	private void FilterVariants(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+        return Task.FromResult(new TableData<VariantModel>() { TotalItems = VariantService.CountForListRequest(ListRequest), Items = variants });
+    }
 
-		Table.ReloadServerData();
+    private void FilterVariants(string searchString)
+    {
+        ListRequest.SearchString = searchString;
 
-		StateHasChanged();
-	}
+        Table.ReloadServerData();
 
-	private async void AddVariant()
-	{
-		var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant" }).Result;
+        StateHasChanged();
+    }
 
-		ProcessVariantDialogResult(result);
-	}
+    private async void AddVariant()
+    {
+        var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant" }).Result;
 
-	private async void AddSimilarVariant(long id)
-	{
-		var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant", ["AddingSimilar"] = true, ["VariantId"] = id }).Result;
+        ProcessVariantDialogResult(result);
+    }
 
-		ProcessVariantDialogResult(result);
-	}
+    private async void AddSimilarVariant(long id)
+    {
+        var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant", ["AddingSimilar"] = true, ["VariantId"] = id }).Result;
 
-	private async void EditVariant(long id)
-	{
-		var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Edit Variant", ["IsEdit"] = true, ["VariantId"] = id }).Result;
+        ProcessVariantDialogResult(result);
+    }
 
-		ProcessVariantDialogResult(result);
-	}
+    private async void EditVariant(long id)
+    {
+        var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Edit Variant", ["IsEdit"] = true, ["VariantId"] = id }).Result;
 
-	private void ProcessVariantDialogResult(DialogResult result)
-	{
-		if (!result.Cancelled)
-		{
-			Table.ReloadServerData();
-		}
-	}
+        ProcessVariantDialogResult(result);
+    }
+
+    private void ProcessVariantDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
 }

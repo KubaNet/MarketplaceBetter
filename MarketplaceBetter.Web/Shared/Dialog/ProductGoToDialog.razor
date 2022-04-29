@@ -38,11 +38,11 @@
     {
         base.OnInitialized();
 
-        ProductColorsLink = $"product-colors?productId={Product.Id}";
-        VariantsLink = $"variants?productId={Product.Id}";
-        ParentsLink = $"parents?productId={Product.Id}";
-        ParentInstancesLink = $"parent-instances?productId={Product.Id}";
-        ChildsLink = $"childs?productId={Product.Id}";
-        ChildInstancesLink = $"child-instances?productId={Product.Id}";
+        ProductColorsLink = $"product-colors?productId={Product.Id}&showAll=true";
+        VariantsLink = $"variants?productId={Product.Id}&showAll=true";
+        ParentsLink = $"parents?productId={Product.Id}&showAll=true";
+        ParentInstancesLink = $"parent-instances?productId={Product.Id}&showAll=true";
+        ChildsLink = $"childs?productId={Product.Id}&showAll=true";
+        ChildInstancesLink = $"child-instances?productId={Product.Id}&showAll=true";
     }
 }

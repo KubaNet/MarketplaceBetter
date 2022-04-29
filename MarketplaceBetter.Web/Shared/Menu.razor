@@ -17,6 +17,17 @@
             <MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
         }
 
+        @if (IsCopyAndMediaModule())
+        {
+            <MudNavGroup Title="Copy & Media" Icon="@Icons.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/copywriting" Icon="@Icons.Filled.PhotoLibrary">Copy & Media</MudNavLink>
+        }
+
         @if (IsColorsAndSizesModule())
         {
             <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
@@ -45,17 +56,6 @@
         else
         {
             <MudNavLink Href="/parents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
-        }
-
-        @if (IsCopyAndMediaModule())
-        {
-            <MudNavGroup Title="Copy & Media" Icon="@Icons.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
-                <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
-            </MudNavGroup>
-        }
-        else
-        {
-            <MudNavLink Href="/copywriting" Icon="@Icons.Filled.PhotoLibrary">Copy & Media</MudNavLink>
         }
 
         @if (IsAmazonCampaignsModule())
@@ -113,6 +113,18 @@
         return false;
     }
 
+    private bool IsCopyAndMediaModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+        if (path == "copywriting")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     private bool IsColorsAndSizesModule()
     {
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
@@ -137,18 +149,6 @@
             || path == "parent-instances"
             || path == "childs"
             || path == "child-instances")
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool IsCopyAndMediaModule()
-    {
-        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
-
-        if (path == "copywriting")
         {
             return true;
         }

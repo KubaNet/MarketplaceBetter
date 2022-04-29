@@ -59,7 +59,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             var groupedVariants = variants.ToList().GroupBy(v => new { v.ProductId, v.ColorId, v.StatusId });
 
-            groupedVariants = groupedVariants.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            if (!request.ShowAll)
+            {
+                groupedVariants = groupedVariants.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            }
 
             return groupedVariants.Select(v => new ProductColorModel
             {

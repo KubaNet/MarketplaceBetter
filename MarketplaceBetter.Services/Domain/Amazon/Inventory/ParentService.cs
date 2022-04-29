@@ -160,7 +160,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<Parent> ApplyPaging(IQueryable<Parent> parents, ListRequest request)
         {
-            return parents.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return request.ShowAll ? parents : parents.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

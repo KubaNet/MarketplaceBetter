@@ -168,7 +168,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Variant> ApplyPaging(IQueryable<Variant> variants, ListRequest request)
         {
-            return variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return request.ShowAll ? variants : variants.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }
