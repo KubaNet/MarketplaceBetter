@@ -1,48 +1,41 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
 @using MarketplaceBetter.Domain.Model.Catalog.Products
-@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
-@using MarketplaceBetter.Services.Validation.Catalog.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.CopyAndMedia.Interfaces
 
-@inject IProductService ProductService
-@inject IProductValidator ProductValidator
+@inject ICopywritingService CopywritingService
+@inject ICopywritingValidator CopywritingValidator
 @inject IBrandService BrandService
-@inject ICollectionService CollectionService
-@inject IColorGroupService ColorGroupService
-@inject ISizeGroupService SizeGroupService
+@inject IProductService ProductService
+@inject IInstanceService InstanceService
+@inject ICopywritingElementService CopywritingElementService
 @inject ISnackbar Snackbar
 
-<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Copywriting" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudTextField Label="Name" @bind-Value="Product.Name" For="() => Product.Name" />
-        <MudTextField Label="Code" @bind-Value="Product.Code" For="() => Product.Code" />
-        <MudSelect Label="Brand" T="BrandModel" Value="Product.Brand" For="() => Product.Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Collection" T="CollectionModel" @bind-Value="Product.Collection" For="() => Product.Collection" Disabled="CollectionSelectDisabled">
-            @foreach (var collection in Collections)
+        <MudSelect Label="Product" T="ProductModel" @bind-Value="Copywriting.Product" For="() => Copywriting.Product" Disabled="ProductSelectDisabled">
+            @foreach (var product in Products)
             {
-                <MudSelectItem Value="collection">@collection.Name</MudSelectItem>
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Color group" T="ColorGroupModel" @bind-Value="Product.ColorGroup" For="() => Product.ColorGroup">
-            @foreach (var colorGroup in ColorGroups)
+        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Copywriting.Instance" For="() => Copywriting.Instance">
+            @foreach (var instance in Instances)
             {
-                <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Size group" T="SizeGroupModel" @bind-Value="Product.SizeGroup" For="() => Product.SizeGroup">
-            @foreach (var sizeGroup in SizeGroups)
-            {
-                <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudNumericField Label="Order" @bind-Value="Product.Order" For="() => Product.Order" Variant="Variant.Text" Min="1" />
     </FormDialog>
 </EditForm>
 
@@ -50,27 +43,24 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long ProductId { get; set; }
+    [Parameter] public long CopywritingId { get; set; }
 
-    CustomValidation CustomValidation = new();
-    ProductModel Product = new();
+    private CustomValidation CustomValidation = new();
+    private CopywritingModel Copywriting = new();
+    private BrandModel Brand;
 
-    IList<BrandModel> Brands;
-    IList<CollectionModel> Collections = new List<CollectionModel>();
-    IList<ColorGroupModel> ColorGroups;
-    IList<SizeGroupModel> SizeGroups;
+    private IList<BrandModel> Brands;
+    private IList<ProductModel> Products = new List<ProductModel>();
+    private IList<InstanceModel> Instances;
 
-    bool CollectionSelectDisabled = true;
+    private bool ProductSelectDisabled = true;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        ColorGroups = ColorGroupService.GetAll();
-        SizeGroups = SizeGroupService.GetAll();
-
-        Product.Order = ProductService.GetMaxOrder() + 1;
+        Instances = InstanceService.GetAllForAmazon();
 
         if (IsEdit)
         {
@@ -80,52 +70,49 @@
 
     private void SetInitialValues()
     {
-        Product = ProductService.Get(ProductId);
-        Product.Brand = Brands.Single(b => b.Id == Product.Brand.Id);
-        Product.ColorGroup = ColorGroups.Single(g => g.Id == Product.ColorGroup.Id);
-        Product.SizeGroup = SizeGroups.Single(g => g.Id == Product.SizeGroup.Id);
+        Copywriting = CopywritingService.Get(CopywritingId);
+        Brand = Brands.Single(b => b.Id == Copywriting.Product.Brand.Id);
+        Copywriting.Instance = Instances.Single(i => i.Id == Copywriting.Instance.Id);
 
-        ActivateCollection(Product.Brand.Id);
-
-        Product.Collection = Collections.Single(c => c.Id == Product.Collection.Id);
+        ActivateProduct(Brand.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)
     {
-        Product.Brand = brand;
+        Brand = brand;
 
-        ResetCollection();
-        ActivateCollection(brand.Id);
+        ResetProduct();
+        ActivateProduct(brand.Id);
     }
 
-    private void ResetCollection()
+    private void ResetProduct()
     {
-        Product.Collection = null;
-        CollectionSelectDisabled = true;
-        Collections = new List<CollectionModel>();
+        Copywriting.Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
     }
 
-    private void ActivateCollection(long brandId)
+    private void ActivateProduct(long brandId)
     {
-        CollectionSelectDisabled = false;
-        Collections = CollectionService.GetAllForBrand(brandId);
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId).OrderBy(p => p.Name).ToList();
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = ProductValidator.Validate(Product);
+        ValidationResult result = CopywritingValidator.Validate(Copywriting);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                ProductService.Update(Product);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product"));
+                CopywritingService.Update(Copywriting);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Copywriting"));
             }
             else
             {
-                ProductService.Add(Product);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product"));
+                CopywritingService.Add(Copywriting);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Copywriting"));
             }
 
             MudDialog.Close();

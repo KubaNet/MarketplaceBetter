@@ -13,3 +13,6 @@ GO
 
 CREATE UNIQUE INDEX UIX_CopywritingElement_SystemName  ON [dbo].[CopywritingElement] ([SystemName] ASC);
 GO
+
+CREATE UNIQUE INDEX UIX_CopywritingElement_Order  ON [dbo].[CopywritingElement] ([Order] ASC);
+GO

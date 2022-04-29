@@ -10,6 +10,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 {
     public interface ICopywritingService
     {
+        CopywritingModel Get(long id);
+
         int CountForListRequest(ListRequest request);
 
         IList<CopywritingModel> GetForListRequest(ListRequest request);

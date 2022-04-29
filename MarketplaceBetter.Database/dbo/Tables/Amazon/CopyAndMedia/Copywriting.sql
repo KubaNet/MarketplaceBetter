@@ -11,3 +11,6 @@
 	CONSTRAINT		[FK_Copywriting_Element]	FOREIGN KEY ([ElementId])	REFERENCES [dbo].[CopywritingElement] ([Id]),
 );
 GO
+
+CREATE UNIQUE INDEX UIX_Copywriting_Product_Instance_Element  ON [dbo].[Copywriting] ([ProductId] ASC, [InstanceId] ASC, [ElementId] ASC);
+GO

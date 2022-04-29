@@ -52,15 +52,15 @@
     [Parameter] public bool IsEdit { get; set; }
     [Parameter] public long ProductId { get; set; }
 
-    CustomValidation CustomValidation = new();
-    ProductModel Product = new();
+    private CustomValidation CustomValidation = new();
+    private ProductModel Product = new();
 
-    IList<BrandModel> Brands;
-    IList<CollectionModel> Collections = new List<CollectionModel>();
-    IList<ColorGroupModel> ColorGroups;
-    IList<SizeGroupModel> SizeGroups;
+    private IList<BrandModel> Brands;
+    private IList<CollectionModel> Collections = new List<CollectionModel>();
+    private IList<ColorGroupModel> ColorGroups;
+    private IList<SizeGroupModel> SizeGroups;
 
-    bool CollectionSelectDisabled = true;
+    private bool CollectionSelectDisabled = true;
 
     protected override void OnInitialized()
     {

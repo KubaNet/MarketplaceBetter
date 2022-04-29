@@ -31,6 +31,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             _mapper = mapper;
         }
 
+        public CopywritingModel Get(long id) => _mapper.Map<CopywritingModel>(_repository.Get(id));
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<Copywriting> copywritings = _repository.GetQuery();

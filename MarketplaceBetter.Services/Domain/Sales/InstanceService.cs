@@ -13,7 +13,6 @@ namespace MarketplaceBetter.Services.Domain.Sales
 {
     public class InstanceService : IInstanceService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Instance> _repository;
         private readonly IMapper _mapper;
 
@@ -21,7 +20,6 @@ namespace MarketplaceBetter.Services.Domain.Sales
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Instance>();
             _mapper = mapper;
         }
