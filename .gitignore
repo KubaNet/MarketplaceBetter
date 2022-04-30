@@ -262,5 +262,6 @@ __pycache__/
 
 # Don't ignore that (custom)
 !Packshot.Database.Local.publish.xml
+MarketplaceBetter.Web/appsettings.json
 MarketplaceBetter.Web/appsettings.Prod.json
 MarketplaceBetter.Web/appsettings.Test.json
