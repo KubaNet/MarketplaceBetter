@@ -70,7 +70,7 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAllForAmazon();
+        Instances = InstanceService.GetAll();
         Elements = CopywritingElementService.GetAll();
 
         if (IsEdit || AddingSimilar)

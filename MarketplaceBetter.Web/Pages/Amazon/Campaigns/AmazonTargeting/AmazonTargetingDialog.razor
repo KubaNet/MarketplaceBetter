@@ -64,7 +64,7 @@
     {
         base.OnInitialized();
 
-        Instances = InstanceService.GetAllForAmazon();
+        Instances = InstanceService.GetAll();
     }
 
     private void HandleInstanceChanged(InstanceModel instance)

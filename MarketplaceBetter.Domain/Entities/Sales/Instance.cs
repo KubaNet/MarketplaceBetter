@@ -13,11 +13,5 @@ namespace MarketplaceBetter.Domain.Entities.Sales
         public InstanceEnum SystemName { get; set; }
 
         public string ShortName { get; set; }
-
-        public int Order { get; set; }
-
-        public long SalesChannelId { get; set; }
-
-        public virtual SalesChannel SalesChannel { get; set; }
     }
 }

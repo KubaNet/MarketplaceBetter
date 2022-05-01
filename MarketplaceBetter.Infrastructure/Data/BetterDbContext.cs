@@ -26,7 +26,6 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         // Sales
         public DbSet<Instance> Instance { get; set; }
-        public DbSet<SalesChannel> SalesChannel { get; set; }
 
         // Catalog
         // => Products

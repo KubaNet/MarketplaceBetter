@@ -24,8 +24,6 @@ namespace MarketplaceBetter.Services.Domain.Sales
             _mapper = mapper;
         }
 
-        public IList<InstanceModel> GetAll() => _mapper.Map<IList<InstanceModel>>(_repository.GetQuery().OrderBy(i => i.Order));
-
-        public IList<InstanceModel> GetAllForAmazon() => _mapper.Map<IList<InstanceModel>>(_repository.GetQuery().Where(i => i.SalesChannel.SystemName == SalesChannelEnum.Amazon).OrderBy(i => i.Order));
+        public IList<InstanceModel> GetAll() => _mapper.Map<IList<InstanceModel>>(_repository.GetQuery().OrderBy(i => i.Id));
     }
 }

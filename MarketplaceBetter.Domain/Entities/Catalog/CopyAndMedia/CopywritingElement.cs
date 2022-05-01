@@ -11,7 +11,5 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
         public string Name { get; set; }
 
         public CopywritingElementEnum SystemName { get; set; }
-
-        public int Order { get; set; }
     }
 }

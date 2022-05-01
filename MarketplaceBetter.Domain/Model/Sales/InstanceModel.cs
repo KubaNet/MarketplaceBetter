@@ -16,9 +16,5 @@ namespace MarketplaceBetter.Domain.Model.Sales
         public InstanceEnum SystemName { get; set; }
 
         public string ShortName { get; set; }
-
-        public int Order { get; set; }
-
-        public SalesChannelModel SalesChannel { get; set; }
     }
 }

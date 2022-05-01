@@ -73,9 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Template.sql" />
-    <Build Include="dbo\Tables\Sales\SalesChannel.sql" />
     <Build Include="dbo\Tables\Sales\Instance.sql" />
-    <None Include="Scripts\Inserts\03_Instances.sql" />
+    <None Include="Scripts\Inserts\02_Instances.sql" />
     <Build Include="dbo\Tables\Base\Country.sql" />
     <None Include="Scripts\Inserts\01_Countries.sql" />
     <None Include="Scripts\Inserts\04_AmazonTargetingStatuses.sql" />
@@ -103,8 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
-    <None Include="Scripts\Inserts\02_SalesChannels.sql" />
-    <None Include="SchemaCompare\Production_SchemaCompare.scmp" />
+    <None Include="SchemaCompare\Prod_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Test_SchemaCompare.scmp" />
     <None Include="Scripts\Inserts\06_VariantStatuses.sql" />
   </ItemGroup>
