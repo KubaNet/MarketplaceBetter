@@ -99,6 +99,9 @@
     <None Include="Scripts\Inserts\07_CopywritingElements.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\Copywriting.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\CopywritingElement.sql" />
+    <Build Include="dbo\Tables\Catalog\CopyAndMedia\ProductPhotoType.sql" />
+    <Build Include="dbo\Tables\Catalog\CopyAndMedia\ProductPhoto.sql" />
+    <None Include="Scripts\Inserts\08_ProductPhotoTypes.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />

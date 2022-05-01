@@ -39,6 +39,11 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<ColorGroup> ColorGroup { get; set; }
         public DbSet<Size> Size { get; set; }
         public DbSet<SizeGroup> SizeGroup { get; set; }
+        // => CopyAndMedia
+        public DbSet<Copywriting> Copywriting { get; set; }
+        public DbSet<CopywritingElement> CopywritingElement { get; set; }
+        public DbSet<ProductPhoto> ProductPhoto { get; set; }
+        public DbSet<ProductPhotoType> ProductPhotoType { get; set; }
 
         // Amazon
         // => Inventory
@@ -53,9 +58,6 @@ namespace MarketplaceBetter.Infrastructure.Data
         // => Keywords
         public DbSet<Research> Research { get; set; }
         public DbSet<ResearchTarget> ResearchTarget { get; set; }
-        // => Copywritings
-        public DbSet<Copywriting> Copywriting { get; set; }
-        public DbSet<CopywritingElement> CopywritingElement { get; set; }
 
         //public override int SaveChanges()
         //{
