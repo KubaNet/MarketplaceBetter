@@ -8,15 +8,17 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 {
-    public class ProductPhotoModel
+    public class PhotoModel
     {
+        public long Id { get; set; }
+
         public VariantModel Variant { get; set; }
 
         public bool ForAllInstances { get; set; }
 
         public InstanceModel Instance { get; set; }
 
-        public ProductPhotoTypeModel Type { get; set; }
+        public PhotoTypeModel Type { get; set; }
 
         public string Url { get; set; }
     }

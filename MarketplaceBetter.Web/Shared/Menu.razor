@@ -21,6 +21,7 @@
         {
             <MudNavGroup Title="Copy & Media" Icon="@Icons.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
+                <MudNavLink Href="/photos">Photos</MudNavLink>
             </MudNavGroup>
         }
         else
@@ -117,7 +118,8 @@
     {
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-        if (path == "copywriting")
+        if (path == "copywriting"
+            || path = "photos")
         {
             return true;
         }

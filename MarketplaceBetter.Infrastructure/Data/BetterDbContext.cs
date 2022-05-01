@@ -42,8 +42,8 @@ namespace MarketplaceBetter.Infrastructure.Data
         // => CopyAndMedia
         public DbSet<Copywriting> Copywriting { get; set; }
         public DbSet<CopywritingElement> CopywritingElement { get; set; }
-        public DbSet<ProductPhoto> ProductPhoto { get; set; }
-        public DbSet<ProductPhotoType> ProductPhotoType { get; set; }
+        public DbSet<Photo> Photo { get; set; }
+        public DbSet<PhotoType> PhotoType { get; set; }
 
         // Amazon
         // => Inventory

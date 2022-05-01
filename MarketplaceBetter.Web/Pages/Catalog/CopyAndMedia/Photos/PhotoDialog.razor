@@ -1,0 +1,144 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces
+
+@inject IPhotoService PhotoService
+@inject IPhotoValidator PhotoValidator
+@inject IBrandService BrandService
+@inject IProductService ProductService
+@inject IInstanceService InstanceService
+@inject IPhotoTypeService PhotoTypeService
+@inject ISnackbar Snackbar
+
+<EditForm Model="Photo" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Product" T="ProductModel" @bind-Value="Photo.Product" For="() => Photo.Product" Disabled="ProductSelectDisabled">
+            @foreach (var product in Products)
+            {
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Photo.Instance" For="() => Photo.Instance">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Element" T="PhotoTypeModel" @bind-Value="Photo.Type" For="() => Photo.Type">
+            @foreach (var type in Types)
+            {
+                <MudSelectItem Value="type">@type.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Value" @bind-Value="Photo.Value" For="() => Photo.Value" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public bool AddingSimilar { get; set; }
+    [Parameter] public long PhotoId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private PhotoModel Photo = new();
+    private BrandModel Brand;
+
+    private IList<BrandModel> Brands;
+    private IList<ProductModel> Products = new List<ProductModel>();
+    private IList<InstanceModel> Instances;
+    private IList<PhotoTypeModel> Types;
+
+    private bool ProductSelectDisabled = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+        Instances = InstanceService.GetAll();
+        Types = PhotoTypeService.GetAll();
+
+        if (IsEdit || AddingSimilar)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        Photo = PhotoService.Get(PhotoId);
+        if (AddingSimilar)
+        {
+            Photo.Id = 0;
+            Photo.Url = null;
+        }
+
+        ActivateProduct(Photo.Product.Brand.Id);
+
+        Brand = Brands.Single(b => b.Id == Photo.Product.Brand.Id);
+        Photo.Product = Products.Single(p => p.Id == Photo.Product.Id);
+        Photo.Instance = Instances.Single(i => i.Id == Photo.Instance.Id);
+        Photo.Element = Types.Single(e => e.Id == Photo.Element.Id);
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Brand = brand;
+
+        ResetProduct();
+        ActivateProduct(brand.Id);
+    }
+
+    private void ResetProduct()
+    {
+        Photo.Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
+    }
+
+    private void ActivateProduct(long brandId)
+    {
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = PhotoValidator.Validate(Photo);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                PhotoService.Update(Photo);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Photo"));
+            }
+            else
+            {
+                PhotoService.Add(Photo);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Photo"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

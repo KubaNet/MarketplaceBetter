@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 {
-    public enum ProductPhotoTypeEnum
+    public enum PhotoTypeEnum
     {
         None = 0,
 

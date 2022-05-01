@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 {
-    public class ProductPhoto : Entity
+    public class Photo : Entity
     {
         public long VariantId { get; set; }
 
@@ -22,7 +22,7 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 
         public long TypeId { get; set; }
 
-        public virtual ProductPhotoType Type { get; set; }
+        public virtual PhotoType Type { get; set; }
 
         public string Url { get; set; }
     }

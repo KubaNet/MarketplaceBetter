@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Catalog.CopyAndMedia
 {
-    public class ProductPhotoTypeProfile : Profile
+    public class PhotoProfile : Profile
     {
-        public ProductPhotoTypeProfile()
+        public PhotoProfile()
         {
-            CreateMap<ProductPhotoType, ProductPhotoTypeModel>();
+            CreateMap<Photo, PhotoModel>();
         }
     }
 }

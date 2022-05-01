@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 {
-    public class ProductPhotoType : Entity
+    public class PhotoType : Entity
     {
         public string Name { get; set; }
 
-        public ProductPhotoTypeEnum SystemName { get; set; }
+        public PhotoTypeEnum SystemName { get; set; }
     }
 }
