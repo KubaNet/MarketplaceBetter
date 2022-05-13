@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 {
@@ -23,7 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Child> _repository;
         private readonly IRepository<Parent> _parentRepository;
-        private readonly IRepository<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> _VariantRepository;
+        private readonly IRepository<Variant> _variantRepository;
         private readonly IChildInstanceService _childInstanceService;
 
         public ChildService(
@@ -35,7 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Child>();
             _parentRepository = unitOfWork.GetRepository<Parent>();
-            _VariantRepository = unitOfWork.GetRepository<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant>();
+            _variantRepository = unitOfWork.GetRepository<Variant>();
             _childInstanceService = childInstanceService;
         }
 
@@ -81,7 +82,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         {
             Parent parent = _parentRepository.Get(parentId);
 
-            IList<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> Variants = _VariantRepository.GetQuery().Where(v => v.ProductId == parent.ProductId).ToList();
+            IList<Variant> Variants = _variantRepository.GetQuery().Where(v => v.ProductId == parent.ProductId).ToList();
             foreach (var Variant in Variants)
             {
                 if (_repository.Any(c => c.ParentId == parentId && c.VariantId == Variant.Id))
@@ -101,7 +102,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         public void AddForVariant(long VariantId)
         {
-            MarketplaceBetter.Domain.Entities.Catalog.Products.Variant Variant = _VariantRepository.Get(VariantId);
+            Variant Variant = _variantRepository.Get(VariantId);
             Parent parent = _parentRepository.SingleOrDefault(p => p.ProductId == Variant.ProductId);
 
             if (parent != null)
@@ -141,7 +142,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             if (parentId.HasValue && VariantId.HasValue)
             {
                 Parent parent = _parentRepository.Get(parentId.Value);
-                MarketplaceBetter.Domain.Entities.Catalog.Products.Variant Variant = _VariantRepository.Get(VariantId.Value);
+                Variant Variant = _variantRepository.Get(VariantId.Value);
 
                 if (Variant.Size.IsOneSize)
                 {

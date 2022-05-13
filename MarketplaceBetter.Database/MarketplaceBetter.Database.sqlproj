@@ -70,6 +70,7 @@
     <Folder Include="dbo\Tables\Catalog\ColorsAndSizes" />
     <Folder Include="dbo\Tables\Catalog\Products" />
     <Folder Include="dbo\Tables\Catalog\CopyAndMedia" />
+    <Folder Include="Scripts\CustomScripts" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Template.sql" />
@@ -102,12 +103,15 @@
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoType.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\Photo.sql" />
     <None Include="Scripts\Inserts\08_PhotoTypes.sql" />
+    <None Include="Scripts\CustomScripts\UpdatingChildsSKU.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Prod_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Test_SchemaCompare.scmp" />
     <None Include="Scripts\Inserts\06_VariantStatuses.sql" />
+    <None Include="Scripts\CustomScripts\InsertingColorTranslations.sql" />
+    <None Include="Scripts\CustomScripts\UpdatingVariantsSKU.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Products\Collection.sql" />

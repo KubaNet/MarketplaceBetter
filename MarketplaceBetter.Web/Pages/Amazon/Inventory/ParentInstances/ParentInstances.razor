@@ -1,8 +1,10 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 @using MarketplaceBetter.Services.Model
+@using System.IO
 
 @page "/parent-instances"
+@inject IJSRuntime JS
 @inject IParentInstanceService ParentInstanceService
 @inject IDialogService DialogService
 
@@ -31,7 +33,10 @@
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Parent.Product.Brand.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditParentInstance(context.Id))">Edit</MudButton></MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => ExportParentInstance(context.Id, context.Sku))">Export</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditParentInstance(context.Id))">Edit</MudButton>
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             @if (!ShowAll.HasValue || ShowAll == false)
@@ -106,5 +111,14 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private async Task ExportParentInstance(long id, string sku)
+    {
+        Stream fileStream = ParentInstanceService.Export(id);
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("DownloadFileFromStream", $"{sku}.csv", streamRef);
     }
 }

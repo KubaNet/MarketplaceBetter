@@ -126,10 +126,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
         public Stream ExportTargeting(ListRequest request)
         {
-            IQueryable<AmazonTargeting> targeting = _repository.GetQuery();
-
-            targeting = ApplyFilter(targeting, request);
-
             MemoryStream stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream);
 
@@ -142,14 +138,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             CsvWriter csv = new CsvWriter(writer, config);
 
-            foreach (var amzTargeting in targeting)
+            IQueryable<AmazonTargeting> targetings = _repository.GetQuery();
+            targetings = ApplyFilter(targetings, request);
+
+            foreach (var amzTargeting in targetings)
             {
                 csv.WriteField(amzTargeting.Value);
                 csv.NextRecord();
             }
 
             writer.Flush();
-
             stream.Seek(0, SeekOrigin.Begin);
 
             return stream;

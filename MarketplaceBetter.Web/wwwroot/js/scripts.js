@@ -1,15 +1,15 @@
-﻿async function downloadFileFromStream(fileName, contentStreamReference) {
+﻿async function DownloadFileFromStream(fileName, contentStreamReference) {
     const arrayBuffer = await contentStreamReference.arrayBuffer();
     const blob = new Blob([arrayBuffer]);
 
     const url = URL.createObjectURL(blob);
 
-    triggerFileDownload(fileName, url);
+    TriggerFileDownload(fileName, url);
 
     URL.revokeObjectURL(url);
 }
 
-function triggerFileDownload(fileName, url) {
+function TriggerFileDownload(fileName, url) {
     const anchorElement = document.createElement('a');
     anchorElement.href = url;
 

@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
+using CsvHelper;
+using CsvHelper.Configuration;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Infrastructure.Data;
@@ -12,6 +16,8 @@ using MarketplaceBetter.Services.Model;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +31,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<ParentInstance> _repository;
         private readonly IRepository<Parent> _parentRepository;
         private readonly IRepository<Instance> _instanceRepository;
+        private readonly IRepository<ChildInstance> _childInstanceRepository;
+        private readonly IRepository<ColorTranslation> _colorTranslationRepository;
 
         public ParentInstanceService(
             IMapper mapper,
@@ -35,6 +43,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _repository = unitOfWork.GetRepository<ParentInstance>();
             _parentRepository = unitOfWork.GetRepository<Parent>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
+            _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
+            _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
         }
 
         public ParentInstanceModel Get(long id) => _mapper.Map<ParentInstanceModel>(_repository.Get(id));
@@ -124,6 +134,49 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             }
 
             return null;
+        }
+
+        public Stream Export(long id)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+                Encoding = Encoding.UTF8,
+                HasHeaderRecord = false,
+            };
+
+            CsvWriter csv = new CsvWriter(writer, config);
+
+            ParentInstance parentInstance = _repository.Get(id);
+            Instance instance = parentInstance.Instance;
+            IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => 
+                c.Child.ParentId == parentInstance.ParentId && c.InstanceId == instance.Id 
+                && c.Child.Variant.Status.SystemName != VariantStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
+
+            csv.WriteField("SKU");
+            csv.WriteField("Color Name");
+            csv.WriteField("Color Mapping");
+            csv.WriteField("Size Name");
+            csv.NextRecord();
+
+            foreach (var childInstance in childInstances)
+            {
+                csv.WriteField(childInstance.Sku);
+                ColorTranslation colorTranslation = _colorTranslationRepository.Single(t => 
+                    t.ColorId == childInstance.Child.Variant.Color.Id && t.InstanceId == instance.Id);
+                csv.WriteField(colorTranslation.Translation);
+                csv.WriteField(colorTranslation.Mapping);
+                csv.WriteField(childInstance.Child.Variant.Size.Name);
+                csv.NextRecord();
+            }
+
+            writer.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
         }
 
         private void TransferValues(ParentInstance toParentInstance, ParentInstanceModel fromParentInstance)

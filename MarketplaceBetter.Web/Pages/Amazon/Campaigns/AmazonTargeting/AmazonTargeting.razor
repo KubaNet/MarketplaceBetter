@@ -131,6 +131,6 @@
 
         using var streamRef = new DotNetStreamReference(stream: fileStream);
 
-        await JS.InvokeVoidAsync("downloadFileFromStream", "Targeting.csv", streamRef);
+        await JS.InvokeVoidAsync("DownloadFileFromStream", "Targeting.csv", streamRef);
     }
 }

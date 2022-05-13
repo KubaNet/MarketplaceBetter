@@ -2,6 +2,7 @@
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,5 +28,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         void Update(ParentInstanceModel parent);
 
         string GetSkuFor(long? parentId, long? instanceId);
+
+        Stream Export(long id);
     }
 }
