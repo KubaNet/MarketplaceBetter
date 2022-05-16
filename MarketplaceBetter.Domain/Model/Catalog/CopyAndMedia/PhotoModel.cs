@@ -23,6 +23,8 @@ namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
         [Required]
         public PhotoTypeModel Type { get; set; }
 
+        public string CloudId { get; set; }
+
         public string Url { get; set; }
     }
 }

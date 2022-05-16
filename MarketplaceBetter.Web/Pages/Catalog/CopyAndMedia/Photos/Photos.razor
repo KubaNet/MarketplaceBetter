@@ -1,10 +1,12 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 @using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Model
+@using MarketplaceBetter.Specialized.Interfaces
 
 @page "/photos"
 @inject IPhotoService PhotoService
 @inject IDialogService DialogService
+@inject IPhotoCloudService PhotoCloudService
 
 <MudText Typo="Typo.h3" Class="mt-2">Photos</MudText>
 
@@ -20,7 +22,7 @@
             <MudTh><MudTableSortLabel SortLabel="variant" T="PhotoModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="type" T="PhotoModel">Type</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="url" T="PhotoModel">Url</MudTableSortLabel></MudTh>
+            <MudTh>Photo</MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -28,10 +30,10 @@
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
             <MudTd DataLabel="Type">@context.Type.Name</MudTd>
-            <MudTd DataLabel="Url">@context.Url</MudTd>
+            <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetForLists(context.CloudId)"></MudImage></MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditPhoto(context.Id))">Edit</MudButton>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditPhoto(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>

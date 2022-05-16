@@ -6,8 +6,10 @@
         @ChildContent
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Cancel" Disabled="FormButtonsDisabled">Cancel</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="FormButtonsDisabled">
+            Save
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -16,6 +18,8 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public string Title { get; set; }
+
+    [CascadingParameter] bool FormButtonsDisabled { get; set; }
 
     void Cancel() => MudDialog.Cancel();
 }

@@ -11,5 +11,7 @@ namespace MarketplaceBetter.Specialized.Interfaces
     public interface IPhotoCloudService
     {
         PhotoUploadResult Upload(MemoryStream photoStream, string fileName);
+
+        string GetForLists(string cloudId);
     }
 }

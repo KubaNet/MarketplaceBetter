@@ -78,6 +78,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             toPhoto.VariantId = fromPhoto.Variant.Id;
             toPhoto.InstanceId = fromPhoto.Instance?.Id;
             toPhoto.TypeId = fromPhoto.Type.Id;
+            toPhoto.CloudId = fromPhoto.CloudId;
             toPhoto.Url = fromPhoto.Url;
         }
 
@@ -132,8 +133,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     "product" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Variant.Product.Name) : photos.OrderByDescending(c => c.Variant.Product.Name),
                     "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Variant.Sku) : photos.OrderByDescending(c => c.Variant.Sku),
                     "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Instance.Name) : photos.OrderByDescending(c => c.Instance.Name),
-                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Type.Name) : photos.OrderByDescending(c => c.Type.Name),
-                    "url" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Url) : photos.OrderByDescending(c => c.Url),
+                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Type.SystemName) : photos.OrderByDescending(c => c.Type.SystemName),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

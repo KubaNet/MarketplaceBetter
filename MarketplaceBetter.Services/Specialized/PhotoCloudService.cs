@@ -54,10 +54,16 @@ namespace MarketplaceBetter.Specialized
             else
             {
                 uploadResult.WasSuccessful = true;
+                uploadResult.Id = result.PublicId;
                 uploadResult.Url = result.Url.ToString();
             }
 
             return uploadResult;
+        }
+
+        public string GetForLists(string cloudId)
+        {
+            return _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(100)).BuildUrl(cloudId);
         }
     }
 }
