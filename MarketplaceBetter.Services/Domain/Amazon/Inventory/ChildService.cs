@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Constants;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
@@ -201,6 +202,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 }
                 else
                 {
+                    if (searchString.Contains("TooLong", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
                     childs = childs.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Sku.Contains(searchString)
                         || c.Asin.Contains(searchString)
@@ -208,6 +214,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || c.Parent.Sku.Contains(searchString)
                         || c.Parent.Product.Brand.Name.Contains(searchString));
                 }
+            }
+
+            if (searchStrings.Any(s => s.Contains("TooLong", StringComparison.OrdinalIgnoreCase)))
+            {
+                childs = childs.Where(c => c.Sku.Length > Standard.AmazonSkuMaxLength - 4);
             }
 
             return childs;

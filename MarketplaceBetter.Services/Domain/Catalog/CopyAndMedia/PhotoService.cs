@@ -76,7 +76,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private void TransferValues(Photo toPhoto, PhotoModel fromPhoto)
         {
             toPhoto.VariantId = fromPhoto.Variant.Id;
-            toPhoto.InstanceId = fromPhoto.Instance.Id;
+            toPhoto.InstanceId = fromPhoto.Instance?.Id;
             toPhoto.TypeId = fromPhoto.Type.Id;
             toPhoto.Url = fromPhoto.Url;
         }

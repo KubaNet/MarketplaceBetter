@@ -3,6 +3,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
@@ -21,6 +22,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 {
@@ -33,6 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<ChildInstance> _childInstanceRepository;
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
+        private readonly IRepository<Copywriting> _copywritingRepository;
 
         public ParentInstanceService(
             IMapper mapper,
@@ -45,6 +49,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
+            _copywritingRepository = unitOfWork.GetRepository<Copywriting>();
         }
 
         public ParentInstanceModel Get(long id) => _mapper.Map<ParentInstanceModel>(_repository.Get(id));
@@ -156,19 +161,26 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 c.Child.ParentId == parentInstance.ParentId && c.InstanceId == instance.Id 
                 && c.Child.Variant.Status.SystemName != VariantStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
 
-            csv.WriteField("SKU");
+            csv.WriteField("Seller SKU");
+            csv.WriteField("Brand Name");
+            csv.WriteField("Product Name");
+            csv.WriteField("Product ID");
             csv.WriteField("Color Name");
-            csv.WriteField("Color Mapping");
+            csv.WriteField("Color Map");
             csv.WriteField("Size Name");
             csv.NextRecord();
 
             foreach (var childInstance in childInstances)
             {
-                csv.WriteField(childInstance.Sku);
-                ColorTranslation colorTranslation = _colorTranslationRepository.Single(t => 
+                ColorTranslation colorTranslation = _colorTranslationRepository.SingleOrDefault(t =>
                     t.ColorId == childInstance.Child.Variant.Color.Id && t.InstanceId == instance.Id);
-                csv.WriteField(colorTranslation.Translation);
-                csv.WriteField(colorTranslation.Mapping);
+
+                csv.WriteField(childInstance.Sku);
+                csv.WriteField(childInstance.Child.Parent.Product.Brand.Name);
+                csv.WriteField(GetProductName(childInstance, colorTranslation));
+                csv.WriteField(childInstance.Child.Asin);
+                csv.WriteField(colorTranslation?.Translation);
+                csv.WriteField(colorTranslation?.Mapping);
                 csv.WriteField(childInstance.Child.Variant.Size.Name);
                 csv.NextRecord();
             }
@@ -177,6 +189,23 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             stream.Seek(0, SeekOrigin.Begin);
 
             return stream;
+        }
+
+        private string GetProductName(ChildInstance childInstance, ColorTranslation colorTranslation)
+        {
+            Variant variant = childInstance.Child.Variant;
+            Size size = variant.Size;
+            Copywriting title = _copywritingRepository.SingleOrDefault(c => c.ProductId == variant.ProductId 
+                && c.Element.SystemName == CopywritingElementEnum.Title);
+
+            if (size.IsOneSize)
+            {
+                return $"{title} ({colorTranslation?.Translation})";
+            }
+            else
+            {
+                return $"{title} ({size.Code}, {colorTranslation?.Translation})";
+            }
         }
 
         private void TransferValues(ParentInstance toParentInstance, ParentInstanceModel fromParentInstance)

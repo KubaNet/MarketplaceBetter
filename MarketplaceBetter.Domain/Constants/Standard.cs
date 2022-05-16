@@ -15,5 +15,7 @@ namespace MarketplaceBetter.Domain.Constants
         public const int AmazonSkuMaxLength = 40;
 
         public const int AmazonAsinLength = 10;
+
+        public const long UploadPhotoSizeLimit = 20971520; //20MB
     }
 }

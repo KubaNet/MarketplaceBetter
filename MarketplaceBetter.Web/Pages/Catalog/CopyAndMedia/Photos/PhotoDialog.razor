@@ -1,10 +1,14 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
+﻿@using MarketplaceBetter.Domain.Constants
+@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Domain.Model.Sales
 @using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Model
 @using MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces
+@using System.IO
+@using MarketplaceBetter.Specialized.Interfaces
 
 @inject IPhotoService PhotoService
 @inject IPhotoValidator PhotoValidator
@@ -13,6 +17,7 @@
 @inject IVariantService VariantService
 @inject IInstanceService InstanceService
 @inject IPhotoTypeService PhotoTypeService
+@inject IPhotoCloudService PhotoCloudService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Photo" OnValidSubmit="@HandleValidSubmit">
@@ -50,6 +55,18 @@
                 <MudSelectItem Value="type">@type.Name</MudSelectItem>
             }
         </MudSelect>
+        <InputFile id="FileInput" OnChange="SetPhoto" hidden />
+        <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Filled.CloudUpload" for="FileInput" Class="mt-4">
+            Upload Photo
+        </MudButton>
+        @if (PhotoFile != null)
+        {
+            <MudList>
+                <MudListItem Icon="@Icons.Filled.AttachFile">
+                    @PhotoFile.Name <code>@PhotoFile.Size bytes</code>
+                </MudListItem>
+            </MudList>
+        }
     </FormDialog>
 </EditForm>
 
@@ -73,6 +90,7 @@
 
     private bool ProductSelectDisabled = true;
     private bool VariantSelectDisabled = true;
+    private IBrowserFile PhotoFile;
 
     protected override void OnInitialized()
     {
@@ -149,28 +167,49 @@
         Variants = VariantService.GetAllForProduct(productId);
     }
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
-        ValidationResult result = PhotoValidator.Validate(Photo);
+        ValidationResult validationResult = PhotoValidator.Validate(Photo);
 
-        if (result.IsValid)
+        if (validationResult.IsValid)
         {
-            if (IsEdit)
+            MemoryStream memoryStream = new MemoryStream();
+            await PhotoFile.OpenReadStream(Standard.UploadPhotoSizeLimit).CopyToAsync(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            string fileName = $"{Photo.Variant.Sku}_{Photo.Type.SystemName}";
+            PhotoUploadResult uploadResult = PhotoCloudService.Upload(memoryStream, fileName);
+
+            if (uploadResult.WasSuccessful)
             {
-                PhotoService.Update(Photo);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Photo"));
+                Photo.Url = uploadResult.Url;
+
+                if (IsEdit)
+                {
+                    PhotoService.Update(Photo);
+                    Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Photo"));
+                }
+                else
+                {
+                    PhotoService.Add(Photo);
+                    Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Photo"));
+                }
+
+                MudDialog.Close();
             }
             else
             {
-                PhotoService.Add(Photo);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Photo"));
+                CustomValidation.DisplayError("There was an error uploading a photo to cloud: " + uploadResult.Error);
             }
-
-            MudDialog.Close();
         }
         else
         {
-            CustomValidation.DisplayErrors(result.Errors);
+            CustomValidation.DisplayErrors(validationResult.Errors);
         }
+    }
+
+    private void SetPhoto(InputFileChangeEventArgs e)
+    {
+        PhotoFile = e.File;
     }
 }

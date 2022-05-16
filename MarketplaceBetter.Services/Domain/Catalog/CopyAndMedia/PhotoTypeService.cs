@@ -24,6 +24,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _mapper = mapper;
         }
 
-        public IList<PhotoTypeModel> GetAll() => _mapper.Map<IList<PhotoTypeModel>>(_repository.GetQuery().OrderBy(e => e.Id));
+        public IList<PhotoTypeModel> GetAll() => _mapper.Map<IList<PhotoTypeModel>>(_repository.GetQuery().OrderBy(e => e.SystemName));
     }
 }

@@ -26,7 +26,7 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
-            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
             <MudTd DataLabel="Type">@context.Type.Name</MudTd>
             <MudTd DataLabel="Url">@context.Url</MudTd>
             <MudTd>

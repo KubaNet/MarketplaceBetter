@@ -33,6 +33,13 @@ namespace MarketplaceBetter.Infrastructure.Extensions
             CurrentEditContext.OnFieldChanged += (s, e) => _messageStore.Clear(e.FieldIdentifier);
         }
 
+        public void DisplayError(string error)
+        {
+            _messageStore.Add(CurrentEditContext.Field(string.Empty), error);
+
+            CurrentEditContext.NotifyValidationStateChanged();
+        }
+
         public void DisplayErrors(IList<ValidationError> errors)
         {
             foreach (var error in errors)

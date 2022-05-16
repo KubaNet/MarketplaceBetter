@@ -24,10 +24,21 @@ namespace MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia
         {
             ValidationResult result = new();
 
-            if (_repository.Any(c => c.Id != photo.Id && c.VariantId == photo.Variant.Id && 
-                c.InstanceId == photo.Instance.Id && c.TypeId == photo.Type.Id))
+            if (photo.Instance != null)
             {
-                result.AddError("This element already exists for selected Variant, Instance and Type.");
+                if (_repository.Any(c => c.Id != photo.Id && c.VariantId == photo.Variant.Id &&
+                    c.InstanceId == photo.Instance.Id && c.TypeId == photo.Type.Id))
+                {
+                    result.AddError("A photo already exists for selected Variant, Instance and Type.");
+                }
+            }
+            else
+            {
+                if (_repository.Any(c => c.Id != photo.Id && c.VariantId == photo.Variant.Id &&
+                    c.InstanceId == null && c.TypeId == photo.Type.Id))
+                {
+                    result.AddError("A photo already exists for selected Variant and Type.");
+                }
             }
 
             return result;
