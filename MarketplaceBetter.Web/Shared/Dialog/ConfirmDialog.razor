@@ -1,0 +1,20 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Please confirm</MudText>
+    </TitleContent>
+    <DialogContent>
+        @Question
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Yes</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Question { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

@@ -33,7 +33,7 @@
             <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetForLists(context.CloudId)"></MudImage></MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>
-                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditPhoto(context.Id))">Edit</MudButton>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.CloudId))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -83,6 +83,16 @@
         var result = await DialogService.Show<PhotoDialog>(null, new DialogParameters { ["Title"] = "Edit Photo", ["IsEdit"] = true, ["PhotoId"] = id }).Result;
 
         ProcessPhotoDialogResult(result);
+    }
+
+    private async void DeletePhoto(long id, string photoId)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Do you want to delete photo \"{photoId}\"?" }).Result;
+
+        if (!result.Cancelled)
+        {
+            
+        }
     }
 
     private void ProcessPhotoDialogResult(DialogResult result)

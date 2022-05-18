@@ -55,7 +55,7 @@ namespace MarketplaceBetter.Specialized
             {
                 uploadResult.WasSuccessful = true;
                 uploadResult.Id = result.PublicId;
-                uploadResult.Url = result.Url.ToString();
+                uploadResult.Url = result.SecureUrl.ToString();
             }
 
             return uploadResult;
