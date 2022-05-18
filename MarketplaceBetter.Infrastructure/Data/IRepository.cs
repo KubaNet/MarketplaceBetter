@@ -14,6 +14,8 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         void Update(TEntity entity);
 
+        void Delete(TEntity entity);
+
         TEntity Get(long id);
 
         IList<TEntity> GetAll();

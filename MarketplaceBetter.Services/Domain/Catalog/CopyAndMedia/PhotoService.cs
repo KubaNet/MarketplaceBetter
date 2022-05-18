@@ -7,6 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -21,14 +22,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Photo> _repository;
         private readonly IMapper _mapper;
+        private readonly IPhotoCloudService _photoCloudService;
 
         public PhotoService(
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IPhotoCloudService photoCloudService)
         {
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
             _mapper = mapper;
+            _photoCloudService = photoCloudService;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -73,10 +77,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
+        public void Delete(long id)
+        {
+            Photo photoToDelete = _repository.Get(id);
+
+            _photoCloudService.Delete(photoToDelete.CloudId);
+
+            _repository.Delete(photoToDelete);
+            _unitOfWork.Save();
+        }
+
         private void TransferValues(Photo toPhoto, PhotoModel fromPhoto)
         {
             toPhoto.VariantId = fromPhoto.Variant.Id;
             toPhoto.InstanceId = fromPhoto.Instance?.Id;
+            toPhoto.ForAllInstances = fromPhoto.Instance == null ? true : false;
             toPhoto.TypeId = fromPhoto.Type.Id;
             toPhoto.CloudId = fromPhoto.CloudId;
             toPhoto.Url = fromPhoto.Url;

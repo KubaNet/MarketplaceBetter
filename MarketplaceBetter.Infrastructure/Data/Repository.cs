@@ -31,6 +31,12 @@ namespace MarketplaceBetter.Infrastructure.Data
             entry.State = EntityState.Modified;
         }
 
+        public void Delete(TEntity entity)
+        {
+            var entry = _dbContext.Entry(entity);
+            entry.State = EntityState.Deleted;
+        }
+
         public TEntity Get(long id)
         {
             Entity entity = _dbSet.Find(id);

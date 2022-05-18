@@ -19,5 +19,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
         void Add(PhotoModel photo);
 
         void Update(PhotoModel photo);
+
+        void Delete(long id);
     }
 }

@@ -17,5 +17,10 @@ namespace MarketplaceBetter.Infrastructure.Helpers
         {
             return string.Format("{0} was successfully updated.", entityName);
         }
+
+        public static string SuccessfullyDeleted(string entityName)
+        {
+            return string.Format("{0} was successfully deleted.", entityName);
+        }
     }
 }

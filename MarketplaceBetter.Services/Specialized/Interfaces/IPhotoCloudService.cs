@@ -13,5 +13,7 @@ namespace MarketplaceBetter.Specialized.Interfaces
         PhotoUploadResult Upload(MemoryStream photoStream, string fileName);
 
         string GetForLists(string cloudId);
+
+        void Delete(string cloudId);
     }
 }

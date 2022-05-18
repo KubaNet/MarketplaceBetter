@@ -7,6 +7,7 @@
 @inject IPhotoService PhotoService
 @inject IDialogService DialogService
 @inject IPhotoCloudService PhotoCloudService
+@inject ISnackbar Snackbar
 
 <MudText Typo="Typo.h3" Class="mt-2">Photos</MudText>
 
@@ -87,11 +88,15 @@
 
     private async void DeletePhoto(long id, string photoId)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Do you want to delete photo \"{photoId}\"?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete photo \"{photoId}\"?" }).Result;
 
         if (!result.Cancelled)
         {
-            
+            PhotoService.Delete(id);
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Photo"));
         }
     }
 
