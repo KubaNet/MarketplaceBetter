@@ -33,6 +33,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         public CopywritingModel Get(long id) => _mapper.Map<CopywritingModel>(_repository.Get(id));
 
+        public CopywritingModel GetForProduct(long productId, long instanceId, CopywritingElementEnum element)
+        {
+            Copywriting copywriting = _repository.SingleOrDefault(c => c.ProductId == productId & c.InstanceId == instanceId
+                & c.Element.SystemName == element);
+
+            return _mapper.Map<CopywritingModel>(copywriting);
+        }
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<Copywriting> copywritings = _repository.GetQuery();

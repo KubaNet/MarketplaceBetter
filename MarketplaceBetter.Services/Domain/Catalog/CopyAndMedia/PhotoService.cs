@@ -37,6 +37,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
 
+        public PhotoModel GetForVariant(long variantId, PhotoTypeEnum type)
+        {
+            Photo photo = _repository.SingleOrDefault(p => p.VariantId == variantId & p.Type.SystemName == type);
+
+            return _mapper.Map<PhotoModel>(photo);
+        }
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<Photo> photos = _repository.GetQuery();

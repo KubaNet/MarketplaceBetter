@@ -7,11 +7,13 @@ using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Infrastructure.Helpers;
 using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
+using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MudBlazor;
@@ -31,25 +33,29 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPhotoService _photoService;
+        private readonly ICopywritingService _copywritingService;
         private readonly IRepository<ParentInstance> _repository;
         private readonly IRepository<Parent> _parentRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<ChildInstance> _childInstanceRepository;
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
-        private readonly IRepository<Copywriting> _copywritingRepository;
 
         public ParentInstanceService(
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IPhotoService photoService,
+            ICopywritingService copywritingService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _photoService = photoService;
+            _copywritingService = copywritingService;
             _repository = unitOfWork.GetRepository<ParentInstance>();
             _parentRepository = unitOfWork.GetRepository<Parent>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
-            _copywritingRepository = unitOfWork.GetRepository<Copywriting>();
         }
 
         public ParentInstanceModel Get(long id) => _mapper.Map<ParentInstanceModel>(_repository.Get(id));
@@ -168,6 +174,24 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             csv.WriteField("Color Name");
             csv.WriteField("Color Map");
             csv.WriteField("Size Name");
+            // copywriting
+            csv.WriteField("Description");
+            csv.WriteField("Bullet Point 1");
+            csv.WriteField("Bullet Point 2");
+            csv.WriteField("Bullet Point 3");
+            csv.WriteField("Bullet Point 4");
+            csv.WriteField("Bullet Point 5");
+            // images
+            csv.WriteField("Main Image");
+            csv.WriteField("Other Image 1");
+            csv.WriteField("Other Image 2");
+            csv.WriteField("Other Image 3");
+            csv.WriteField("Other Image 4");
+            csv.WriteField("Other Image 5");
+            csv.WriteField("Other Image 6");
+            csv.WriteField("Other Image 7");
+            csv.WriteField("Other Image 8");
+            csv.WriteField("Swatch Image");
             csv.NextRecord();
 
             foreach (var childInstance in childInstances)
@@ -182,6 +206,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 csv.WriteField(colorTranslation?.Translation);
                 csv.WriteField(colorTranslation?.Mapping);
                 csv.WriteField(childInstance.Child.Variant.Size.Name);
+                WriteCopywriting(csv, childInstance);
+                WritePhotos(csv, childInstance);
                 csv.NextRecord();
             }
 
@@ -191,20 +217,59 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             return stream;
         }
 
+        private void WriteCopywriting(CsvWriter csv, ChildInstance childInstance)
+        {
+            CopywritingModel description = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.Description);
+            csv.WriteField(description?.Value);
+            CopywritingModel bulletPoint1 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint1);
+            csv.WriteField(bulletPoint1?.Value);
+            CopywritingModel bulletPoint2 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint2);
+            csv.WriteField(bulletPoint2?.Value);
+            CopywritingModel bulletPoint3 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint3);
+            csv.WriteField(bulletPoint3?.Value);
+            CopywritingModel bulletPoint4 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint4);
+            csv.WriteField(bulletPoint4?.Value);
+            CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint5);
+            csv.WriteField(bulletPoint5?.Value);
+        }
+
+        private void WritePhotos(CsvWriter csv, ChildInstance childInstance)
+        {
+            PhotoModel mainImage = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.MainImage);
+            csv.WriteField(mainImage?.Url);
+            PhotoModel otherImage1 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage1);
+            csv.WriteField(otherImage1?.Url);
+            PhotoModel otherImage2 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage2);
+            csv.WriteField(otherImage2?.Url);
+            PhotoModel otherImage3 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage3);
+            csv.WriteField(otherImage3?.Url);
+            PhotoModel otherImage4 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage4);
+            csv.WriteField(otherImage4?.Url);
+            PhotoModel otherImage5 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage5);
+            csv.WriteField(otherImage5?.Url);
+            PhotoModel otherImage6 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage6);
+            csv.WriteField(otherImage6?.Url);
+            PhotoModel otherImage7 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage7);
+            csv.WriteField(otherImage7?.Url);
+            PhotoModel otherImage8 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage8);
+            csv.WriteField(otherImage8?.Url);
+            PhotoModel swatchImage = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.SwatchImage);
+            csv.WriteField(swatchImage?.Url);
+        }
+
         private string GetProductName(ChildInstance childInstance, ColorTranslation colorTranslation)
         {
             Variant variant = childInstance.Child.Variant;
             Size size = variant.Size;
-            Copywriting title = _copywritingRepository.SingleOrDefault(c => c.ProductId == variant.ProductId 
-                && c.Element.SystemName == CopywritingElementEnum.Title);
+            CopywritingModel title = _copywritingService.GetForProduct(variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.Title);
 
             if (size.IsOneSize)
             {
-                return $"{title} ({colorTranslation?.Translation})";
+                return $"{title.Value} ({colorTranslation?.Translation})";
             }
             else
             {
-                return $"{title} ({size.Code}, {colorTranslation?.Translation})";
+                return $"{title.Value} ({size.Code}, {colorTranslation?.Translation})";
             }
         }
 
