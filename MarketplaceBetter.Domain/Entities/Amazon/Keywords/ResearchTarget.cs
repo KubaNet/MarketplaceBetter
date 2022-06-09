@@ -13,5 +13,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Keywords
         public long ResearchId { get; set; }
 
         public virtual Research Research { get; set; }
+
+        public int? Helium10Value { get; set; }
+
+        public int? AmazonSearchTermsValue { get; set; }
     }
 }

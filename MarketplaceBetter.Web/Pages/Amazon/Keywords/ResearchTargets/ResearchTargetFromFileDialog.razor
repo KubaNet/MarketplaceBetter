@@ -3,18 +3,26 @@
 @using MarketplaceBetter.Services.Validation.Amazon.Keywords.Interfaces
 @using System.IO
 
-@inject IResearchTargetOperationsService ResearchTargetOperationsService
 @inject IResearchService ResearchService
+@inject IResearchTargetService ResearchTargetService
+@inject IResearchTargetSourceService ResearchTargetSourceService
 @inject ISnackbar Snackbar
 
 <EditForm Model="AddTargetsModel" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title="Add Research Targets from file">
         <DataAnnotationsValidator />
+        <ValidationSummary />
         <MudSelect Label="Research" T="ResearchModel" @bind-Value="AddTargetsModel.Research" For="() => AddTargetsModel.Research">
             @foreach (var research in Researches)
             {
                 <MudSelectItem Value="research">@($"{research.Name} ({research.Instance.ShortName})")</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Source" T="ResearchTargetSourceModel" @bind-Value="AddTargetsModel.Source" For="() => AddTargetsModel.Source">
+            @foreach (var source in Sources)
+            {
+                <MudSelectItem Value="source">@source.Name</MudSelectItem>
             }
         </MudSelect>
         <InputFile id="FileInput" OnChange="UploadFile" hidden />
@@ -37,7 +45,8 @@
 
     private CustomValidation CustomValidation = new();
     private IList<ResearchModel> Researches = new List<ResearchModel>();
-    private AddAdvertisingReportResearchTargetsModel AddTargetsModel = new ();
+    private IList<ResearchTargetSourceModel> Sources = new List<ResearchTargetSourceModel>();
+    private AddResearchTargetsModel AddTargetsModel = new();
     private IBrowserFile File;
 
     protected override void OnInitialized()
@@ -45,6 +54,7 @@
         base.OnInitialized();
 
         Researches = ResearchService.GetAll();
+        Sources = ResearchTargetSourceService.GetAll();
     }
 
     private void UploadFile(InputFileChangeEventArgs e)
@@ -54,12 +64,27 @@
 
     private async void HandleValidSubmit()
     {
-        MemoryStream memoryStream = new MemoryStream();
-        await File.OpenReadStream(maxAllowedSize:100000000).CopyToAsync(memoryStream);
-        memoryStream.Seek(0, SeekOrigin.Begin);
+        ValidationResult validationResult = new();
 
-        AddAdvertisingReportResearchTargetsModel model = ResearchTargetOperationsService.CreateTargetsFromAdvertisingReport(AddTargetsModel.Research, memoryStream);
+        if (File == null)
+        {
+            validationResult = new ValidationResult();
+            validationResult.AddError("Please upload a file");
+        }
 
-        MudDialog.Close(model);
+        if (validationResult.IsValid)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            await File.OpenReadStream(maxAllowedSize: 100000000).CopyToAsync(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            ResearchTargetService.AddFromFile(memoryStream, AddTargetsModel);
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(validationResult.Errors);
+        }
     }
 }

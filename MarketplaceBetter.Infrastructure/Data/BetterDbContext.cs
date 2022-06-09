@@ -58,6 +58,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         // => Keywords
         public DbSet<Research> Research { get; set; }
         public DbSet<ResearchTarget> ResearchTarget { get; set; }
+        public DbSet<ResearchTargetSource> ResearchTargetSource { get; set; }
 
         //public override int SaveChanges()
         //{

@@ -104,6 +104,8 @@
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\Photo.sql" />
     <None Include="Scripts\Inserts\08_PhotoTypes.sql" />
     <None Include="Scripts\CustomScripts\UpdatingChildsSKU.sql" />
+    <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetSource.sql" />
+    <None Include="Scripts\Inserts\09_ResearchTargetsSources.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />

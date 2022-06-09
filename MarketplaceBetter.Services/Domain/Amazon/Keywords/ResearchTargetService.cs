@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CsvHelper;
+using CsvHelper.Configuration;
 using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
 using MarketplaceBetter.Domain.Model.Amazon.Keywords;
 using MarketplaceBetter.Infrastructure.Data;
@@ -10,6 +12,8 @@ using MarketplaceBetter.Services.Model;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,6 +69,36 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
+        public void AddFromFile(MemoryStream file, AddResearchTargetsModel model)
+        {
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ",",
+            };
+
+            using var reader = new StreamReader(file);
+            using var csv = new CsvReader(reader, config);
+
+            csv.Read();
+            csv.ReadHeader();
+
+            while (csv.Read())
+            {
+                ResearchTarget target = new ResearchTarget();
+
+                target.ResearchId = model.Research.Id;
+
+                if (model.Source.SystemName == ResearchTargetSourceEnum.Helium10)
+                {
+                    GetValuesAsHelium10(target, csv);
+                }
+
+                _repository.Add(target);
+            }
+
+            _unitOfWork.Save();
+        }
+
         public void Update(ResearchTargetModel target)
         {
             ResearchTarget targetToUpdate = _repository.Get(target.Id);
@@ -73,6 +107,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             _repository.Update(targetToUpdate);
             _unitOfWork.Save();
+        }
+
+        private void GetValuesAsHelium10(ResearchTarget target, CsvReader csv)
+        {
+            target.Name = csv.GetField("Keyword Phrase");
+            target.Helium10Value = csv.GetField<int>("Search Volume");
         }
 
         private void TransferValues(ResearchTarget toResearch, ResearchTargetModel fromResearch)

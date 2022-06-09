@@ -15,7 +15,7 @@
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterResearchTarget" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
-            <MudButton OnClick="AddResearchTarget" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Research Target</MudButton>
+            @*<MudButton OnClick="AddResearchTarget" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Research Target</MudButton>*@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ResearchTargetModel">Id</MudTableSortLabel></MudTh>
@@ -27,7 +27,9 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Research">@context.Research.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditResearchTarget(context.Id))">Edit</MudButton></MudTd>
+            <MudTd>
+                @*<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditResearchTarget(context.Id))">Edit</MudButton>*@
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
@@ -61,17 +63,7 @@
     {
         var result = await DialogService.Show<ResearchTargetFromFileDialog>().Result;
 
-        if (!result.Cancelled)
-        {
-            AddAdvertisingReportResearchTargetsModel fromAdvertisingReportModel = (AddAdvertisingReportResearchTargetsModel)result.Data;
-
-            //var fromAdvertisingReportDialogResult = await DialogService.Show<ResearchTargetsFromAdvertisingReportDialog>(null, new DialogOptions { FullScreen = true }).Result;
-
-            //if (!fromAdvertisingReportDialogResult.Cancelled)
-            //{
-            //    Table.ReloadServerData();
-            //}
-        }
+        ProcessResearchTargetDialogResult(result);
     }
 
     private async void AddResearchTarget()
