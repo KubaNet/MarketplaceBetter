@@ -22,5 +22,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Keywords
         public int? Helium10Value { get; set; }
 
         public int? AmazonSearchTermsValue { get; set; }
+
+        public ResearchTargetStatusModel Status { get; set; }
     }
 }

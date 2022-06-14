@@ -25,6 +25,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<ResearchTarget> _repository;
+        private readonly IRepository<ResearchTargetStatus> _statusRepository;
 
         public ResearchTargetService(
             IMapper mapper,
@@ -33,6 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ResearchTarget>();
+            _statusRepository = unitOfWork.GetRepository<ResearchTargetStatus>();
         }
 
         public ResearchTargetModel Get(long id) => _mapper.Map<ResearchTargetModel>(_repository.Get(id));
@@ -80,20 +82,35 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             using var csv = new CsvReader(reader, config);
 
             csv.Read();
+            if (model.Source.SystemName == ResearchTargetSourceEnum.AmazonSearchTerms)
+            {
+                csv.Read();
+            }
             csv.ReadHeader();
 
             while (csv.Read())
             {
-                ResearchTarget target = new ResearchTarget();
+                string name = GetTargetName(model.Source.SystemName, csv);
 
-                target.ResearchId = model.Research.Id;
+                ResearchTarget target = _repository.SingleOrDefault(t => t.ResearchId == model.Research.Id && t.Name == name);
 
-                if (model.Source.SystemName == ResearchTargetSourceEnum.Helium10)
+                if (target == null)
                 {
-                    GetValuesAsHelium10(target, csv);
-                }
+                    target = new ResearchTarget();
+                    target.ResearchId = model.Research.Id;
+                    target.Name = name;
+                    target.Status = _statusRepository.Single(s => s.SystemName == ResearchTargetStatusEnum.Included);
 
-                _repository.Add(target);
+                    SetValue(target, model.Source.SystemName, csv);
+
+                    _repository.Add(target);
+                }
+                else
+                {
+                    SetValue(target, model.Source.SystemName, csv);
+
+                    _repository.Update(target);
+                }
             }
 
             _unitOfWork.Save();
@@ -109,10 +126,36 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
-        private void GetValuesAsHelium10(ResearchTarget target, CsvReader csv)
+        private void SetValue(ResearchTarget target, ResearchTargetSourceEnum source, CsvReader csv)
         {
-            target.Name = csv.GetField("Keyword Phrase");
-            target.Helium10Value = csv.GetField<int>("Search Volume");
+            if (source == ResearchTargetSourceEnum.Helium10)
+            {
+                target.Helium10Value = int.Parse(csv.GetField("Search Volume").Replace(",", string.Empty));
+            }
+            else if (source == ResearchTargetSourceEnum.AmazonSearchTerms)
+            {
+                target.Helium10Value = int.Parse(csv.GetField("Search Frequency Rank").Replace(",", string.Empty));
+            }
+            else
+            {
+                throw new UnrecognizedEnumValue<ResearchTargetSourceEnum>(source);
+            }
+        }
+
+        private string GetTargetName(ResearchTargetSourceEnum source, CsvReader csv)
+        {
+            if (source == ResearchTargetSourceEnum.Helium10)
+            {
+                return csv.GetField("Keyword Phrase");
+            }
+            else if (source == ResearchTargetSourceEnum.AmazonSearchTerms)
+            {
+                return csv.GetField("Search Term");
+            }
+            else
+            {
+                throw new UnrecognizedEnumValue<ResearchTargetSourceEnum>(source);
+            }
         }
 
         private void TransferValues(ResearchTarget toResearch, ResearchTargetModel fromResearch)
@@ -164,6 +207,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Id) : targets.OrderByDescending(t => t.Id),
                     "name" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Name) : targets.OrderByDescending(t => t.Name),
+                    "h10" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Helium10Value) : targets.OrderByDescending(t => t.Helium10Value),
+                    "ast" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.AmazonSearchTermsValue) : targets.OrderByDescending(t => t.AmazonSearchTermsValue),
                     "research" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Research.Name) : targets.OrderByDescending(t => t.Research.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };

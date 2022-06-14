@@ -20,12 +20,18 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ResearchTargetModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="name" T="ResearchTargetModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="h10" T="ResearchTargetModel">H10</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="ast" T="ResearchTargetModel">AST</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ResearchTargetModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="research" T="ResearchTargetModel">Research</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
+            @*<MudTh Style="width: 100px;">Actions</MudTh>*@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="H10">@context.Helium10Value</MudTd>
+            <MudTd DataLabel="AST">@context.AmazonSearchTermsValue</MudTd>
+            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
             <MudTd DataLabel="Research">@context.Research.Name</MudTd>
             <MudTd>
                 @*<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditResearchTarget(context.Id))">Edit</MudButton>*@
