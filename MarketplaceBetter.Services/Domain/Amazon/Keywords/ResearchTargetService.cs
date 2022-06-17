@@ -126,6 +126,42 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             _unitOfWork.Save();
         }
 
+        public void SetAsIncluded(ResearchTargetModel target)
+        {
+            ResearchTarget targetToUpdate = _repository.Get(target.Id);
+
+            targetToUpdate.Status = _statusRepository.Single(s => s.SystemName == ResearchTargetStatusEnum.Included);
+
+            _repository.Update(targetToUpdate);
+            _unitOfWork.Save();
+        }
+
+        public void SetAsIncluded(IList<ResearchTargetModel> targets)
+        {
+            foreach (var target in targets)
+            {
+                SetAsIncluded(target);
+            }
+        }
+
+        public void SetAsExcluded(ResearchTargetModel target)
+        {
+            ResearchTarget targetToUpdate = _repository.Get(target.Id);
+
+            targetToUpdate.Status = _statusRepository.Single(s => s.SystemName == ResearchTargetStatusEnum.Excluded);
+
+            _repository.Update(targetToUpdate);
+            _unitOfWork.Save();
+        }
+
+        public void SetAsExcluded(IList<ResearchTargetModel> targets)
+        {
+            foreach (var target in targets)
+            {
+                SetAsExcluded(target);
+            }
+        }
+
         private void SetValue(ResearchTarget target, ResearchTargetSourceEnum source, CsvReader csv)
         {
             if (source == ResearchTargetSourceEnum.Helium10)
@@ -134,7 +170,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             }
             else if (source == ResearchTargetSourceEnum.AmazonSearchTerms)
             {
-                target.Helium10Value = int.Parse(csv.GetField("Search Frequency Rank").Replace(",", string.Empty));
+                target.AmazonSearchTermsValue = int.Parse(csv.GetField("Search Frequency Rank").Replace(",", string.Empty));
             }
             else
             {
@@ -175,7 +211,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "research" };
+                string[] searchFieldNames = new[] { "id", "name", "status", "research" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -184,6 +220,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     {
                         "id" => targets.Where(t => t.Id == searchField.Value.ParseToIntOrDefault()),
                         "name" => targets.Where(t => t.Name.Contains(searchField.Value)),
+                        "status" => targets.Where(t => t.Status.Name.Contains(searchField.Value)),
                         "research" => targets.Where(t => t.Research.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -209,6 +246,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
                     "name" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Name) : targets.OrderByDescending(t => t.Name),
                     "h10" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Helium10Value) : targets.OrderByDescending(t => t.Helium10Value),
                     "ast" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.AmazonSearchTermsValue) : targets.OrderByDescending(t => t.AmazonSearchTermsValue),
+                    "status" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Status.Name) : targets.OrderByDescending(t => t.Status.Name),
                     "research" => request.SortDirection == SortDirection.Ascending ? targets.OrderBy(t => t.Research.Name) : targets.OrderByDescending(t => t.Research.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };

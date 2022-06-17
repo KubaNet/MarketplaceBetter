@@ -1,0 +1,24 @@
+﻿@using System.Globalization
+
+@NumberString
+
+@code {
+    [Parameter] public int? Number { get; set; }
+
+    private string NumberString;
+
+    protected override void OnInitialized()
+    {
+        if (Number.HasValue)
+        {
+            NumberFormatInfo format = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+            format.NumberGroupSeparator = " ";
+
+            NumberString = Number.Value.ToString("#,0", format);
+        }
+        else
+        {
+            NumberString = string.Empty;
+        }
+    }
+}

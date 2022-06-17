@@ -24,5 +24,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
         void AddFromFile(MemoryStream file, AddResearchTargetsModel model);
 
         void Update(ResearchTargetModel target);
+
+        void SetAsIncluded(ResearchTargetModel target);
+
+        void SetAsIncluded(IList<ResearchTargetModel> targets);
+
+        void SetAsExcluded(ResearchTargetModel target);
+
+        void SetAsExcluded(IList<ResearchTargetModel> targets);
     }
 }
