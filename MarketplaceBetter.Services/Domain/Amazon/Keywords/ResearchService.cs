@@ -7,6 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -20,15 +21,22 @@ namespace MarketplaceBetter.Services.Domain.Amazon
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IResearchCalculator _researchCalculator;
         private readonly IRepository<Research> _repository;
+        private readonly IRepository<ResearchTarget> _targetRepository;
+        private readonly IRepository<ResearchResult> _resultRepository;
 
         public ResearchService(
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IResearchCalculator researchCalculator)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _researchCalculator = researchCalculator;
             _repository = unitOfWork.GetRepository<Research>();
+            _targetRepository = unitOfWork.GetRepository<ResearchTarget>();
+            _resultRepository = unitOfWork.GetRepository<ResearchResult>();
         }
 
         public ResearchModel Get(long id) => _mapper.Map<ResearchModel>(_repository.Get(id));
@@ -72,6 +80,35 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             TransferValues(researchToUpdate, research);
 
             _repository.Update(researchToUpdate);
+            _unitOfWork.Save();
+        }
+
+        public void Calculate(long id)
+        {
+            Research research = _repository.Get(id);
+            IList<ResearchTarget> targets = _targetRepository.Where(t => t.ResearchId == id && t.Status.SystemName == ResearchTargetStatusEnum.Included).ToList();
+
+            DeletePreviousResults(research);
+
+            IList<ResearchResult> results = _researchCalculator.Calculate(research, targets);
+
+            foreach (var result in results)
+            {
+                _resultRepository.Add(result);
+            }
+
+            _unitOfWork.Save();
+        }
+
+        private void DeletePreviousResults(Research research)
+        {
+            IList<ResearchResult> results = _resultRepository.Where(r => r.ResearchId == research.Id).ToList();
+
+            foreach (var result in results)
+            {
+                _resultRepository.Delete(result);
+            }
+
             _unitOfWork.Save();
         }
 

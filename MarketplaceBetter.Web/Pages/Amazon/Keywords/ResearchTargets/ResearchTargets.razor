@@ -12,9 +12,9 @@
 <MudText Typo="Typo.h3" Class="mt-2">Research Targets</MudText>
 
 <MainBody>
-    <MudTable T="ResearchTargetModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchTargetModel>>>(ReloadResearchTarget))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage="15">
+    <MudTable T="ResearchTargetModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchTargetModel>>>(ReloadTargets))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage="15">
         <ToolBarContent>
-            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterResearchTarget" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterTargets" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="SetAsIncluded" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success" Disabled="NoneSelected" Class="ml-2">Included</MudButton>
             <MudButton OnClick="SetAsExcluded" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Excluded</MudButton>
@@ -54,7 +54,7 @@
     private HashSet<ResearchTargetModel> SelectedTargets = new HashSet<ResearchTargetModel>();
     private bool NoneSelected = true;
 
-    private Task<TableData<ResearchTargetModel>> ReloadResearchTarget(TableState state)
+    private Task<TableData<ResearchTargetModel>> ReloadTargets(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -63,7 +63,7 @@
         return Task.FromResult(new TableData<ResearchTargetModel>() { TotalItems = ResearchTargetService.CountForListRequest(ListRequest), Items = parents });
     }
 
-    private void FilterResearchTarget(string searchString)
+    private void FilterTargets(string searchString)
     {
         ListRequest.SearchString = searchString;
 

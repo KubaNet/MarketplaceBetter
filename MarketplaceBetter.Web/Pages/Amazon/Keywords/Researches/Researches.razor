@@ -6,14 +6,15 @@
 @page "/researches"
 @inject IResearchService ResearchService
 @inject IDialogService DialogService
+@inject NavigationManager NavigationManager
 
 <MudText Typo="Typo.h3" Class="mt-2">Researches</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchModel>>>(ReloadResearch))" Dense="true" Hover="true" RowsPerPage="15">
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterResearch" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterResearch" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
             <MudButton OnClick="AddResearch" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Research</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -26,7 +27,10 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditResearch(context.Id))">Edit</MudButton></MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => CalculateResearch(context.Id))">Calculate</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditResearch(context.Id))">Edit</MudButton>
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
@@ -39,22 +43,22 @@
     private ListRequest ListRequest = new();
 
     private Task<TableData<ResearchModel>> ReloadResearch(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<ResearchModel> parents = ResearchService.GetForListRequest(ListRequest);
+        IList<ResearchModel> parents = ResearchService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<ResearchModel>() { TotalItems = ResearchService.CountForListRequest(ListRequest), Items = parents });
-	}
+        return Task.FromResult(new TableData<ResearchModel>() { TotalItems = ResearchService.CountForListRequest(ListRequest), Items = parents });
+    }
 
     private void FilterResearch(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
     private async void AddResearch()
     {
@@ -76,5 +80,12 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private void CalculateResearch(long id)
+    {
+        ResearchService.Calculate(id);
+
+        NavigationManager.NavigateTo("research-results");
     }
 }

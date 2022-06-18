@@ -8,20 +8,10 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
 {
-    public interface IResearchService
+    public interface IResearchResultService
     {
-        ResearchModel Get(long id);
-
-        IList<ResearchModel> GetAll();
-
         int CountForListRequest(ListRequest request);
 
-        IList<ResearchModel> GetForListRequest(ListRequest request);
-
-        void Add(ResearchModel research);
-
-        void Update(ResearchModel research);
-
-        void Calculate(long id);
+        IList<ResearchResultModel> GetForListRequest(ListRequest request);
     }
 }

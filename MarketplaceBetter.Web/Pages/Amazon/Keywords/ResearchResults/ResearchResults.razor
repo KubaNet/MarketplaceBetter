@@ -1,0 +1,64 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Amazon.Keywords
+@using MarketplaceBetter.Services.Domain.Amazon.Keywords.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/research-results"
+@inject IResearchResultService ResultService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3" Class="mt-2">Research Results</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchResultModel>>>(ReloadResults))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterResults" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ResearchResultModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="phrase" T="ResearchResultModel">Phrase</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="score" T="ResearchResultModel">Score</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="words" T="ResearchResultModel">Words Count</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="frequency" T="ResearchResultModel">Frequency</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="research" T="ResearchTargetModel">Research</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Phrase">@context.Phrase</MudTd>
+            <MudTd DataLabel="Score"><NumberDisplay Number="@context.Score" /></MudTd>
+            <MudTd DataLabel="Words Count">@context.WordsCount</MudTd>
+            <MudTd DataLabel="Frequency"><NumberDisplay Number="@context.Frequency" /></MudTd>
+            <MudTd DataLabel="Research">@context.Research.Name</MudTd>
+            <MudTd>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<ResearchResultModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<ResearchResultModel>> ReloadResults(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<ResearchResultModel> parents = ResultService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<ResearchResultModel>() { TotalItems = ResultService.CountForListRequest(ListRequest), Items = parents });
+    }
+
+    private void FilterResults(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+}

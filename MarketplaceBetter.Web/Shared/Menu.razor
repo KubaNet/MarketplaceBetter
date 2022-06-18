@@ -76,6 +76,7 @@
             <MudNavGroup Title="Keywords" Icon="@Icons.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/researches">Researches</MudNavLink>
                 <MudNavLink Href="/research-targets">Research Targets</MudNavLink>
+                <MudNavLink Href="/research-results">Research Results</MudNavLink>
             </MudNavGroup>
         }
         else
@@ -176,7 +177,8 @@
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
         if (path == "researches"
-            || path == "research-targets")
+            || path == "research-targets"
+            || path == "research-results")
         {
             return true;
         }
