@@ -8,7 +8,7 @@
 @using MarketplaceBetter.Services.Domain.Sales.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
 
-@inject IAmazonCampaignService AmazonCampaignService
+@inject ICampaignService AmazonCampaignService
 @inject IAmazonCampaignValidator AmazonCampaignValidator
 @inject IBrandService BrandService
 @inject IProductService ProductService
@@ -49,7 +49,7 @@
     [Parameter] public long AmazonCampaignId { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private AmazonCampaignModel AmazonCampaign = new();
+    private CampaignModel AmazonCampaign = new();
     private BrandModel Brand;
 
     private IList<BrandModel> Brands;

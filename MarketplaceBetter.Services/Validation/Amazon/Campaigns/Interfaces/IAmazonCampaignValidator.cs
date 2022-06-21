@@ -10,6 +10,6 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
 {
     public interface IAmazonCampaignValidator
     {
-        ValidationResult Validate(AmazonCampaignModel campaign);
+        ValidationResult Validate(CampaignModel campaign);
     }
 }

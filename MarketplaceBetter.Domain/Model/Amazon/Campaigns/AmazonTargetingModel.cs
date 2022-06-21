@@ -12,7 +12,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
 
         public string Value { get; set; }
 
-        public AmazonCampaignModel Campaign { get; set; }
+        public CampaignModel Campaign { get; set; }
 
         public AmazonTargetingTypeModel Type { get; set; }
 

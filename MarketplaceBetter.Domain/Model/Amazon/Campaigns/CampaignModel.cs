@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
 {
-    public class AmazonCampaignModel
+    public class CampaignModel
     {
         public long Id { get; set; }
 
@@ -19,9 +19,11 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
         public string Name { get; set; }
 
         [Required]
-        public ProductModel Product { get; set; }
+        public InstanceModel Instance { get; set; }
 
         [Required]
-        public InstanceModel Instance { get; set; }
+        public CampaignTypeModel Type { get; set; }
+
+        public ProductModel Product { get; set; }
     }
 }

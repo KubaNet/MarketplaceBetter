@@ -16,50 +16,50 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 {
-    public class AmazonCampaignService : IAmazonCampaignService
+    public class CampaignService : ICampaignService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<AmazonCampaign> _repository;
+        private readonly IRepository<Campaign> _repository;
         private readonly IMapper _mapper;
 
-        public AmazonCampaignService(
+        public CampaignService(
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _repository = unitOfWork.GetRepository<AmazonCampaign>();
+            _repository = unitOfWork.GetRepository<Campaign>();
             _mapper = mapper;
         }
 
-        public AmazonCampaignModel Get(long id) => _mapper.Map<AmazonCampaignModel>(_repository.Get(id));
+        public CampaignModel Get(long id) => _mapper.Map<CampaignModel>(_repository.Get(id));
 
-        public IList<AmazonCampaignModel> GetAll() => _mapper.Map<IList<AmazonCampaignModel>>(_repository.GetQuery().OrderBy(g => g.Name));
+        public IList<CampaignModel> GetAll() => _mapper.Map<IList<CampaignModel>>(_repository.GetQuery().OrderBy(g => g.Name));
 
-        public IList<AmazonCampaignModel> GetForInstance(long instanceId) => _mapper.Map<IList<AmazonCampaignModel>>(_repository.GetQuery().Where(c => c.InstanceId == instanceId).OrderBy(g => g.Name));
+        public IList<CampaignModel> GetForInstance(long instanceId) => _mapper.Map<IList<CampaignModel>>(_repository.GetQuery().Where(c => c.InstanceId == instanceId).OrderBy(g => g.Name));
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<AmazonCampaign> campaigns = _repository.GetQuery();
+            IQueryable<Campaign> campaigns = _repository.GetQuery();
 
             ApplyFilter(campaigns, request);
 
             return campaigns.Count();
         }
 
-        public IList<AmazonCampaignModel> GetForListRequest(ListRequest request)
+        public IList<CampaignModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<AmazonCampaign> campaigns = _repository.GetQuery();
+            IQueryable<Campaign> campaigns = _repository.GetQuery();
 
             campaigns = ApplyFilter(campaigns, request);
             campaigns = ApplySorting(campaigns, request);
             campaigns = ApplyPaging(campaigns, request);
 
-            return _mapper.Map<IList<AmazonCampaignModel>>(campaigns);
+            return _mapper.Map<IList<CampaignModel>>(campaigns);
         }
 
-        public void Add(AmazonCampaignModel campaign)
+        public void Add(CampaignModel campaign)
         {
-            AmazonCampaign campaignToAdd = new();
+            Campaign campaignToAdd = new();
 
             TransferValues(campaignToAdd, campaign);
 
@@ -67,9 +67,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             _unitOfWork.Save();
         }
 
-        public void Update(AmazonCampaignModel campaign)
+        public void Update(CampaignModel campaign)
         {
-            AmazonCampaign campaignToUpdate = _repository.Get(campaign.Id);
+            Campaign campaignToUpdate = _repository.Get(campaign.Id);
 
             TransferValues(campaignToUpdate, campaign);
 
@@ -77,14 +77,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             _unitOfWork.Save();
         }
 
-        private void TransferValues(AmazonCampaign toCampaign, AmazonCampaignModel fromCampaign)
+        private void TransferValues(Campaign toCampaign, CampaignModel fromCampaign)
         {
             toCampaign.Name = fromCampaign.Name;
             toCampaign.ProductId = fromCampaign.Product.Id;
             toCampaign.InstanceId = fromCampaign.Instance.Id;
         }
 
-        private IQueryable<AmazonCampaign> ApplyFilter(IQueryable<AmazonCampaign> products, ListRequest request)
+        private IQueryable<Campaign> ApplyFilter(IQueryable<Campaign> products, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
@@ -123,7 +123,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             return products;
         }
 
-        private IQueryable<AmazonCampaign> ApplySorting(IQueryable<AmazonCampaign> products, ListRequest request)
+        private IQueryable<Campaign> ApplySorting(IQueryable<Campaign> products, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -141,7 +141,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             return products;
         }
 
-        private IQueryable<AmazonCampaign> ApplyPaging(IQueryable<AmazonCampaign> products, ListRequest request)
+        private IQueryable<Campaign> ApplyPaging(IQueryable<Campaign> products, ListRequest request)
         {
             return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }

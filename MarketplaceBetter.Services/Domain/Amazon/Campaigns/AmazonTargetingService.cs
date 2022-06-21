@@ -153,7 +153,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             return stream;
         }
 
-        private void ReadAndSaveTargeting(AmazonCampaignModel campaign, Stream file)
+        private void ReadAndSaveTargeting(CampaignModel campaign, Stream file)
         {
             CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -174,7 +174,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             }
         }
 
-        private void ProcessTargeting(AmazonCampaignModel campaign, string targetingValue)
+        private void ProcessTargeting(CampaignModel campaign, string targetingValue)
         {
             AmazonTargeting targeting = _repository.SingleOrDefault(t => t.CampaignId == campaign.Id && t.Value == targetingValue);
             if (targeting != null)

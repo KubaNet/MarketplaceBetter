@@ -19,10 +19,62 @@ namespace MarketplaceBetter.Services.Specialized
 
             IList<ResearchResult> results = CreateResultsFromTargets(targets);
 
+            NormalizeTargets(targets);
             CalculateFrequency(results, targets);
             CalculateScore(results, targets);
+            NormalizeResults(results);
 
             return results;
+        }
+
+        private void NormalizeTargets(IList<ResearchTarget> targets)
+        {
+            int minScore = targets.Min(t => t.Helium10Value);
+            int maxScore = targets.Max(t => t.Helium10Value);
+
+            int min = 1;
+            int max = 10000;
+            double divider = (maxScore - minScore) / (double)max;
+
+            foreach (var target in targets)
+            {
+                target.Helium10Value = (int)Math.Round((target.Helium10Value - minScore) / divider);
+
+                if (target.Helium10Value <= 0)
+                {
+                    target.Helium10Value = min;
+                }
+
+                if (target.Helium10Value > max)
+                {
+                    target.Helium10Value = max;
+                }
+            }
+        }
+
+        private void NormalizeResults(IList<ResearchResult> results)
+        {
+            int minScore = results.Min(r => r.Score);
+            int maxScore = results.Max(r => r.Score);
+
+            int min = 1;
+            int max = 10000;
+            double divider = (maxScore - minScore) / (double)max;
+
+            foreach (var result in results)
+            {
+                result.Score = (int)Math.Round((result.Score - minScore) / divider);
+
+                if (result.Score <= 0)
+                {
+                    result.Score = min;
+                }
+
+                if (result.Score > max)
+                {
+                    result.Score = max;
+                }
+            }
         }
 
         private IList<ResearchResult> CreateResultsFromTargets(IList<ResearchTarget> targets)
@@ -96,7 +148,7 @@ namespace MarketplaceBetter.Services.Specialized
 
                     foreach (var phrase in phrases)
                     {
-                        if (phrase == string.Empty)
+                        if (phrase == string.Empty || result.Phrase == phrase)
                         {
                             continue;
                         }
@@ -112,7 +164,7 @@ namespace MarketplaceBetter.Services.Specialized
         {
             if (words.Count() == 0)
             {
-                return new String[] { "" };
+                return new string[] { "" };
             }
             else
             {

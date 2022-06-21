@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Campaigns.Campaigns
 {
-    public class AmazonCampaignProfile : Profile
+    public class CampaignProfile : Profile
     {
-        public AmazonCampaignProfile()
+        public CampaignProfile()
         {
-            CreateMap<AmazonCampaign, AmazonCampaignModel>();
+            CreateMap<Campaign, CampaignModel>();
         }
     }
 }

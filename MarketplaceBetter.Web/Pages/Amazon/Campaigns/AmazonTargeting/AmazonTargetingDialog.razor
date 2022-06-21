@@ -11,7 +11,7 @@
 @inject IAmazonTargetingService AmazonTargetingService
 @inject IAmazonTargetingValidator AmazonTargetingValidator
 @inject IInstanceService InstanceService
-@inject IAmazonCampaignService AmazonCampaignService
+@inject ICampaignService AmazonCampaignService
 @inject ISnackbar Snackbar
 
 <EditForm Model="AmazonTargeting" OnValidSubmit="@HandleValidSubmit">
@@ -25,7 +25,7 @@
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Campaign" T="AmazonCampaignModel" Value="AmazonTargeting.Campaign" For="() => AmazonTargeting.Campaign" ValueChanged="HandleCampaignChanged" Disabled="CampaignSelectDisabled">
+        <MudSelect Label="Campaign" T="CampaignModel" Value="AmazonTargeting.Campaign" For="() => AmazonTargeting.Campaign" ValueChanged="HandleCampaignChanged" Disabled="CampaignSelectDisabled">
             @foreach (var campaign in Campaigns)
             {
                 <MudSelectItem Value="campaign">@campaign.Name</MudSelectItem>
@@ -55,7 +55,7 @@
     private InstanceModel Instance;
 
     private IList<InstanceModel> Instances;
-    private IList<AmazonCampaignModel> Campaigns = new List<AmazonCampaignModel>();
+    private IList<CampaignModel> Campaigns = new List<CampaignModel>();
     private IBrowserFile File;
 
     private bool CampaignSelectDisabled = true;
@@ -75,7 +75,7 @@
         ActivateCampaign(instance.Id);
     }
 
-    private void HandleCampaignChanged(AmazonCampaignModel campaign)
+    private void HandleCampaignChanged(CampaignModel campaign)
     {
         AmazonTargeting.Campaign = campaign;
     }
@@ -84,7 +84,7 @@
     {
         AmazonTargeting.Campaign = null;
         CampaignSelectDisabled = true;
-        Campaigns = new List<AmazonCampaignModel>();
+        Campaigns = new List<CampaignModel>();
     }
 
     private void ActivateCampaign(long instanceId)

@@ -8,14 +8,14 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Campaigns
 {
     public class AmazonCampaignValidator : IAmazonCampaignValidator
     {
-        private readonly IRepository<AmazonCampaign> _repository;
+        private readonly IRepository<Campaign> _repository;
 
         public AmazonCampaignValidator(IUnitOfWork unitOfWork)
         {
-            _repository = unitOfWork.GetRepository<AmazonCampaign>();
+            _repository = unitOfWork.GetRepository<Campaign>();
         }
 
-        public ValidationResult Validate(AmazonCampaignModel campaign)
+        public ValidationResult Validate(CampaignModel campaign)
         {
             ValidationResult result = new();
 
@@ -26,7 +26,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Campaigns
 
             if (_repository.Any(p => p.Id != campaign.Id && p.Name == campaign.Name))
             {
-                result.AddErrorFor<AmazonCampaignModel>(p => p.Name, ValidationMessages.NameNotUnique, "Amazon Campaign");
+                result.AddErrorFor<CampaignModel>(p => p.Name, ValidationMessages.NameNotUnique, "Amazon Campaign");
             }
 
             return result;

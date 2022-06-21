@@ -12,7 +12,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
 
         public long CampaignId { get; set; }
 
-        public virtual AmazonCampaign Campaign { get; set; }
+        public virtual Campaign Campaign { get; set; }
 
         public long TypeId { get; set; }
 

@@ -8,16 +8,20 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
 {
-    public class AmazonCampaign : Entity
+    public class Campaign : Entity
     {
         public string Name { get; set; }
-
-        public long ProductId { get; set; }
-
-        public virtual Product Product { get; set; }
 
         public long InstanceId { get; set; }
 
         public virtual Instance Instance { get; set; }
+
+        public long TypeId { get; set; }
+
+        public virtual CampaignType Type { get; set; }
+
+        public long? ProductId { get; set; }
+
+        public virtual Product Product { get; set; }
     }
 }
