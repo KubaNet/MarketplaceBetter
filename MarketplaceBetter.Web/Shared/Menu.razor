@@ -59,16 +59,16 @@
             <MudNavLink Href="/parents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
         }
 
-        @if (IsAmazonCampaignsModule())
+        @if (IsCampaignsModule())
         {
             <MudNavGroup Title="Campaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd" Expanded="true" HideExpandIcon="true">
-                <MudNavLink Href="/amazoncampaigns">Campaigns</MudNavLink>
+                <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
                 <MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
             </MudNavGroup>
         }
         else
         {
-            <MudNavLink Href="/amazoncampaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd">Campaigns</MudNavLink>
+            <MudNavLink Href="/campaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd">Campaigns</MudNavLink>
         }
 
         @if (IsKeywordsModule())
@@ -159,11 +159,11 @@
         return false;
     }
 
-    private bool IsAmazonCampaignsModule()
+    private bool IsCampaignsModule()
     {
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-        if (path == "amazoncampaigns"
+        if (path == "campaigns"
             || path == "amazontargeting")
         {
             return true;

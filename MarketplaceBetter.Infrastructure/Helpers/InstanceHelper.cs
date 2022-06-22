@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Helpers
 {
-    public static class AmazonInstanceHelper
+    public static class InstanceHelper
     {
         public static string GetCodeFor(InstanceEnum instance)
         {
@@ -23,7 +23,7 @@ namespace MarketplaceBetter.Infrastructure.Helpers
                 InstanceEnum.AmazonES => "es",
                 InstanceEnum.AmazonNL => "nl",
                 InstanceEnum.AmazonSE => "se",
-                _ => throw new UnrecognizedEnumValue<InstanceEnum>(instance)
+                _ => throw new UnrecognizedEnumValueException<InstanceEnum>(instance)
             };
         }
     }

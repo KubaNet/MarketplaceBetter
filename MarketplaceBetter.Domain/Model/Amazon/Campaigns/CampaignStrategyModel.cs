@@ -9,6 +9,8 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
 {
     public class CampaignStrategyModel
     {
+        public long Id { get; set; }
+
         public string Name { get; set; }
 
         public CampaignStrategyEnum SystemName { get; set; }

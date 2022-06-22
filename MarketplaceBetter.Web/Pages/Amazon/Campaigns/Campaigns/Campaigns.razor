@@ -2,34 +2,34 @@
 @using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 @using MarketplaceBetter.Services.Model
 
-@page "/amazoncampaigns"
-@inject ICampaignService AmazonCampaignService
+@page "/campaigns"
+@inject ICampaignService CampaignService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Amazon Campaigns</MudText>
+<MudText Typo="Typo.h3" Class="mt-2">Campaigns</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CampaignModel>>>(ReloadCampaigns))" Dense="true" Hover="true" RowsPerPage="15">
         <ToolBarContent>
 			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterCampaigns" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-            <MudButton OnClick="AddAmazonCampaign" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Amazon Campaign</MudButton>
+            <MudButton OnClick="AddCampaign" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Campaign</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="CampaignModel">Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="sku" T="CampaignModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="CampaignModel">Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="product" T="CampaignModel">Product</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="CampaignModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="strategy" T="CampaignModel">Strategy</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="CampaignModel">Instance</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Product">@context.Product.Name</MudTd>
-            <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Product?.Brand.Name</MudTd>
+            <MudTd DataLabel="Strategy">@context.Strategy.Name</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAmazonCampaign(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
@@ -45,9 +45,9 @@
 	{
 		state.PopulateListRequest(ListRequest);
 
-		IList<CampaignModel> parents = AmazonCampaignService.GetForListRequest(ListRequest);
+		IList<CampaignModel> parents = CampaignService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<CampaignModel>() { TotalItems = AmazonCampaignService.CountForListRequest(ListRequest), Items = parents });
+		return Task.FromResult(new TableData<CampaignModel>() { TotalItems = CampaignService.CountForListRequest(ListRequest), Items = parents });
 	}
 
     private void FilterCampaigns(string searchString)
@@ -59,16 +59,16 @@
 		StateHasChanged();
 	}
 
-    private async void AddAmazonCampaign()
+    private async void AddCampaign()
     {
-        var result = await DialogService.Show<AmazonCampaignDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Campaign" }).Result;
+        var result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Add Campaign" }).Result;
 
         ProcessAmazonCampaignDialogResult(result);
     }
 
-    private async void EditAmazonCampaign(long id)
+    private async void EditCampaign(long id)
     {
-        var result = await DialogService.Show<AmazonCampaignDialog>(null, new DialogParameters { ["Title"] = "Edit Amazon Campaign", ["IsEdit"] = true, ["AmazonCampaignId"] = id }).Result;
+        var result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Edit Campaign", ["IsEdit"] = true, ["CampaignId"] = id }).Result;
 
         ProcessAmazonCampaignDialogResult(result);
     }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Exceptions
 {
-    public class UnrecognizedEnumValue<T> : Exception where T: Enum
+    public class UnrecognizedEnumValueException<T> : Exception where T: Enum
     {
-        public UnrecognizedEnumValue(Enum value) : base(GetMessage(value))
+        public UnrecognizedEnumValueException(Enum value) : base(GetMessage(value))
         {
         }
 

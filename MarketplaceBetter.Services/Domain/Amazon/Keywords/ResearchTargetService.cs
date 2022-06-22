@@ -174,7 +174,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             }
             else
             {
-                throw new UnrecognizedEnumValue<ResearchTargetSourceEnum>(source);
+                throw new UnrecognizedEnumValueException<ResearchTargetSourceEnum>(source);
             }
         }
 
@@ -190,7 +190,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon
             }
             else
             {
-                throw new UnrecognizedEnumValue<ResearchTargetSourceEnum>(source);
+                throw new UnrecognizedEnumValueException<ResearchTargetSourceEnum>(source);
             }
         }
 

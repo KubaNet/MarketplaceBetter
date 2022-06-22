@@ -80,8 +80,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
         private void TransferValues(Campaign toCampaign, CampaignModel fromCampaign)
         {
             toCampaign.Name = fromCampaign.Name;
-            toCampaign.ProductId = fromCampaign.Product.Id;
             toCampaign.InstanceId = fromCampaign.Instance.Id;
+            toCampaign.TypeId = fromCampaign.Type.Id;
+            toCampaign.StrategyId = fromCampaign.Strategy.Id;
+            toCampaign.ProductId = fromCampaign.Product.Id;
         }
 
         private IQueryable<Campaign> ApplyFilter(IQueryable<Campaign> products, ListRequest request)

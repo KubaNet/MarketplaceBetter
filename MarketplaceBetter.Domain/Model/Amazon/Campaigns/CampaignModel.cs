@@ -24,6 +24,10 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
         [Required]
         public CampaignTypeModel Type { get; set; }
 
+        [Required]
+        public CampaignStrategyModel Strategy { get; set; }
+
+        [Required]
         public ProductModel Product { get; set; }
     }
 }

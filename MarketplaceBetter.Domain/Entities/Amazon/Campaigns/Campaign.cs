@@ -20,6 +20,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
 
         public virtual CampaignType Type { get; set; }
 
+        public long StrategyId { get; set; }
+
+        public virtual CampaignStrategy Strategy { get; set; }
+
         public long? ProductId { get; set; }
 
         public virtual Product Product { get; set; }

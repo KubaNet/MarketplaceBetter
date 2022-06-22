@@ -112,7 +112,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 Child child = _childRepository.Get(childId.Value);
                 Instance instance = _instanceRepository.Get(instanceId.Value);
 
-                return $"{AmazonInstanceHelper.GetCodeFor(instance.SystemName)}_{child.Sku}";
+                return $"{InstanceHelper.GetCodeFor(instance.SystemName)}_{child.Sku}";
             }
             else if (childId.HasValue)
             {
@@ -124,7 +124,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             {
                 Instance instance = _instanceRepository.Get(instanceId.Value);
 
-                return $"{AmazonInstanceHelper.GetCodeFor(instance.SystemName)}_";
+                return $"{InstanceHelper.GetCodeFor(instance.SystemName)}_";
             }
 
             return null;
