@@ -55,6 +55,10 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<Campaign> Campaign { get; set; }
         public DbSet<CampaignType> CampaignType { get; set; }
         public DbSet<CampaignStrategy> CampaignStrategy { get; set; }
+        public DbSet<AdEntityStatus> AdEntityStatus { get; set; }
+        public DbSet<AdGroup> AdGroup { get; set; }
+        public DbSet<ProductAd> ProductAd { get; set; }
+
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }
         // => Keywords

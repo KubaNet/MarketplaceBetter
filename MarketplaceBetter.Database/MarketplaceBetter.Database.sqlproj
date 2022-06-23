@@ -110,6 +110,10 @@
     <None Include="Scripts\Inserts\08_CampaignTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\CampaignStrategy.sql" />
     <None Include="Scripts\Inserts\09_CampaignStrategies.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\AdEntityStatus.sql" />
+    <None Include="Scripts\Inserts\10_AdEntityStatuses.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\AdGroup.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\ProductAd.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
