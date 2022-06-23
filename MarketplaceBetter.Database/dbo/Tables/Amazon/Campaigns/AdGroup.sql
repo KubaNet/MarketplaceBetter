@@ -2,9 +2,8 @@
 (
 	[Id]			BIGINT					NOT NULL	IDENTITY,
 	[Name]			NVARCHAR(255)			NOT NULL,
-	[DefaultBid]	DECIMAL					NOT NULL,
 	[CampaignId]	BIGINT					NOT NULL,
-	[AmazonId]		BIGINT					NULL,
+	[AmazonId]		NVARCHAR(255)			NULL,
 	[StatusId]		BIGINT					NOT NULL,
 	CONSTRAINT		[PK_AdGroup]			PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_AdGroup_Campaign]	FOREIGN KEY ([CampaignId])	REFERENCES [dbo].[Campaign] ([Id]),

@@ -27,5 +27,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
         public long? ProductId { get; set; }
 
         public virtual Product Product { get; set; }
+
+        public decimal DefaultBid { get; set; }
     }
 }

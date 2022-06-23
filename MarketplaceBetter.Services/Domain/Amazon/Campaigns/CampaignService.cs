@@ -21,14 +21,17 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Campaign> _repository;
         private readonly IMapper _mapper;
+        private readonly IAdGroupService _adGroupService;
 
         public CampaignService(
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IAdGroupService adGroupService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Campaign>();
-            _mapper = mapper;
+            _adGroupService = adGroupService;
         }
 
         public CampaignModel Get(long id) => _mapper.Map<CampaignModel>(_repository.Get(id));
@@ -65,6 +68,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             _repository.Add(campaignToAdd);
             _unitOfWork.Save();
+
+            _adGroupService.AddForCampaign(campaignToAdd.Id);
         }
 
         public void Update(CampaignModel campaign)
@@ -86,11 +91,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             toCampaign.ProductId = fromCampaign.Product.Id;
         }
 
-        private IQueryable<Campaign> ApplyFilter(IQueryable<Campaign> products, ListRequest request)
+        private IQueryable<Campaign> ApplyFilter(IQueryable<Campaign> campaigns, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
-                return products;
+                return campaigns;
             }
 
             IList<string> searchStrings = request.SearchString.SplitForFiltering();
@@ -102,19 +107,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
                 if (searchField != null)
                 {
-                    products = searchField.Name switch
+                    campaigns = searchField.Name switch
                     {
-                        "id" => products.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
-                        "name" => products.Where(c => c.Name.Contains(searchField.Value)),
-                        "product" => products.Where(c => c.Product.Name.Contains(searchField.Value)),
-                        "brand" => products.Where(c => c.Product.Brand.Name.Contains(searchField.Value)),
-                        "instance" => products.Where(c => c.Instance.Name.Contains(searchField.Value)),
+                        "id" => campaigns.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
+                        "name" => campaigns.Where(c => c.Name.Contains(searchField.Value)),
+                        "product" => campaigns.Where(c => c.Product.Name.Contains(searchField.Value)),
+                        "brand" => campaigns.Where(c => c.Product.Brand.Name.Contains(searchField.Value)),
+                        "instance" => campaigns.Where(c => c.Instance.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    products = products.Where(c => c.Id == searchString.ParseToIntOrDefault()
+                    campaigns = campaigns.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Name.Contains(searchString)
                         || c.Product.Name.Contains(searchString)
                         || c.Product.Brand.Name.Contains(searchString)
@@ -122,30 +127,30 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
                 }
             }
 
-            return products;
+            return campaigns;
         }
 
-        private IQueryable<Campaign> ApplySorting(IQueryable<Campaign> products, ListRequest request)
+        private IQueryable<Campaign> ApplySorting(IQueryable<Campaign> campaigns, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
-                products = request.SortBy switch
+                campaigns = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Id) : products.OrderByDescending(c => c.Id),
-                    "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Name) : products.OrderByDescending(c => c.Name),
-                    "product" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Product.Name) : products.OrderByDescending(c => c.Product.Name),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Product.Brand.Name) : products.OrderByDescending(c => c.Product.Brand.Name),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(c => c.Instance.Name) : products.OrderByDescending(c => c.Instance.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Id) : campaigns.OrderByDescending(c => c.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Name) : campaigns.OrderByDescending(c => c.Name),
+                    "product" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Product.Name) : campaigns.OrderByDescending(c => c.Product.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Product.Brand.Name) : campaigns.OrderByDescending(c => c.Product.Brand.Name),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Instance.Name) : campaigns.OrderByDescending(c => c.Instance.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
 
-            return products;
+            return campaigns;
         }
 
-        private IQueryable<Campaign> ApplyPaging(IQueryable<Campaign> products, ListRequest request)
+        private IQueryable<Campaign> ApplyPaging(IQueryable<Campaign> campaigns, ListRequest request)
         {
-            return products.Skip(request.Page * request.PageSize).Take(request.PageSize);
+            return campaigns.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
     }
 }

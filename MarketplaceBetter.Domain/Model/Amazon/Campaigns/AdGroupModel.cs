@@ -12,11 +12,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
 
         public string Name { get; set; }
 
-        public decimal DefaultBid { get; set; }
-
         public CampaignModel Campaign { get; set; }
 
-        public long? AmazonId { get; set; }
+        public string AmazonId { get; set; }
 
         public AdEntityStatusModel Status { get; set; }
     }

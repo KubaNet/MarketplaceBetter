@@ -1,0 +1,82 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/ad-groups"
+@inject IAdGroupService AdGroupService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3" Class="mt-2">Ad Groups</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AdGroupModel>>>(ReloadAdGroups))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterAdGroups" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="AdGroupModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="AdGroupModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazonid" T="AdGroupModel">Amazon Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="AdGroupModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="campaign" T="AdGroupModel">Campaign</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="AmazonId">@context.AmazonId</MudTd>
+            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
+            <MudTd DataLabel="Campaign">@context.Campaign.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditAdGroup(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<AdGroupModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<AdGroupModel>> ReloadAdGroups(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<AdGroupModel> parents = AdGroupService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<AdGroupModel>() { TotalItems = AdGroupService.CountForListRequest(ListRequest), Items = parents });
+	}
+
+    private void FilterAdGroups(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddAdGroup()
+    {
+        var result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Add Campaign" }).Result;
+
+        ProcessAdGroupDialogResult(result);
+    }
+
+    private async void EditAdGroup(long id)
+    {
+        var result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Edit Ad Group", ["IsEdit"] = true, ["AdGroupId"] = id }).Result;
+
+        ProcessAdGroupDialogResult(result);
+    }
+
+    private void ProcessAdGroupDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

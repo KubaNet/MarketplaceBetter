@@ -63,17 +63,17 @@
     {
         var result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Add Campaign" }).Result;
 
-        ProcessAmazonCampaignDialogResult(result);
+        ProcessCampaignDialogResult(result);
     }
 
     private async void EditCampaign(long id)
     {
         var result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Edit Campaign", ["IsEdit"] = true, ["CampaignId"] = id }).Result;
 
-        ProcessAmazonCampaignDialogResult(result);
+        ProcessCampaignDialogResult(result);
     }
 
-    private void ProcessAmazonCampaignDialogResult(DialogResult result)
+    private void ProcessCampaignDialogResult(DialogResult result)
     {
         if (!result.Cancelled)
         {

@@ -29,5 +29,8 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
 
         [Required]
         public ProductModel Product { get; set; }
+
+        [Required]
+        public decimal DefaultBid { get; set; }
     }
 }

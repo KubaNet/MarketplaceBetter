@@ -1,0 +1,59 @@
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Entities.Sales
+@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
+
+@inject IAdGroupService AdGroupService
+@inject IAmazonCampaignValidator CampaignValidator
+@inject ISnackbar Snackbar
+
+<EditForm Model="AdGroup" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudTextField Label="Amazon Id" @bind-Value="AdGroup.AmazonId" For="() => AdGroup.AmazonId" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long AdGroupId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private AdGroupModel AdGroup = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        AdGroup = AdGroupService.Get(AdGroupId);
+    }
+
+    private void HandleValidSubmit()
+    {
+        if (IsEdit)
+        {
+            AdGroupService.Update(AdGroup);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Ad Group"));
+        }
+
+        MudDialog.Close();
+    }
+}

@@ -63,6 +63,7 @@
         {
             <MudNavGroup Title="Campaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
+                <MudNavLink Href="/ad-groups">Ad Groups</MudNavLink>
                 <MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
             </MudNavGroup>
         }
@@ -164,6 +165,7 @@
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
         if (path == "campaigns"
+            || path == "ad-groups"
             || path == "amazontargeting")
         {
             return true;

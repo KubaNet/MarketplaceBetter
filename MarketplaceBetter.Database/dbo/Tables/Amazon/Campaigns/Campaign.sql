@@ -6,6 +6,7 @@
 	[TypeId]		BIGINT					NOT NULL,
 	[StrategyId]	BIGINT					NOT NULL,
 	[ProductId]		BIGINT					NULL,
+	[DefaultBid]	DECIMAL					NOT NULL,
 	CONSTRAINT		[PK_Campaign]			PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_Campaign_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
 	CONSTRAINT		[FK_Campaign_Type]		FOREIGN KEY ([TypeId])		REFERENCES [dbo].[CampaignType] ([Id]),
