@@ -15,7 +15,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
 
         public AdGroupModel AdGroup { get; set; }
 
-        public long? AmazonId { get; set; }
+        public string AmazonId { get; set; }
 
         public AdEntityStatusModel Status { get; set; }
     }

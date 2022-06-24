@@ -64,6 +64,7 @@
             <MudNavGroup Title="Campaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
                 <MudNavLink Href="/ad-groups">Ad Groups</MudNavLink>
+                <MudNavLink Href="/product-ads">Product Ads</MudNavLink>
                 <MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
             </MudNavGroup>
         }
@@ -166,6 +167,7 @@
 
         if (path == "campaigns"
             || path == "ad-groups"
+            || path == "product-ads"
             || path == "amazontargeting")
         {
             return true;

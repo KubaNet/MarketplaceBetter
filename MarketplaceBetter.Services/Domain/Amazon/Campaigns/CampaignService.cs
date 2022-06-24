@@ -18,20 +18,23 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 {
     public class CampaignService : ICampaignService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Campaign> _repository;
-        private readonly IMapper _mapper;
         private readonly IAdGroupService _adGroupService;
+        private readonly IProductAdService _productAdService;
 
         public CampaignService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IAdGroupService adGroupService)
+            IAdGroupService adGroupService,
+            IProductAdService productAdService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Campaign>();
             _adGroupService = adGroupService;
+            _productAdService = productAdService;
         }
 
         public CampaignModel Get(long id) => _mapper.Map<CampaignModel>(_repository.Get(id));
@@ -69,7 +72,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             _repository.Add(campaignToAdd);
             _unitOfWork.Save();
 
-            _adGroupService.AddForCampaign(campaignToAdd.Id);
+            long adGroupId = _adGroupService.AddForCampaign(campaignToAdd.Id);
+            _productAdService.AddForAdGroup(adGroupId, campaign.Product.Id);
         }
 
         public void Update(CampaignModel campaign)

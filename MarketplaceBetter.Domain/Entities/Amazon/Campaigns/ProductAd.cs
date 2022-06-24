@@ -17,7 +17,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
 
         public virtual AdGroup AdGroup { get; set; }
 
-        public long? AmazonId { get; set; }
+        public string AmazonId { get; set; }
 
         public long StatusId { get; set; }
 

@@ -3,7 +3,7 @@
 	[Id]			BIGINT						NOT NULL	IDENTITY,
 	[VariantId]		BIGINT						NOT NULL,
 	[AdGroupId]		BIGINT						NOT NULL,
-	[AmazonId]		BIGINT						NULL,
+	[AmazonId]		NVARCHAR(255)				NULL,
 	[StatusId]		BIGINT						NOT NULL,
 	CONSTRAINT		[PK_ProductAd]				PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_ProductAd_Variant]		FOREIGN KEY ([VariantId])	REFERENCES [dbo].[Variant] ([Id]),
@@ -12,5 +12,5 @@
 );
 GO
 
-CREATE UNIQUE INDEX UIX_ProductAd_AmazonId  ON [dbo].[ProductAd] ([AmazonId] ASC);
+CREATE UNIQUE INDEX UIX_ProductAd_AmazonId  ON [dbo].[ProductAd] ([AmazonId] ASC) WHERE [AmazonId] IS NOT NULL;
 GO

@@ -60,7 +60,7 @@
 
     private async void AddAdGroup()
     {
-        var result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Add Campaign" }).Result;
+        var result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Add Ad Group" }).Result;
 
         ProcessAdGroupDialogResult(result);
     }

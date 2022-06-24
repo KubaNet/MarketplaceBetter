@@ -9,15 +9,15 @@
 @using MarketplaceBetter.Services.Domain.Sales.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
 
-@inject IAdGroupService AdGroupService
+@inject IProductAdService ProductAdService
 @inject ISnackbar Snackbar
 
-<EditForm Model="AdGroup" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="ProductAd" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudTextField Label="Amazon Id" @bind-Value="AdGroup.AmazonId" For="() => AdGroup.AmazonId" />
+        <MudTextField Label="Amazon Id" @bind-Value="ProductAd.AmazonId" For="() => ProductAd.AmazonId" />
     </FormDialog>
 </EditForm>
 
@@ -25,10 +25,10 @@
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long AdGroupId { get; set; }
+    [Parameter] public long ProductAdId { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private AdGroupModel AdGroup = new();
+    private ProductAdModel ProductAd = new();
 
     protected override void OnInitialized()
     {
@@ -42,15 +42,15 @@
 
     private void SetInitialValues()
     {
-        AdGroup = AdGroupService.Get(AdGroupId);
+        ProductAd = ProductAdService.Get(ProductAdId);
     }
 
     private void HandleValidSubmit()
     {
         if (IsEdit)
         {
-            AdGroupService.Update(AdGroup);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Ad Group"));
+            ProductAdService.Update(ProductAd);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product Ad"));
         }
 
         MudDialog.Close();

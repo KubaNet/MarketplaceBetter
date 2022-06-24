@@ -1,0 +1,82 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/product-ads"
+@inject IProductAdService ProductAdService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3" Class="mt-2">Product Ads</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductAdModel>>>(ReloadProductAds))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterProductAds" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ProductAdModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="variant" T="ProductAdModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazonid" T="ProductAdModel">Amazon Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ProductAdModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="campaign" T="ProductAdModel">Campaign</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd DataLabel="AmazonId">@context.AmazonId</MudTd>
+            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
+            <MudTd DataLabel="Campaign">@context.AdGroup.Campaign.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductAd(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<ProductAdModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<ProductAdModel>> ReloadProductAds(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<ProductAdModel> parents = ProductAdService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<ProductAdModel>() { TotalItems = ProductAdService.CountForListRequest(ListRequest), Items = parents });
+	}
+
+    private void FilterProductAds(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddProductAd()
+    {
+        var result = await DialogService.Show<ProductAdDialog>(null, new DialogParameters { ["Title"] = "Add Product Ad" }).Result;
+
+        ProcessProductAdDialogResult(result);
+    }
+
+    private async void EditProductAd(long id)
+    {
+        var result = await DialogService.Show<ProductAdDialog>(null, new DialogParameters { ["Title"] = "Edit Product Ad", ["IsEdit"] = true, ["ProductAdId"] = id }).Result;
+
+        ProcessProductAdDialogResult(result);
+    }
+
+    private void ProcessProductAdDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

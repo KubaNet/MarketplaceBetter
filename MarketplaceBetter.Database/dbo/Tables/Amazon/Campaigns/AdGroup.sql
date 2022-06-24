@@ -14,5 +14,5 @@ GO
 CREATE UNIQUE INDEX UIX_AdGroup_Name  ON [dbo].[AdGroup] ([Name] ASC);
 GO
 
-CREATE UNIQUE INDEX UIX_AdGroup_AmazonId  ON [dbo].[AdGroup] ([AmazonId] ASC);
+CREATE UNIQUE INDEX UIX_AdGroup_AmazonId  ON [dbo].[AdGroup] ([AmazonId] ASC) WHERE [AmazonId] IS NOT NULL;
 GO

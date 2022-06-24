@@ -55,7 +55,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             return _mapper.Map<IList<AdGroupModel>>(adGroups);
         }
 
-        public void AddForCampaign(long campaignId)
+        public long AddForCampaign(long campaignId)
         {
             AdGroup lastAdGroup = _repository.GetQuery().OrderBy(g => g.Id).LastOrDefault();
             long nextNumber = lastAdGroup != null ? lastAdGroup.Id + 1 : 1;
@@ -65,6 +65,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             _repository.Add(adGroup);
             _unitOfWork.Save();
+
+            return adGroup.Id;
         }
 
         public void Update(AdGroupModel adGroup)

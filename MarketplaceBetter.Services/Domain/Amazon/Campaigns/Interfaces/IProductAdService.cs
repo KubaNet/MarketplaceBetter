@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 {
-    public interface IAdGroupService
+    public interface IProductAdService
     {
-        AdGroupModel Get(long id);
+        ProductAdModel Get(long id);
 
         int CountForListRequest(ListRequest request);
 
-        IList<AdGroupModel> GetForListRequest(ListRequest request);
+        IList<ProductAdModel> GetForListRequest(ListRequest request);
 
-        long AddForCampaign(long campaignId);
+        void AddForAdGroup(long adGroupId, long productId);
 
-        void Update(AdGroupModel adGroup);
+        void Update(ProductAdModel productAd);
     }
 }
