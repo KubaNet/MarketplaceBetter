@@ -21,7 +21,8 @@
             <MudTh><MudTableSortLabel SortLabel="product" T="CampaignModel">Product</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="CampaignModel">Brand</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="strategy" T="CampaignModel">Strategy</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="instance" T="CampaignModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazonid" T="CampaignModel">Amazon Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="CampaignModel">Status</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -29,7 +30,8 @@
             <MudTd DataLabel="Product">@context.Product.Name</MudTd>
             <MudTd DataLabel="Brand">@context.Product?.Brand.Name</MudTd>
             <MudTd DataLabel="Strategy">@context.Strategy.Name</MudTd>
-            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="AmazonId">@context.AmazonId</MudTd>
+            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />

@@ -21,6 +21,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Campaign> _repository;
+        private readonly IRepository<AdEntityStatus> _adEntityStatusRepository;
         private readonly IAdGroupService _adGroupService;
         private readonly IProductAdService _productAdService;
 
@@ -33,6 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Campaign>();
+            _adEntityStatusRepository = unitOfWork.GetRepository<AdEntityStatus>();
             _adGroupService = adGroupService;
             _productAdService = productAdService;
         }
@@ -69,6 +71,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             TransferValues(campaignToAdd, campaign);
 
+            campaignToAdd.Status = _adEntityStatusRepository.Single(s => s.SystemName == AdEntityStatusEnum.Enabled);
+
             _repository.Add(campaignToAdd);
             _unitOfWork.Save();
 
@@ -93,6 +97,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             toCampaign.TypeId = fromCampaign.Type.Id;
             toCampaign.StrategyId = fromCampaign.Strategy.Id;
             toCampaign.ProductId = fromCampaign.Product.Id;
+            toCampaign.AmazonId = fromCampaign.AmazonId;
         }
 
         private IQueryable<Campaign> ApplyFilter(IQueryable<Campaign> campaigns, ListRequest request)
@@ -106,7 +111,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "instance", "product", "brand"};
+                string[] searchFieldNames = new[] { "id", "name", "product", "brand", "amazonid", "status"};
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -117,7 +122,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
                         "name" => campaigns.Where(c => c.Name.Contains(searchField.Value)),
                         "product" => campaigns.Where(c => c.Product.Name.Contains(searchField.Value)),
                         "brand" => campaigns.Where(c => c.Product.Brand.Name.Contains(searchField.Value)),
-                        "instance" => campaigns.Where(c => c.Instance.Name.Contains(searchField.Value)),
+                        "amazonid" => campaigns.Where(c => c.AmazonId.Contains(searchField.Value)),
+                        "status" => campaigns.Where(c => c.Status.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -127,7 +133,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
                         || c.Name.Contains(searchString)
                         || c.Product.Name.Contains(searchString)
                         || c.Product.Brand.Name.Contains(searchString)
-                        || c.Instance.Name.Contains(searchString));
+                        || c.AmazonId.Contains(searchString)
+                        || c.Status.Name.Contains(searchString));
                 }
             }
 
@@ -144,7 +151,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
                     "name" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Name) : campaigns.OrderByDescending(c => c.Name),
                     "product" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Product.Name) : campaigns.OrderByDescending(c => c.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Product.Brand.Name) : campaigns.OrderByDescending(c => c.Product.Brand.Name),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Instance.Name) : campaigns.OrderByDescending(c => c.Instance.Name),
+                    "amazonid" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.AmazonId) : campaigns.OrderByDescending(c => c.AmazonId),
+                    "status" => request.SortDirection == SortDirection.Ascending ? campaigns.OrderBy(c => c.Status.Name) : campaigns.OrderByDescending(c => c.Status.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

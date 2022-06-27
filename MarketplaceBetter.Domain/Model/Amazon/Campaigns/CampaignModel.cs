@@ -32,5 +32,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
 
         [Required]
         public decimal DefaultBid { get; set; }
+
+        public string AmazonId { get; set; }
+
+        public AdEntityStatusModel Status { get; set; }
     }
 }
