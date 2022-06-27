@@ -1,8 +1,10 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
 @using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 @using MarketplaceBetter.Services.Model
+@using System.IO
 
 @page "/campaigns"
+@inject IJSRuntime JS
 @inject ICampaignService CampaignService
 @inject IDialogService DialogService
 
@@ -11,9 +13,10 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CampaignModel>>>(ReloadCampaigns))" Dense="true" Hover="true" RowsPerPage="15">
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterCampaigns" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
-            <MudButton OnClick="AddCampaign" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Campaign</MudButton>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterCampaigns" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="Export" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Upload" Color="Color.Info">Export</MudButton>
+            <MudButton OnClick="AddCampaign" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Campaign</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="CampaignModel">Id</MudTableSortLabel></MudTh>
@@ -44,22 +47,22 @@
     private ListRequest ListRequest = new();
 
     private Task<TableData<CampaignModel>> ReloadCampaigns(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<CampaignModel> parents = CampaignService.GetForListRequest(ListRequest);
+        IList<CampaignModel> parents = CampaignService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<CampaignModel>() { TotalItems = CampaignService.CountForListRequest(ListRequest), Items = parents });
-	}
+        return Task.FromResult(new TableData<CampaignModel>() { TotalItems = CampaignService.CountForListRequest(ListRequest), Items = parents });
+    }
 
     private void FilterCampaigns(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
     private async void AddCampaign()
     {
@@ -81,5 +84,14 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private async void Export()
+    {
+        Stream fileStream = CampaignService.Export();
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("DownloadFileFromStream", $"Campaigns.csv", streamRef);
     }
 }

@@ -2,6 +2,7 @@
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,5 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
         void Add(CampaignModel campaign);
 
         void Update(CampaignModel campaign);
+
+        Stream Export();
     }
 }

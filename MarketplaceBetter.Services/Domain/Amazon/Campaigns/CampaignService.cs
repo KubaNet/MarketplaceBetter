@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using CsvHelper;
+using CsvHelper.Configuration;
+using MarketplaceBetter.Domain.CsvRecords;
 using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
+using MarketplaceBetter.Infrastructure.CsvMaps;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -10,6 +14,8 @@ using MarketplaceBetter.Services.Model;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,6 +94,48 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             _repository.Update(campaignToUpdate);
             _unitOfWork.Save();
+        }
+
+        public Stream Export()
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+                Encoding = Encoding.UTF8
+            };
+
+            CsvWriter csv = new CsvWriter(writer, config);
+            csv.Context.RegisterClassMap<SponsoredProductCsvRecordMap>();
+
+            IList<SponsoredProductCsvRecord> records = CreateSponsoredProductsRecords();
+
+            csv.WriteRecords(records);
+
+            writer.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
+        }
+
+        private IList<SponsoredProductCsvRecord> CreateSponsoredProductsRecords()
+        {
+            IList<SponsoredProductCsvRecord> records = new List<SponsoredProductCsvRecord>();
+
+            foreach (var campaign in _repository.GetAll())
+            {
+                SponsoredProductCsvRecord campaignRecord = new SponsoredProductCsvRecord();
+
+                campaignRecord.Product = "Sponsored Products";
+                campaignRecord.Entity = "Campaign";
+                campaignRecord.CampaignName = campaign.Name;
+
+                records.Add(campaignRecord);
+            }
+
+            return records;
         }
 
         private void TransferValues(Campaign toCampaign, CampaignModel fromCampaign)
