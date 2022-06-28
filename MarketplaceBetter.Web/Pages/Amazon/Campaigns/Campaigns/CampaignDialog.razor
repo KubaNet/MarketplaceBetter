@@ -10,10 +10,11 @@
 @using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
 
 @inject ICampaignService CampaignService
-@inject IAmazonCampaignValidator CampaignValidator
+@inject ICampaignValidator CampaignValidator
+@inject IInstanceService InstanceService
+@inject IPortfolioService PortfolioService
 @inject IBrandService BrandService
 @inject IProductService ProductService
-@inject IInstanceService InstanceService
 @inject ICampaignTypeService TypeService
 @inject ICampaignStrategyService StrategyService
 @inject ISnackbar Snackbar
@@ -27,6 +28,12 @@
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Portfolio" T="PortfolioModel" @bind-Value="Campaign.Portfolio" For="() => Campaign.Portfolio" Disabled="PortfolioSelectDisabled">
+            @foreach (var portfolio in Portfolios)
+            {
+                <MudSelectItem Value="portfolio">@portfolio.Name</MudSelectItem>
             }
         </MudSelect>
         <MudSelect Label="Type" T="CampaignTypeModel" Value="Campaign.Type" For="() => Campaign.Type" ValueChanged="HandleTypeChanged">
@@ -68,12 +75,14 @@
     private CampaignModel Campaign = new();
     private BrandModel Brand;
 
+    private IList<InstanceModel> Instances;
+    private IList<PortfolioModel> Portfolios = new List<PortfolioModel>();
     private IList<BrandModel> Brands;
     private IList<ProductModel> Products = new List<ProductModel>();
-    private IList<InstanceModel> Instances;
     private IList<CampaignTypeModel> Types;
     private IList<CampaignStrategyModel> Strategies = new List<CampaignStrategyModel>();
 
+    private bool PortfolioSelectDisabled = true;
     private bool ProductSelectDisabled = true;
     private bool StrategySelectDisabled = true;
 
@@ -95,9 +104,11 @@
     {
         Campaign = CampaignService.Get(CampaignId);
 
+        ActivatePortfolio(Campaign.Instance.Id);
         ActivateProduct(Campaign.Product.Brand.Id);
 
         Campaign.Instance = Instances.Single(i => i.Id == Campaign.Instance.Id);
+        Campaign.Portfolio = Portfolios.Single(p => p.Id == Campaign.Portfolio.Id);
         Brand = Brands.Single(b => b.Id == Campaign.Product.Brand.Id);
         Campaign.Product = Products.Single(p => p.Id == Campaign.Product.Id);
     }
@@ -105,6 +116,9 @@
     private void HandleInstanceChanged(InstanceModel instance)
     {
         Campaign.Instance = instance;
+
+        ResetPortfolio();
+        ActivatePortfolio(instance.Id);
         SetCampaignName();
     }
 
@@ -138,6 +152,19 @@
 
         SetCampaignName();
         SetCampaignName();
+    }
+
+    private void ResetPortfolio()
+    {
+        Campaign.Portfolio = null;
+        PortfolioSelectDisabled = true;
+        Portfolios = new List<PortfolioModel>();
+    }
+
+    private void ActivatePortfolio(long instanceId)
+    {
+        PortfolioSelectDisabled = false;
+        Portfolios = PortfolioService.GetForInstance(instanceId);
     }
 
     private void ResetProduct()

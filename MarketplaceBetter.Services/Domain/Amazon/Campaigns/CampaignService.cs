@@ -130,6 +130,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
                 campaignRecord.Product = "Sponsored Products";
                 campaignRecord.Entity = "Campaign";
+                campaignRecord.CampaignId = campaign.AmazonId;
                 campaignRecord.CampaignName = campaign.Name;
 
                 records.Add(campaignRecord);
@@ -142,6 +143,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
         {
             toCampaign.Name = fromCampaign.Name;
             toCampaign.InstanceId = fromCampaign.Instance.Id;
+            toCampaign.PortfolioId = fromCampaign.Portfolio.Id;
             toCampaign.TypeId = fromCampaign.Type.Id;
             toCampaign.StrategyId = fromCampaign.Strategy.Id;
             toCampaign.ProductId = fromCampaign.Product.Id;

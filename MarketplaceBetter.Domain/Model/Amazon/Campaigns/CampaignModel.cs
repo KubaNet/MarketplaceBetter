@@ -22,6 +22,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
         public InstanceModel Instance { get; set; }
 
         [Required]
+        public PortfolioModel Portfolio { get; set; }
+
+        [Required]
         public CampaignTypeModel Type { get; set; }
 
         [Required]

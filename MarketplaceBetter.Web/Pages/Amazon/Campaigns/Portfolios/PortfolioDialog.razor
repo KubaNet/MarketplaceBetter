@@ -1,0 +1,87 @@
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Entities.Sales
+@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
+
+@inject IPortfolioService PortfolioService
+@inject IPortfolioValidator PortfolioValidator
+@inject IInstanceService InstanceService
+@inject ISnackbar Snackbar
+
+<EditForm Model="Portfolio" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Portfolio.Instance" For="() => Portfolio.Instance">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Name" @bind-Value="Portfolio.Name" For="() => Portfolio.Name" />
+        <MudTextField Label="Amazon Id" @bind-Value="Portfolio.AmazonId" For="() => Portfolio.AmazonId" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long PortfolioId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private PortfolioModel Portfolio = new();
+
+    private IList<InstanceModel> Instances;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Instances = InstanceService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        Portfolio = PortfolioService.Get(PortfolioId);
+
+        Portfolio.Instance = Instances.Single(i => i.Id == Portfolio.Instance.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = PortfolioValidator.Validate(Portfolio);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                PortfolioService.Update(Portfolio);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Portfolio"));
+            }
+            else
+            {
+                PortfolioService.Add(Portfolio);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Portfolio"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

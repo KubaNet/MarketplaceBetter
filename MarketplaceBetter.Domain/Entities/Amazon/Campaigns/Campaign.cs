@@ -16,6 +16,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
 
         public virtual Instance Instance { get; set; }
 
+        public long PortfolioId { get; set; }
+
+        public virtual Portfolio Portfolio { get; set; }
+
         public long TypeId { get; set; }
 
         public virtual CampaignType Type { get; set; }

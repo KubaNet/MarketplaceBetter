@@ -6,11 +6,11 @@ using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Campaigns
 {
-    public class AmazonCampaignValidator : IAmazonCampaignValidator
+    public class CampaignValidator : ICampaignValidator
     {
         private readonly IRepository<Campaign> _repository;
 
-        public AmazonCampaignValidator(IUnitOfWork unitOfWork)
+        public CampaignValidator(IUnitOfWork unitOfWork)
         {
             _repository = unitOfWork.GetRepository<Campaign>();
         }
@@ -19,14 +19,14 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Campaigns
         {
             ValidationResult result = new();
 
-            if (_repository.Any(p => p.Id != campaign.Id && p.InstanceId == campaign.Instance.Id && p.ProductId == campaign.Product.Id))
+            if (_repository.Any(c => c.Id != campaign.Id && c.InstanceId == campaign.Instance.Id && c.ProductId == campaign.Product.Id))
             {
-                result.AddError("There already exists an Amazon Campaign for this Instance and Product.");
+                result.AddError("There already exists a Campaign for this Instance and Product.");
             }
 
-            if (_repository.Any(p => p.Id != campaign.Id && p.Name == campaign.Name))
+            if (_repository.Any(c => c.Id != campaign.Id && c.Name == campaign.Name))
             {
-                result.AddErrorFor<CampaignModel>(p => p.Name, ValidationMessages.NameNotUnique, "Amazon Campaign");
+                result.AddErrorFor<CampaignModel>(c => c.Name, ValidationMessages.NameNotUnique, "Campaign");
             }
 
             return result;

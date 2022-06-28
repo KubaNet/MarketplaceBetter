@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
 {
-    public interface IAmazonCampaignValidator
+    public interface ICampaignValidator
     {
         ValidationResult Validate(CampaignModel campaign);
     }

@@ -50,9 +50,9 @@
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<CampaignModel> parents = CampaignService.GetForListRequest(ListRequest);
+        IList<CampaignModel> campaigns = CampaignService.GetForListRequest(ListRequest);
 
-        return Task.FromResult(new TableData<CampaignModel>() { TotalItems = CampaignService.CountForListRequest(ListRequest), Items = parents });
+        return Task.FromResult(new TableData<CampaignModel>() { TotalItems = CampaignService.CountForListRequest(ListRequest), Items = campaigns });
     }
 
     private void FilterCampaigns(string searchString)
