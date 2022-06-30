@@ -11,6 +11,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -28,21 +29,28 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Campaign> _repository;
         private readonly IRepository<AdEntityStatus> _adEntityStatusRepository;
+        private readonly IRepository<AdGroup> _adGroupRepository;
+        private readonly IRepository<ProductAd> _productAdRepository;
         private readonly IAdGroupService _adGroupService;
         private readonly IProductAdService _productAdService;
+        private readonly IAdBulksheetRecordsCreator _recordsCreator;
 
         public CampaignService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IAdGroupService adGroupService,
-            IProductAdService productAdService)
+            IProductAdService productAdService,
+            IAdBulksheetRecordsCreator recordsCreator)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Campaign>();
             _adEntityStatusRepository = unitOfWork.GetRepository<AdEntityStatus>();
+            _adGroupRepository = unitOfWork.GetRepository<AdGroup>();
+            _productAdRepository = unitOfWork.GetRepository<ProductAd>();
             _adGroupService = adGroupService;
             _productAdService = productAdService;
+            _recordsCreator = recordsCreator;
         }
 
         public CampaignModel Get(long id) => _mapper.Map<CampaignModel>(_repository.Get(id));
@@ -126,11 +134,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             foreach (var campaign in _repository.GetAll())
             {
-                SponsoredProductCsvRecord campaignRecord = AdBulksheetHelper.CreateSponsoredProductsCampaign(campaign);
+                SponsoredProductCsvRecord campaignRecord = _recordsCreator.CreateSponsoredProductsCampaign(campaign);
                 records.Add(campaignRecord);
 
-                IList<SponsoredProductCsvRecord> biddingAdjustmentRecords = AdBulksheetHelper.CreateSponsoredProductsBiddingAdjustments(campaign);
+                IList<SponsoredProductCsvRecord> biddingAdjustmentRecords = _recordsCreator.CreateSponsoredProductsBiddingAdjustments(campaign);
                 records.AddRange(biddingAdjustmentRecords);
+
+                AdGroup adGroup = _adGroupRepository.Single(g => g.CampaignId == campaign.Id);
+                SponsoredProductCsvRecord adGroupRecord = _recordsCreator.CreateSponsoredProductsAdGroup(campaign, adGroup);
+                records.Add(adGroupRecord);
+
+                IList<ProductAd> productAds = _productAdRepository.Where(p => p.AdGroupId == adGroup.Id).ToList();
+                IList<SponsoredProductCsvRecord> productAdsRecords = _recordsCreator.CreateSponsoredProductsProductAds(campaign, adGroup, productAds);
+                records.AddRange(productAdsRecords);
             }
 
             return records;
