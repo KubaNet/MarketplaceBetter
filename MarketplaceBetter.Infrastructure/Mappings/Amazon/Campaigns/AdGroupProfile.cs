@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Campaigns.Campaigns
+namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Campaigns
 {
     public class AdGroupProfile : Profile
     {

@@ -17,6 +17,7 @@
 @inject IProductService ProductService
 @inject ICampaignTypeService TypeService
 @inject ICampaignStrategyService StrategyService
+@inject IBiddingStrategyService BiddingStrategyService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Campaign" OnValidSubmit="@HandleValidSubmit">
@@ -60,6 +61,20 @@
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect Label="Bidding Strategy" T="BiddingStrategyModel" @bind-Value="Campaign.BiddingStrategy" For="() => Campaign.BiddingStrategy">
+            @foreach (var biddingStrategy in BiddingStrategies)
+            {
+                <MudSelectItem Value="biddingStrategy">@biddingStrategy.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <div class="d-flex">
+            <MudNumericField Label="Default Bid" @bind-Value="Campaign.DefaultBid" For="() => Campaign.DefaultBid" />
+            <MudNumericField Label="Daily Budget" @bind-Value="Campaign.DailyBudget" For="() => Campaign.DailyBudget" Class="ml-2" />
+        </div>
+        <div class="d-flex">
+            <MudNumericField Label="Top Of Search Bid Adjustment" @bind-Value="Campaign.TopOfSearchBidAdjustment" For="() => Campaign.TopOfSearchBidAdjustment" />
+            <MudNumericField Label="Product Page Bid Adjustment" @bind-Value="Campaign.ProductPageBidAdjustment" For="() => Campaign.ProductPageBidAdjustment" Class="ml-2" />
+        </div>
         <MudTextField Label="Name" @bind-Value="Campaign.Name" For="() => Campaign.Name" />
         <MudTextField Label="Amazon Id" @bind-Value="Campaign.AmazonId" For="() => Campaign.AmazonId" />
     </FormDialog>
@@ -81,6 +96,7 @@
     private IList<ProductModel> Products = new List<ProductModel>();
     private IList<CampaignTypeModel> Types;
     private IList<CampaignStrategyModel> Strategies = new List<CampaignStrategyModel>();
+    private IList<BiddingStrategyModel> BiddingStrategies;
 
     private bool PortfolioSelectDisabled = true;
     private bool ProductSelectDisabled = true;
@@ -93,6 +109,7 @@
         Brands = BrandService.GetAll();
         Instances = InstanceService.GetAll();
         Types = TypeService.GetAll();
+        BiddingStrategies = BiddingStrategyService.GetAll();
 
         if (IsEdit)
         {

@@ -115,6 +115,8 @@
     <Build Include="dbo\Tables\Amazon\Campaigns\AdGroup.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\ProductAd.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\Portfolio.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\BiddingStrategy.sql" />
+    <None Include="Scripts\Inserts\11_BiddingStrategies.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />

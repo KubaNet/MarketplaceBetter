@@ -122,18 +122,15 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
         private IList<SponsoredProductCsvRecord> CreateSponsoredProductsRecords()
         {
-            IList<SponsoredProductCsvRecord> records = new List<SponsoredProductCsvRecord>();
+            List<SponsoredProductCsvRecord> records = new List<SponsoredProductCsvRecord>();
 
             foreach (var campaign in _repository.GetAll())
             {
-                SponsoredProductCsvRecord campaignRecord = new SponsoredProductCsvRecord();
-
-                campaignRecord.Product = "Sponsored Products";
-                campaignRecord.Entity = "Campaign";
-                campaignRecord.CampaignId = campaign.AmazonId;
-                campaignRecord.CampaignName = campaign.Name;
-
+                SponsoredProductCsvRecord campaignRecord = AdBulksheetHelper.CreateSponsoredProductsCampaign(campaign);
                 records.Add(campaignRecord);
+
+                IList<SponsoredProductCsvRecord> biddingAdjustmentRecords = AdBulksheetHelper.CreateSponsoredProductsBiddingAdjustments(campaign);
+                records.AddRange(biddingAdjustmentRecords);
             }
 
             return records;
@@ -147,6 +144,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             toCampaign.TypeId = fromCampaign.Type.Id;
             toCampaign.StrategyId = fromCampaign.Strategy.Id;
             toCampaign.ProductId = fromCampaign.Product.Id;
+            toCampaign.BiddingStrategyId = fromCampaign.BiddingStrategy.Id;
+            toCampaign.DefaultBid = fromCampaign.DefaultBid;
+            toCampaign.DailyBudget = fromCampaign.DailyBudget;
+            toCampaign.TopOfSearchBidAdjustment = fromCampaign.TopOfSearchBidAdjustment;
+            toCampaign.ProductPageBidAdjustment = fromCampaign.ProductPageBidAdjustment;
             toCampaign.AmazonId = fromCampaign.AmazonId;
         }
 

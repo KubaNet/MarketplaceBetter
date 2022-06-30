@@ -34,7 +34,24 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Campaigns
         public ProductModel Product { get; set; }
 
         [Required]
+        [Display(Name = "Default Bid")]
         public decimal DefaultBid { get; set; }
+
+        [Required]
+        [Display(Name = "Daily Budget")]
+        public int DailyBudget { get; set; }
+
+        [Required]
+        [Display(Name = "Top Of Search Bid Adjustment")]
+        public int TopOfSearchBidAdjustment { get; set; }
+
+        [Required]
+        [Display(Name = "Product Page Bid Adjustment")]
+        public int ProductPageBidAdjustment { get; set; }
+
+        [Required]
+        [Display(Name = "Bidding Strategy")]
+        public BiddingStrategyModel BiddingStrategy { get; set; }
 
         public string AmazonId { get; set; }
 

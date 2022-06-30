@@ -34,6 +34,16 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
 
         public decimal DefaultBid { get; set; }
 
+        public int DailyBudget { get; set; }
+
+        public int TopOfSearchBidAdjustment { get; set; }
+
+        public int ProductPageBidAdjustment { get; set; }
+
+        public long BiddingStrategyId { get; set; }
+
+        public virtual BiddingStrategy BiddingStrategy { get; set; }
+
         public string AmazonId { get; set; }
 
         public long StatusId { get; set; }
