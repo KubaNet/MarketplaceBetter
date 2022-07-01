@@ -17,16 +17,16 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ProductAdModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="variant" T="ProductAdModel">Variant</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="amazonid" T="ProductAdModel">Amazon Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="status" T="ProductAdModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazonid" T="ProductAdModel">Amazon Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="campaign" T="ProductAdModel">Campaign</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd DataLabel="Status"><ProductAdStatusDisplay ProductAd="context"/></MudTd>
             <MudTd DataLabel="AmazonId">@context.AmazonId</MudTd>
-            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
             <MudTd DataLabel="Campaign">@context.AdGroup.Campaign.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProductAd(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>

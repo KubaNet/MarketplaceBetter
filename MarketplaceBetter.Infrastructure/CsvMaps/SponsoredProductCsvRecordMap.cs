@@ -16,11 +16,11 @@ namespace MarketplaceBetter.Infrastructure.CsvMaps
             AutoMap(CultureInfo.InvariantCulture);
             Map(r => r.CampaignId).Name("Campaign Id");
             Map(r => r.AdGroupId).Name("Ad Group Id");
-            Map(r => r.AdGroupId).Name("Portfolio Id");
+            Map(r => r.PortfolioId).Name("Portfolio Id");
             Map(r => r.AdId).Name("Ad Id (Read only)");
             Map(r => r.KeywordId).Name("Keyword Id (Read only)");
             Map(r => r.ProductTargetingId).Name("Product Targeting Id (Read only)");
-            Map(r => r.CampaignId).Name("Campaign Name");
+            Map(r => r.CampaignName).Name("Campaign Name");
             Map(r => r.AdGroupName).Name("Ad Group Name");
             Map(r => r.StartDate).Name("Start Date");
             Map(r => r.EndDate).Name("End Date");

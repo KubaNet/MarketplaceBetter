@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
+using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
         void AddForAdGroup(long adGroupId, long productId);
 
         void Update(ProductAdModel productAd);
+
+        void UpdateStatus(long productAdId, AdEntityStatusEnum status);
     }
 }

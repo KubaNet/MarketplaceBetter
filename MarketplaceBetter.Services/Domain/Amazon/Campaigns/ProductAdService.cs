@@ -84,6 +84,17 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             _unitOfWork.Save();
         }
 
+        public void UpdateStatus(long productAdId, AdEntityStatusEnum status)
+        {
+            ProductAd productAd = _repository.Get(productAdId);
+            AdEntityStatus newStatus = _adEntityStatusRepository.Single(s => s.SystemName == status);
+
+            productAd.Status = newStatus;
+
+            _repository.Update(productAd);
+            _unitOfWork.Save();
+        }
+
         private void TransferValues(ProductAd toProductAd, ProductAdModel fromProductAd)
         {
             toProductAd.AmazonId = fromProductAd.AmazonId;

@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
+using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
         void Add(CampaignModel campaign);
 
         void Update(CampaignModel campaign);
+
+        void UpdateStatus(long campaign, AdEntityStatusEnum status);
 
         Stream Export();
     }

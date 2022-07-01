@@ -104,6 +104,17 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             _unitOfWork.Save();
         }
 
+        public void UpdateStatus(long campaignId, AdEntityStatusEnum status)
+        {
+            Campaign campaign = _repository.Get(campaignId);
+            AdEntityStatus newStatus = _adEntityStatusRepository.Single(s => s.SystemName == status);
+
+            campaign.Status = newStatus;
+
+            _repository.Update(campaign);
+            _unitOfWork.Save();
+        }
+
         public Stream Export()
         {
             MemoryStream stream = new MemoryStream();
