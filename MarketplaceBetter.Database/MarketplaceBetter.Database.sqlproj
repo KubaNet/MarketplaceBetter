@@ -78,8 +78,8 @@
     <None Include="Scripts\Inserts\02_Instances.sql" />
     <Build Include="dbo\Tables\Base\Country.sql" />
     <None Include="Scripts\Inserts\01_Countries.sql" />
-    <None Include="Scripts\Inserts\12_AmazonTargetingStatuses.sql" />
-    <None Include="Scripts\Inserts\13_AmazonTargetingTypes.sql" />
+    <None Include="Scripts\Inserts\AmazonTargetingStatuses.sql" />
+    <None Include="Scripts\Inserts\AmazonTargetingTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchTarget.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\Research.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\Child.sql" />
@@ -117,6 +117,8 @@
     <Build Include="dbo\Tables\Amazon\Campaigns\Portfolio.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\BiddingStrategy.sql" />
     <None Include="Scripts\Inserts\11_BiddingStrategies.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\MatchType.sql" />
+    <None Include="Scripts\Inserts\12_MatchTypes.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
