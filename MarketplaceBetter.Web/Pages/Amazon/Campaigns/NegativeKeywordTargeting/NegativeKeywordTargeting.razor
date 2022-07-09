@@ -1,0 +1,84 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/negative-keyword-targeting"
+@inject INegativeKeywordTargetingService NegativeKeywordTargetingService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3" Class="mt-2">Negative Keyword Targeting</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<NegativeKeywordTargetingModel>>>(ReloadNegativeKeywordTargetings))" Dense="true" Hover="true" RowsPerPage="15">
+        <ToolBarContent>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterNegativeKeywordTargetings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="NegativeKeywordTargetingModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="keyword" T="NegativeKeywordTargetingModel">Keyword</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="matchtype" T="NegativeKeywordTargetingModel">Match Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="NegativeKeywordTargetingModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazonid" T="NegativeKeywordTargetingModel">Amazon Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="campaign" T="NegativeKeywordTargetingModel">Campaign</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Keyword">@context.Keyword</MudTd>
+            <MudTd DataLabel="MatchType">@context.MatchType.Name</MudTd>
+            <MudTd DataLabel="Status"><NegativeKeywordTargetingStatusDisplay NegativeKeywordTargeting="context"/></MudTd>
+            <MudTd DataLabel="AmazonId">@context.AmazonId</MudTd>
+            <MudTd DataLabel="Campaign">@context.AdGroup.Campaign.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditNegativeKeywordTargeting(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<NegativeKeywordTargetingModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<NegativeKeywordTargetingModel>> ReloadNegativeKeywordTargetings(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<NegativeKeywordTargetingModel> parents = NegativeKeywordTargetingService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<NegativeKeywordTargetingModel>() { TotalItems = NegativeKeywordTargetingService.CountForListRequest(ListRequest), Items = parents });
+	}
+
+    private void FilterNegativeKeywordTargetings(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void AddNegativeKeywordTargeting()
+    {
+        var result = await DialogService.Show<NegativeKeywordTargetingDialog>(null, new DialogParameters { ["Title"] = "Add Targeting" }).Result;
+
+        ProcessNegativeKeywordTargetingDialogResult(result);
+    }
+
+    private async void EditNegativeKeywordTargeting(long id)
+    {
+        var result = await DialogService.Show<NegativeKeywordTargetingDialog>(null, new DialogParameters { ["Title"] = "Edit Targeting", ["IsEdit"] = true, ["NegativeKeywordTargetingId"] = id }).Result;
+
+        ProcessNegativeKeywordTargetingDialogResult(result);
+    }
+
+    private void ProcessNegativeKeywordTargetingDialogResult(DialogResult result)
+    {
+        if (!result.Cancelled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

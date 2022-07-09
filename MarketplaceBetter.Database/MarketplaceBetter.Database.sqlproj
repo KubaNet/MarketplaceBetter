@@ -119,6 +119,7 @@
     <None Include="Scripts\Inserts\11_BiddingStrategies.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\MatchType.sql" />
     <None Include="Scripts\Inserts\12_MatchTypes.sql" />
+    <Build Include="dbo\Tables\Amazon\Campaigns\NegativeKeywordTargeting.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />

@@ -59,6 +59,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<AdGroup> AdGroup { get; set; }
         public DbSet<ProductAd> ProductAd { get; set; }
         public DbSet<MatchType> MatchType { get; set; }
+        public DbSet<NegativeKeywordTargeting> NegativeKeywordTargeting { get; set; }
 
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }

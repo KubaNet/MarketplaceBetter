@@ -1,0 +1,58 @@
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Entities.Sales
+@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Sales
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Sales.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
+
+@inject INegativeKeywordTargetingService NegativeKeywordTargetingService
+@inject ISnackbar Snackbar
+
+<EditForm Model="NegativeKeywordTargeting" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudTextField Label="Amazon Id" @bind-Value="NegativeKeywordTargeting.AmazonId" For="() => NegativeKeywordTargeting.AmazonId" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long NegativeKeywordTargetingId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private NegativeKeywordTargetingModel NegativeKeywordTargeting = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        NegativeKeywordTargeting = NegativeKeywordTargetingService.Get(NegativeKeywordTargetingId);
+    }
+
+    private void HandleValidSubmit()
+    {
+        if (IsEdit)
+        {
+            NegativeKeywordTargetingService.Update(NegativeKeywordTargeting);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Negative Keyword Targeting"));
+        }
+
+        MudDialog.Close();
+    }
+}

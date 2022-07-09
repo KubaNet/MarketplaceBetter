@@ -1,0 +1,37 @@
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.Campaigns
+@using MarketplaceBetter.Domain.Model.Amazon.Campaigns
+@using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
+
+@inject INegativeKeywordTargetingService NegativeKeywordTargetingService
+
+<MudSwitch T="bool" Checked="Checked" Color="Color.Tertiary" CheckedChanged="OnCheckedChanged" />
+
+@code {
+    [Parameter] public NegativeKeywordTargetingModel NegativeKeywordTargeting { get; set; }
+
+    private bool Checked = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (NegativeKeywordTargeting.Status.SystemName == AdEntityStatusEnum.Enabled)
+        {
+            Checked = true;
+        }
+    }
+
+    private void OnCheckedChanged(bool status)
+    {
+        Checked = status;
+
+        if (status == true)
+        {
+            NegativeKeywordTargetingService.UpdateStatus(NegativeKeywordTargeting.Id, AdEntityStatusEnum.Enabled);
+        }
+        else
+        {
+            NegativeKeywordTargetingService.UpdateStatus(NegativeKeywordTargeting.Id, AdEntityStatusEnum.Paused);
+        }
+    }
+}
