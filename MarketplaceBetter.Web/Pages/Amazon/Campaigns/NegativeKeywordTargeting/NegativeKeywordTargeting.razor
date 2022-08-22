@@ -2,11 +2,11 @@
 @using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 @using MarketplaceBetter.Services.Model
 
-@page "/negative-keyword-targeting"
+@page "/negative-keywords"
 @inject INegativeKeywordTargetingService NegativeKeywordTargetingService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Negative Keyword Targeting</MudText>
+<MudText Typo="Typo.h3" Class="mt-2">Negative Keywords</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<NegativeKeywordTargetingModel>>>(ReloadNegativeKeywordTargetings))" Dense="true" Hover="true" RowsPerPage="15">

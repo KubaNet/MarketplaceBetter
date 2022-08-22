@@ -25,37 +25,37 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect Label="Instance" T="InstanceModel" Value="Campaign.Instance" For="() => Campaign.Instance" ValueChanged="HandleInstanceChanged">
+        <MudSelect Label="Instance" T="InstanceModel" Value="Campaign.Instance" For="() => Campaign.Instance" ValueChanged="HandleInstanceChanged" Disabled="IsEdit">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Portfolio" T="PortfolioModel" @bind-Value="Campaign.Portfolio" For="() => Campaign.Portfolio" Disabled="PortfolioSelectDisabled">
+        <MudSelect Label="Portfolio" T="PortfolioModel" @bind-Value="Campaign.Portfolio" For="() => Campaign.Portfolio" Disabled="PortfolioSelectDisabled || IsEdit">
             @foreach (var portfolio in Portfolios)
             {
                 <MudSelectItem Value="portfolio">@portfolio.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Type" T="CampaignTypeModel" Value="Campaign.Type" For="() => Campaign.Type" ValueChanged="HandleTypeChanged">
+        <MudSelect Label="Type" T="CampaignTypeModel" Value="Campaign.Type" For="() => Campaign.Type" ValueChanged="HandleTypeChanged" Disabled="IsEdit">
             @foreach (var type in Types)
             {
                 <MudSelectItem Value="type">@type.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Strategy" T="CampaignStrategyModel" Value="Campaign.Strategy" For="() => Campaign.Strategy" ValueChanged="HandleStrategyChanged" Disabled="StrategySelectDisabled">
+        <MudSelect Label="Strategy" T="CampaignStrategyModel" Value="Campaign.Strategy" For="() => Campaign.Strategy" ValueChanged="HandleStrategyChanged" Disabled="StrategySelectDisabled || IsEdit">
             @foreach (var strategy in Strategies)
             {
                 <MudSelectItem Value="strategy">@strategy.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged" Disabled="IsEdit">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Product" T="ProductModel" Value="Campaign.Product" For="() => Campaign.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+        <MudSelect Label="Product" T="ProductModel" Value="Campaign.Product" For="() => Campaign.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled || IsEdit">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
@@ -122,10 +122,14 @@
         Campaign = CampaignService.Get(CampaignId);
 
         ActivatePortfolio(Campaign.Instance.Id);
+        ActivateStrategy(Campaign.Type.SystemName);
         ActivateProduct(Campaign.Product.Brand.Id);
 
         Campaign.Instance = Instances.Single(i => i.Id == Campaign.Instance.Id);
         Campaign.Portfolio = Portfolios.Single(p => p.Id == Campaign.Portfolio.Id);
+        Campaign.Type = Types.Single(t => t.Id == Campaign.Type.Id);
+        Campaign.Strategy = Strategies.Single(s => s.Id == Campaign.Strategy.Id);
+        Campaign.BiddingStrategy = BiddingStrategies.Single(s => s.Id == Campaign.BiddingStrategy.Id);
         Brand = Brands.Single(b => b.Id == Campaign.Product.Brand.Id);
         Campaign.Product = Products.Single(p => p.Id == Campaign.Product.Id);
     }

@@ -7,10 +7,13 @@
 	[StatusId]		BIGINT						NOT NULL,
 	CONSTRAINT		[PK_ProductAd]				PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_ProductAd_Variant]		FOREIGN KEY ([VariantId])	REFERENCES [dbo].[Variant] ([Id]),
-	CONSTRAINT		[FK_ProductAd_AdGroupId]	FOREIGN KEY ([AdGroupId])	REFERENCES [dbo].[AdGroup] ([Id]),
+	CONSTRAINT		[FK_ProductAd_AdGroup]		FOREIGN KEY ([AdGroupId])	REFERENCES [dbo].[AdGroup] ([Id]),
 	CONSTRAINT		[FK_ProductAd_Status]		FOREIGN KEY ([StatusId])	REFERENCES [dbo].[AdEntityStatus] ([Id]),
 );
 GO
 
 CREATE UNIQUE INDEX UIX_ProductAd_AmazonId  ON [dbo].[ProductAd] ([AmazonId] ASC) WHERE [AmazonId] IS NOT NULL;
+GO
+
+CREATE UNIQUE INDEX UIX_ProductAd_AdGroup_Variant  ON [dbo].[ProductAd] ([AdGroupId] ASC, [VariantId] ASC);
 GO

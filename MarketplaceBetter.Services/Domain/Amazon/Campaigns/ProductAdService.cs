@@ -65,8 +65,36 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             foreach (var variant in variants)
             {
-                ProductAd productAd = new ProductAd() { AdGroupId = adGroupId, VariantId = variant.Id, 
-                    Status = _adEntityStatusRepository.Single(s => s.SystemName == AdEntityStatusEnum.Enabled) };
+                ProductAd productAd = new ProductAd()
+                {
+                    AdGroupId = adGroupId,
+                    VariantId = variant.Id,
+                    Status = _adEntityStatusRepository.Single(s => s.SystemName == AdEntityStatusEnum.Enabled)
+                };
+
+                _repository.Add(productAd);
+            }
+
+            _unitOfWork.Save();
+        }
+
+        public void UpdateForAdGroup(long adGroupId, long productId)
+        {
+            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == productId && v.Status.SystemName == VariantStatusEnum.Active).ToList();
+
+            foreach (var variant in variants)
+            {
+                if (_repository.Any(a => a.AdGroupId == adGroupId && a.VariantId == variant.Id))
+                {
+                    continue;
+                }
+
+                ProductAd productAd = new ProductAd()
+                {
+                    AdGroupId = adGroupId,
+                    VariantId = variant.Id,
+                    Status = _adEntityStatusRepository.Single(s => s.SystemName == AdEntityStatusEnum.Enabled)
+                };
 
                 _repository.Add(productAd);
             }

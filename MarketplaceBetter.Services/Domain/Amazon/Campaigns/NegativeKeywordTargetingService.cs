@@ -52,6 +52,18 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             return _mapper.Map<IList<NegativeKeywordTargetingModel>>(negativeKeywordTargetings);
         }
 
+        public void Add(NegativeKeywordTargetingModel negativeKeywordTargeting)
+        {
+            NegativeKeywordTargeting negativeKeywordTargetingToAdd = new();
+
+            TransferValues(negativeKeywordTargetingToAdd, negativeKeywordTargeting);
+
+            negativeKeywordTargetingToAdd.Status = _adEntityStatusRepository.Single(s => s.SystemName == AdEntityStatusEnum.Enabled);
+
+            _repository.Add(negativeKeywordTargetingToAdd);
+            _unitOfWork.Save();
+        }
+
         public void Update(NegativeKeywordTargetingModel negativeKeywordTargeting)
         {
             NegativeKeywordTargeting negativeKeywordTargetingToUpdate = _repository.Get(negativeKeywordTargeting.Id);

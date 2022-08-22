@@ -17,6 +17,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 
         IList<NegativeKeywordTargetingModel> GetForListRequest(ListRequest request);
 
+        void Add(NegativeKeywordTargetingModel negativeKeywordTargeting);
+
         void Update(NegativeKeywordTargetingModel negativeKeywordTargeting);
 
         void UpdateStatus(long negativeKeywordTargetingId, AdEntityStatusEnum status);

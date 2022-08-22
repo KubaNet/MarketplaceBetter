@@ -102,6 +102,17 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             _repository.Update(campaignToUpdate);
             _unitOfWork.Save();
+
+            AdGroup adGroup = _adGroupRepository.SingleOrDefault(g => g.CampaignId == campaign.Id);
+            if (adGroup == null)
+            {
+                long adGroupId = _adGroupService.AddForCampaign(campaign.Id);
+                _productAdService.AddForAdGroup(adGroupId, campaign.Product.Id);
+            }
+            else
+            {
+                _productAdService.UpdateForAdGroup(adGroup.Id, campaign.Product.Id);
+            }
         }
 
         public void UpdateStatus(long campaignId, AdEntityStatusEnum status)

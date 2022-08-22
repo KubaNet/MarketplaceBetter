@@ -57,10 +57,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
         public long AddForCampaign(long campaignId)
         {
-            AdGroup lastAdGroup = _repository.GetQuery().OrderBy(g => g.Id).LastOrDefault();
-            long nextNumber = lastAdGroup != null ? lastAdGroup.Id + 1 : 1;
-
-            AdGroup adGroup = new AdGroup { Name = $"Ad_Group_{nextNumber}", CampaignId = campaignId, 
+            AdGroup adGroup = new AdGroup { Name = $"Ad_Group_{GetNextNumber()}", CampaignId = campaignId, 
                 Status = _statusRepository.Single(s => s.SystemName == AdEntityStatusEnum.Enabled) };
 
             _repository.Add(adGroup);
@@ -77,6 +74,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
             _repository.Update(adGroupToUpdate);
             _unitOfWork.Save();
+        }
+
+        private long GetNextNumber()
+        {
+            AdGroup lastAdGroup = _repository.GetQuery().OrderBy(g => g.Id).LastOrDefault();
+            long nextNumber = lastAdGroup != null ? lastAdGroup.Id + 1 : 1;
+
+            return nextNumber;
         }
 
         private void TransferValues(AdGroup toAdGroup, AdGroupModel fromAdGroup)

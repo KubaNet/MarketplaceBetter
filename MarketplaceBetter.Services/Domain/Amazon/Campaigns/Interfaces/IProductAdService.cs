@@ -19,6 +19,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 
         void AddForAdGroup(long adGroupId, long productId);
 
+        void UpdateForAdGroup(long adGroupId, long productId);
+
         void Update(ProductAdModel productAd);
 
         void UpdateStatus(long productAdId, AdEntityStatusEnum status);

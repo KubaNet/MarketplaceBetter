@@ -17,28 +17,9 @@ namespace MarketplaceBetter.Infrastructure.Helpers
         {
             string name = string.Empty;
 
-            if (instance != null)
+            if (instance != null && type != null && strategy != null && product != null)
             {
-                name = InstanceHelper.GetCodeFor(instance.SystemName);
-
-                if (type != null)
-                {
-                    name += $"_{GetTypeCodeFor(type)}";
-
-                    if (product != null)
-                    {
-                        name += $"_{product.Brand.Code}_{product.Name.Replace(" ", "_")}";
-
-                        if (strategy != null)
-                        {
-                            name += $"_{strategy.Name.ToUpper()}";
-                        }
-                    }
-                    else if (strategy != null)
-                    {
-                        name += $"_{strategy.Name.ToUpper()}";
-                    }
-                }
+                name = $"{product.Brand.Code}_{product.Name.Replace(" ", "_")}_{strategy.Name.ToUpper()}_{GetTypeCodeFor(type)}_{InstanceHelper.GetCodeFor(instance.SystemName)}";
             }
 
             return name;
