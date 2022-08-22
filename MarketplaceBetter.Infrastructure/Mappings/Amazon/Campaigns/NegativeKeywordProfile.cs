@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Campaigns
 {
-    public class NegativeKeywordTargetingProfile : Profile
+    public class NegativeKeywordProfile : Profile
     {
-        public NegativeKeywordTargetingProfile()
+        public NegativeKeywordProfile()
         {
-            CreateMap<NegativeKeywordTargeting, NegativeKeywordTargetingModel>();
+            CreateMap<NegativeKeyword, NegativeKeywordModel>();
         }
     }
 }

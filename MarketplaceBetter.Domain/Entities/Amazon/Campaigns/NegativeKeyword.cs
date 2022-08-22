@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
 {
-    public class NegativeKeywordTargeting : Entity
+    public class NegativeKeyword : Entity
     {
         public string Keyword { get; set; }
 

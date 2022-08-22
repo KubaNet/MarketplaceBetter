@@ -2,12 +2,12 @@
 @using MarketplaceBetter.Domain.Model.Amazon.Campaigns
 @using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 
-@inject INegativeKeywordTargetingService NegativeKeywordTargetingService
+@inject INegativeKeywordService NegativeKeywordService
 
 <MudSwitch T="bool" Checked="Checked" Color="Color.Tertiary" CheckedChanged="OnCheckedChanged" />
 
 @code {
-    [Parameter] public NegativeKeywordTargetingModel NegativeKeywordTargeting { get; set; }
+    [Parameter] public NegativeKeywordModel NegativeKeyword { get; set; }
 
     private bool Checked = false;
 
@@ -15,7 +15,7 @@
     {
         base.OnInitialized();
 
-        if (NegativeKeywordTargeting.Status.SystemName == AdEntityStatusEnum.Enabled)
+        if (NegativeKeyword.Status.SystemName == AdEntityStatusEnum.Enabled)
         {
             Checked = true;
         }
@@ -27,11 +27,11 @@
 
         if (status == true)
         {
-            NegativeKeywordTargetingService.UpdateStatus(NegativeKeywordTargeting.Id, AdEntityStatusEnum.Enabled);
+            NegativeKeywordService.UpdateStatus(NegativeKeyword.Id, AdEntityStatusEnum.Enabled);
         }
         else
         {
-            NegativeKeywordTargetingService.UpdateStatus(NegativeKeywordTargeting.Id, AdEntityStatusEnum.Paused);
+            NegativeKeywordService.UpdateStatus(NegativeKeyword.Id, AdEntityStatusEnum.Paused);
         }
     }
 }
