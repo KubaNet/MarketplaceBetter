@@ -13,6 +13,7 @@
         <ToolBarContent>
 			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterNegativeKeywords" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
+            <MudButton OnClick="AddNegativeKeyword" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Negative Keyword</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="NegativeKeywordModel">Id</MudTableSortLabel></MudTh>
@@ -62,14 +63,14 @@
 
     private async void AddNegativeKeyword()
     {
-        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Targeting" }).Result;
+        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Negative Keyword" }).Result;
 
         ProcessNegativeKeywordDialogResult(result);
     }
 
     private async void EditNegativeKeyword(long id)
     {
-        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Edit Targeting", ["IsEdit"] = true, ["NegativeKeywordId"] = id }).Result;
+        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Edit Negative Keyword", ["IsEdit"] = true, ["NegativeKeywordId"] = id }).Result;
 
         ProcessNegativeKeywordDialogResult(result);
     }

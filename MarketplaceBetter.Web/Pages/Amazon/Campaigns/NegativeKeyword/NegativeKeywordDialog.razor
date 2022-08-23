@@ -10,6 +10,10 @@
 @using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
 
 @inject INegativeKeywordService NegativeKeywordService
+@inject IInstanceService InstanceService
+@inject IBrandService BrandService
+@inject IProductService ProductService
+@inject ICampaignService CampaignService
 @inject ISnackbar Snackbar
 
 <EditForm Model="NegativeKeyword" OnValidSubmit="@HandleValidSubmit">
@@ -17,6 +21,31 @@
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged" Disabled="IsEdit">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Product" T="ProductModel" Value="Product" For="() => Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled || IsEdit">
+            @foreach (var product in Products)
+            {
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged" Disabled="InstanceSelectDisabled || IsEdit">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Campaign" T="CampaignModel" Value="Campaign" For="() => Campaign" Disabled="CampaignSelectDisabled || IsEdit">
+            @foreach (var campaign in Campaigns)
+            {
+                <MudSelectItem Value="campaign">@campaign.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Keyword" @bind-Value="NegativeKeyword.Keyword" For="() => NegativeKeyword.Keyword" />
         <MudTextField Label="Amazon Id" @bind-Value="NegativeKeyword.AmazonId" For="() => NegativeKeyword.AmazonId" />
     </FormDialog>
 </EditForm>
@@ -29,10 +58,26 @@
 
     private CustomValidation CustomValidation = new();
     private NegativeKeywordModel NegativeKeyword = new();
+    private BrandModel Brand;
+    private ProductModel Product;
+    private InstanceModel Instance;
+    private CampaignModel Campaign;
+
+    private IList<BrandModel> Brands;
+    private IList<ProductModel> Products = new List<ProductModel>();
+    private IList<InstanceModel> Instances;
+    private IList<CampaignModel> Campaigns = new List<CampaignModel>();
+
+    private bool ProductSelectDisabled = true;
+    private bool InstanceSelectDisabled = true;
+    private bool CampaignSelectDisabled = true;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+        Instances = InstanceService.GetAll();
 
         if (IsEdit)
         {
@@ -45,12 +90,83 @@
         NegativeKeyword = NegativeKeywordService.Get(NegativeKeywordId);
     }
 
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Brand = brand;
+
+        ResetProduct();
+        ActivateProduct(brand.Id);
+
+        ResetInstance();
+        ResetCampaign();
+    }
+
+    private void HandleProductChanged(ProductModel product)
+    {
+        Product = product;
+
+        ResetInstance();
+        ActivateInstance();
+
+        ResetCampaign();
+    }
+
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        Instance = instance;
+
+        ResetCampaign();
+        ActivateCampaign();
+    }
+
+    private void ResetProduct()
+    {
+        Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
+    }
+
+    private void ActivateProduct(long brandId)
+    {
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId);
+    }
+
+    private void ResetInstance()
+    {
+        Instance = null;
+        InstanceSelectDisabled = true;
+    }
+
+    private void ActivateInstance()
+    {
+        InstanceSelectDisabled = false;
+    }
+
+    private void ResetCampaign()
+    {
+        Campaign = null;
+        CampaignSelectDisabled = true;
+        Campaigns = new List<CampaignModel>();
+    }
+
+    private void ActivateCampaign()
+    {
+        CampaignSelectDisabled = false;
+        Campaigns = CampaignService.GetForInstanceAndProduct(Instance.Id, Product.Id);
+    }
+
     private void HandleValidSubmit()
     {
         if (IsEdit)
         {
             NegativeKeywordService.Update(NegativeKeyword);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Negative Keyword Targeting"));
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Negative Keyword"));
+        }
+        else
+        {
+            NegativeKeywordService.Add(NegativeKeyword);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Negative Keyword"));
         }
 
         MudDialog.Close();
