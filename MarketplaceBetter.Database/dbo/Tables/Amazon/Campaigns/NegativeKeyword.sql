@@ -15,3 +15,6 @@ GO
 
 CREATE UNIQUE INDEX UIX_NegativeKeyword_AmazonId  ON [dbo].[NegativeKeyword] ([AmazonId] ASC) WHERE [AmazonId] IS NOT NULL;
 GO
+
+CREATE UNIQUE INDEX UIX_NegativeKeyword_AdGroup_Keyword_MatchType  ON [dbo].[NegativeKeyword] ([AdGroupId] ASC, [Keyword] ASC, [MatchTypeId] ASC);
+GO

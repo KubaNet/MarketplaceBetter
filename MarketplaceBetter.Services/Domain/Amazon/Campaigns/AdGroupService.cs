@@ -35,6 +35,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
         public AdGroupModel Get(long id) => _mapper.Map<AdGroupModel>(_repository.Get(id));
 
+        public AdGroupModel GetForCampaign(long campaignId) => _mapper.Map<AdGroupModel>(_repository.SingleOrDefault(g => g.CampaignId == campaignId));
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<AdGroup> adGroups = _repository.GetQuery();

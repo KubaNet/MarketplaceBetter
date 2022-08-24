@@ -11,8 +11,8 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<NegativeKeywordModel>>>(ReloadNegativeKeywords))" Dense="true" Hover="true" RowsPerPage="15">
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterNegativeKeywords" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterNegativeKeywords" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
             <MudButton OnClick="AddNegativeKeyword" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Negative Keyword</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -28,10 +28,13 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Keyword">@context.Keyword</MudTd>
             <MudTd DataLabel="MatchType">@context.MatchType.Name</MudTd>
-            <MudTd DataLabel="Status"><NegativeKeywordStatusDisplay NegativeKeyword="context"/></MudTd>
+            <MudTd DataLabel="Status"><NegativeKeywordStatusDisplay NegativeKeyword="context" /></MudTd>
             <MudTd DataLabel="AmazonId">@context.AmazonId</MudTd>
             <MudTd DataLabel="Campaign">@context.AdGroup.Campaign.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditNegativeKeyword(context.Id))">Edit</MudButton></MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarNegativeKeyword(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditNegativeKeyword(context.Id))">Edit</MudButton>
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
@@ -44,26 +47,33 @@
     private ListRequest ListRequest = new();
 
     private Task<TableData<NegativeKeywordModel>> ReloadNegativeKeywords(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<NegativeKeywordModel> parents = NegativeKeywordService.GetForListRequest(ListRequest);
+        IList<NegativeKeywordModel> parents = NegativeKeywordService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<NegativeKeywordModel>() { TotalItems = NegativeKeywordService.CountForListRequest(ListRequest), Items = parents });
-	}
+        return Task.FromResult(new TableData<NegativeKeywordModel>() { TotalItems = NegativeKeywordService.CountForListRequest(ListRequest), Items = parents });
+    }
 
     private void FilterNegativeKeywords(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
     private async void AddNegativeKeyword()
     {
         var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Negative Keyword" }).Result;
+
+        ProcessNegativeKeywordDialogResult(result);
+    }
+
+    private async void AddSimilarNegativeKeyword(long id)
+    {
+        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Negative Keyword", ["AddingSimilar"] = true, ["NegativeKeywordId"] = id }).Result;
 
         ProcessNegativeKeywordDialogResult(result);
     }

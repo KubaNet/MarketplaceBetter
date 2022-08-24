@@ -12,6 +12,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
     {
         AdGroupModel Get(long id);
 
+        AdGroupModel GetForCampaign(long campaignId);
+
         int CountForListRequest(ListRequest request);
 
         IList<AdGroupModel> GetForListRequest(ListRequest request);

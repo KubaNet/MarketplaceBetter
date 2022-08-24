@@ -10,10 +10,13 @@
 @using MarketplaceBetter.Services.Validation.Amazon.Campaigns.Interfaces
 
 @inject INegativeKeywordService NegativeKeywordService
+@inject INegativeKeywordValidator NegativeKeywordValidator
 @inject IInstanceService InstanceService
 @inject IBrandService BrandService
 @inject IProductService ProductService
 @inject ICampaignService CampaignService
+@inject IMatchTypeService MatchTypeService
+@inject IAdGroupService AdGroupService
 @inject ISnackbar Snackbar
 
 <EditForm Model="NegativeKeyword" OnValidSubmit="@HandleValidSubmit">
@@ -39,13 +42,19 @@
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Campaign" T="CampaignModel" Value="Campaign" For="() => Campaign" Disabled="CampaignSelectDisabled || IsEdit">
+        <MudSelect Label="Campaign" T="CampaignModel" @bind-Value="Campaign" For="() => Campaign" Disabled="CampaignSelectDisabled || IsEdit">
             @foreach (var campaign in Campaigns)
             {
                 <MudSelectItem Value="campaign">@campaign.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="Keyword" @bind-Value="NegativeKeyword.Keyword" For="() => NegativeKeyword.Keyword" />
+        <MudTextField Label="Keyword" @bind-Value="NegativeKeyword.Keyword" For="() => NegativeKeyword.Keyword" Disabled="IsEdit" />
+        <MudSelect Label="Match Type" T="MatchTypeModel" @bind-Value="NegativeKeyword.MatchType" For="() => NegativeKeyword.MatchType" Disabled="IsEdit">
+            @foreach (var matchType in MatchTypes)
+            {
+                <MudSelectItem Value="matchType">@matchType.Name</MudSelectItem>
+            }
+        </MudSelect>
         <MudTextField Label="Amazon Id" @bind-Value="NegativeKeyword.AmazonId" For="() => NegativeKeyword.AmazonId" />
     </FormDialog>
 </EditForm>
@@ -54,6 +63,7 @@
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public bool AddingSimilar { get; set; }
     [Parameter] public long NegativeKeywordId { get; set; }
 
     private CustomValidation CustomValidation = new();
@@ -67,6 +77,7 @@
     private IList<ProductModel> Products = new List<ProductModel>();
     private IList<InstanceModel> Instances;
     private IList<CampaignModel> Campaigns = new List<CampaignModel>();
+    private IList<MatchTypeModel> MatchTypes;
 
     private bool ProductSelectDisabled = true;
     private bool InstanceSelectDisabled = true;
@@ -78,8 +89,9 @@
 
         Brands = BrandService.GetAll();
         Instances = InstanceService.GetAll();
+        MatchTypes = MatchTypeService.GetAllNegative();
 
-        if (IsEdit)
+        if (IsEdit || AddingSimilar)
         {
             SetInitialValues();
         }
@@ -88,6 +100,21 @@
     private void SetInitialValues()
     {
         NegativeKeyword = NegativeKeywordService.Get(NegativeKeywordId);
+        if (AddingSimilar)
+        {
+            NegativeKeyword.Id = 0;
+            NegativeKeyword.AmazonId = null;
+        }
+
+        ActivateProduct(NegativeKeyword.AdGroup.Campaign.Product.Brand.Id);
+        ActivateInstance();
+        ActivateCampaign(NegativeKeyword.AdGroup.Campaign.Instance.Id, NegativeKeyword.AdGroup.Campaign.Product.Id);
+
+        Brand = Brands.Single(b => b.Id == NegativeKeyword.AdGroup.Campaign.Product.Brand.Id);
+        Product = Products.Single(p => p.Id == NegativeKeyword.AdGroup.Campaign.Product.Id);
+        Instance = Instances.Single(i => i.Id == NegativeKeyword.AdGroup.Campaign.Instance.Id);
+        Campaign = Campaigns.Single(c => c.Id == NegativeKeyword.AdGroup.Campaign.Id);
+        NegativeKeyword.MatchType = MatchTypes.Single(t => t.Id == NegativeKeyword.MatchType.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)
@@ -116,7 +143,7 @@
         Instance = instance;
 
         ResetCampaign();
-        ActivateCampaign();
+        ActivateCampaign(instance.Id, Product.Id);
     }
 
     private void ResetProduct()
@@ -150,25 +177,36 @@
         Campaigns = new List<CampaignModel>();
     }
 
-    private void ActivateCampaign()
+    private void ActivateCampaign(long instanceId, long productId)
     {
         CampaignSelectDisabled = false;
-        Campaigns = CampaignService.GetForInstanceAndProduct(Instance.Id, Product.Id);
+        Campaigns = CampaignService.GetForInstanceAndProduct(instanceId, productId);
     }
 
     private void HandleValidSubmit()
     {
-        if (IsEdit)
+        NegativeKeyword.AdGroup = AdGroupService.GetForCampaign(Campaign.Id);
+
+        ValidationResult result = NegativeKeywordValidator.Validate(NegativeKeyword);
+
+        if (result.IsValid)
         {
-            NegativeKeywordService.Update(NegativeKeyword);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Negative Keyword"));
+            if (IsEdit)
+            {
+                NegativeKeywordService.Update(NegativeKeyword);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Negative Keyword"));
+            }
+            else
+            {
+                NegativeKeywordService.Add(NegativeKeyword, Campaign);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Negative Keyword"));
+            }
+
+            MudDialog.Close();
         }
         else
         {
-            NegativeKeywordService.Add(NegativeKeyword);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Negative Keyword"));
+            CustomValidation.DisplayErrors(result.Errors);
         }
-
-        MudDialog.Close();
     }
 }

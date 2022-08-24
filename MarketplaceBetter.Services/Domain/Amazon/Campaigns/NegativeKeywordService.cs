@@ -7,6 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MudBlazor;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<NegativeKeyword> _repository;
         private readonly IRepository<AdEntityStatus> _adEntityStatusRepository;
+        private readonly IRepository<AdGroup> _adGroupRepository;
 
         public NegativeKeywordService(
             IUnitOfWork unitOfWork,
@@ -28,6 +30,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<NegativeKeyword>();
             _adEntityStatusRepository = unitOfWork.GetRepository<AdEntityStatus>();
+            _adGroupRepository = unitOfWork.GetRepository<AdGroup>();
         }
 
         public NegativeKeywordModel Get(long id) => _mapper.Map<NegativeKeywordModel>(_repository.Get(id));
@@ -52,7 +55,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             return _mapper.Map<IList<NegativeKeywordModel>>(negativeKeywords);
         }
 
-        public void Add(NegativeKeywordModel negativeKeyword)
+        public void Add(NegativeKeywordModel negativeKeyword, CampaignModel campaign)
         {
             NegativeKeyword negativeKeywordToAdd = new();
 
@@ -87,6 +90,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
         private void TransferValues(NegativeKeyword toNegativeKeyword, NegativeKeywordModel fromNegativeKeyword)
         {
+            toNegativeKeyword.AdGroupId = fromNegativeKeyword.AdGroup.Id;
+            toNegativeKeyword.Keyword = fromNegativeKeyword.Keyword;
+            toNegativeKeyword.MatchTypeId = fromNegativeKeyword.MatchType.Id;
             toNegativeKeyword.AmazonId = fromNegativeKeyword.AmazonId;
         }
 

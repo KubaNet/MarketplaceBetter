@@ -17,7 +17,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns.Interfaces
 
         IList<NegativeKeywordModel> GetForListRequest(ListRequest request);
 
-        void Add(NegativeKeywordModel negativeKeyword);
+        void Add(NegativeKeywordModel negativeKeyword, CampaignModel campaign);
 
         void Update(NegativeKeywordModel negativeKeyword);
 
