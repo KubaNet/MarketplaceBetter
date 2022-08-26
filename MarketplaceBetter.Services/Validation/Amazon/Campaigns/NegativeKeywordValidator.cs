@@ -22,7 +22,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Campaigns
             if (_repository.Any(k => k.Id != negativeKeyword.Id && k.AdGroupId == negativeKeyword.AdGroup.Id && k.Keyword == negativeKeyword.Keyword
                 && k.MatchTypeId == negativeKeyword.MatchType.Id))
             {
-                result.AddError("There already exists a Negative Keyword for this Campaign, Value and Match Type.");
+                result.AddError("There already exists a Negative Keyword for this Campaign, Keyword and Match Type.");
             }
 
             return result;

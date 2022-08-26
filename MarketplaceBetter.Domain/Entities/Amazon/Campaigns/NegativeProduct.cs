@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MarketplaceBetter.Domain.Entities.Amazon.Campaigns
+{
+    public class NegativeProduct : Entity
+    {
+        public string Asin { get; set; }
+
+        public long AdGroupId { get; set; }
+
+        public virtual AdGroup AdGroup { get; set; }
+
+        public string AmazonId { get; set; }
+
+        public long StatusId { get; set; }
+
+        public virtual AdEntityStatus Status { get; set; }
+    }
+}

@@ -114,23 +114,23 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
                 {
                     negativeKeywords = searchField.Name switch
                     {
-                        "id" => negativeKeywords.Where(t => t.Id == searchField.Value.ParseToIntOrDefault()),
-                        "keyword" => negativeKeywords.Where(t => t.Keyword.Contains(searchField.Value)),
-                        "matchtype" => negativeKeywords.Where(t => t.MatchType.Name.Contains(searchField.Value)),
-                        "amazonid" => negativeKeywords.Where(t => t.AmazonId.Contains(searchField.Value)),
-                        "status" => negativeKeywords.Where(t => t.Status.Name.Contains(searchField.Value)),
-                        "campaign" => negativeKeywords.Where(t => t.AdGroup.Campaign.Name.Contains(searchField.Value)),
+                        "id" => negativeKeywords.Where(k => k.Id == searchField.Value.ParseToIntOrDefault()),
+                        "keyword" => negativeKeywords.Where(k => k.Keyword.Contains(searchField.Value)),
+                        "matchtype" => negativeKeywords.Where(k => k.MatchType.Name.Contains(searchField.Value)),
+                        "amazonid" => negativeKeywords.Where(k => k.AmazonId.Contains(searchField.Value)),
+                        "status" => negativeKeywords.Where(k => k.Status.Name.Contains(searchField.Value)),
+                        "campaign" => negativeKeywords.Where(k => k.AdGroup.Campaign.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    negativeKeywords = negativeKeywords.Where(t => t.Id == searchString.ParseToIntOrDefault()
-                        || t.Keyword.Contains(searchString)
-                        || t.MatchType.Name.Contains(searchString)
-                        || t.AmazonId.Contains(searchString)
-                        || t.Status.Name.Contains(searchString)
-                        || t.AdGroup.Campaign.Name.Contains(searchString));
+                    negativeKeywords = negativeKeywords.Where(k => k.Id == searchString.ParseToIntOrDefault()
+                        || k.Keyword.Contains(searchString)
+                        || k.MatchType.Name.Contains(searchString)
+                        || k.AmazonId.Contains(searchString)
+                        || k.Status.Name.Contains(searchString)
+                        || k.AdGroup.Campaign.Name.Contains(searchString));
                 }
             }
 
@@ -143,12 +143,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
             {
                 negativeKeywords = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(t => t.Id) : negativeKeywords.OrderByDescending(t => t.Id),
-                    "keyword" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(t => t.Keyword) : negativeKeywords.OrderByDescending(t => t.Keyword),
-                    "matchtype" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(t => t.MatchType.Name) : negativeKeywords.OrderByDescending(t => t.MatchType.Name),
-                    "amazonid" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(t => t.AmazonId) : negativeKeywords.OrderByDescending(t => t.AmazonId),
-                    "status" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(t => t.Status.Name) : negativeKeywords.OrderByDescending(t => t.Status.Name),
-                    "campaign" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(t => t.AdGroup.Campaign.Name) : negativeKeywords.OrderByDescending(t => t.AdGroup.Campaign.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(k => k.Id) : negativeKeywords.OrderByDescending(k => k.Id),
+                    "keyword" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(k => k.Keyword) : negativeKeywords.OrderByDescending(k => k.Keyword),
+                    "matchtype" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(k => k.MatchType.Name) : negativeKeywords.OrderByDescending(k => k.MatchType.Name),
+                    "amazonid" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(k => k.AmazonId) : negativeKeywords.OrderByDescending(k => k.AmazonId),
+                    "status" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(k => k.Status.Name) : negativeKeywords.OrderByDescending(k => k.Status.Name),
+                    "campaign" => request.SortDirection == SortDirection.Ascending ? negativeKeywords.OrderBy(k => k.AdGroup.Campaign.Name) : negativeKeywords.OrderByDescending(k => k.AdGroup.Campaign.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
