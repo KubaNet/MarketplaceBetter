@@ -9,7 +9,7 @@
 <MudText Typo="Typo.h3" Class="mt-2">Childs</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(ReloadChilds))" Dense="true" Hover="true" RowsPerPage="15">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(ReloadChilds))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterChilds" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -19,7 +19,7 @@
             <MudTh><MudTableSortLabel SortLabel="id" T="ChildModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="ChildModel">SKU</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="asin" T="ChildModel">ASIN</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="product_variant" T="ChildModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="variant" T="ChildModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="parent" T="ChildModel">Parent</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
@@ -36,7 +36,7 @@
         <PagerContent>
             @if (!ShowAll.HasValue || ShowAll == false)
             {
-                <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+                <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
             }
         </PagerContent>
     </MudTable>

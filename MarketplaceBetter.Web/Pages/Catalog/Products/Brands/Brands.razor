@@ -8,7 +8,7 @@
 <MudText Typo="Typo.h3" Class="mt-2">Brands</MudText>
 
 <MainBody>
-    <MudTable Items="@BrandsData" Dense="true" Hover="true" RowsPerPage="15">
+    <MudTable Items="@BrandsData" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
             <MudSpacer />
             <MudButton OnClick="AddBrand" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Brand</MudButton>
@@ -26,7 +26,7 @@
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditBrand(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
         </PagerContent>
     </MudTable>
 </MainBody>

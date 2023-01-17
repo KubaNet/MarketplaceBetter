@@ -183,7 +183,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asin", "product_variant", "parent", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "variant", "parent", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -193,7 +193,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "id" => childs.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => childs.Where(c => c.Sku.Contains(searchField.Value)),
                         "asin" => childs.Where(c => c.Asin.Contains(searchField.Value)),
-                        "product_variant" => childs.Where(c => c.Variant.Sku.Contains(searchField.Value)),
+                        "variant" => childs.Where(c => c.Variant.Sku.Contains(searchField.Value)),
                         "parent" => childs.Where(c => c.Parent.Sku.Contains(searchField.Value)),
                         "brand" => childs.Where(c => c.Parent.Product.Brand.Name.Contains(searchField.Value)),
                         "product_id" => childs.Where(c => c.Parent.Product.Id == searchField.Value.ParseToIntOrDefault()),
@@ -233,7 +233,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "id" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Id) : childs.OrderByDescending(c => c.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Sku) : childs.OrderByDescending(c => c.Sku),
                     "asin" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Asin) : childs.OrderByDescending(c => c.Asin),
-                    "product_variant" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Variant.Sku) : childs.OrderByDescending(c => c.Variant.Sku),
+                    "variant" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Variant.Sku) : childs.OrderByDescending(c => c.Variant.Sku),
                     "parent" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Parent.Sku) : childs.OrderByDescending(c => c.Parent.Sku),
                     "brand" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Parent.Product.Brand.Name) : childs.OrderByDescending(c => c.Parent.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
