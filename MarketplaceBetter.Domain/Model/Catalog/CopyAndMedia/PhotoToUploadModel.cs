@@ -9,21 +9,17 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 {
-    public class PhotoModel
+    public class PhotoToUploadModel
     {
-        public long Id { get; set; }
-
-        [Required]
-        public VariantModel Variant { get; set; }
-
-        public bool ForAllInstances { get; set; }
+        public IList<VariantModel> Variants { get; set; }
 
         public InstanceModel Instance { get; set; }
 
-        [Required]
         public PhotoTypeModel Type { get; set; }
 
         public string CloudId { get; set; }
+
+        public string FileName { get; set; }
 
         public string Url { get; set; }
     }

@@ -19,7 +19,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 
         IList<PhotoModel> GetForListRequest(ListRequest request);
 
-        IList<PhotoModel> GetFromCloud();
+        IList<PhotoToUploadModel> GetAllToUpload(ListRequest request);
 
         void Add(PhotoModel photo);
 

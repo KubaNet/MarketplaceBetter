@@ -1,9 +1,10 @@
 ﻿CREATE TABLE [dbo].[PhotoType]
 (
-	[Id]			BIGINT					NOT NULL	IDENTITY,
-	[Name]			NVARCHAR (255)			NOT NULL,
-	[SystemName]	INT						NOT NULL,
-	CONSTRAINT		[PK_PhotoType]	PRIMARY KEY ([Id]),
+	[Id]				BIGINT					NOT NULL	IDENTITY,
+	[Name]				NVARCHAR (255)			NOT NULL,
+	[AmazonUploadCode]	NVARCHAR (255)			NOT NULL,
+	[SystemName]		INT						NOT NULL,
+	CONSTRAINT			[PK_PhotoType]	PRIMARY KEY ([Id]),
 );
 GO
 

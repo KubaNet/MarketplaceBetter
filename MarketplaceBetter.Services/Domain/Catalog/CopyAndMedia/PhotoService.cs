@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
+using MarketplaceBetter.Services.Domain.Sales.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
@@ -23,16 +26,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Photo> _repository;
         private readonly IMapper _mapper;
         private readonly IPhotoCloudService _photoCloudService;
+        private readonly IInstanceService _instanceService;
 
         public PhotoService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IPhotoCloudService photoCloudService)
+            IPhotoCloudService photoCloudService,
+            IInstanceService instanceService)
         {
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
             _mapper = mapper;
             _photoCloudService = photoCloudService;
+            _instanceService = instanceService;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -64,14 +70,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return _mapper.Map<IList<PhotoModel>>(photos);
         }
 
-        public IList<PhotoModel> GetFromCloud()
+        public IList<PhotoToUploadModel> GetAllToUpload(ListRequest request)
         {
-            IList<PhotoModel> photos = _photoCloudService.GetPhotosToUploadFromCloud();
+            IList<PhotoToUploadModel> photos = _photoCloudService.GetPhotosToUpload();
 
             foreach (var photo in photos)
             {
-
+                photo.Instance = GetIntanceFromFileName(photo.FileName);
             }
+
+            photos = ApplySorting(photos, request);
 
             return photos;
         }
@@ -106,6 +114,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
+        private InstanceModel GetIntanceFromFileName(string fileName)
+        {
+            IList<InstanceModel> instances = _instanceService.GetAll();
+
+            foreach (var instance in instances)
+            {
+                if (fileName.StartsWith($"{instance.ShortName}_"))
+                {
+                    return instance;
+                }
+            }
+
+            return null;
+        }
+
         private void TransferValues(Photo toPhoto, PhotoModel fromPhoto)
         {
             toPhoto.VariantId = fromPhoto.Variant.Id;
@@ -127,30 +150,28 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "variant", "instance", "type", "url" };
+                string[] searchFieldNames = new[] { "id", "product", "variant", "instance", "type" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
                 {
                     photos = searchField.Name switch
                     {
-                        "id" => photos.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
-                        "product" => photos.Where(c => c.Variant.Product.Name.Contains(searchField.Value)),
-                        "variant" => photos.Where(c => c.Variant.Sku.Contains(searchField.Value)),
-                        "instance" => photos.Where(c => c.Instance.Name.Contains(searchField.Value)),
-                        "type" => photos.Where(c => c.Type.Name.Contains(searchField.Value)),
-                        "url" => photos.Where(c => c.Url.Contains(searchField.Value)),
+                        "id" => photos.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
+                        "product" => photos.Where(p => p.Variant.Product.Name.Contains(searchField.Value)),
+                        "variant" => photos.Where(p => p.Variant.Sku.Contains(searchField.Value)),
+                        "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
+                        "type" => photos.Where(p => p.Type.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    photos = photos.Where(c => c.Id == searchString.ParseToIntOrDefault()
-                        || c.Variant.Product.Name.Contains(searchString)
-                        || c.Variant.Sku.Contains(searchString)
-                        || c.Instance.Name.Contains(searchString)
-                        || c.Type.Name.Contains(searchString)
-                        || c.Url.Contains(searchString));
+                    photos = photos.Where(p => p.Id == searchString.ParseToIntOrDefault()
+                        || p.Variant.Product.Name.Contains(searchString)
+                        || p.Variant.Sku.Contains(searchString)
+                        || p.Instance.Name.Contains(searchString)
+                        || p.Type.Name.Contains(searchString));
                 }
             }
 
@@ -163,17 +184,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             {
                 photos = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Id) : photos.OrderByDescending(c => c.Id),
-                    "product" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Variant.Product.Name) : photos.OrderByDescending(c => c.Variant.Product.Name),
-                    "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Variant.Sku) : photos.OrderByDescending(c => c.Variant.Sku),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Instance.Name) : photos.OrderByDescending(c => c.Instance.Name),
-                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(c => c.Type.SystemName) : photos.OrderByDescending(c => c.Type.SystemName),
+                    "id" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Id) : photos.OrderByDescending(p => p.Id),
+                    "product" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Product.Name) : photos.OrderByDescending(p => p.Variant.Product.Name),
+                    "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku) : photos.OrderByDescending(p => p.Variant.Sku),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name) : photos.OrderByDescending(p => p.Instance.Name),
+                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.SystemName) : photos.OrderByDescending(p => p.Type.SystemName),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
             else
             {
-                photos = photos.OrderBy(c => c.Id);
+                photos = photos.OrderBy(p => p.Id);
             }
 
             return photos;
@@ -182,6 +203,22 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private IQueryable<Photo> ApplyPaging(IQueryable<Photo> photos, ListRequest request)
         {
             return photos.Skip(request.Page * request.PageSize).Take(request.PageSize);
+        }
+
+        private IList<PhotoToUploadModel> ApplySorting(IList<PhotoToUploadModel> photos, ListRequest request)
+        {
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+            {
+                photos = request.SortBy switch
+                {
+                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance?.Name).ToList() : photos.OrderByDescending(p => p.Instance?.Name).ToList(),
+                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type?.SystemName).ToList() : photos.OrderByDescending(p => p.Type?.SystemName).ToList(),
+                    "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName).ToList() : photos.OrderByDescending(p => p.FileName).ToList(),
+                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
+                };
+            }
+
+            return photos;
         }
     }
 }

@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 
         public string Name { get; set; }
 
+        public string AmazonUploadCode { get; set; }
+
         public PhotoTypeEnum SystemName { get; set; }
     }
 }
