@@ -8,7 +8,7 @@
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
 
-<MudText Typo="Typo.h3" Class="mt-2">Researches</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Researches</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchModel>>>(ReloadResearch))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

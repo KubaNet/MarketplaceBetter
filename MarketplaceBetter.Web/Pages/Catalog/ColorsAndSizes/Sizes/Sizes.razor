@@ -6,7 +6,7 @@
 @inject ISizeService SizeService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Sizes</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Sizes</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<SizeModel>>>(ReloadSizes))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

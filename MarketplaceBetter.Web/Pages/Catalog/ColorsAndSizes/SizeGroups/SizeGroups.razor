@@ -6,7 +6,7 @@
 @inject ISizeGroupService SizeGroupService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Size Groups</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Size Groups</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<SizeGroupModel>>>(ReloadGroups))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

@@ -6,7 +6,7 @@
 @inject IProductAdService ProductAdService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Product Ads</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Product Ads</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductAdModel>>>(ReloadProductAds))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

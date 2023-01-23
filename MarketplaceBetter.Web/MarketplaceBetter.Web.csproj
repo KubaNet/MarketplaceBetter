@@ -28,4 +28,10 @@
     <ProjectReference Include="..\MarketplaceBetter.Services\MarketplaceBetter.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\Catalog\CopyAndMedia\Photos\PhotosFromCloud.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,58 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
+@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
+@using MarketplaceBetter.Services.Model
+@using MarketplaceBetter.Specialized.Interfaces
+
+@page "/photos-from-cloud"
+@inject IPhotoService PhotoService
+@inject IDialogService DialogService
+@inject IPhotoCloudService PhotoCloudService
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mt-2">Photos from Cloud</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoModel>>>(ReloadPhotos))" MultiSelection="true" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+        <ToolBarContent>
+            <MudSpacer />
+            <MudButton OnClick="UploadSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Info">Upload selected</MudButton>
+            <MudButton OnClick="UploadAll" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAdd" Color="Color.Primary" Class="ml-2">Upload all</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="variant" T="PhotoModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoModel">Type</MudTableSortLabel></MudTh>
+            <MudTh>Photo</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Variant">@context.Variant?.Sku</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
+            <MudTd DataLabel="Type">@context.Type?.Name</MudTd>
+            <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId)"></MudImage></MudTd>
+        </RowTemplate>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<PhotoModel> Table;
+    private ListRequest ListRequest = new();
+
+    private Task<TableData<PhotoModel>> ReloadPhotos(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<PhotoModel> photos = PhotoService.GetFromCloud();
+
+        return Task.FromResult(new TableData<PhotoModel>() { TotalItems = photos.Count, Items = photos });
+    }
+
+    private async void UploadSelected()
+    {
+    }
+
+    private async void UploadAll()
+    {
+        
+    }
+}

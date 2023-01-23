@@ -6,7 +6,7 @@
 @inject IColorGroupService ColorGroupService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Color Groups</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Color Groups</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorGroupModel>>>(ReloadGroups))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

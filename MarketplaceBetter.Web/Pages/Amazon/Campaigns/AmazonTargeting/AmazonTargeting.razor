@@ -11,7 +11,7 @@
 @inject IAmazonTargetingStatusService AmazonTargetingStatusService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Amazon Targeting</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Amazon Targeting</MudText>
 
 <MainBody>
     <MudTable T="AmazonTargetingModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonTargetingModel>>>(ReloadTargetings))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" RowsPerPage="500" Dense="true" Hover="true">

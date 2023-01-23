@@ -8,7 +8,7 @@
 @inject IPortfolioService PortfolioService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Portfolios</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Portfolios</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PortfolioModel>>>(ReloadPortfolios))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

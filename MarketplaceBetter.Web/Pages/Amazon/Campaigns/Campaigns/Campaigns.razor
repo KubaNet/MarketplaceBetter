@@ -8,7 +8,7 @@
 @inject ICampaignService CampaignService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Campaigns</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Campaigns</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CampaignModel>>>(ReloadCampaigns))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

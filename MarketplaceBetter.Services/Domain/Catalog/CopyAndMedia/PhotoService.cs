@@ -64,6 +64,18 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return _mapper.Map<IList<PhotoModel>>(photos);
         }
 
+        public IList<PhotoModel> GetFromCloud()
+        {
+            IList<PhotoModel> photos = _photoCloudService.GetPhotosToUploadFromCloud();
+
+            foreach (var photo in photos)
+            {
+
+            }
+
+            return photos;
+        }
+
         public void Add(PhotoModel photo)
         {
             Photo photoToAdd = new();

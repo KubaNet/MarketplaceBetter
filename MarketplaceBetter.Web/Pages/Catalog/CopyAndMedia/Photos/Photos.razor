@@ -4,19 +4,21 @@
 @using MarketplaceBetter.Specialized.Interfaces
 
 @page "/photos"
+@inject NavigationManager NavigationManager
 @inject IPhotoService PhotoService
 @inject IDialogService DialogService
 @inject IPhotoCloudService PhotoCloudService
 @inject ISnackbar Snackbar
 
-<MudText Typo="Typo.h3" Class="mt-2">Photos</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Photos</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoModel>>>(ReloadPhotos))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="AddPhoto" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Photo</MudButton>
+            <MudButton OnClick="UploadFromCloud" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info">Upload from cloud</MudButton>
+            <MudButton OnClick="AddPhoto" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Photo</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="PhotoModel">Id</MudTableSortLabel></MudTh>
@@ -31,7 +33,7 @@
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
             <MudTd DataLabel="Type">@context.Type.Name</MudTd>
-            <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetForLists(context.CloudId)"></MudImage></MudTd>
+            <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId)"></MudImage></MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>
                 <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.CloudId))">Delete</MudButton>
@@ -51,9 +53,9 @@
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<PhotoModel> copywritings = PhotoService.GetForListRequest(ListRequest);
+        IList<PhotoModel> photos = PhotoService.GetForListRequest(ListRequest);
 
-        return Task.FromResult(new TableData<PhotoModel>() { TotalItems = PhotoService.CountForListRequest(ListRequest), Items = copywritings });
+        return Task.FromResult(new TableData<PhotoModel>() { TotalItems = PhotoService.CountForListRequest(ListRequest), Items = photos });
     }
 
     private void FilterPhotos(string searchString)
@@ -70,6 +72,11 @@
         var result = await DialogService.Show<PhotoDialog>(null, new DialogParameters { ["Title"] = "Add Photo" }).Result;
 
         ProcessPhotoDialogResult(result);
+    }
+
+    private void UploadFromCloud()
+    {
+        NavigationManager.NavigateTo($"photos-from-cloud");
     }
 
     private async void AddSimilarPhoto(long id)

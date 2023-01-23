@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Services.Model;
+﻿using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,9 @@ namespace MarketplaceBetter.Specialized.Interfaces
     {
         PhotoUploadResult Upload(MemoryStream photoStream, string fileName);
 
-        string GetForLists(string cloudId);
+        IList<PhotoModel> GetPhotosToUploadFromCloud();
+
+        string GetPhotoUrlForLists(string cloudId);
 
         void Delete(string cloudId);
     }

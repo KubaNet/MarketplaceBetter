@@ -17,18 +17,6 @@
             <MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
         }
 
-        @if (IsCopyAndMediaModule())
-        {
-            <MudNavGroup Title="Copy & Media" Icon="@Icons.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
-                <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
-                <MudNavLink Href="/photos">Photos</MudNavLink>
-            </MudNavGroup>
-        }
-        else
-        {
-            <MudNavLink Href="/copywriting" Icon="@Icons.Filled.PhotoLibrary">Copy & Media</MudNavLink>
-        }
-
         @if (IsColorsAndSizesModule())
         {
             <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
@@ -42,6 +30,18 @@
         else
         {
             <MudNavLink Href="/colors" Icon="@Icons.Filled.Palette">Colors & Sizes</MudNavLink>
+        }
+
+        @if (IsCopyAndMediaModule())
+        {
+            <MudNavGroup Title="Copy & Media" Icon="@Icons.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
+                <MudNavLink Href="/photos">Photos</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/copywriting" Icon="@Icons.Filled.PhotoLibrary">Copy & Media</MudNavLink>
         }
     </MudNavGroup>
     <MudNavGroup Title="Amazon" Icon="@Icons.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
@@ -125,7 +125,8 @@
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
         if (path == "copywriting"
-            || path == "photos")
+            || path == "photos"
+            || path == "photos-from-cloud")
         {
             return true;
         }

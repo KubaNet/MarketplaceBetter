@@ -7,7 +7,7 @@
 @inject IResearchResultService ResultService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Research Results</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Research Results</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchResultModel>>>(ReloadResults))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

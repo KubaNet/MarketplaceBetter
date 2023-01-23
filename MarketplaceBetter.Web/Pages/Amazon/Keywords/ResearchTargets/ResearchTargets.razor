@@ -9,7 +9,7 @@
 @inject IDialogService DialogService
 @inject IResearchTargetStatusService TargetStatusService
 
-<MudText Typo="Typo.h3" Class="mt-2">Research Targets</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Research Targets</MudText>
 
 <MainBody>
     <MudTable T="ResearchTargetModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ResearchTargetModel>>>(ReloadTargets))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

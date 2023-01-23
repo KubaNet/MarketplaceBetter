@@ -6,7 +6,7 @@
 @inject INegativeKeywordService NegativeKeywordService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Negative Keywords</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Negative Keywords</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<NegativeKeywordModel>>>(ReloadNegativeKeywords))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

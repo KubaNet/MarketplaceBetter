@@ -6,7 +6,7 @@
 @inject IColorTranslationService ColorTranslationService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h3" Class="mt-2">Color Translations</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Color Translations</MudText>
 
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorTranslationModel>>>(ReloadTranslations))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>

@@ -1,8 +1,10 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
 using Microsoft.Extensions.Configuration;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +18,7 @@ namespace MarketplaceBetter.Specialized
     {
         private readonly IConfiguration _configuration;
         private readonly Cloudinary _cloudinary;
+        private readonly string _instanceFolder;
 
         public PhotoCloudService(IConfiguration configuration)
         {
@@ -28,12 +31,13 @@ namespace MarketplaceBetter.Specialized
 
             _cloudinary = new Cloudinary(account);
             _cloudinary.Api.Secure = true;
+
+            _instanceFolder = _configuration["CloudinaryFolder"];
         }
 
         public PhotoUploadResult Upload(MemoryStream photoStream, string fileName)
         {
-            string folder = _configuration["CloudinaryFolder"];
-            string fullFileName = $"{folder}/{fileName}";
+            string fullFileName = $"{_instanceFolder}/{fileName}";
 
             ImageUploadParams parameters = new ImageUploadParams
             {
@@ -61,7 +65,27 @@ namespace MarketplaceBetter.Specialized
             return uploadResult;
         }
 
-        public string GetForLists(string cloudId)
+        public IList<PhotoModel> GetPhotosToUploadFromCloud()
+        {
+            SearchResult searchResult = _cloudinary.Search().Expression($"folder:{_instanceFolder}/upload").Execute();
+
+            IList<PhotoModel> photos = new List<PhotoModel>();
+
+            foreach (var resource in searchResult.Resources)
+            {
+                PhotoModel photo = new PhotoModel();
+
+                photo.CloudId = resource.PublicId;
+                photo.FileName = resource.FileName;
+                photo.Url= resource.Url;
+
+                photos.Add(photo);
+            }
+
+            return photos;
+        }
+
+        public string GetPhotoUrlForLists(string cloudId)
         {
             return _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(100)).BuildUrl(cloudId);
         }
