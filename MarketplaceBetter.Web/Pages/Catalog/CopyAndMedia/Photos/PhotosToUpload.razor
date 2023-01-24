@@ -12,7 +12,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Photos to Upload</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoToUploadModel>>>(ReloadPhotos))" MultiSelection="true" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoToUploadModel>>>(ReloadPhotos))" MultiSelection="true" Dense="true" Hover="true">
         <ToolBarContent>
             <MudSpacer />
             <MudButton OnClick="UploadSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Info">Upload selected</MudButton>
@@ -32,6 +32,9 @@
             <MudTd DataLabel="Type">@context.Type?.Name</MudTd>
             <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId)"></MudImage></MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
+            <MudTd>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteFromCloud(context.CloudId))">Delete</MudButton>
+            </MudTd>
         </RowTemplate>
     </MudTable>
 </MainBody>
@@ -51,11 +54,25 @@
 
     private async void UploadSelected()
     {
-        
+
     }
 
     private async void UploadAll()
     {
-        
+
+    }
+
+    private async void DeleteFromCloud(string photoId)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete photo \"{photoId}\" from Cloud?" }).Result;
+
+        if (!result.Cancelled)
+        {
+            PhotoService.DeleteFromCloud(photoId);
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Photo"));
+        }
     }
 }

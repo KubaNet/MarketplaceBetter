@@ -27,18 +27,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IMapper _mapper;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IInstanceService _instanceService;
+        private readonly IPhotoTypeService _photoTypeService;
 
         public PhotoService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IPhotoCloudService photoCloudService,
-            IInstanceService instanceService)
+            IInstanceService instanceService,
+            IPhotoTypeService photoTypeService)
         {
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
             _mapper = mapper;
             _photoCloudService = photoCloudService;
             _instanceService = instanceService;
+            _photoTypeService = photoTypeService;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -77,6 +80,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             foreach (var photo in photos)
             {
                 photo.Instance = GetIntanceFromFileName(photo.FileName);
+                photo.Type = GetTypeFromFileName(photo.FileName);
             }
 
             photos = ApplySorting(photos, request);
@@ -114,19 +118,23 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
+        public void DeleteFromCloud(string cloudId)
+        {
+            _photoCloudService.Delete(cloudId);
+        }
+
         private InstanceModel GetIntanceFromFileName(string fileName)
         {
             IList<InstanceModel> instances = _instanceService.GetAll();
 
-            foreach (var instance in instances)
-            {
-                if (fileName.StartsWith($"{instance.ShortName}_"))
-                {
-                    return instance;
-                }
-            }
+            return PhotoFromCloudHelper.GetIntance(instances, fileName);
+        }
 
-            return null;
+        private PhotoTypeModel GetTypeFromFileName(string fileName)
+        {
+            IList<PhotoTypeModel> types = _photoTypeService.GetAll();
+
+            return PhotoFromCloudHelper.GetType(types, fileName);
         }
 
         private void TransferValues(Photo toPhoto, PhotoModel fromPhoto)
