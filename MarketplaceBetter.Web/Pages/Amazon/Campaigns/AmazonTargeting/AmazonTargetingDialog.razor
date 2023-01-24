@@ -64,7 +64,7 @@
     {
         base.OnInitialized();
 
-        Instances = InstanceService.GetAll();
+        Instances = InstanceService.GetAllNormal();
     }
 
     private void HandleInstanceChanged(InstanceModel instance)

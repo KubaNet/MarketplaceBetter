@@ -70,7 +70,7 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAll();
+        Instances = InstanceService.GetAllNormal();
         Elements = CopywritingElementService.GetAll();
 
         if (IsEdit || AddingSimilar)

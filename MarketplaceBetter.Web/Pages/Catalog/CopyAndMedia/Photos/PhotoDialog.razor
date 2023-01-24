@@ -100,7 +100,7 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAll();
+        Instances = InstanceService.GetAllNormal();
         Types = PhotoTypeService.GetAll();
 
         if (IsEdit || AddingSimilar)

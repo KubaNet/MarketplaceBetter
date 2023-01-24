@@ -73,7 +73,7 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAll();
+        Instances = InstanceService.GetAllNormal();
 
         if (IsEdit)
         {

@@ -10,5 +10,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Interfaces
     public interface IInstanceService
     {
         IList<InstanceModel> GetAll();
+
+        IList<InstanceModel> GetAllNormal();
     }
 }
