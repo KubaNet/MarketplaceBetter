@@ -23,7 +23,7 @@ namespace MarketplaceBetter.Services.Helpers
                 }
             }
 
-            return null;
+            return instances.Single(i => i.SystemName == InstanceEnum.All);
         }
 
         public static PhotoTypeModel GetType(IList<PhotoTypeModel> types, string fileName)

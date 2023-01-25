@@ -2,6 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -79,10 +80,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             foreach (var photo in photos)
             {
+                photo.Variants = new List<VariantModel>();
                 photo.Instance = GetIntanceFromFileName(photo.FileName);
                 photo.Type = GetTypeFromFileName(photo.FileName);
             }
 
+            photos = ApplyFilter(photos, request);
             photos = ApplySorting(photos, request);
 
             return photos;
@@ -213,6 +216,45 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return photos.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }
 
+        private IList<PhotoToUploadModel> ApplyFilter(IList<PhotoToUploadModel> photos, ListRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.SearchString))
+            {
+                return photos;
+            }
+
+            IList<string> searchStrings = request.SearchString.SplitForFiltering();
+
+            foreach (string searchString in searchStrings)
+            {
+                string[] searchFieldNames = new[] { "product", "variant", "instance", "type", "filename" };
+                SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
+
+                if (searchField != null)
+                {
+                    photos = searchField.Name switch
+                    {
+                        "product" => photos.Where(p => p.Variants.Any(v => v.Product.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase))).ToList(),
+                        "variant" => photos.Where(p => p.Variants.Any(v => v.Sku.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase))).ToList(),
+                        "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
+                        "type" => photos.Where(p => p.Type.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
+                        "filename" => photos.Where(p => p.FileName.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
+                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
+                    };
+                }
+                else
+                {
+                    photos = photos.Where(p => p.Variants.Any(v => v.Product.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                        || p.Variants.Any(v => v.Sku.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                        || p.Instance.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                        || (p.Type != null && p.Type.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                        || p.FileName.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+            }
+
+            return photos;
+        }
+
         private IList<PhotoToUploadModel> ApplySorting(IList<PhotoToUploadModel> photos, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
@@ -224,6 +266,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName).ToList() : photos.OrderByDescending(p => p.FileName).ToList(),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
+            }
+            else
+            {
+                photos = photos.OrderBy(p => p.FileName).ToList();
             }
 
             return photos;

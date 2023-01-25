@@ -14,24 +14,25 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoToUploadModel>>>(ReloadPhotos))" MultiSelection="true" Dense="true" Hover="true">
         <ToolBarContent>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotosToUpload" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
             <MudSpacer />
-            <MudButton OnClick="UploadSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Info">Upload selected</MudButton>
-            <MudButton OnClick="UploadAll" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAdd" Color="Color.Primary" Class="ml-2">Upload all</MudButton>
+            <MudButton OnClick="UploadSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary">Upload selected</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Variant</MudTh>
-            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoToUploadModel">Instance</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoToUploadModel">Type</MudTableSortLabel></MudTh>
             <MudTh>Photo</MudTh>
             <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoToUploadModel">File Name</MudTableSortLabel></MudTh>
+            <MudTh>Variant</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoToUploadModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoToUploadModel">Instance</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Variant"></MudTd>
-            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
-            <MudTd DataLabel="Type">@context.Type?.Name</MudTd>
             <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId)"></MudImage></MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
+            <MudTd DataLabel="Variant"></MudTd>
+            <MudTd DataLabel="Type">@context.Type?.Name</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
             <MudTd>
                 <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteFromCloud(context.CloudId))">Delete</MudButton>
             </MudTd>
@@ -42,6 +43,7 @@
 @code {
     private MudTable<PhotoToUploadModel> Table;
     private ListRequest ListRequest = new();
+    private int NumberOfPhotos;
 
     private Task<TableData<PhotoToUploadModel>> ReloadPhotos(TableState state)
     {
@@ -49,15 +51,21 @@
 
         IList<PhotoToUploadModel> photos = PhotoService.GetAllToUpload(ListRequest);
 
+        NumberOfPhotos = photos.Count;
+
         return Task.FromResult(new TableData<PhotoToUploadModel>() { TotalItems = photos.Count, Items = photos });
     }
 
-    private async void UploadSelected()
+    private void FilterPhotosToUpload(string searchString)
     {
+        ListRequest.SearchString = searchString;
 
+        Table.ReloadServerData();
+
+        StateHasChanged();
     }
 
-    private async void UploadAll()
+    private async void UploadSelected()
     {
 
     }

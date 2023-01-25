@@ -22,18 +22,18 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="PhotoModel">Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="variant" T="PhotoModel">Variant</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoModel">Instance</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoModel">Type</MudTableSortLabel></MudTh>
             <MudTh>Photo</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="variant" T="PhotoModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoModel">Instance</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
-            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
-            <MudTd DataLabel="Type">@context.Type.Name</MudTd>
             <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId)"></MudImage></MudTd>
+            <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd DataLabel="Type">@context.Type.Name</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>
                 <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.CloudId))">Delete</MudButton>

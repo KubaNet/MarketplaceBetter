@@ -35,9 +35,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         public SizeModel Get(long id) => _mapper.Map<SizeModel>(_repository.Get(id));
 
-        public IList<SizeModel> GetAll() => _mapper.Map<IList<SizeModel>>(_repository.GetQuery().OrderBy(s => s.Name));
+        public IList<SizeModel> GetAll() => _mapper.Map<IList<SizeModel>>(_repository.GetQuery().OrderBy(s => s.Id));
 
-        public IList<SizeModel> GetAllForGroup(long groupId) => _mapper.Map<IList<SizeModel>>(_repository.GetQuery().Where(s => s.GroupId == groupId).OrderBy(s => s.Name));
+        public IList<SizeModel> GetAllForGroup(long groupId) => _mapper.Map<IList<SizeModel>>(_repository.GetQuery().Where(s => s.GroupId == groupId).OrderBy(s => s.Id));
 
         public int CountForListRequest(ListRequest request)
         {

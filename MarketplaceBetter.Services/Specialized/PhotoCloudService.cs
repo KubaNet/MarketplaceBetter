@@ -67,7 +67,7 @@ namespace MarketplaceBetter.Specialized
 
         public IList<PhotoToUploadModel> GetPhotosToUpload()
         {
-            SearchResult searchResult = _cloudinary.Search().Expression($"folder:upload/{_instanceFolder}").Execute();
+            SearchResult searchResult = _cloudinary.Search().Expression($"folder:upload/prod").MaxResults(500).Execute();
 
             IList<PhotoToUploadModel> photos = new List<PhotoToUploadModel>();
 
