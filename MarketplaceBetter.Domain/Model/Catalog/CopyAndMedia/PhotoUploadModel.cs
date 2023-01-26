@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 {
-    public class PhotoToUploadModel
+    public class PhotoUploadModel
     {
         public IList<VariantModel> Variants { get; set; }
 

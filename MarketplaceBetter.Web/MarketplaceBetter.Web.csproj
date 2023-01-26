@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Pages\Catalog\CopyAndMedia\Photos\PhotosToUpload.razor">
+    <Content Update="Pages\Catalog\CopyAndMedia\Photos\UploadPhotos.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>

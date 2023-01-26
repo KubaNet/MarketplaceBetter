@@ -19,14 +19,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 
         IList<PhotoModel> GetForListRequest(ListRequest request);
 
-        IList<PhotoToUploadModel> GetAllToUpload(ListRequest request);
-
         void Add(PhotoModel photo);
 
         void Update(PhotoModel photo);
 
         void Delete(long id);
-
-        void DeleteFromCloud(string cloudId);
     }
 }

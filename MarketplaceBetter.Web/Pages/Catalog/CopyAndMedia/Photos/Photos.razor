@@ -17,7 +17,7 @@
         <ToolBarContent>
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="UploadFromCloud" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info">Upload from cloud</MudButton>
+            <MudButton OnClick="UploadMultiple" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info">Upload multiple</MudButton>
             <MudButton OnClick="AddPhoto" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Photo</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -74,9 +74,9 @@
         ProcessPhotoDialogResult(result);
     }
 
-    private void UploadFromCloud()
+    private void UploadMultiple()
     {
-        NavigationManager.NavigateTo($"photos-to-upload");
+        NavigationManager.NavigateTo($"upload-photos");
     }
 
     private async void AddSimilarPhoto(long id)

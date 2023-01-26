@@ -65,15 +65,15 @@ namespace MarketplaceBetter.Specialized
             return uploadResult;
         }
 
-        public IList<PhotoToUploadModel> GetPhotosToUpload()
+        public IList<PhotoUploadModel> GetPhotosToUpload()
         {
             SearchResult searchResult = _cloudinary.Search().Expression($"folder:upload/prod").MaxResults(500).Execute();
 
-            IList<PhotoToUploadModel> photos = new List<PhotoToUploadModel>();
+            IList<PhotoUploadModel> photos = new List<PhotoUploadModel>();
 
             foreach (var resource in searchResult.Resources)
             {
-                PhotoToUploadModel photo = new PhotoToUploadModel();
+                PhotoUploadModel photo = new PhotoUploadModel();
 
                 photo.CloudId = resource.PublicId;
                 photo.FileName = resource.FileName;

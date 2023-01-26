@@ -1,30 +1,31 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 @using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Model
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Specialized.Interfaces
 
-@page "/photos-to-upload"
-@inject IPhotoService PhotoService
+@page "/upload-photos"
+@inject IPhotoUploadService PhotoUploadService
 @inject IDialogService DialogService
 @inject IPhotoCloudService PhotoCloudService
 @inject ISnackbar Snackbar
 
-<MudText Typo="Typo.h4" Class="mt-2">Photos to Upload</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Upload Photos</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoToUploadModel>>>(ReloadPhotos))" MultiSelection="true" Dense="true" Hover="true">
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoUploadModel>>>(ReloadPhotos))" MultiSelection="true" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotosToUpload" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
             <MudSpacer />
             <MudButton OnClick="UploadSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary">Upload selected</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Photo</MudTh>
-            <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoToUploadModel">File Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoUploadModel">File Name</MudTableSortLabel></MudTh>
             <MudTh>Variant</MudTh>
-            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoToUploadModel">Type</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoToUploadModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoUploadModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoUploadModel">Instance</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -34,29 +35,29 @@
             <MudTd DataLabel="Type">@context.Type?.Name</MudTd>
             <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
             <MudTd>
-                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteFromCloud(context.CloudId))">Delete</MudButton>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Remove(context.CloudId))">Remove</MudButton>
             </MudTd>
         </RowTemplate>
     </MudTable>
 </MainBody>
 
 @code {
-    private MudTable<PhotoToUploadModel> Table;
+    private MudTable<PhotoUploadModel> Table;
     private ListRequest ListRequest = new();
     private int NumberOfPhotos;
 
-    private Task<TableData<PhotoToUploadModel>> ReloadPhotos(TableState state)
+    private Task<TableData<PhotoUploadModel>> ReloadPhotos(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<PhotoToUploadModel> photos = PhotoService.GetAllToUpload(ListRequest);
+        IList<PhotoUploadModel> photos = PhotoUploadService.GetForListRequest(ListRequest);
 
         NumberOfPhotos = photos.Count;
 
-        return Task.FromResult(new TableData<PhotoToUploadModel>() { TotalItems = photos.Count, Items = photos });
+        return Task.FromResult(new TableData<PhotoUploadModel>() { TotalItems = photos.Count, Items = photos });
     }
 
-    private void FilterPhotosToUpload(string searchString)
+    private void FilterPhotos(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -70,13 +71,13 @@
 
     }
 
-    private async void DeleteFromCloud(string photoId)
+    private async void Remove(string photoId)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete photo \"{photoId}\" from Cloud?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove photo \"{photoId}\" from upload?" }).Result;
 
         if (!result.Cancelled)
         {
-            PhotoService.DeleteFromCloud(photoId);
+            PhotoUploadService.Remove(photoId);
 
             await Table.ReloadServerData();
 

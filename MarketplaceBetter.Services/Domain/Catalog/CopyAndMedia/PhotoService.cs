@@ -27,22 +27,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Photo> _repository;
         private readonly IMapper _mapper;
         private readonly IPhotoCloudService _photoCloudService;
-        private readonly IInstanceService _instanceService;
-        private readonly IPhotoTypeService _photoTypeService;
 
         public PhotoService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IPhotoCloudService photoCloudService,
-            IInstanceService instanceService,
-            IPhotoTypeService photoTypeService)
+            IPhotoCloudService photoCloudService)
         {
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
             _mapper = mapper;
             _photoCloudService = photoCloudService;
-            _instanceService = instanceService;
-            _photoTypeService = photoTypeService;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -74,23 +68,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return _mapper.Map<IList<PhotoModel>>(photos);
         }
 
-        public IList<PhotoToUploadModel> GetAllToUpload(ListRequest request)
-        {
-            IList<PhotoToUploadModel> photos = _photoCloudService.GetPhotosToUpload();
-
-            foreach (var photo in photos)
-            {
-                photo.Variants = new List<VariantModel>();
-                photo.Instance = GetIntanceFromFileName(photo.FileName);
-                photo.Type = GetTypeFromFileName(photo.FileName);
-            }
-
-            photos = ApplyFilter(photos, request);
-            photos = ApplySorting(photos, request);
-
-            return photos;
-        }
-
         public void Add(PhotoModel photo)
         {
             Photo photoToAdd = new();
@@ -119,25 +96,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             _repository.Delete(photoToDelete);
             _unitOfWork.Save();
-        }
-
-        public void DeleteFromCloud(string cloudId)
-        {
-            _photoCloudService.Delete(cloudId);
-        }
-
-        private InstanceModel GetIntanceFromFileName(string fileName)
-        {
-            IList<InstanceModel> instances = _instanceService.GetAll();
-
-            return PhotoFromCloudHelper.GetIntance(instances, fileName);
-        }
-
-        private PhotoTypeModel GetTypeFromFileName(string fileName)
-        {
-            IList<PhotoTypeModel> types = _photoTypeService.GetAll();
-
-            return PhotoFromCloudHelper.GetType(types, fileName);
         }
 
         private void TransferValues(Photo toPhoto, PhotoModel fromPhoto)
@@ -214,65 +172,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private IQueryable<Photo> ApplyPaging(IQueryable<Photo> photos, ListRequest request)
         {
             return photos.Skip(request.Page * request.PageSize).Take(request.PageSize);
-        }
-
-        private IList<PhotoToUploadModel> ApplyFilter(IList<PhotoToUploadModel> photos, ListRequest request)
-        {
-            if (string.IsNullOrWhiteSpace(request.SearchString))
-            {
-                return photos;
-            }
-
-            IList<string> searchStrings = request.SearchString.SplitForFiltering();
-
-            foreach (string searchString in searchStrings)
-            {
-                string[] searchFieldNames = new[] { "product", "variant", "instance", "type", "filename" };
-                SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
-
-                if (searchField != null)
-                {
-                    photos = searchField.Name switch
-                    {
-                        "product" => photos.Where(p => p.Variants.Any(v => v.Product.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase))).ToList(),
-                        "variant" => photos.Where(p => p.Variants.Any(v => v.Sku.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase))).ToList(),
-                        "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
-                        "type" => photos.Where(p => p.Type.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
-                        "filename" => photos.Where(p => p.FileName.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
-                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
-                    };
-                }
-                else
-                {
-                    photos = photos.Where(p => p.Variants.Any(v => v.Product.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                        || p.Variants.Any(v => v.Sku.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                        || p.Instance.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                        || (p.Type != null && p.Type.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                        || p.FileName.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
-            }
-
-            return photos;
-        }
-
-        private IList<PhotoToUploadModel> ApplySorting(IList<PhotoToUploadModel> photos, ListRequest request)
-        {
-            if (!string.IsNullOrWhiteSpace(request.SortBy))
-            {
-                photos = request.SortBy switch
-                {
-                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance?.Name).ToList() : photos.OrderByDescending(p => p.Instance?.Name).ToList(),
-                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type?.SystemName).ToList() : photos.OrderByDescending(p => p.Type?.SystemName).ToList(),
-                    "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName).ToList() : photos.OrderByDescending(p => p.FileName).ToList(),
-                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
-                };
-            }
-            else
-            {
-                photos = photos.OrderBy(p => p.FileName).ToList();
-            }
-
-            return photos;
         }
     }
 }
