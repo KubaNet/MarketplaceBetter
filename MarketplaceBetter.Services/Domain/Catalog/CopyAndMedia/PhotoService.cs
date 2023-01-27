@@ -106,6 +106,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             toPhoto.TypeId = fromPhoto.Type.Id;
             toPhoto.CloudId = fromPhoto.CloudId;
             toPhoto.Url = fromPhoto.Url;
+            toPhoto.Height = fromPhoto.Height;
+            toPhoto.Width = fromPhoto.Width;
         }
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
@@ -119,7 +121,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "variant", "instance", "type" };
+                string[] searchFieldNames = new[] { "id", "product", "variant", "instance", "type", "height", "width" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -131,6 +133,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                         "variant" => photos.Where(p => p.Variant.Sku.Contains(searchField.Value)),
                         "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "type" => photos.Where(p => p.Type.Name.Contains(searchField.Value)),
+                        "height" => photos.Where(p => p.Height == searchField.Value.ParseToIntOrDefault()),
+                        "width" => photos.Where(p => p.Width == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -140,7 +144,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                         || p.Variant.Product.Name.Contains(searchString)
                         || p.Variant.Sku.Contains(searchString)
                         || p.Instance.Name.Contains(searchString)
-                        || p.Type.Name.Contains(searchString));
+                        || p.Type.Name.Contains(searchString)
+                        || p.Height == searchString.ParseToIntOrDefault()
+                        || p.Width == searchString.ParseToIntOrDefault());
                 }
             }
 
@@ -158,6 +164,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku) : photos.OrderByDescending(p => p.Variant.Sku),
                     "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name) : photos.OrderByDescending(p => p.Instance.Name),
                     "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.SystemName) : photos.OrderByDescending(p => p.Type.SystemName),
+                    "height" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Height) : photos.OrderByDescending(p => p.Height),
+                    "width" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Width) : photos.OrderByDescending(p => p.Width),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

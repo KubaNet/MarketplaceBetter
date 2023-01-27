@@ -22,18 +22,24 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Photo</MudTh>
+            <MudTh>Size</MudTh>
             <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoUploadModel">File Name</MudTableSortLabel></MudTh>
             <MudTh>Variant</MudTh>
             <MudTh><MudTableSortLabel SortLabel="type" T="PhotoUploadModel">Type</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoUploadModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="width" T="PhotoModel">Width</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="height" T="PhotoModel">Height</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId)"></MudImage></MudTd>
+            <MudTd>@context.Width<span>x</span>@context.Height</MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
             <MudTd DataLabel="Variant"></MudTd>
             <MudTd DataLabel="Type">@context.Type?.Name</MudTd>
             <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
+            <MudTd DataLabel="Width">@context.Width</MudTd>
+            <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd>
                 <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Remove(context.CloudId))">Remove</MudButton>
             </MudTd>

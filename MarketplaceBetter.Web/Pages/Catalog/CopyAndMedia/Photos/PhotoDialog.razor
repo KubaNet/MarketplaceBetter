@@ -100,7 +100,7 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll();
-        Instances = InstanceService.GetAllNormal();
+        Instances = InstanceService.GetAll();
         Types = PhotoTypeService.GetAll();
 
         if (IsEdit || AddingSimilar)
@@ -198,8 +198,10 @@
 
             if (uploadResult.WasSuccessful)
             {
-                Photo.CloudId = uploadResult.Id;
+                Photo.CloudId = uploadResult.CloudId;
                 Photo.Url = uploadResult.Url;
+                Photo.Height = uploadResult.Height;
+                Photo.Width = uploadResult.Width;
 
                 if (IsEdit)
                 {

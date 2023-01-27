@@ -5,6 +5,7 @@ using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
+using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -24,14 +25,17 @@ namespace MarketplaceBetter.Services.Specialized
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IInstanceService _instanceService;
         private readonly IPhotoTypeService _photoTypeService;
+        private readonly IBrandService _brandService;
 
         public PhotoUploadService(IPhotoCloudService photoCloudService,
             IInstanceService instanceService,
-            IPhotoTypeService photoTypeService)
+            IPhotoTypeService photoTypeService,
+            IBrandService brandService)
         {
             _photoCloudService = photoCloudService;
             _instanceService = instanceService;
             _photoTypeService = photoTypeService;
+            _brandService = brandService;
         }
 
         public IList<PhotoUploadModel> GetForListRequest(ListRequest request)
@@ -40,7 +44,7 @@ namespace MarketplaceBetter.Services.Specialized
 
             foreach (var photo in photos)
             {
-                photo.Variants = new List<VariantModel>();
+                photo.Variants = GetVariants(photo.FileName);
                 photo.Instance = GetIntance(photo.FileName);
                 photo.Type = GetPhotoType(photo.FileName);
             }
@@ -54,6 +58,13 @@ namespace MarketplaceBetter.Services.Specialized
         public void Remove(string cloudId)
         {
             _photoCloudService.Delete(cloudId);
+        }
+
+        private IList<VariantModel> GetVariants(string fileName)
+        {
+            BrandModel brand = GetBrand(fileName);
+
+            return new List<VariantModel>();
         }
 
         private InstanceModel GetIntance(string fileName)
@@ -97,19 +108,21 @@ namespace MarketplaceBetter.Services.Specialized
             return null;
         }
 
-        private string GetBrandName(IList<InstanceModel> instances, string fileName)
+        private BrandModel GetBrand(string fileName)
         {
-            if (StartsWithInstance(instances, fileName))
+            if (StartsWithInstance(fileName))
             {
-                fileName = fileName.Substring(0, 3);
+                fileName = fileName.Remove(0, 3);
             }
 
             return null;
         }
 
-        private bool StartsWithInstance(IList<InstanceModel> instances, string fileName)
+        private bool StartsWithInstance(string fileName)
         {
-            return instances.Any(i => fileName.StartsWith($"{i.ShortName}_"));
+            IList<InstanceModel> instances = _instanceService.GetAll();
+
+            return instances.Any(i => fileName.StartsWith($"{i.ShortName}_", StringComparison.OrdinalIgnoreCase));
         }
 
         private IList<PhotoUploadModel> ApplyFilter(IList<PhotoUploadModel> photos, ListRequest request)
@@ -123,7 +136,7 @@ namespace MarketplaceBetter.Services.Specialized
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "product", "variant", "instance", "type", "filename" };
+                string[] searchFieldNames = new[] { "product", "variant", "instance", "type", "filename", "height", "width" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -135,6 +148,8 @@ namespace MarketplaceBetter.Services.Specialized
                         "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
                         "type" => photos.Where(p => p.Type.Name.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
                         "filename" => photos.Where(p => p.FileName.Contains(searchField.Value, StringComparison.OrdinalIgnoreCase)).ToList(),
+                        "height" => photos.Where(p => p.Height == searchField.Value.ParseToIntOrDefault()).ToList(),
+                        "width" => photos.Where(p => p.Width == searchField.Value.ParseToIntOrDefault()).ToList(),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -144,7 +159,9 @@ namespace MarketplaceBetter.Services.Specialized
                         || p.Variants.Any(v => v.Sku.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                         || p.Instance.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)
                         || (p.Type != null && p.Type.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                        || p.FileName.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                        || p.FileName.Contains(searchString, StringComparison.OrdinalIgnoreCase) 
+                        || p.Height == searchString.ParseToIntOrDefault()
+                        || p.Width == searchString.ParseToIntOrDefault()).ToList();
                 }
             }
 
@@ -160,6 +177,8 @@ namespace MarketplaceBetter.Services.Specialized
                     "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance?.Name).ToList() : photos.OrderByDescending(p => p.Instance?.Name).ToList(),
                     "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type?.SystemName).ToList() : photos.OrderByDescending(p => p.Type?.SystemName).ToList(),
                     "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName).ToList() : photos.OrderByDescending(p => p.FileName).ToList(),
+                    "height" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Height).ToList() : photos.OrderByDescending(p => p.Height).ToList(),
+                    "width" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Width).ToList() : photos.OrderByDescending(p => p.Width).ToList(),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

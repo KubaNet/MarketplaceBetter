@@ -58,8 +58,10 @@ namespace MarketplaceBetter.Specialized
             else
             {
                 uploadResult.WasSuccessful = true;
-                uploadResult.Id = result.PublicId;
+                uploadResult.CloudId = result.PublicId;
                 uploadResult.Url = result.SecureUrl.ToString();
+                uploadResult.Height = result.Height;
+                uploadResult.Width= result.Width;
             }
 
             return uploadResult;
@@ -78,6 +80,8 @@ namespace MarketplaceBetter.Specialized
                 photo.CloudId = resource.PublicId;
                 photo.FileName = resource.FileName;
                 photo.Url= resource.Url;
+                photo.Height= resource.Height;
+                photo.Width = resource.Width;
 
                 photos.Add(photo);
             }
