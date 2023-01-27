@@ -18,7 +18,8 @@
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
             <MudSpacer />
-            <MudButton OnClick="UploadSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary">Upload selected</MudButton>
+            <MudButton OnClick="Upload" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Info">Upload</MudButton>
+            <MudButton OnClick="SaveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary" Class="ml-2">Save</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Photo</MudTh>
@@ -72,9 +73,14 @@
         StateHasChanged();
     }
 
-    private async void UploadSelected()
+    private async void SaveSelected()
     {
 
+    }
+
+    private async void Upload()
+    {
+        
     }
 
     private async void Remove(string photoId)

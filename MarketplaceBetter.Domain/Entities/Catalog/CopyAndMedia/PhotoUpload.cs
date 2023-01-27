@@ -10,19 +10,21 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 {
     public class PhotoUpload : Entity
     {
-        public IList<PhotoUploadVariant> Variants { get; set; }
+        public virtual IList<PhotoUploadVariant> Variants { get; set; }
 
         public long? InstanceId { get; set; }
 
         public virtual Instance Instance { get; set; }
 
-        public long TypeId { get; set; }
+        public long? TypeId { get; set; }
 
         public virtual PhotoType Type { get; set; }
 
         public string CloudId { get; set; }
 
         public string Url { get; set; }
+
+        public string FileName { get; set; }
 
         public int Height { get; set; }
 

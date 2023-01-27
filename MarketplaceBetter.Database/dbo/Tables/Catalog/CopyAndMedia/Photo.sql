@@ -6,6 +6,7 @@
 	[TypeId]			BIGINT						NOT NULL,
 	[CloudId]			NVARCHAR (255)				NOT NULL,
 	[Url]				NVARCHAR (255)				NOT NULL,
+	[FileName]			NVARCHAR (255)				NOT NULL,
 	[Height]			INT							NOT NULL,
 	[Width]				INT							NOT NULL,
 	CONSTRAINT			[PK_Photo]			PRIMARY KEY ([Id]),
