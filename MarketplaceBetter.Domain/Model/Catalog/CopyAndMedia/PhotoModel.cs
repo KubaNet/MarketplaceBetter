@@ -16,8 +16,6 @@ namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
         [Required]
         public VariantModel Variant { get; set; }
 
-        public bool ForAllInstances { get; set; }
-
         public InstanceModel Instance { get; set; }
 
         [Required]

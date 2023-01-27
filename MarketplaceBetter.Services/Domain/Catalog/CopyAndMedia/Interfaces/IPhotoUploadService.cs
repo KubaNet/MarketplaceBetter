@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized.Interfaces
+namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 {
     public interface IPhotoUploadService
     {

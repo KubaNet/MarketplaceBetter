@@ -121,6 +121,8 @@
     <None Include="Scripts\Inserts\12_MatchTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\NegativeKeyword.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\NegativeProduct.sql" />
+    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoUpload.sql" />
+    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoUploadVariant.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />

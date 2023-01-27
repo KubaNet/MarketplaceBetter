@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized
+namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
     public class PhotoUploadService : IPhotoUploadService
     {
@@ -26,6 +26,8 @@ namespace MarketplaceBetter.Services.Specialized
         private readonly IInstanceService _instanceService;
         private readonly IPhotoTypeService _photoTypeService;
         private readonly IBrandService _brandService;
+
+        private readonly IList<PhotoUploadModel> _photos;
 
         public PhotoUploadService(IPhotoCloudService photoCloudService,
             IInstanceService instanceService,
@@ -36,13 +38,15 @@ namespace MarketplaceBetter.Services.Specialized
             _instanceService = instanceService;
             _photoTypeService = photoTypeService;
             _brandService = brandService;
+
+            _photos = _photoCloudService.GetPhotosToUpload();
         }
 
         public IList<PhotoUploadModel> GetForListRequest(ListRequest request)
         {
             IList<PhotoUploadModel> photos = _photoCloudService.GetPhotosToUpload();
 
-            foreach (var photo in photos)
+            foreach (var photo in _photos)
             {
                 photo.Variants = GetVariants(photo.FileName);
                 photo.Instance = GetIntance(photo.FileName);
@@ -158,8 +162,8 @@ namespace MarketplaceBetter.Services.Specialized
                     photos = photos.Where(p => p.Variants.Any(v => v.Product.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                         || p.Variants.Any(v => v.Sku.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                         || p.Instance.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)
-                        || (p.Type != null && p.Type.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                        || p.FileName.Contains(searchString, StringComparison.OrdinalIgnoreCase) 
+                        || p.Type != null && p.Type.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                        || p.FileName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
                         || p.Height == searchString.ParseToIntOrDefault()
                         || p.Width == searchString.ParseToIntOrDefault()).ToList();
                 }

@@ -2,7 +2,6 @@
 (
 	[Id]				BIGINT						NOT NULL	IDENTITY,
 	[VariantId]			BIGINT						NOT NULL,
-	[ForAllInstances]	BIT							NOT NULL,
 	[InstanceId]		BIGINT						NOT NULL,
 	[TypeId]			BIGINT						NOT NULL,
 	[CloudId]			NVARCHAR (255)				NOT NULL,

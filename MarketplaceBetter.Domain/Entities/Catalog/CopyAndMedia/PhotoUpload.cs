@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 {
-    public class Photo : Entity
+    public class PhotoUpload : Entity
     {
-        public long VariantId { get; set; }
-
-        public virtual Variant Variant { get; set; }
+        public IList<PhotoUploadVariant> Variants { get; set; }
 
         public long? InstanceId { get; set; }
 

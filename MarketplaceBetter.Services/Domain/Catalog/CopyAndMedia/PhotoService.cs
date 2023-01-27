@@ -102,7 +102,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         {
             toPhoto.VariantId = fromPhoto.Variant.Id;
             toPhoto.InstanceId = fromPhoto.Instance?.Id;
-            toPhoto.ForAllInstances = fromPhoto.Instance == null ? true : false;
             toPhoto.TypeId = fromPhoto.Type.Id;
             toPhoto.CloudId = fromPhoto.CloudId;
             toPhoto.Url = fromPhoto.Url;
