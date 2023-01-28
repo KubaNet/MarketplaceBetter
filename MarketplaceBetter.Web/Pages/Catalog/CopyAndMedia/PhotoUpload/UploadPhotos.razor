@@ -53,6 +53,16 @@
     private ListRequest ListRequest = new();
     private int NumberOfPhotos;
 
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            var result = await DialogService.Show<UploadPhotosDialog>(null).Result;
+        }
+    }
+
     private Task<TableData<PhotoUploadModel>> ReloadPhotos(TableState state)
     {
         state.PopulateListRequest(ListRequest);
@@ -80,14 +90,14 @@
 
     private async void Upload()
     {
-        
+        var result = await DialogService.Show<UploadPhotosDialog>(null).Result;
     }
 
     private async void Remove(string photoId)
     {
         DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove photo \"{photoId}\" from upload?" }).Result;
 
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             PhotoUploadService.Remove(photoId);
 

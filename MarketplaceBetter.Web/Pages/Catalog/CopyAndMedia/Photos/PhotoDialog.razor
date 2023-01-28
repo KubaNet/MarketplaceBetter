@@ -57,13 +57,13 @@
                 }
             </MudSelect>
             <InputFile id="FileInput" OnChange="SetPhoto" hidden />
-            <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Filled.CloudUpload" for="FileInput" Class="mt-4">
+            <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="FileInput" Class="mt-4">
                 Upload Photo
             </MudButton>
             @if (PhotoFile != null)
             {
                 <MudList>
-                    <MudListItem Icon="@Icons.Filled.AttachFile">
+                    <MudListItem Icon="@Icons.Material.Filled.AttachFile">
                         @PhotoFile.Name <code>@PhotoFile.Size bytes</code>
                     </MudListItem>
                 </MudList>

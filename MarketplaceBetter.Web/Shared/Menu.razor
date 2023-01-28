@@ -1,10 +1,10 @@
 ﻿@inject NavigationManager NavigationManager
 
 <MudNavMenu>
-    <MudNavGroup Title="Catalog" Icon="@Icons.Filled.Folder" Expanded="true" HideExpandIcon="true">
+    <MudNavGroup Title="Catalog" Icon="@Icons.Material.Filled.Folder" Expanded="true" HideExpandIcon="true">
         @if (IsProductsModule())
         {
-            <MudNavGroup Title="Products" Icon="@Icons.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
+            <MudNavGroup Title="Products" Icon="@Icons.Material.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/products">Products</MudNavLink>
                 <MudNavLink Href="/product-colors">Product Colors</MudNavLink>
                 <MudNavLink Href="/variants">Variants</MudNavLink>
@@ -14,12 +14,12 @@
         }
         else
         {
-            <MudNavLink Href="/products" Icon="@Icons.Filled.ShoppingBasket">Products</MudNavLink>
+            <MudNavLink Href="/products" Icon="@Icons.Material.Filled.ShoppingBasket">Products</MudNavLink>
         }
 
         @if (IsColorsAndSizesModule())
         {
-            <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Filled.Palette" Expanded="true" HideExpandIcon="true">
+            <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Material.Filled.Palette" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/colors">Colors</MudNavLink>
                 <MudNavLink Href="/color-translations">Color Translations</MudNavLink>
                 <MudNavLink Href="/color-groups">Color Groups</MudNavLink>
@@ -29,25 +29,25 @@
         }
         else
         {
-            <MudNavLink Href="/colors" Icon="@Icons.Filled.Palette">Colors & Sizes</MudNavLink>
+            <MudNavLink Href="/colors" Icon="@Icons.Material.Filled.Palette">Colors & Sizes</MudNavLink>
         }
 
         @if (IsCopyAndMediaModule())
         {
-            <MudNavGroup Title="Copy & Media" Icon="@Icons.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
+            <MudNavGroup Title="Copy & Media" Icon="@Icons.Material.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
                 <MudNavLink Href="/photos">Photos</MudNavLink>
             </MudNavGroup>
         }
         else
         {
-            <MudNavLink Href="/copywriting" Icon="@Icons.Filled.PhotoLibrary">Copy & Media</MudNavLink>
+            <MudNavLink Href="/copywriting" Icon="@Icons.Material.Filled.PhotoLibrary">Copy & Media</MudNavLink>
         }
     </MudNavGroup>
-    <MudNavGroup Title="Amazon" Icon="@Icons.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
+    <MudNavGroup Title="Amazon" Icon="@Icons.Material.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
         @if (IsAmazonInventoryModule())
         {
-            <MudNavGroup Title="Inventory" Icon="@Icons.Filled.Inventory" Expanded="true" HideExpandIcon="true">
+            <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/parents">Parents</MudNavLink>
                 <MudNavLink Href="/parent-instances">Parent Instances</MudNavLink>
                 <MudNavLink Href="/childs">Childs</MudNavLink>
@@ -56,12 +56,12 @@
         }
         else
         {
-            <MudNavLink Href="/parents" Icon="@Icons.Filled.Inventory">Inventory</MudNavLink>
+            <MudNavLink Href="/parents" Icon="@Icons.Material.Filled.Inventory">Inventory</MudNavLink>
         }
 
         @if (IsCampaignsModule())
         {
-            <MudNavGroup Title="Campaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd" Expanded="true" HideExpandIcon="true">
+            <MudNavGroup Title="Campaigns" Icon="@Icons.Material.Filled.SwitchAccessShortcutAdd" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
                 <MudNavLink Href="/portfolios">Portfolios</MudNavLink>
                 <MudNavLink Href="/ad-groups">Ad Groups</MudNavLink>
@@ -73,12 +73,12 @@
         }
         else
         {
-            <MudNavLink Href="/campaigns" Icon="@Icons.Filled.SwitchAccessShortcutAdd">Campaigns</MudNavLink>
+            <MudNavLink Href="/campaigns" Icon="@Icons.Material.Filled.SwitchAccessShortcutAdd">Campaigns</MudNavLink>
         }
 
         @if (IsKeywordsModule())
         {
-            <MudNavGroup Title="Keywords" Icon="@Icons.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
+            <MudNavGroup Title="Keywords" Icon="@Icons.Material.Filled.ManageSearch" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/researches">Researches</MudNavLink>
                 <MudNavLink Href="/research-targets">Research Targets</MudNavLink>
                 <MudNavLink Href="/research-results">Research Results</MudNavLink>
@@ -86,7 +86,7 @@
         }
         else
         {
-            <MudNavLink Href="/researches" Icon="@Icons.Filled.ManageSearch">Keywords</MudNavLink>
+            <MudNavLink Href="/researches" Icon="@Icons.Material.Filled.ManageSearch">Keywords</MudNavLink>
         }
     </MudNavGroup>
 </MudNavMenu>

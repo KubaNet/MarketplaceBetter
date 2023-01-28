@@ -103,7 +103,7 @@
     {
         DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete photo \"{photoId}\"?" }).Result;
 
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             PhotoService.Delete(id);
 
@@ -115,7 +115,7 @@
 
     private void ProcessPhotoDialogResult(DialogResult result)
     {
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             Table.ReloadServerData();
         }

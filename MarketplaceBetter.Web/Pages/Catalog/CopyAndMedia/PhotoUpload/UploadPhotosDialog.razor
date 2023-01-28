@@ -1,0 +1,74 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog Style="min-width: 800px;">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Upload photos</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer Style="max-height: 550px; overflow-y: scroll">
+            <MudStack Style="width: 100%;">
+                <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnInputFileChanged" MaximumFileCount="500" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20" InputStyle="opacity:0"
+                               @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass">
+                    <ButtonTemplate>
+                        <MudPaper MinHeight="400px" Outlined="true" Class="@DragClass">
+                            <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
+                            @foreach (var fileName in FileNames)
+                            {
+                                <MudChip Color="Color.Dark" Text="@fileName" />
+                            }
+                        </MudPaper>
+                    </ButtonTemplate>
+                </MudFileUpload>
+            </MudStack>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton OnClick="Upload" Disabled="@(!FileNames.Any())" Color="Color.Primary" Variant="Variant.Filled">Upload</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+
+    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mud-width-full mud-height-full z-10";
+    private string DragClass = DefaultDragClass;
+    private IList<string> FileNames = new List<string>();
+
+    private void OnInputFileChanged(InputFileChangeEventArgs changeEvent)
+    {
+        ClearDragClass();
+
+        var files = changeEvent.GetMultipleFiles(maximumFileCount: 500);
+        foreach (var file in files)
+        {
+            FileNames.Add(file.Name);
+        }
+    }
+
+    private void Cancel()
+    {
+        FileNames.Clear();
+        ClearDragClass();
+
+        MudDialog.Cancel();
+    }
+
+    private void Upload()
+    {
+        //Upload the files here
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add("TODO: Upload your files!", Severity.Normal);
+    }
+
+    private void SetDragClass()
+    {
+        DragClass = $"{DefaultDragClass} mud-border-primary";
+    }
+
+    private void ClearDragClass()
+    {
+        DragClass = DefaultDragClass;
+    }
+}
