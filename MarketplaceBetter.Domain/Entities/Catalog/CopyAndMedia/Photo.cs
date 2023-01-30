@@ -26,6 +26,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 
         public string Url { get; set; }
 
+        public string FileName { get; set; }
+
         public int Height { get; set; }
 
         public int Width { get; set; }

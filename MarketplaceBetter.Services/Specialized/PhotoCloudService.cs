@@ -47,22 +47,24 @@ namespace MarketplaceBetter.Specialized
             };
 
             ImageUploadResult result = _cloudinary.Upload(parameters);
+            PhotoUploadResult uploadResult = CreatePhotoUploadResult(result);
 
-            PhotoUploadResult uploadResult = new PhotoUploadResult();
+            return uploadResult;
+        }
 
-            if (result.Error != null)
+        public PhotoUploadResult PreUpload(MemoryStream photoStream, string fileName)
+        {
+            string fullFileName = $"upload/{_instanceFolder}/{fileName}";
+
+            ImageUploadParams parameters = new ImageUploadParams
             {
-                uploadResult.WasSuccessful = false;
-                uploadResult.Error = result.Error.Message;
-            }
-            else
-            {
-                uploadResult.WasSuccessful = true;
-                uploadResult.CloudId = result.PublicId;
-                uploadResult.Url = result.SecureUrl.ToString();
-                uploadResult.Height = result.Height;
-                uploadResult.Width= result.Width;
-            }
+                AllowedFormats = new string[] { "jpg", "png" },
+                PublicId = fullFileName,
+                File = new FileDescription(fullFileName, photoStream)
+            };
+
+            ImageUploadResult result = _cloudinary.Upload(parameters);
+            PhotoUploadResult uploadResult = CreatePhotoUploadResult(result);
 
             return uploadResult;
         }
@@ -97,6 +99,27 @@ namespace MarketplaceBetter.Specialized
         public void Delete(string cloudId)
         {
             _cloudinary.DeleteResources(ResourceType.Image, new string[] { cloudId });
+        }
+
+        private PhotoUploadResult CreatePhotoUploadResult(ImageUploadResult result)
+        {
+            PhotoUploadResult uploadResult = new PhotoUploadResult();
+
+            if (result.Error != null)
+            {
+                uploadResult.WasSuccessful = false;
+                uploadResult.Error = result.Error.Message;
+            }
+            else
+            {
+                uploadResult.WasSuccessful = true;
+                uploadResult.CloudId = result.PublicId;
+                uploadResult.Url = result.SecureUrl.ToString();
+                uploadResult.Height = result.Height;
+                uploadResult.Width = result.Width;
+            }
+
+            return uploadResult;
         }
     }
 }

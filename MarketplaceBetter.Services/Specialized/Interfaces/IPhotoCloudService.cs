@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Specialized.Interfaces
     {
         PhotoUploadResult Upload(MemoryStream photoStream, string fileName);
 
+        PhotoUploadResult PreUpload(MemoryStream photoStream, string fileName);
+
         IList<PhotoUploadModel> GetPhotosToUpload();
 
         string GetPhotoUrlForLists(string cloudId);

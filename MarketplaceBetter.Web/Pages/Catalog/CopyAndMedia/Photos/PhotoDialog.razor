@@ -202,6 +202,7 @@
                 Photo.Url = uploadResult.Url;
                 Photo.Height = uploadResult.Height;
                 Photo.Width = uploadResult.Width;
+                Photo.FileName = fileName;
 
                 if (IsEdit)
                 {
@@ -230,8 +231,8 @@
         }
     }
 
-    private void SetPhoto(InputFileChangeEventArgs e)
+    private void SetPhoto(InputFileChangeEventArgs changeEvent)
     {
-        PhotoFile = e.File;
+        PhotoFile = changeEvent.File;
     }
 }
