@@ -27,27 +27,23 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<PhotoUpload> _repository;
+        private readonly IRepository<Instance> _instanceRepository;
         private readonly IMapper _mapper;
         private readonly IPhotoCloudService _photoCloudService;
-        private readonly IInstanceService _instanceService;
         private readonly IPhotoTypeService _photoTypeService;
-        private readonly IBrandService _brandService;
 
         public PhotoUploadService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IPhotoCloudService photoCloudService,
-            IInstanceService instanceService,
-            IPhotoTypeService photoTypeService,
-            IBrandService brandService)
+            IPhotoTypeService photoTypeService)
         {
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<PhotoUpload>();
+            _instanceRepository = unitOfWork.GetRepository<Instance>();
             _mapper = mapper;
             _photoCloudService = photoCloudService;
-            _instanceService = instanceService;
             _photoTypeService = photoTypeService;
-            _brandService = brandService;
         }
 
         public IList<PhotoUploadModel> GetForListRequest(ListRequest request)
@@ -60,9 +56,34 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return _mapper.Map<IList<PhotoUploadModel>>(photos);
         }
 
+        public void Add(PhotoUploadModel photoUpload)
+        {
+            PhotoUpload photoUploadToAdd = new();
+
+            TransferValues(photoUploadToAdd, photoUpload);
+
+            photoUploadToAdd.Instance = GetIntance(photoUpload.FileName);
+
+            _repository.Add(photoUploadToAdd);
+            _unitOfWork.Save();
+        }
+
         public void Remove(string cloudId)
         {
             _photoCloudService.Delete(cloudId);
+
+            PhotoUpload photoUpload = _repository.Single(p => p.CloudId == cloudId);
+            _repository.Delete(photoUpload);
+            _unitOfWork.Save();
+        }
+
+        private void TransferValues(PhotoUpload toPhotoUpload, PhotoUploadModel fromPhotoUpload)
+        {
+            toPhotoUpload.FileName = fromPhotoUpload.FileName;
+            toPhotoUpload.CloudId = fromPhotoUpload.CloudId;
+            toPhotoUpload.Url = fromPhotoUpload.Url;
+            toPhotoUpload.Height = fromPhotoUpload.Height;
+            toPhotoUpload.Width = fromPhotoUpload.Width;
         }
 
         private IList<VariantModel> GetVariants(string fileName)
@@ -72,9 +93,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return new List<VariantModel>();
         }
 
-        private InstanceModel GetIntance(string fileName)
+        private Instance GetIntance(string fileName)
         {
-            IList<InstanceModel> instances = _instanceService.GetAll();
+            IList<Instance> instances = _instanceRepository.GetAll();
 
             foreach (var instance in instances)
             {
@@ -125,7 +146,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private bool StartsWithInstance(string fileName)
         {
-            IList<InstanceModel> instances = _instanceService.GetAll();
+            IList<Instance> instances = _instanceRepository.GetAll();
 
             return instances.Any(i => fileName.StartsWith($"{i.ShortName}_", StringComparison.OrdinalIgnoreCase));
         }

@@ -19,6 +19,7 @@ namespace MarketplaceBetter.Specialized
         private readonly IConfiguration _configuration;
         private readonly Cloudinary _cloudinary;
         private readonly string _instanceFolder;
+        private readonly string[] _allowedFormats = new string[] { "jpg", "png" };
 
         public PhotoCloudService(IConfiguration configuration)
         {
@@ -37,11 +38,12 @@ namespace MarketplaceBetter.Specialized
 
         public PhotoUploadResult Upload(MemoryStream photoStream, string fileName)
         {
+            fileName = ClearFileName(fileName);
             string fullFileName = $"{_instanceFolder}/{fileName}";
 
             ImageUploadParams parameters = new ImageUploadParams
             {
-                AllowedFormats = new string[] { "jpg", "png" },
+                AllowedFormats = _allowedFormats,
                 PublicId = fullFileName,
                 File = new FileDescription(fullFileName, photoStream)
             };
@@ -54,11 +56,12 @@ namespace MarketplaceBetter.Specialized
 
         public PhotoUploadResult PreUpload(MemoryStream photoStream, string fileName)
         {
-            string fullFileName = $"upload/{_instanceFolder}/{fileName}";
+            fileName = ClearFileName(fileName);
+            string fullFileName = $"preupload/{_instanceFolder}/{fileName}";
 
             ImageUploadParams parameters = new ImageUploadParams
             {
-                AllowedFormats = new string[] { "jpg", "png" },
+                AllowedFormats = _allowedFormats,
                 PublicId = fullFileName,
                 File = new FileDescription(fullFileName, photoStream)
             };
@@ -99,6 +102,16 @@ namespace MarketplaceBetter.Specialized
         public void Delete(string cloudId)
         {
             _cloudinary.DeleteResources(ResourceType.Image, new string[] { cloudId });
+        }
+
+        private string ClearFileName(string fileName)
+        {
+            foreach (var format in _allowedFormats)
+            {
+                fileName = fileName.Replace($".{format}", string.Empty, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return fileName;
         }
 
         private PhotoUploadResult CreatePhotoUploadResult(ImageUploadResult result)

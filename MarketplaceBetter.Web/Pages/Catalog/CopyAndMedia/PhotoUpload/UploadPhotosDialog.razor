@@ -1,13 +1,16 @@
 ﻿@using System.IO;
+@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Model;
 @using MarketplaceBetter.Specialized.Interfaces;
 
 @inject IPhotoCloudService PhotoCloudService
+@inject IPhotoUploadService PhotoUploadService
 @inject ISnackbar Snackbar
 
 <MudDialog Style="min-width: 800px;">
     <TitleContent>
-        <MudText Typo="Typo.h6">Add Photo Files to Upload</MudText>
+        <MudText Typo="Typo.h6">Add photo files to upload</MudText>
     </TitleContent>
     <DialogContent>
         <MudContainer Class="@ProgressDisplayClass">
@@ -103,6 +106,17 @@
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             PhotoUploadResult uploadResult = PhotoCloudService.PreUpload(memoryStream, file.Name);
+
+            PhotoUploadModel photoUploadToAdd = new PhotoUploadModel()
+            {
+                FileName = file.Name,
+                CloudId = uploadResult.CloudId,
+                Url = uploadResult.Url,
+                Height = uploadResult.Height,
+                Width = uploadResult.Width
+            };
+
+            PhotoUploadService.Add(photoUploadToAdd);
         }
 
         MudDialog.Close();

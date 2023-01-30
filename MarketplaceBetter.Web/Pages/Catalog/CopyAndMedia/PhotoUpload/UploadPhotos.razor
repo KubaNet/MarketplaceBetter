@@ -62,6 +62,8 @@
             DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
             var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
+
+            ProcessPhotoUploadDialogResult(result);
         }
     }
 
@@ -95,19 +97,29 @@
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
         var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
+
+        ProcessPhotoUploadDialogResult(result);
     }
 
-    private async void Remove(string photoId)
+    private async void Remove(string photoUploadId)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove photo \"{photoId}\" from upload?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove photo \"{photoUploadId}\" from upload?" }).Result;
 
         if (!result.Canceled)
         {
-            PhotoUploadService.Remove(photoId);
+            PhotoUploadService.Remove(photoUploadId);
 
             await Table.ReloadServerData();
 
             Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Photo"));
+        }
+    }
+
+    private void ProcessPhotoUploadDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
         }
     }
 }
