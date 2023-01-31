@@ -6,6 +6,7 @@
 
 @inject IPhotoCloudService PhotoCloudService
 @inject IPhotoUploadService PhotoUploadService
+@inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
 <MudDialog Style="min-width: 800px;">
@@ -27,9 +28,9 @@
                     <ButtonTemplate>
                         <MudPaper MinHeight="400px" Outlined="true" Class="@DragClass">
                             <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
-                            @foreach (var fileName in FileNames)
+                            @foreach (var uploadedFile in UploadedFiles)
                             {
-                                <MudChip Color="IsCorrectFileType(fileName) ? Color.Dark : Color.Error" Text="@fileName" />
+                                <MudChip Color="ChipsColors[uploadedFile.Key]" Text="@uploadedFile.Value.Name" />
                             }
                         </MudPaper>
                     </ButtonTemplate>
@@ -39,7 +40,6 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Disabled="ButtonsDisabled">Cancel</MudButton>
-        <MudButton OnClick="Upload" Disabled="ButtonsDisabled || !FileNames.Any()" Color="Color.Primary" Variant="Variant.Filled">Upload</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -48,35 +48,50 @@
     [Parameter] public string Title { get; set; }
 
     private MudFileUpload<IReadOnlyList<IBrowserFile>> MudFileUpload;
+    private IDictionary<int, Color> ChipsColors = new Dictionary<int, Color>();
+    private IDictionary<int, IBrowserFile> UploadedFiles = new Dictionary<int, IBrowserFile>();
     private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mud-width-full mud-height-full z-10";
     private string DragClass = DefaultDragClass;
-    private IList<string> FileNames = new List<string>();
 
     private bool ButtonsDisabled = false;
     private string ProgressDisplayClass = "d-none";
     private string IncorrectFilesClass = "d-none";
+    private bool IncorrectFilesExists = false;
     private string CurrentFileName = string.Empty;
     private double CurrentProgressValue = 0;
     private double CorrectFileCount = 0;
+    private int CurrentFileIndex = 0;
 
-    private void OnInputFileChanged(InputFileChangeEventArgs changeEvent)
+    private async void OnInputFileChanged(InputFileChangeEventArgs changeEvent)
     {
         ClearDragClass();
 
         var files = changeEvent.GetMultipleFiles(maximumFileCount: 500);
         foreach (var file in files)
         {
-            FileNames.Add(file.Name);
+            UploadedFiles.Add(CurrentFileIndex, file);
 
-            if (IsCorrectFileType(file.Name))
+            if (IsCorrectFileType(file))
             {
+                ChipsColors.Add(CurrentFileIndex, Color.Dark);
                 CorrectFileCount++;
             }
             else
             {
+                ChipsColors.Add(CurrentFileIndex, Color.Error);
                 IncorrectFilesClass = "d-block";
+                IncorrectFilesExists = true;
             }
+
+            CurrentFileIndex++;
         }
+
+        if (IncorrectFilesExists)
+        {
+            await DialogService.Show<WarningDialog>(null, new DialogParameters { ["Warning"] = "There are files with incorrect type (not .jpg or .png). They will not be uploaded." }).Result;
+        }
+
+        Upload();
     }
 
     private void Cancel()
@@ -90,15 +105,16 @@
         ButtonsDisabled = true;
         ProgressDisplayClass = "d-block";
 
-        foreach (var file in MudFileUpload.Files)
+        foreach (var uploadedFile in UploadedFiles)
         {
-            if (!IsCorrectFileType(file.Name))
+            IBrowserFile file = uploadedFile.Value;
+
+            if (!IsCorrectFileType(file))
             {
                 continue;
             }
 
             CurrentFileName = file.Name;
-            CurrentProgressValue += progressStep;
             StateHasChanged();
 
             MemoryStream memoryStream = new MemoryStream();
@@ -117,14 +133,19 @@
             };
 
             PhotoUploadService.Add(photoUploadToAdd);
+
+            CurrentProgressValue += progressStep;
+            ChipsColors[uploadedFile.Key] = Color.Primary;
         }
 
+        StateHasChanged();
+        await Task.Delay(1000);
         MudDialog.Close();
     }
 
-    private bool IsCorrectFileType(string fileName)
+    private bool IsCorrectFileType(IBrowserFile file)
     {
-        return fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase);
+        return file.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || file.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase);
     }
 
     private void SetDragClass()

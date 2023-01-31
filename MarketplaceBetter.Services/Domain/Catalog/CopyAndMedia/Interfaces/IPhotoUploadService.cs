@@ -14,6 +14,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 
         void Add(PhotoUploadModel photoUpload);
 
-        void Remove(string cloudId);
+        void Remove(PhotoUploadModel photoUpload);
     }
 }

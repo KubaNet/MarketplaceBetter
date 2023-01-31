@@ -11,6 +11,8 @@ namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 {
     public class PhotoUploadModel
     {
+        public long Id { get; set; }
+
         public IList<VariantModel> Variants { get; set; }
 
         public InstanceModel Instance { get; set; }

@@ -68,12 +68,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
-        public void Remove(string cloudId)
+        public void Remove(PhotoUploadModel photoUpload)
         {
-            _photoCloudService.Delete(cloudId);
+            _photoCloudService.Delete(photoUpload.CloudId);
 
-            PhotoUpload photoUpload = _repository.Single(p => p.CloudId == cloudId);
-            _repository.Delete(photoUpload);
+            PhotoUpload photoUploadToDelete = _repository.Get(photoUpload.Id);
+            _repository.Delete(photoUploadToDelete);
             _unitOfWork.Save();
         }
 
