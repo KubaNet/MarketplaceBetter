@@ -14,6 +14,8 @@ namespace MarketplaceBetter.Services.Model
 
         public string CloudId { get; set; }
 
+        public string Version { get; set; }
+
         public string Url { get; set; }
 
         public int Height { get; set; }

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,31 +73,9 @@ namespace MarketplaceBetter.Specialized
             return uploadResult;
         }
 
-        public IList<PhotoUploadModel> GetPhotosToUpload()
+        public string GetPhotoUrlForLists(string cloudId, string version)
         {
-            SearchResult searchResult = _cloudinary.Search().Expression($"folder:upload/prod").MaxResults(500).Execute();
-
-            IList<PhotoUploadModel> photos = new List<PhotoUploadModel>();
-
-            foreach (var resource in searchResult.Resources)
-            {
-                PhotoUploadModel photo = new PhotoUploadModel();
-
-                photo.CloudId = resource.PublicId;
-                photo.FileName = resource.FileName;
-                photo.Url= resource.Url;
-                photo.Height= resource.Height;
-                photo.Width = resource.Width;
-
-                photos.Add(photo);
-            }
-
-            return photos;
-        }
-
-        public string GetPhotoUrlForLists(string cloudId)
-        {
-            return _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(100)).BuildUrl(cloudId);
+            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(100)).BuildUrl(cloudId);
         }
 
         public void Delete(string cloudId)
@@ -127,6 +106,7 @@ namespace MarketplaceBetter.Specialized
             {
                 uploadResult.WasSuccessful = true;
                 uploadResult.CloudId = result.PublicId;
+                uploadResult.Version = result.Version;
                 uploadResult.Url = result.SecureUrl.ToString();
                 uploadResult.Height = result.Height;
                 uploadResult.Width = result.Width;

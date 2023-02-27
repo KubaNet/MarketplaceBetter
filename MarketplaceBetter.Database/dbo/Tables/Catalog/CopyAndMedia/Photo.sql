@@ -5,6 +5,7 @@
 	[InstanceId]		BIGINT						NOT NULL,
 	[TypeId]			BIGINT						NOT NULL,
 	[CloudId]			NVARCHAR (255)				NOT NULL,
+	[Version]			NVARCHAR (255)				NOT NULL,
 	[Url]				NVARCHAR (255)				NOT NULL,
 	[FileName]			NVARCHAR (255)				NOT NULL,
 	[Height]			INT							NOT NULL,

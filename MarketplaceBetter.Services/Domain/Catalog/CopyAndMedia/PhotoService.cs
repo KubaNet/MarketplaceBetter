@@ -104,6 +104,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             toPhoto.InstanceId = fromPhoto.Instance.Id;
             toPhoto.TypeId = fromPhoto.Type.Id;
             toPhoto.CloudId = fromPhoto.CloudId;
+            toPhoto.Version = fromPhoto.Version;
             toPhoto.Url = fromPhoto.Url;
             toPhoto.Height = fromPhoto.Height;
             toPhoto.Width = fromPhoto.Width;

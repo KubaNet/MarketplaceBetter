@@ -4,6 +4,7 @@
 	[InstanceId]		BIGINT						NOT NULL,
 	[TypeId]			BIGINT						NULL,
 	[CloudId]			NVARCHAR (255)				NOT NULL,
+	[Version]			NVARCHAR (255)				NOT NULL,
 	[Url]				NVARCHAR (255)				NOT NULL,
 	[FileName]			NVARCHAR (255)				NOT NULL,
 	[Height]			INT							NOT NULL,
@@ -14,7 +15,7 @@
 );
 GO
 
-CREATE UNIQUE INDEX UIX_PhotoUpload_CloudId  ON [dbo].[PhotoUpload] ([Url] ASC);
+CREATE UNIQUE INDEX UIX_PhotoUpload_CloudId  ON [dbo].[PhotoUpload] ([CloudId] ASC);
 GO
 
 CREATE UNIQUE INDEX UIX_PhotoUpload_Url  ON [dbo].[PhotoUpload] ([Url] ASC);

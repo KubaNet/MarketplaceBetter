@@ -15,9 +15,7 @@ namespace MarketplaceBetter.Specialized.Interfaces
 
         PhotoUploadResult PreUpload(MemoryStream photoStream, string fileName);
 
-        IList<PhotoUploadModel> GetPhotosToUpload();
-
-        string GetPhotoUrlForLists(string cloudId);
+        string GetPhotoUrlForLists(string cloudId, string version);
 
         void Delete(string cloudId);
     }

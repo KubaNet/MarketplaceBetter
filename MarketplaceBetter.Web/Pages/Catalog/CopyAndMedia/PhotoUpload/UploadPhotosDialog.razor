@@ -9,7 +9,7 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<MudDialog Style="min-width: 800px;">
+<MudDialog Style="min-width: 60%;">
     <TitleContent>
         <MudText Typo="Typo.h6">Add photo files to upload</MudText>
     </TitleContent>
@@ -21,12 +21,12 @@
         <MudContainer Class="@IncorrectFilesClass">
             <MudText Typo="Typo.body2" Color="Color.Error">There are files with incorrect type (not .jpg or .png). They will not be uploaded.</MudText>
         </MudContainer>
-        <MudContainer Style="max-height: 550px; overflow-y: scroll">
+        <MudContainer Style="max-height: 900px; overflow-y: scroll">
             <MudStack Style="width: 100%;">
                 <MudFileUpload @ref="MudFileUpload" T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnInputFileChanged" MaximumFileCount="500" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20" InputStyle="opacity:0"
                                @ondragenter="SetDragClass" @ondragleave="ClearDragClass" @ondragend="ClearDragClass">
                     <ButtonTemplate>
-                        <MudPaper MinHeight="400px" Outlined="true" Class="@DragClass">
+                        <MudPaper MinHeight="500px" Outlined="true" Class="@DragClass">
                             <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
                             @foreach (var uploadedFile in UploadedFiles)
                             {
@@ -127,12 +127,13 @@
             {
                 FileName = file.Name,
                 CloudId = uploadResult.CloudId,
+                Version = uploadResult.Version,
                 Url = uploadResult.Url,
                 Height = uploadResult.Height,
                 Width = uploadResult.Width
             };
 
-            PhotoUploadService.Add(photoUploadToAdd);
+            PhotoUploadService.AddOrUpdate(photoUploadToAdd);
 
             CurrentProgressValue += progressStep;
             ChipsColors[uploadedFile.Key] = Color.Primary;

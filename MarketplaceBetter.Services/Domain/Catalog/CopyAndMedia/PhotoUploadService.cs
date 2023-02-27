@@ -56,16 +56,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return _mapper.Map<IList<PhotoUploadModel>>(photos);
         }
 
-        public void Add(PhotoUploadModel photoUpload)
+        public void AddOrUpdate(PhotoUploadModel photoUpload)
         {
-            PhotoUpload photoUploadToAdd = new();
-
-            TransferValues(photoUploadToAdd, photoUpload);
-
-            photoUploadToAdd.Instance = GetIntance(photoUpload.FileName);
-
-            _repository.Add(photoUploadToAdd);
-            _unitOfWork.Save();
+            if (_repository.Any(p => p.CloudId == photoUpload.CloudId))
+            {
+                Update(photoUpload);
+            }
+            else
+            {
+                Add(photoUpload);
+            }
         }
 
         public void Remove(PhotoUploadModel photoUpload)
@@ -77,10 +77,35 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
+        private void Add(PhotoUploadModel photoUpload)
+        {
+            PhotoUpload photoUploadToAdd = new();
+
+            TransferValues(photoUploadToAdd, photoUpload);
+
+            photoUploadToAdd.Instance = GetIntance(photoUpload.FileName);
+
+            _repository.Add(photoUploadToAdd);
+            _unitOfWork.Save();
+        }
+
+        private void Update(PhotoUploadModel photoUpload)
+        {
+            PhotoUpload photoUploadToAdd = _repository.Single(p => p.CloudId == photoUpload.CloudId);
+
+            TransferValues(photoUploadToAdd, photoUpload);
+
+            photoUploadToAdd.Instance = GetIntance(photoUpload.FileName);
+
+            _repository.Update(photoUploadToAdd);
+            _unitOfWork.Save();
+        }
+
         private void TransferValues(PhotoUpload toPhotoUpload, PhotoUploadModel fromPhotoUpload)
         {
             toPhotoUpload.FileName = fromPhotoUpload.FileName;
             toPhotoUpload.CloudId = fromPhotoUpload.CloudId;
+            toPhotoUpload.Version = fromPhotoUpload.Version;
             toPhotoUpload.Url = fromPhotoUpload.Url;
             toPhotoUpload.Height = fromPhotoUpload.Height;
             toPhotoUpload.Width = fromPhotoUpload.Width;

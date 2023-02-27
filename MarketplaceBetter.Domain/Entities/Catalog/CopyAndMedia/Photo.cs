@@ -24,6 +24,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 
         public string CloudId { get; set; }
 
+        public string Version { get; set; }
+
         public string Url { get; set; }
 
         public string FileName { get; set; }

@@ -199,6 +199,7 @@
             if (uploadResult.WasSuccessful)
             {
                 Photo.CloudId = uploadResult.CloudId;
+                Photo.Version = uploadResult.Version;
                 Photo.Url = uploadResult.Url;
                 Photo.Height = uploadResult.Height;
                 Photo.Width = uploadResult.Width;
