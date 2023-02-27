@@ -32,5 +32,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
         public int Height { get; set; }
 
         public int Width { get; set; }
+
+        public DateTime Uploaded { get; set; }
     }
 }

@@ -10,6 +10,7 @@
 	[FileName]			NVARCHAR (255)				NOT NULL,
 	[Height]			INT							NOT NULL,
 	[Width]				INT							NOT NULL,
+	[Uploaded]			DATETIME2					NOT NULL,
 	CONSTRAINT			[PK_Photo]			PRIMARY KEY ([Id]),
 	CONSTRAINT			[FK_Photo_Variant]	FOREIGN KEY ([VariantId])	REFERENCES [dbo].[Variant] ([Id]),
 	CONSTRAINT			[FK_Photo_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),

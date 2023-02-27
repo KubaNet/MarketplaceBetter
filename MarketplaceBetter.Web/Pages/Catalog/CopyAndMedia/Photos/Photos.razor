@@ -27,8 +27,10 @@
             <MudTh><MudTableSortLabel SortLabel="variant" T="PhotoModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="type" T="PhotoModel">Type</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoModel">File name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="width" T="PhotoModel">Width</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="height" T="PhotoModel">Height</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="uploaded" T="PhotoModel">Uploaded</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -37,9 +39,11 @@
             <MudTd>@context.Width<span>x</span>@context.Height</MudTd>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Type">@context.Type.Name</MudTd>
-            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="FileName">@context.FileName</MudTd>
             <MudTd DataLabel="Width">@context.Width</MudTd>
             <MudTd DataLabel="Height">@context.Height</MudTd>
+            <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>
                 <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.CloudId))">Delete</MudButton>
