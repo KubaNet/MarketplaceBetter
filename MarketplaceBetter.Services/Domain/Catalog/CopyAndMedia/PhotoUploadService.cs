@@ -77,6 +77,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
+        public void Remove(IList<PhotoUploadModel> photoUploads)
+        {
+            foreach (var photoUpload in photoUploads)
+            {
+                Remove(photoUpload);
+            }
+        }
+
         private void Add(PhotoUploadModel photoUpload)
         {
             PhotoUpload photoUploadToAdd = new();

@@ -18,7 +18,8 @@
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
             <MudSpacer />
-            <MudButton OnClick="Upload" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Info">Add Files</MudButton>
+            <MudButton OnClick="RemoveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Remove</MudButton>
+            <MudButton OnClick="Upload" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Info" Class="ml-2">Add Files</MudButton>
             <MudButton OnClick="SaveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary" Class="ml-2">Save</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -90,11 +91,6 @@
         StateHasChanged();
     }
 
-    private async void SaveSelected()
-    {
-
-    }
-
     private async void Upload()
     {
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
@@ -116,6 +112,25 @@
 
             Snackbar.AddSuccess("Photo was successfully removed.");
         }
+    }
+
+    private async void RemoveSelected()
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove selected photos?" }).Result;
+
+        if (!result.Canceled)
+        {
+            PhotoUploadService.Remove(SelectedPhotos.ToList());
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess("Photos were successfully removed.");
+        }
+    }
+
+    private async void SaveSelected()
+    {
+
     }
 
     private void ProcessPhotoUploadDialogResult(DialogResult result)
