@@ -13,7 +13,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Add multiple Photos</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoUploadModel>>>(ReloadPhotos))" MultiSelection="true" Dense="true" Hover="true">
+    <MudTable T="PhotoUploadModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoUploadModel>>>(ReloadPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
         <ToolBarContent>
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
@@ -52,6 +52,9 @@
     private MudTable<PhotoUploadModel> Table;
     private ListRequest ListRequest = new();
     private int NumberOfPhotos;
+
+    private HashSet<PhotoUploadModel> SelectedPhotos = new HashSet<PhotoUploadModel>();
+    private bool NoneSelected = true;
 
     protected override async void OnAfterRender(bool firstRender)
     {
@@ -111,7 +114,7 @@
 
             await Table.ReloadServerData();
 
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Photo"));
+            Snackbar.AddSuccess("Photo was successfully removed.");
         }
     }
 
@@ -120,6 +123,20 @@
         if (!result.Canceled)
         {
             Table.ReloadServerData();
+        }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<PhotoUploadModel> selectedPhotos)
+    {
+        SelectedPhotos = selectedPhotos;
+
+        if (SelectedPhotos.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
         }
     }
 }
