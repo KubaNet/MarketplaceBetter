@@ -152,7 +152,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 }
             }
 
-            return instances.Single(i => i.SystemName == InstanceEnum.All);
+            return null;
         }
 
         private PhotoTypeModel GetPhotoType(string fileName)

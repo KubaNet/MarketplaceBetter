@@ -38,9 +38,36 @@
             <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId, context.Version)"></MudImage></MudTd>
             <MudTd>@context.Width<span>x</span>@context.Height</MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
-            <MudTd DataLabel="Variant"></MudTd>
-            <MudTd DataLabel="Type">@context.Type?.Name</MudTd>
-            <MudTd DataLabel="Instance">@context.Instance?.Name</MudTd>
+            <MudTd DataLabel="Variant">
+                @if (context.Variants.Any())
+                {
+                    
+                }
+                else
+                {
+                    <span class="red-text"><b>unrecognized</b></span>
+                }
+            </MudTd>
+            <MudTd DataLabel="Type">
+                @if (context.Type != null)
+                {
+                    @context.Type.Name
+                }
+                else
+                {
+                    <span class="red-text"><b>not set</b></span>
+                }
+            </MudTd>
+            <MudTd DataLabel="Instance">
+                @if (context.Instance != null)
+                {
+                    @context.Instance.Name
+                }
+                else
+                {
+                    <span class="red-text"><b>unrecognized</b></span>
+                }
+            </MudTd>
             <MudTd DataLabel="Width">@context.Width</MudTd>
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd>
