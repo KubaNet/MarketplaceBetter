@@ -85,6 +85,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             }
         }
 
+        public void SetType(IList<PhotoUploadModel> photoUploads, PhotoTypeModel type)
+        {
+            foreach (var photoUpload in photoUploads)
+            {
+                PhotoUpload photoUploadToUpdate = _repository.Get(photoUpload.Id);
+
+                photoUploadToUpdate.TypeId = type.Id;
+
+                _repository.Update(photoUploadToUpdate);
+            }
+
+            _unitOfWork.Save();
+        }
+
         private void Add(PhotoUploadModel photoUpload)
         {
             PhotoUpload photoUploadToAdd = new();

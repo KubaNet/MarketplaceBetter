@@ -1,8 +1,9 @@
 ﻿CREATE TABLE [dbo].[PhotoUpload]
 (
 	[Id]				BIGINT						NOT NULL	IDENTITY,
-	[InstanceId]		BIGINT						NOT NULL,
+	[InstanceId]		BIGINT						NULL,
 	[TypeId]			BIGINT						NULL,
+	[KindId]			BIGINT						NULL,
 	[CloudId]			NVARCHAR (255)				NOT NULL,
 	[Version]			NVARCHAR (255)				NOT NULL,
 	[Url]				NVARCHAR (255)				NOT NULL,

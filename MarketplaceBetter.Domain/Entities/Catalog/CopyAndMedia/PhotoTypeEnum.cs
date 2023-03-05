@@ -10,24 +10,24 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
     {
         None = 0,
 
-        MainImage = 1,
+        Main = 1,
 
-        SwatchImage = 2,
+        Swatch = 2,
 
-        OtherImage1 = 3,
+        Other1 = 3,
 
-        OtherImage2 = 4,
+        Other2 = 4,
 
-        OtherImage3 = 5,
+        Other3 = 5,
 
-        OtherImage4 = 6,
+        Other4 = 6,
 
-        OtherImage5 = 7,
+        Other5 = 7,
 
-        OtherImage6 = 8,
+        Other6 = 8,
 
-        OtherImage7 = 9,
+        Other7 = 9,
 
-        OtherImage8 = 10,
+        Other8 = 10,
     }
 }

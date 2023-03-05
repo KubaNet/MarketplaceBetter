@@ -1,0 +1,45 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
+
+
+@inject IPhotoTypeService PhotoTypeService
+@inject IPhotoUploadService PhotoUploadService
+@inject ISnackbar Snackbar
+
+<EditForm Model="Type" OnValidSubmit="@HandleValidSubmit">
+    <FormDialog Title="Set type of photos">
+        <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Type">
+            @foreach (var type in Types)
+            {
+                <MudSelectItem Value="type">@type.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<PhotoUploadModel> PhotoUploads { get; set; }
+
+    private PhotoTypeModel Type = new PhotoTypeModel();
+
+    private IList<PhotoTypeModel> Types;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Types = PhotoTypeService.GetAll();
+
+        Type = Types.First();
+    }
+
+    private void HandleValidSubmit()
+    {
+        PhotoUploadService.SetType(PhotoUploads, Type);
+
+        Snackbar.AddSuccess("Type of photos was successfully set.");
+
+        MudDialog.Close();
+    }
+}

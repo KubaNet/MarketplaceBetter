@@ -18,9 +18,10 @@
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
             <MudSpacer />
+            <MudButton OnClick="SetTypeForSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Workspaces" Color="Color.Dark" Disabled="NoneSelected" Class="ml-2">Set type</MudButton>
             <MudButton OnClick="RemoveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Remove</MudButton>
             <MudButton OnClick="Upload" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Info" Class="ml-2">Add Files</MudButton>
-            <MudButton OnClick="SaveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary" Class="ml-2">Save</MudButton>
+            <MudButton OnClick="SaveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary" Disabled="NoneSelected" Class="ml-2">Save</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Photo</MudTh>
@@ -126,6 +127,13 @@
 
             Snackbar.AddSuccess("Photos were successfully removed.");
         }
+    }
+
+    private async void SetTypeForSelected()
+    {
+        var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters{ ["PhotoUploads"] = SelectedPhotos.ToList() }).Result;
+
+        ProcessPhotoUploadDialogResult(result);
     }
 
     private async void SaveSelected()

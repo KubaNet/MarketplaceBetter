@@ -44,6 +44,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<CopywritingElement> CopywritingElement { get; set; }
         public DbSet<Photo> Photo { get; set; }
         public DbSet<PhotoType> PhotoType { get; set; }
+        public DbSet<PhotoKind> PhotoKind { get; set; }
         public DbSet<PhotoUpload> PhotoUpload { get; set; }
         public DbSet<PhotoUploadVariant> PhotoUploadVariant { get; set; }
 

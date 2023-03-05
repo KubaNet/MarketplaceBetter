@@ -123,6 +123,7 @@
     <Build Include="dbo\Tables\Amazon\Campaigns\NegativeProduct.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoUpload.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoUploadVariant.sql" />
+    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoKind.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />

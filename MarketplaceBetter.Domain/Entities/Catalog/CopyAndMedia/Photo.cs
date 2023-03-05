@@ -22,6 +22,10 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 
         public virtual PhotoType Type { get; set; }
 
+        public long KindId { get; set; }
+
+        public virtual PhotoKind Kind { get; set; }
+
         public string CloudId { get; set; }
 
         public string Version { get; set; }

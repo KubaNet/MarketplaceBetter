@@ -17,5 +17,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
         void Remove(PhotoUploadModel photoUpload);
 
         void Remove(IList<PhotoUploadModel> photoUploads);
+
+        void SetType(IList<PhotoUploadModel> photoUploads, PhotoTypeModel type);
     }
 }

@@ -4,6 +4,7 @@
 	[VariantId]			BIGINT						NOT NULL,
 	[InstanceId]		BIGINT						NOT NULL,
 	[TypeId]			BIGINT						NOT NULL,
+	[KindId]			BIGINT						NOT NULL,
 	[CloudId]			NVARCHAR (255)				NOT NULL,
 	[Version]			NVARCHAR (255)				NOT NULL,
 	[Url]				NVARCHAR (255)				NOT NULL,
@@ -15,6 +16,7 @@
 	CONSTRAINT			[FK_Photo_Variant]	FOREIGN KEY ([VariantId])	REFERENCES [dbo].[Variant] ([Id]),
 	CONSTRAINT			[FK_Photo_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
 	CONSTRAINT			[FK_Photo_Type]		FOREIGN KEY ([TypeId])		REFERENCES [dbo].[PhotoType] ([Id]),
+	CONSTRAINT			[FK_Photo_Kind]		FOREIGN KEY ([KindId])		REFERENCES [dbo].[PhotoKind] ([Id]),
 );
 GO
 

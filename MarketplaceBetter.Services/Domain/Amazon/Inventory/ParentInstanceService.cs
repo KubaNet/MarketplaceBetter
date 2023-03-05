@@ -235,26 +235,26 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private void WritePhotos(CsvWriter csv, ChildInstance childInstance)
         {
-            PhotoModel mainImage = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.MainImage);
-            csv.WriteField(mainImage?.Url);
-            PhotoModel otherImage1 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage1);
-            csv.WriteField(otherImage1?.Url);
-            PhotoModel otherImage2 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage2);
-            csv.WriteField(otherImage2?.Url);
-            PhotoModel otherImage3 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage3);
-            csv.WriteField(otherImage3?.Url);
-            PhotoModel otherImage4 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage4);
-            csv.WriteField(otherImage4?.Url);
-            PhotoModel otherImage5 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage5);
-            csv.WriteField(otherImage5?.Url);
-            PhotoModel otherImage6 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage6);
-            csv.WriteField(otherImage6?.Url);
-            PhotoModel otherImage7 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage7);
-            csv.WriteField(otherImage7?.Url);
-            PhotoModel otherImage8 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.OtherImage8);
-            csv.WriteField(otherImage8?.Url);
-            PhotoModel swatchImage = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.SwatchImage);
-            csv.WriteField(swatchImage?.Url);
+            PhotoModel main = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Main);
+            csv.WriteField(main?.Url);
+            PhotoModel other1 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other1);
+            csv.WriteField(other1?.Url);
+            PhotoModel other2 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other2);
+            csv.WriteField(other2?.Url);
+            PhotoModel other3 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other3);
+            csv.WriteField(other3?.Url);
+            PhotoModel other4 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other4);
+            csv.WriteField(other4?.Url);
+            PhotoModel other5 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other5);
+            csv.WriteField(other5?.Url);
+            PhotoModel other6 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other6);
+            csv.WriteField(other6?.Url);
+            PhotoModel other7 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other7);
+            csv.WriteField(other7?.Url);
+            PhotoModel other8 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other8);
+            csv.WriteField(other8?.Url);
+            PhotoModel swatch = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Swatch);
+            csv.WriteField(swatch?.Url);
         }
 
         private string GetProductName(ChildInstance childInstance, ColorTranslation colorTranslation)
