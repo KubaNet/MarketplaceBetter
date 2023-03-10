@@ -26,9 +26,10 @@
         <HeaderContent>
             <MudTh>Photo</MudTh>
             <MudTh>Size</MudTh>
-            <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoUploadModel">File Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoUploadModel">File name</MudTableSortLabel></MudTh>
             <MudTh>Variant</MudTh>
             <MudTh><MudTableSortLabel SortLabel="type" T="PhotoUploadModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="kind" T="PhotoUploadModel">Kind</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoUploadModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="width" T="PhotoUploadModel">Width</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="height" T="PhotoUploadModel">Height</MudTableSortLabel></MudTh>
@@ -56,6 +57,16 @@
                 else
                 {
                     <span class="red-text"><b>not set</b></span>
+                }
+            </MudTd>
+            <MudTd DataLabel="Kind">
+                @if (context.Kind != null)
+                {
+                    @context.Kind.Name
+                }
+                else
+                {
+                    <span class="red-text"><b>unrecognized</b></span>
                 }
             </MudTd>
             <MudTd DataLabel="Instance">

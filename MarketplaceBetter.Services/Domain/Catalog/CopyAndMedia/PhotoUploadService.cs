@@ -28,6 +28,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<PhotoUpload> _repository;
         private readonly IRepository<Instance> _instanceRepository;
+        private readonly IRepository<PhotoKind> _photoKindRepository;
+        private readonly IRepository<PhotoKindBeginning> _photoKindBeginningRepository;
         private readonly IMapper _mapper;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IPhotoTypeService _photoTypeService;
@@ -41,6 +43,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<PhotoUpload>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
+            _photoKindRepository = unitOfWork.GetRepository<PhotoKind>();
+            _photoKindBeginningRepository = unitOfWork.GetRepository<PhotoKindBeginning>();
             _mapper = mapper;
             _photoCloudService = photoCloudService;
             _photoTypeService = photoTypeService;
@@ -106,6 +110,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             TransferValues(photoUploadToAdd, photoUpload);
 
             photoUploadToAdd.Instance = GetIntance(photoUpload.FileName);
+            photoUploadToAdd.Kind = GetKind(photoUpload.FileName);
 
             _repository.Add(photoUploadToAdd);
             _unitOfWork.Save();
@@ -140,6 +145,59 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return new List<VariantModel>();
         }
 
+        private PhotoKind GetKind(string fileName)
+        {
+            if (fileName.Count(c => c == '.') < 2)
+            {
+                return null;
+            }
+
+            int lastIndexOfDot = fileName.LastIndexOf('.');
+            fileName = fileName.Substring(0, lastIndexOfDot);
+
+            lastIndexOfDot = fileName.LastIndexOf('.');
+            string kindString = fileName.Substring(lastIndexOfDot + 1);
+
+            foreach (var kindBeginning in _photoKindBeginningRepository.GetAll())
+            {
+                if (kindString.StartsWith(kindBeginning.Name, StringComparison.OrdinalIgnoreCase) 
+                    && kindString.Length == kindBeginning.Name.Length + 2)
+                {
+                    string numberString = kindString.Replace(kindBeginning.Name, string.Empty, StringComparison.OrdinalIgnoreCase);
+
+                    if (numberString.Contains("0"))
+                    {
+                        numberString = numberString.Replace("0", string.Empty);
+                    }
+
+                    int number;
+                    bool isNumber = int.TryParse(numberString, out number);
+
+                    if (isNumber)
+                    {
+                        if (_photoKindRepository.Any(k => k.Name == kindString))
+                        {
+                            return _photoKindRepository.Single(k => k.Name == kindString);
+                        }
+                        else
+                        {
+                            PhotoKind photoKindToAdd = new PhotoKind { Name = kindString.ToUpper() };
+                            _photoKindRepository.Add(photoKindToAdd);
+                            _unitOfWork.Save();
+
+                            return photoKindToAdd;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private Instance GetIntance(string fileName)
         {
             IList<Instance> instances = _instanceRepository.GetAll();
@@ -149,32 +207,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 if (fileName.StartsWith($"{instance.ShortName}_", StringComparison.OrdinalIgnoreCase))
                 {
                     return instance;
-                }
-            }
-
-            return null;
-        }
-
-        private PhotoTypeModel GetPhotoType(string fileName)
-        {
-            string amazonUploadCode;
-
-            if (fileName.Contains('.'))
-            {
-                amazonUploadCode = fileName.Substring(fileName.LastIndexOf(".") + 1, fileName.Length - fileName.LastIndexOf(".") - 1);
-            }
-            else
-            {
-                return null;
-            }
-
-            IList<PhotoTypeModel> photoTypes = _photoTypeService.GetAll();
-
-            foreach (var photoType in photoTypes)
-            {
-                if (photoType.AmazonUploadCode.Equals(amazonUploadCode, StringComparison.OrdinalIgnoreCase))
-                {
-                    return photoType;
                 }
             }
 
@@ -209,7 +241,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "product", "variant", "instance", "type", "filename", "height", "width" };
+                string[] searchFieldNames = new[] { "product", "variant", "instance", "type", "kind", "filename", "height", "width" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -220,6 +252,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                         "variant" => photos.Where(p => p.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value))),
                         "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "type" => photos.Where(p => p.Type != null && p.Type.Name.Contains(searchField.Value)),
+                        "kind" => photos.Where(p => p.Kind != null && p.Kind.Name.Contains(searchField.Value)),
                         "filename" => photos.Where(p => p.FileName.Contains(searchField.Value)),
                         "height" => photos.Where(p => p.Height == searchField.Value.ParseToIntOrDefault()),
                         "width" => photos.Where(p => p.Width == searchField.Value.ParseToIntOrDefault()),
@@ -232,6 +265,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                         || p.Variants.Any(v => v.Variant.Sku.Contains(searchString))
                         || p.Instance.Name.Contains(searchString)
                         || p.Type != null && p.Type.Name.Contains(searchString)
+                        || p.Kind != null && p.Kind.Name.Contains(searchString)
                         || p.FileName.Contains(searchString)
                         || p.Height == searchString.ParseToIntOrDefault()
                         || p.Width == searchString.ParseToIntOrDefault());
@@ -248,7 +282,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 photos = request.SortBy switch
                 {
                     "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name) : photos.OrderByDescending(p => p.Instance.Name),
-                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.SystemName) : photos.OrderByDescending(p => p.Type.SystemName),
+                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.Name) : photos.OrderByDescending(p => p.Type.Name),
+                    "kind" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Kind.Name) : photos.OrderByDescending(p => p.Kind.Name),
                     "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName) : photos.OrderByDescending(p => p.FileName),
                     "height" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Height) : photos.OrderByDescending(p => p.Height),
                     "width" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Width) : photos.OrderByDescending(p => p.Width),

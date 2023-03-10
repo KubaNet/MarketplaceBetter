@@ -124,7 +124,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "variant", "instance", "file_name", "type", "height", "width" };
+                string[] searchFieldNames = new[] { "id", "product", "variant", "instance", "file_name", "type", "kind", "height", "width" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -137,6 +137,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                         "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "file_name" => photos.Where(p => p.FileName.Contains(searchField.Value)),
                         "type" => photos.Where(p => p.Type.Name.Contains(searchField.Value)),
+                        "kind" => photos.Where(p => p.Kind.Name.Contains(searchField.Value)),
                         "height" => photos.Where(p => p.Height == searchField.Value.ParseToIntOrDefault()),
                         "width" => photos.Where(p => p.Width == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -150,6 +151,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                         || p.Instance.Name.Contains(searchString)
                         || p.FileName.Contains(searchString)
                         || p.Type.Name.Contains(searchString)
+                        || p.Kind.Name.Contains(searchString)
                         || p.Height == searchString.ParseToIntOrDefault()
                         || p.Width == searchString.ParseToIntOrDefault());
                 }
@@ -167,7 +169,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     "id" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Id) : photos.OrderByDescending(p => p.Id),
                     "product" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Product.Name) : photos.OrderByDescending(p => p.Variant.Product.Name),
                     "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku) : photos.OrderByDescending(p => p.Variant.Sku),
-                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.SystemName) : photos.OrderByDescending(p => p.Type.SystemName),
+                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.Name) : photos.OrderByDescending(p => p.Type.Name),
+                    "kind" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Kind.Name) : photos.OrderByDescending(p => p.Kind.Name),
                     "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name) : photos.OrderByDescending(p => p.Instance.Name),
                     "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName) : photos.OrderByDescending(p => p.FileName),
                     "height" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Height) : photos.OrderByDescending(p => p.Height),

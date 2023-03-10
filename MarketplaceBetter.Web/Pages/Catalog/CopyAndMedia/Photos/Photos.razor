@@ -26,6 +26,7 @@
             <MudTh>Size</MudTh>
             <MudTh><MudTableSortLabel SortLabel="variant" T="PhotoModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="type" T="PhotoModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="kind" T="PhotoModel">Kind</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoModel">File name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="width" T="PhotoModel">Width</MudTableSortLabel></MudTh>
@@ -39,6 +40,7 @@
             <MudTd>@context.Width<span>x</span>@context.Height</MudTd>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Type">@context.Type.Name</MudTd>
+            <MudTd DataLabel="Kind">@context.Kind.Name</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
             <MudTd DataLabel="Width">@context.Width</MudTd>
