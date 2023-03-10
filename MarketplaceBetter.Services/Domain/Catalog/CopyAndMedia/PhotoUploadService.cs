@@ -268,7 +268,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                         || p.Kind != null && p.Kind.Name.Contains(searchString)
                         || p.FileName.Contains(searchString)
                         || p.Height == searchString.ParseToIntOrDefault()
-                        || p.Width == searchString.ParseToIntOrDefault());
+                        || p.Width == searchString.ParseToIntOrDefault()
+                        || ("not set".Contains(searchString, StringComparison.OrdinalIgnoreCase) 
+                            && p.Type == null)
+                        || ("unrecognized".Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                            && (!p.Variants.Any() || p.Kind == null || p.Instance == null)));
                 }
             }
 
