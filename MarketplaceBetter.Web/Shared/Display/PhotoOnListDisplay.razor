@@ -1,0 +1,32 @@
+﻿@using MarketplaceBetter.Specialized.Interfaces;
+
+@inject IPhotoCloudService PhotoCloudService
+
+<div>
+    <MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(CloudId, Version)" @onmouseenter="ShowBiggerImage" @onmouseleave="HideBiggerImage" />
+    <MudPopover Open="Open" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
+        <MudImage Src="@PhotoCloudService.GetBiggerPhotoUrlForLists(CloudId, Version)" />
+    </MudPopover>
+</div>
+
+@code {
+    [Parameter] public string CloudId { get; set; }
+    [Parameter] public string Version { get; set; }
+
+    private bool Open = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void ShowBiggerImage()
+    {
+        Open = true;
+    }
+
+    private void HideBiggerImage()
+    {
+        Open = false;
+    }
+}

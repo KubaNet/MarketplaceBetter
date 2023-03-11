@@ -78,6 +78,11 @@ namespace MarketplaceBetter.Specialized
             return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(100)).BuildUrl(cloudId);
         }
 
+        public string GetBiggerPhotoUrlForLists(string cloudId, string version)
+        {
+            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Height(700)).BuildUrl(cloudId);
+        }
+
         public void Delete(string cloudId)
         {
             _cloudinary.DeleteResources(ResourceType.Image, new string[] { cloudId });

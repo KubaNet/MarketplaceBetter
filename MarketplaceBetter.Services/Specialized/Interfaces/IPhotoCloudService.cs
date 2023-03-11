@@ -17,6 +17,8 @@ namespace MarketplaceBetter.Specialized.Interfaces
 
         string GetPhotoUrlForLists(string cloudId, string version);
 
+        string GetBiggerPhotoUrlForLists(string cloudId, string version);
+
         void Delete(string cloudId);
     }
 }

@@ -36,7 +36,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Photo"><MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(context.CloudId, context.Version)"></MudImage></MudTd>
+            <MudTd DataLabel="Photo"><PhotoOnListDisplay CloudId="@context.CloudId" Version="@context.Version" /></MudTd>
             <MudTd>@context.Width<span>x</span>@context.Height</MudTd>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Type">@context.Type.Name</MudTd>
