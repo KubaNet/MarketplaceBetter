@@ -13,7 +13,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
     {
         public long Id { get; set; }
 
-        public IList<VariantModel> Variants { get; set; }
+        public IList<PhotoUploadVariantModel> Variants { get; set; }
 
         public InstanceModel Instance { get; set; }
 

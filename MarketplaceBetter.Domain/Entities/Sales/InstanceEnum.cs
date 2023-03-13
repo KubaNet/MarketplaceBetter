@@ -12,22 +12,22 @@ namespace MarketplaceBetter.Domain.Entities.Sales
 
         All = 1,
 
-        AmazonUS = 2,
+        US = 2,
 
-        AmazonCA = 3,
+        CA = 3,
 
-        AmazonUK = 4,
+        UK = 4,
 
-        AmazonDE = 5,
+        DE = 5,
 
-        AmazonFR = 6,
+        FR = 6,
 
-        AmazonIT = 7,
+        IT = 7,
 
-        AmazonES = 8,
+        ES = 8,
 
-        AmazonNL = 9,
+        NL = 9,
 
-        AmazonSE = 10,
+        SE = 10,
     }
 }

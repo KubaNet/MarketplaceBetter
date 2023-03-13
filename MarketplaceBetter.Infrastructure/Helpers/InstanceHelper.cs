@@ -14,15 +14,15 @@ namespace MarketplaceBetter.Infrastructure.Helpers
         {
             return instance switch
             {
-                InstanceEnum.AmazonUS => "us",
-                InstanceEnum.AmazonCA => "ca",
-                InstanceEnum.AmazonUK => "uk",
-                InstanceEnum.AmazonDE => "de",
-                InstanceEnum.AmazonFR => "fr",
-                InstanceEnum.AmazonIT => "it",
-                InstanceEnum.AmazonES => "es",
-                InstanceEnum.AmazonNL => "nl",
-                InstanceEnum.AmazonSE => "se",
+                InstanceEnum.US => "us",
+                InstanceEnum.CA => "ca",
+                InstanceEnum.UK => "uk",
+                InstanceEnum.DE => "de",
+                InstanceEnum.FR => "fr",
+                InstanceEnum.IT => "it",
+                InstanceEnum.ES => "es",
+                InstanceEnum.NL => "nl",
+                InstanceEnum.SE => "se",
                 _ => throw new UnrecognizedEnumValueException<InstanceEnum>(instance)
             };
         }

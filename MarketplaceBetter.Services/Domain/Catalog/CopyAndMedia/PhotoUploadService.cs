@@ -16,36 +16,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MudBlazor.Icons.Custom;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
+using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
     public class PhotoUploadService : IPhotoUploadService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         private readonly IRepository<PhotoUpload> _repository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<PhotoKind> _photoKindRepository;
         private readonly IRepository<PhotoKindBeginning> _photoKindBeginningRepository;
         private readonly IRepository<Brand> _brandRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Variant> _variantRepository;
-        private readonly IMapper _mapper;
+        private readonly IRepository<Color> _colorRepository;
         private readonly IPhotoCloudService _photoCloudService;
 
         public PhotoUploadService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IPhotoCloudService photoCloudService,
-            IPhotoTypeService photoTypeService)
+            IPhotoCloudService photoCloudService)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _repository = unitOfWork.GetRepository<PhotoUpload>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoKindRepository = unitOfWork.GetRepository<PhotoKind>();
             _photoKindBeginningRepository = unitOfWork.GetRepository<PhotoKindBeginning>();
             _brandRepository = unitOfWork.GetRepository<Brand>();
+            _productRepository = unitOfWork.GetRepository<Product>();
             _variantRepository = unitOfWork.GetRepository<Variant>();
-            _mapper = mapper;
+            _colorRepository = unitOfWork.GetRepository<Color>();
             _photoCloudService = photoCloudService;
         }
 
@@ -158,14 +163,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IList<PhotoUploadVariant> GetVariants(PhotoUpload photoUpload, IList<string> nameParts)
         {
-            Brand brand = GetBrand(nameParts);
-
-            if (brand == null)
+            if (nameParts.Count < 5)
             {
                 return null;
             }
 
-            if (nameParts.Count < 3)
+            Brand brand = GetBrand(nameParts);
+
+            if (brand == null)
             {
                 return null;
             }
@@ -175,16 +180,49 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             }
             else
             {
+                Product product = GetProduct(brand, nameParts);
 
+                if (nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase) 
+                    && nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
+                {
+                    return GetVariantsForProduct(photoUpload, product);
+                }
+                else if (nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase)
+                    && !nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
+                {
+                    Color color = GetColor(product, nameParts);
+
+                    return GetVariantsForProductAndColor(photoUpload, product, color);
+                }
             }
 
             return new List<PhotoUploadVariant>();
         }
 
+        private IList<PhotoUploadVariant> GetVariantsForProductAndColor(PhotoUpload photoUpload, Product product, Color color)
+        {
+            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id && v.ColorId == color.Id).ToList();
+
+            return CreatePhotoUploadVariants(photoUpload, variants);
+        }
+
+        private IList<PhotoUploadVariant> GetVariantsForProduct(PhotoUpload photoUpload, Product product)
+        {
+            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id).ToList();
+
+            return CreatePhotoUploadVariants(photoUpload, variants);
+        }
+
         private IList<PhotoUploadVariant> GetVariantsForBrand(PhotoUpload photoUpload, Brand brand)
         {
-            IList<PhotoUploadVariant> photoUploadVariants = new List<PhotoUploadVariant>();
             IList<Variant> variants = _variantRepository.Where(v => v.Product.BrandId == brand.Id).ToList();
+
+            return CreatePhotoUploadVariants(photoUpload, variants);
+        }
+
+        private IList<PhotoUploadVariant> CreatePhotoUploadVariants(PhotoUpload photoUpload, IList<Variant> variants)
+        {
+            IList<PhotoUploadVariant> photoUploadVariants = new List<PhotoUploadVariant>();
 
             foreach (var variant in variants)
             {
@@ -198,6 +236,36 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             }
 
             return photoUploadVariants;
+        }
+
+        private Color GetColor(Product product, IList<string> nameParts)
+        {
+            if (nameParts.Count == 5)
+            {
+                return null;
+            }
+
+            int colorPartsCount = nameParts.Count - 4;
+            string colorCode = nameParts[4];
+
+            for (int i = 1; i < colorPartsCount; i++)
+            {
+                colorCode += $"_{nameParts[4 + i]}";
+            }
+
+            Color color = _colorRepository.SingleOrDefault(c => c.GroupId == product.ColorGroupId && c.Code == colorCode);
+
+            return color;
+        }
+
+        private Product GetProduct(Brand brand, IList<string> nameParts)
+        {
+            if (nameParts.Count < 3)
+            {
+                return null;
+            }
+
+            return _productRepository.SingleOrDefault(p => p.BrandId == brand.Id && p.Code == nameParts[2]);
         }
 
         private Brand GetBrand(IList<string> nameParts)
@@ -265,7 +333,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private Instance GetIntance(IList<string> nameParts)
         {
-            Instance instance = _instanceRepository.SingleOrDefault(i => i.Name.Equals(nameParts[0], StringComparison.OrdinalIgnoreCase));
+            Instance instance = _instanceRepository.SingleOrDefault(i => i.Name == nameParts[0]);
 
             return instance;
         }
