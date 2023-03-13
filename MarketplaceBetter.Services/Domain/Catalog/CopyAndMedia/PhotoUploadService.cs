@@ -1,18 +1,14 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
-using MarketplaceBetter.Domain.Model.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
-using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
-using MarketplaceBetter.Services.Domain.Sales.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Specialized.Interfaces;
 using MarketplaceBetter.Specialized.Interfaces;
 using MudBlazor;
 using System;
@@ -20,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -30,9 +27,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<PhotoKind> _photoKindRepository;
         private readonly IRepository<PhotoKindBeginning> _photoKindBeginningRepository;
+        private readonly IRepository<Brand> _brandRepository;
+        private readonly IRepository<Variant> _variantRepository;
         private readonly IMapper _mapper;
         private readonly IPhotoCloudService _photoCloudService;
-        private readonly IPhotoTypeService _photoTypeService;
 
         public PhotoUploadService(
             IUnitOfWork unitOfWork,
@@ -45,9 +43,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoKindRepository = unitOfWork.GetRepository<PhotoKind>();
             _photoKindBeginningRepository = unitOfWork.GetRepository<PhotoKindBeginning>();
+            _brandRepository = unitOfWork.GetRepository<Brand>();
+            _variantRepository = unitOfWork.GetRepository<Variant>();
             _mapper = mapper;
             _photoCloudService = photoCloudService;
-            _photoTypeService = photoTypeService;
         }
 
         public IList<PhotoUploadModel> GetForListRequest(ListRequest request)
@@ -83,10 +82,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         public void Remove(IList<PhotoUploadModel> photoUploads)
         {
+            _photoCloudService.Delete(photoUploads.Select(p => p.CloudId).ToList());
+
             foreach (var photoUpload in photoUploads)
             {
-                Remove(photoUpload);
+                PhotoUpload photoUploadToDelete = _repository.Get(photoUpload.Id);
+                _repository.Delete(photoUploadToDelete);
             }
+
+            _unitOfWork.Save();
         }
 
         public void SetType(IList<PhotoUploadModel> photoUploads, PhotoTypeModel type)
@@ -108,9 +112,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             PhotoUpload photoUploadToAdd = new();
 
             TransferValues(photoUploadToAdd, photoUpload);
-
-            photoUploadToAdd.Instance = GetIntance(photoUpload.FileName);
-            photoUploadToAdd.Kind = GetKind(photoUpload.FileName);
+            SetValues(photoUploadToAdd);
 
             _repository.Add(photoUploadToAdd);
             _unitOfWork.Save();
@@ -118,13 +120,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private void Update(PhotoUploadModel photoUpload)
         {
-            PhotoUpload photoUploadToAdd = _repository.Single(p => p.CloudId == photoUpload.CloudId);
+            PhotoUpload photoUploadToUpdate = _repository.Single(p => p.CloudId == photoUpload.CloudId);
 
-            TransferValues(photoUploadToAdd, photoUpload);
+            TransferValues(photoUploadToUpdate, photoUpload);
+            SetValues(photoUploadToUpdate);
 
-            photoUploadToAdd.Instance = GetIntance(photoUpload.FileName);
-
-            _repository.Update(photoUploadToAdd);
+            _repository.Update(photoUploadToUpdate);
             _unitOfWork.Save();
         }
 
@@ -138,11 +139,75 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             toPhotoUpload.Width = fromPhotoUpload.Width;
         }
 
-        private IList<VariantModel> GetVariants(string fileName)
+        private void SetValues(PhotoUpload photoUpload)
         {
-            BrandModel brand = GetBrand(fileName);
+            IList<string> fileNameParts = GetNameParts(photoUpload.FileName);
 
-            return new List<VariantModel>();
+            photoUpload.Instance = GetIntance(fileNameParts);
+            photoUpload.Kind = GetKind(photoUpload.FileName);
+            photoUpload.Variants = GetVariants(photoUpload, fileNameParts);
+        }
+
+        private IList<string> GetNameParts(string fileName)
+        {
+            fileName = fileName.Remove(fileName.IndexOf('.'));
+            string[] parts = fileName.Split('_');
+
+            return parts.ToList();
+        }
+
+        private IList<PhotoUploadVariant> GetVariants(PhotoUpload photoUpload, IList<string> nameParts)
+        {
+            Brand brand = GetBrand(nameParts);
+
+            if (brand == null)
+            {
+                return null;
+            }
+
+            if (nameParts.Count < 3)
+            {
+                return null;
+            }
+            else if (nameParts[2].Equals("all", StringComparison.OrdinalIgnoreCase))
+            {
+                return GetVariantsForBrand(photoUpload, brand);
+            }
+            else
+            {
+
+            }
+
+            return new List<PhotoUploadVariant>();
+        }
+
+        private IList<PhotoUploadVariant> GetVariantsForBrand(PhotoUpload photoUpload, Brand brand)
+        {
+            IList<PhotoUploadVariant> photoUploadVariants = new List<PhotoUploadVariant>();
+            IList<Variant> variants = _variantRepository.Where(v => v.Product.BrandId == brand.Id).ToList();
+
+            foreach (var variant in variants)
+            {
+                PhotoUploadVariant photoUploadVariant = new PhotoUploadVariant()
+                {
+                    PhotoUpload = photoUpload,
+                    Variant = variant
+                };
+
+                photoUploadVariants.Add(photoUploadVariant);
+            }
+
+            return photoUploadVariants;
+        }
+
+        private Brand GetBrand(IList<string> nameParts)
+        {
+            if (nameParts.Count < 2)
+            {
+                return null;
+            }
+
+            return _brandRepository.SingleOrDefault(b => b.Code == nameParts[1]);
         }
 
         private PhotoKind GetKind(string fileName)
@@ -198,36 +263,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             return null;
         }
 
-        private Instance GetIntance(string fileName)
+        private Instance GetIntance(IList<string> nameParts)
         {
-            IList<Instance> instances = _instanceRepository.GetAll();
+            Instance instance = _instanceRepository.SingleOrDefault(i => i.Name.Equals(nameParts[0], StringComparison.OrdinalIgnoreCase));
 
-            foreach (var instance in instances)
-            {
-                if (fileName.StartsWith($"{instance.ShortName}_", StringComparison.OrdinalIgnoreCase))
-                {
-                    return instance;
-                }
-            }
-
-            return null;
-        }
-
-        private BrandModel GetBrand(string fileName)
-        {
-            if (StartsWithInstance(fileName))
-            {
-                fileName = fileName.Remove(0, 3);
-            }
-
-            return null;
-        }
-
-        private bool StartsWithInstance(string fileName)
-        {
-            IList<Instance> instances = _instanceRepository.GetAll();
-
-            return instances.Any(i => fileName.StartsWith($"{i.ShortName}_", StringComparison.OrdinalIgnoreCase));
+            return instance;
         }
 
         private IQueryable<PhotoUpload> ApplyFilter(IQueryable<PhotoUpload> photos, ListRequest request)
