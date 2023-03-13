@@ -85,7 +85,12 @@ namespace MarketplaceBetter.Specialized
 
         public void Delete(string cloudId)
         {
-            _cloudinary.DeleteResources(ResourceType.Image, new string[] { cloudId });
+            Delete(new List<string> { cloudId });
+        }
+
+        public void Delete(IList<string> cloudIds)
+        {
+            _cloudinary.DeleteResources(ResourceType.Image, cloudIds.ToArray());
         }
 
         private string ClearFileName(string fileName)
