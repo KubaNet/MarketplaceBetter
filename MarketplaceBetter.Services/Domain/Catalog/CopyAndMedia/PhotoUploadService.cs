@@ -16,9 +16,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static MudBlazor.Icons.Custom;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
+using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -34,6 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Variant> _variantRepository;
         private readonly IRepository<Color> _colorRepository;
+        private readonly IRepository<Size> _sizeRepository;
         private readonly IPhotoCloudService _photoCloudService;
 
         public PhotoUploadService(
@@ -51,6 +52,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _productRepository = unitOfWork.GetRepository<Product>();
             _variantRepository = unitOfWork.GetRepository<Variant>();
             _colorRepository = unitOfWork.GetRepository<Color>();
+            _sizeRepository = unitOfWork.GetRepository<Size>();
             _photoCloudService = photoCloudService;
         }
 
@@ -182,26 +184,82 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             {
                 Product product = GetProduct(brand, nameParts);
 
-                if (nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase) 
+                if (product == null) 
+                {
+                    return null;
+                }
+                else if (nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase) 
                     && nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
                 {
                     return GetVariantsForProduct(photoUpload, product);
+                }
+                else if (!nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase)
+                    && nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
+                {
+                    Size size = GetSize(product, nameParts);
+
+                    if (size != null)
+                    {
+                        return GetVariantsForProductAndSize(photoUpload, product, size);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else if (nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase)
                     && !nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
                 {
                     Color color = GetColor(product, nameParts);
 
-                    return GetVariantsForProductAndColor(photoUpload, product, color);
+                    if (color != null)
+                    {
+                        return GetVariantsForProductAndColor(photoUpload, product, color);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else if (!nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase)
+                    && !nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
+                {
+                    Size size = GetSize(product, nameParts);
+                    Color color = GetColor(product, nameParts);
+
+                    if (size != null && color != null)
+                    {
+                        return GetVariantsForProductAndSizeAndColor(photoUpload, product, size, color);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
                 }
             }
+        }
 
-            return new List<PhotoUploadVariant>();
+        private IList<PhotoUploadVariant> GetVariantsForProductAndSizeAndColor(PhotoUpload photoUpload, Product product, Size size, Color color)
+        {
+            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id && v.SizeId == size.Id && v.ColorId == color.Id).ToList();
+
+            return CreatePhotoUploadVariants(photoUpload, variants);
         }
 
         private IList<PhotoUploadVariant> GetVariantsForProductAndColor(PhotoUpload photoUpload, Product product, Color color)
         {
             IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id && v.ColorId == color.Id).ToList();
+
+            return CreatePhotoUploadVariants(photoUpload, variants);
+        }
+
+        private IList<PhotoUploadVariant> GetVariantsForProductAndSize(PhotoUpload photoUpload, Product product, Size size)
+        {
+            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id && v.SizeId == size.Id).ToList();
 
             return CreatePhotoUploadVariants(photoUpload, variants);
         }
@@ -240,7 +298,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private Color GetColor(Product product, IList<string> nameParts)
         {
-            if (nameParts.Count == 5)
+            if (nameParts.Count < 5)
             {
                 return null;
             }
@@ -253,9 +311,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 colorCode += $"_{nameParts[4 + i]}";
             }
 
-            Color color = _colorRepository.SingleOrDefault(c => c.GroupId == product.ColorGroupId && c.Code == colorCode);
+            return _colorRepository.SingleOrDefault(c => c.GroupId == product.ColorGroupId && c.Code == colorCode);
+        }
 
-            return color;
+        private Size GetSize(Product product, IList<string> nameParts)
+        {
+            if (nameParts.Count < 4)
+            {
+                return null;
+            }
+
+            return _sizeRepository.SingleOrDefault(s => s.GroupId == product.SizeGroupId && s.Code == nameParts[3]);
         }
 
         private Product GetProduct(Brand brand, IList<string> nameParts)
