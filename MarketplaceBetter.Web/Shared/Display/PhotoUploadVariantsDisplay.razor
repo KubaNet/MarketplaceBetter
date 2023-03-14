@@ -1,0 +1,71 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+
+@if (Variants.Any())
+{
+    if (Variants.Count < 5)
+    {
+        for (int i = 0; i < Variants.Count; i++)
+        {
+            <div>@Variants[i].Variant.Sku</div>
+        }
+    }
+    else
+    {
+        <div>
+            <MudTooltip IsVisible="TooltipVisible">
+                <ChildContent>
+                    <MudButton Variant="Variant.Text" Color="Color.Info" OnClick="OpenPopover">@Variants.Count variants</MudButton>
+                </ChildContent>
+                <TooltipContent>
+                    @for (int i = 0; i < 100; i++)
+                    {
+                        @foreach (var variant in Variants)
+                        {
+                            <span>@variant.Variant.Sku; </span>
+                        }
+                    }
+                </TooltipContent>
+            </MudTooltip>
+            <MudPopover Open="PopoverOpenned" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Class="px-4 pt-4">
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.h6" Class="mb-3">@Variants.Count variants</MudText>
+                    <MudIconButton OnClick="ClosePopover" Icon="@Icons.Material.Filled.Close" style="position: absolute; top: 4px; right: 2px;"></MudIconButton>
+                    @for (int i = 0; i < 50; i++)
+                    {
+                        @foreach (var variant in Variants)
+                        {
+                            <div>@variant.Variant.Sku;</div>
+                        }
+                    }
+                    <MudButton OnClick="ClosePopover" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+                </div>
+            </MudPopover>
+        </div>
+    }
+}
+else
+{
+    <span class="red-text"><b>unrecognized</b></span>
+}
+
+@code {
+    [Parameter] public IList<PhotoUploadVariantModel> Variants { get; set; }
+
+    private bool TooltipVisible = false;
+    private bool PopoverOpenned = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void OpenPopover()
+    {
+        PopoverOpenned = true;
+    }
+
+    private void ClosePopover()
+    {
+        PopoverOpenned = false;
+    }
+}

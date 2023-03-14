@@ -6,8 +6,14 @@
         @Question
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Yes</MudButton>
+        <MudButton Disabled="Processing" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Disabled="Processing" OnClick="Submit" Color="Color.Primary">
+            @if (Processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+            }
+            Yes
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -15,6 +21,16 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Question { get; set; }
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    void Cancel() => MudDialog.Cancel();
+    private bool Processing = false;
+
+    private async void Submit()
+    {
+        Processing = true;
+
+        await Task.Delay(100);
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
 }

@@ -39,16 +39,7 @@
             <MudTd DataLabel="Photo"><PhotoOnListDisplay CloudId="@context.CloudId" Version="@context.Version" /></MudTd>
             <MudTd>@context.Width<span>x</span>@context.Height</MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
-            <MudTd DataLabel="Variant">
-                @if (context.Variants.Any())
-                {
-                    
-                }
-                else
-                {
-                    <span class="red-text"><b>unrecognized</b></span>
-                }
-            </MudTd>
+            <MudTd DataLabel="Variant"><PhotoUploadVariantsDisplay Variants="@context.Variants" /></MudTd>
             <MudTd DataLabel="Type">
                 @if (context.Type != null)
                 {
