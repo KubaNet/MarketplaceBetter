@@ -82,6 +82,7 @@
 @code {
     private MudTable<PhotoUploadModel> Table;
     private ListRequest ListRequest = new();
+    private IList<PhotoUploadModel> PhotoUploads { get; set; }
     private int NumberOfPhotos;
 
     private HashSet<PhotoUploadModel> SelectedPhotos = new HashSet<PhotoUploadModel>();
@@ -105,11 +106,11 @@
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<PhotoUploadModel> photos = PhotoUploadService.GetForListRequest(ListRequest);
+        PhotoUploads = PhotoUploadService.GetForListRequest(ListRequest);
 
-        NumberOfPhotos = photos.Count;
+        NumberOfPhotos = PhotoUploads.Count;
 
-        return Task.FromResult(new TableData<PhotoUploadModel>() { TotalItems = photos.Count, Items = photos });
+        return Task.FromResult(new TableData<PhotoUploadModel>() { TotalItems = PhotoUploads.Count, Items = PhotoUploads });
     }
 
     private void FilterPhotos(string searchString)
@@ -160,14 +161,36 @@
 
     private async void SetTypeForSelected()
     {
-        var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters{ ["PhotoUploads"] = SelectedPhotos.ToList() }).Result;
+        if (SelectedPhotos.Any(p => p.Instance == null) || SelectedPhotos.Any(p => p.Variants == null) || SelectedPhotos.Any(p => p.Variants.Count == 0)
+            || SelectedPhotos.Any(p => p.Kind == null))
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
 
-        ProcessPhotoUploadDialogResult(result);
+            Snackbar.Add("Can't set type of photos because some have unrecognized values.", Severity.Error);
+        }
+        else if (SelectedPhotos.SelectMany(p => p.Variants.Select(v => v.Variant.Id)).Distinct().Count() != SelectedPhotos.SelectMany(p => p.Variants.Select(v => v.Variant.Id)).Count())
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+
+            Snackbar.Add("Can't set same type to multiple photos of same variant. Each photo of a variant has to have different type.", Severity.Error);
+        }
+        else
+        {
+            var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters { ["PhotoUploadsToUpdate"] = SelectedPhotos.ToList(), ["AllPhotoUploads"] = PhotoUploads }).Result;
+
+            ProcessPhotoUploadDialogResult(result);
+        }
     }
 
-    private async void SaveSelected()
+    private void SaveSelected()
     {
+        if (SelectedPhotos.Any(p => p.Instance == null) || SelectedPhotos.Any(p => p.Variants == null) || SelectedPhotos.Any(p => p.Variants.Count == 0)
+            || SelectedPhotos.Any(p => p.Type == null) || SelectedPhotos.Any(p => p.Kind == null))
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
 
+            Snackbar.Add("Can't save photos because some have unrecognized values or type is not set.", Severity.Error);
+        }
     }
 
     private void ProcessPhotoUploadDialogResult(DialogResult result)
