@@ -41,9 +41,9 @@
     {
         foreach (var photoUploadToUpdate in PhotoUploadsToUpdate)
         {
-            if (AllPhotoUploads.Any(p => p.Id != photoUploadToUpdate.Id && p.Variants.Any(v1 => photoUploadToUpdate.Variants.Any(v2 => v2.Variant.Id == v1.Variant.Id)) && p.Type != null && p.Type.Id == Type.Id))
+            if (AllPhotoUploads.Any(p => p.Id != photoUploadToUpdate.Id && p.Instance.Id == photoUploadToUpdate.Instance.Id && p.Variants.Any(v1 => photoUploadToUpdate.Variants.Any(v2 => v2.Variant.Id == v1.Variant.Id)) && p.Type != null && p.Type.Id == Type.Id))
             {
-                CustomValidation.DisplayError("Can't set this type to selected photos because another photo that is on list has same type and is for same variant. Each photo of a variant has to have different type.");
+                CustomValidation.DisplayError("Can't set this type to selected photos because another photo that is on list has same type (and instance) and is for same variant. Each photo of a variant has to have different type (for same instance).");
 
                 return;
             }

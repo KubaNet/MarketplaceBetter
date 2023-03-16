@@ -90,6 +90,22 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
+        public void AddOrUpdate(PhotoUploadModel photoUpload, VariantModel variant)
+        {
+            Photo photo;
+
+            if (_repository.Any(p => p.InstanceId == photoUpload.Instance.Id && p.TypeId == photoUpload.Type.Id && p.VariantId == variant.Id))
+            {
+                photo = _repository.Single(p => p.InstanceId == photoUpload.Instance.Id && p.TypeId == photoUpload.Type.Id && p.VariantId == variant.Id);
+            }
+            else
+            {
+                photo = new Photo();
+            }
+
+            _unitOfWork.Save();
+        }
+
         public void Delete(long id)
         {
             Photo photoToDelete = _repository.Get(id);

@@ -50,7 +50,7 @@
                 CurrentVariant = photoVariant.Variant.Sku;
                 StateHasChanged();
 
-                await Task.Delay(500);
+                PhotoUploadService.Save(photoUpload, photoVariant.Variant);
 
                 CurrentProgressValue += progressStep;
                 CurrentPhotoNumber++;

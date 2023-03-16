@@ -1,5 +1,6 @@
 ﻿using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
         void Add(PhotoModel photo);
 
         void Update(PhotoModel photo);
+
+        void AddOrUpdate(PhotoUploadModel photoUpload, VariantModel variant);
 
         void Delete(long id);
     }
