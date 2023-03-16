@@ -5,6 +5,7 @@
 @using MarketplaceBetter.Specialized.Interfaces
 
 @page "/add-photos"
+@inject NavigationManager NavigationManager
 @inject IPhotoUploadService PhotoUploadService
 @inject IPhotoCloudService PhotoCloudService
 @inject IDialogService DialogService
@@ -165,31 +166,46 @@
             || SelectedPhotos.Any(p => p.Kind == null))
         {
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-
             Snackbar.Add("Can't set type of photos because some have unrecognized values.", Severity.Error);
+
+            return;
         }
-        else if (SelectedPhotos.SelectMany(p => p.Variants.Select(v => v.Variant.Id)).Distinct().Count() != SelectedPhotos.SelectMany(p => p.Variants.Select(v => v.Variant.Id)).Count())
+
+        if (SelectedPhotos.SelectMany(p => p.Variants.Select(v => v.Variant.Id)).Distinct().Count() != SelectedPhotos.SelectMany(p => p.Variants.Select(v => v.Variant.Id)).Count())
         {
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-
             Snackbar.Add("Can't set same type to multiple photos of same variant. Each photo of a variant has to have different type.", Severity.Error);
-        }
-        else
-        {
-            var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters { ["PhotoUploadsToUpdate"] = SelectedPhotos.ToList(), ["AllPhotoUploads"] = PhotoUploads }).Result;
 
-            ProcessPhotoUploadDialogResult(result);
+            return;
         }
+
+        var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters { ["PhotoUploadsToUpdate"] = SelectedPhotos.ToList(), ["AllPhotoUploads"] = PhotoUploads }).Result;
+
+        ProcessPhotoUploadDialogResult(result);
     }
 
-    private void SaveSelected()
+    private async void SaveSelected()
     {
         if (SelectedPhotos.Any(p => p.Instance == null) || SelectedPhotos.Any(p => p.Variants == null) || SelectedPhotos.Any(p => p.Variants.Count == 0)
             || SelectedPhotos.Any(p => p.Type == null) || SelectedPhotos.Any(p => p.Kind == null))
         {
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-
             Snackbar.Add("Can't save photos because some have unrecognized values or type is not set.", Severity.Error);
+
+            return;
+        }
+
+        var result = await DialogService.Show<SavePhotosDialog>(null, new DialogParameters { ["PhotoUploads"] = SelectedPhotos.ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
+
+        Snackbar.AddSuccess("Photos were successfully saved.");
+
+        if (SelectedPhotos.Count == NumberOfPhotos)
+        {
+            NavigationManager.NavigateTo($"photos");
+        }
+        else
+        {
+            Table.ReloadServerData();
         }
     }
 

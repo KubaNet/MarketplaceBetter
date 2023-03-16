@@ -1,0 +1,65 @@
+﻿@using System.IO;
+@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
+@using MarketplaceBetter.Services.Model;
+@using MarketplaceBetter.Specialized.Interfaces;
+
+@inject IPhotoCloudService PhotoCloudService
+@inject IPhotoUploadService PhotoUploadService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudDialog Style="min-width: 60%;">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Saving @TotalPhotoCount photos in total (@PhotoUploads.Count photos for multiple variants)</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer>
+            <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b>. Saving photo @CurrentPhoto for variant @CurrentVariant</MudText>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<PhotoUploadModel> PhotoUploads { get; set; }
+
+    private string CurrentPhoto;
+    private string CurrentVariant;
+    private double CurrentProgressValue;
+    private int CurrentPhotoNumber = 0;
+    private int TotalPhotoCount;
+
+    protected override void OnInitialized()
+    {
+        TotalPhotoCount = PhotoUploads.SelectMany(p => p.Variants).Count();
+
+        Save();
+    }
+
+    private async void Save()
+    {
+        double progressStep = 100 / TotalPhotoCount;
+
+        foreach (var photoUpload in PhotoUploads)
+        {
+            foreach (var photoVariant in photoUpload.Variants)
+            {
+                CurrentPhoto = photoUpload.FileName;
+                CurrentVariant = photoVariant.Variant.Sku;
+                StateHasChanged();
+
+                await Task.Delay(500);
+
+                CurrentProgressValue += progressStep;
+                CurrentPhotoNumber++;
+            }
+        }
+
+        CurrentProgressValue = 100;
+        StateHasChanged();
+        await Task.Delay(1000);
+        MudDialog.Close();
+    }
+}

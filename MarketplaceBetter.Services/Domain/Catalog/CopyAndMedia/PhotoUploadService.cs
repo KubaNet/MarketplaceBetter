@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
 using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -112,6 +113,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             }
 
             _unitOfWork.Save();
+        }
+
+        public void Save(PhotoUploadModel photoUpload, VariantModel variant)
+        {
+
         }
 
         private void Add(PhotoUploadModel photoUpload)
