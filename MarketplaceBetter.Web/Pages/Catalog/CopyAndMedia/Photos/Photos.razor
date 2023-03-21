@@ -13,12 +13,13 @@
 <MudText Typo="Typo.h4" Class="mt-2">Photos</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoModel>>>(ReloadPhotos))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable T="PhotoModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoModel>>>(ReloadPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
             <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="AddMultiplePhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info">Add multiple</MudButton>
-            <MudButton OnClick="AddPhoto" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Photo</MudButton>
+            <MudButton OnClick="DeleteSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Remove</MudButton>
+            <MudButton OnClick="AddMultiplePhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info" Class="ml-2">Add multiple</MudButton>
+            @*<MudButton OnClick="AddPhoto" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Photo</MudButton>*@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="PhotoModel">Id</MudTableSortLabel></MudTh>
@@ -47,8 +48,8 @@
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>
-                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.CloudId))">Delete</MudButton>
+                @*<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>*@
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.FileName))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -60,6 +61,9 @@
 @code {
     private MudTable<PhotoModel> Table;
     private ListRequest ListRequest = new();
+
+    private HashSet<PhotoModel> SelectedPhotos = new HashSet<PhotoModel>();
+    private bool NoneSelected = true;
 
     private Task<TableData<PhotoModel>> ReloadPhotos(TableState state)
     {
@@ -105,9 +109,9 @@
         ProcessPhotoDialogResult(result);
     }
 
-    private async void DeletePhoto(long id, string photoId)
+    private async void DeletePhoto(long id, string fileName)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete photo \"{photoId}\"?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete photo \"{fileName}\"?" }).Result;
 
         if (!result.Canceled)
         {
@@ -124,6 +128,34 @@
         if (!result.Canceled)
         {
             Table.ReloadServerData();
+        }
+    }
+
+    private async void DeleteSelected()
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete selected photos?" }).Result;
+
+        if (!result.Canceled)
+        {
+            PhotoService.Delete(SelectedPhotos.ToList());
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess("Photos were successfully deleted.");
+        }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<PhotoModel> selectedPhotos)
+    {
+        SelectedPhotos = selectedPhotos;
+
+        if (SelectedPhotos.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
         }
     }
 }

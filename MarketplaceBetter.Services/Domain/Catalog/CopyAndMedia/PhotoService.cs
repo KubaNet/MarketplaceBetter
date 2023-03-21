@@ -104,8 +104,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 Photo photoToAdd = new Photo();
                 TransferValues(photoToAdd, photo, variant);
 
-                photo.Uploaded = DateTime.Now;
-
                 _repository.Add(photoToAdd);
             }
 
@@ -119,6 +117,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _photoCloudService.Delete(photoToDelete.CloudId);
 
             _repository.Delete(photoToDelete);
+            _unitOfWork.Save();
+        }
+
+        public void Delete(IList<PhotoModel> photos)
+        {
+            _photoCloudService.Delete(photos.Select(p => p.CloudId).ToList());
+
+            foreach (var photo in photos)
+            {
+                Photo photoToDelete = _repository.Get(photo.Id);
+                _repository.Delete(photoToDelete);
+            }
+
             _unitOfWork.Save();
         }
 
@@ -147,6 +158,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             toPhoto.FileName = fromPhoto.FileName;
             toPhoto.Height = fromPhoto.Height;
             toPhoto.Width = fromPhoto.Width;
+            toPhoto.Uploaded = DateTime.Now;
         }
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
