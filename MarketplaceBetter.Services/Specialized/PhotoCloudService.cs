@@ -73,6 +73,25 @@ namespace MarketplaceBetter.Specialized
             return uploadResult;
         }
 
+        public PhotoUploadResult SaveFromPreUpload(string cloudId, string version, string fileName)
+        {
+            string fullFileName = $"{_instanceFolder}/{fileName}";
+            string originalFileUrl = _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
+
+            ImageUploadParams parameters = new ImageUploadParams
+            {
+                AllowedFormats = _allowedFormats,
+                PublicId = fullFileName, 
+                File = new FileDescription(fullFileName, originalFileUrl)
+            };
+
+            ImageUploadResult result = _cloudinary.Upload(parameters);
+
+            PhotoUploadResult uploadResult = CreatePhotoUploadResult(result);
+
+            return uploadResult;
+        }
+
         public string GetPhotoUrlForLists(string cloudId, string version)
         {
             return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(100)).BuildUrl(cloudId);

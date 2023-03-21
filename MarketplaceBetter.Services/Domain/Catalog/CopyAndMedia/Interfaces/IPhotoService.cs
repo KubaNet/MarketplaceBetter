@@ -24,7 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 
         void Update(PhotoModel photo);
 
-        void AddOrUpdate(PhotoUploadModel photoUpload, VariantModel variant);
+        void AddOrUpdate(PhotoModel photo, VariantModel variant);
 
         void Delete(long id);
     }

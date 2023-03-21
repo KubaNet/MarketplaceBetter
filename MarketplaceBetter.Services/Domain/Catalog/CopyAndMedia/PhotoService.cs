@@ -90,17 +90,23 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
-        public void AddOrUpdate(PhotoUploadModel photoUpload, VariantModel variant)
+        public void AddOrUpdate(PhotoModel photo, VariantModel variant)
         {
-            Photo photo;
-
-            if (_repository.Any(p => p.InstanceId == photoUpload.Instance.Id && p.TypeId == photoUpload.Type.Id && p.VariantId == variant.Id))
+            if (_repository.Any(p => p.InstanceId == photo.Instance.Id && p.TypeId == photo.Type.Id && p.VariantId == variant.Id))
             {
-                photo = _repository.Single(p => p.InstanceId == photoUpload.Instance.Id && p.TypeId == photoUpload.Type.Id && p.VariantId == variant.Id);
+                Photo photoToUpdate = _repository.Single(p => p.InstanceId == photo.Instance.Id && p.TypeId == photo.Type.Id && p.VariantId == variant.Id);
+                TransferValues(photoToUpdate, photo, variant);
+
+                _repository.Update(photoToUpdate);
             }
             else
             {
-                photo = new Photo();
+                Photo photoToAdd = new Photo();
+                TransferValues(photoToAdd, photo, variant);
+
+                photo.Uploaded = DateTime.Now;
+
+                _repository.Add(photoToAdd);
             }
 
             _unitOfWork.Save();
@@ -121,6 +127,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             toPhoto.VariantId = fromPhoto.Variant.Id;
             toPhoto.InstanceId = fromPhoto.Instance.Id;
             toPhoto.TypeId = fromPhoto.Type.Id;
+            toPhoto.CloudId = fromPhoto.CloudId;
+            toPhoto.Version = fromPhoto.Version;
+            toPhoto.Url = fromPhoto.Url;
+            toPhoto.FileName = fromPhoto.FileName;
+            toPhoto.Height = fromPhoto.Height;
+            toPhoto.Width = fromPhoto.Width;
+        }
+
+        private void TransferValues(Photo toPhoto, PhotoModel fromPhoto, VariantModel variant)
+        {
+            toPhoto.VariantId = variant.Id;
+            toPhoto.InstanceId = fromPhoto.Instance.Id;
+            toPhoto.TypeId = fromPhoto.Type.Id;
+            toPhoto.KindId = fromPhoto.Kind.Id;
             toPhoto.CloudId = fromPhoto.CloudId;
             toPhoto.Version = fromPhoto.Version;
             toPhoto.Url = fromPhoto.Url;

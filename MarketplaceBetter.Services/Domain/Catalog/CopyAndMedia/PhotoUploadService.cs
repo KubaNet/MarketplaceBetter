@@ -20,6 +20,7 @@ using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
 using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Sales;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -37,11 +38,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Color> _colorRepository;
         private readonly IRepository<Size> _sizeRepository;
         private readonly IPhotoCloudService _photoCloudService;
+        private readonly IPhotoService _photoService;
 
         public PhotoUploadService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IPhotoCloudService photoCloudService)
+            IPhotoCloudService photoCloudService,
+            IPhotoService photoService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -55,6 +58,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _colorRepository = unitOfWork.GetRepository<Color>();
             _sizeRepository = unitOfWork.GetRepository<Size>();
             _photoCloudService = photoCloudService;
+            _photoService = photoService;
         }
 
         public IList<PhotoUploadModel> GetForListRequest(ListRequest request)
@@ -117,7 +121,29 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         public void Save(PhotoUploadModel photoUpload, VariantModel variant)
         {
+            string fileName = $"{photoUpload.Instance.ShortName.ToLower()}_variant_{variant.Id}_{photoUpload.Type.SystemName}";
+            string fullFileName = $"product_{variant.Product.Id}/variant_{variant.Id}/instance_{photoUpload.Instance.ShortName.ToLower()}/{photoUpload.Instance.ShortName.ToLower()}_variant_{variant.Id}_{photoUpload.Type.SystemName}";
+            
+            PhotoUploadResult result = _photoCloudService.SaveFromPreUpload(photoUpload.CloudId, photoUpload.Version, fullFileName);
 
+            PhotoModel photo = new PhotoModel();
+
+            TransferValues(photo, photoUpload, result, fileName);
+
+            _photoService.AddOrUpdate(photo, variant);
+        }
+
+        private void TransferValues(PhotoModel toPhoto, PhotoUploadModel fromPhoto, PhotoUploadResult fromResult, string fileName)
+        {
+            toPhoto.Instance = fromPhoto.Instance;
+            toPhoto.Type = fromPhoto.Type;
+            toPhoto.Kind = fromPhoto.Kind;
+            toPhoto.Height = fromPhoto.Height;
+            toPhoto.Width = fromPhoto.Width;
+            toPhoto.CloudId = fromResult.CloudId;
+            toPhoto.Version = fromResult.Version;
+            toPhoto.Url = fromResult.Url;
+            toPhoto.FileName = fileName;
         }
 
         private void Add(PhotoUploadModel photoUpload)

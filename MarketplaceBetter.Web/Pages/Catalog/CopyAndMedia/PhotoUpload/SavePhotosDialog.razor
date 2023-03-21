@@ -40,6 +40,8 @@
 
     private async void Save()
     {
+        await Task.Delay(1000);
+
         double progressStep = 100 / TotalPhotoCount;
 
         foreach (var photoUpload in PhotoUploads)
@@ -55,6 +57,11 @@
                 CurrentProgressValue += progressStep;
                 CurrentPhotoNumber++;
             }
+        }
+
+        foreach (var photoUpload in PhotoUploads)
+        {
+            PhotoUploadService.Remove(photoUpload);
         }
 
         CurrentProgressValue = 100;
