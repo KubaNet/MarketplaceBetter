@@ -1,9 +1,12 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Model;
 
 @page "/variant-photos"
 @inject IVariantPhotosService VariantPhotosService
+@inject IPhotoTypeService PhotoTypeService
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">Variant Photos</MudText>
@@ -15,9 +18,24 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="variant" T="VariantPhotosModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="VariantPhotosModel">Instance</MudTableSortLabel></MudTh>
+            @foreach (var type in Types)
+            {
+                <MudTh>@type.Name</MudTh>
+            }
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            @foreach (var type in Types)
+            {
+                <MudTd>
+                    @if (context.Photos.Any(t => t.Type.Id == type.Id))
+                    {
+                        <PhotoOnListDisplay CloudId="@context.Photos.Single(t => t.Type.Id == type.Id).CloudId" Version="@context.Photos.Single(t => t.Type.Id == type.Id).Version"></PhotoOnListDisplay>
+                    }
+                </MudTd>
+            }
         </RowTemplate>
         <PagerContent>
             @if (!ShowAll.HasValue || ShowAll == false)
@@ -34,12 +52,15 @@
 
     private MudTable<VariantPhotosModel> Table;
     private ListRequest ListRequest = new();
+    private IList<PhotoTypeModel> Types;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         ProcessQueryParameters();
+
+        Types = PhotoTypeService.GetAll();
     }
 
     private void ProcessQueryParameters()

@@ -2,6 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -36,7 +37,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             photos = ApplyFilter(photos, request);
 
-            var groupedPhotos = photos.GroupBy(p => p.VariantId);
+            var groupedPhotos = photos.GroupBy(p => new { p.VariantId, p.InstanceId });
 
             return groupedPhotos.Count();
         }
@@ -48,7 +49,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             photos = ApplyFilter(photos, request);
             photos = ApplySorting(photos, request);
 
-            var groupedPhotos = photos.ToList().GroupBy(p => p.VariantId);
+            var groupedPhotos = photos.ToList().GroupBy(p => new { p.VariantId, p.InstanceId });
 
             if (!request.ShowAll)
             {
@@ -58,6 +59,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             return groupedPhotos.Select(p => new VariantPhotosModel
             {
                 Variant = _mapper.Map<VariantModel>(p.First().Variant),
+                Instance = _mapper.Map<InstanceModel>(p.First().Instance),
                 Photos = _mapper.Map<IList<PhotoModel>>(p.ToList()),
             }).ToList();
         }
@@ -73,7 +75,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "variant", "product_id" };
+                string[] searchFieldNames = new[] { "variant", "instance", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -81,13 +83,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     photos = searchField.Name switch
                     {
                         "variant" => photos.Where(p => p.Variant.Sku.Contains(searchField.Value)),
+                        "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "product_id" => photos.Where(p => p.Variant.ProductId == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    photos = photos.Where(p => p.Variant.Sku.Contains(searchString));
+                    photos = photos.Where(p => p.Variant.Sku.Contains(searchString)
+                        || p.Instance.Name.Contains(searchString));
                 }
             }
 
@@ -100,13 +104,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             {
                 photos = request.SortBy switch
                 {
-                    "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku) : photos.OrderByDescending(p => p.Variant.Sku),
+                    "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku).ThenBy(p => p.InstanceId) : photos.OrderByDescending(p => p.Variant.Sku).ThenBy(p => p.InstanceId),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name).ThenBy(p => p.InstanceId) : photos.OrderByDescending(p => p.Instance.Name).ThenBy(p => p.InstanceId),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
             else
             {
-                photos = photos.OrderBy(p => p.Variant.Id);
+                photos = photos.OrderBy(p => p.Variant.Id).ThenBy(p => p.InstanceId);
             }
 
             return photos;
