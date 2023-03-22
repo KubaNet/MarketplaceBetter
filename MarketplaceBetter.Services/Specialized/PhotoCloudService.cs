@@ -92,6 +92,11 @@ namespace MarketplaceBetter.Specialized
             return uploadResult;
         }
 
+        public string GetOriginalPhotoUrl(string cloudId, string version)
+        {
+            return _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
+        }
+
         public string GetPhotoUrlForLists(string cloudId, string version)
         {
             return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(100)).BuildUrl(cloudId);

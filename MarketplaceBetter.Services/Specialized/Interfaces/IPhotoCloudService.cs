@@ -17,6 +17,8 @@ namespace MarketplaceBetter.Specialized.Interfaces
 
         PhotoUploadResult SaveFromPreUpload(string cloudId, string version, string fileName);
 
+        string GetOriginalPhotoUrl(string cloudId, string version);
+
         string GetPhotoUrlForLists(string cloudId, string version);
 
         string GetBiggerPhotoUrlForLists(string cloudId, string version);

@@ -1,9 +1,12 @@
 ﻿@using MarketplaceBetter.Specialized.Interfaces;
 
 @inject IPhotoCloudService PhotoCloudService
+@inject NavigationManager NavigationManager
 
 <div>
-    <MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(CloudId, Version)" @onmouseenter="ShowBiggerImage" @onmouseleave="HideBiggerImage" />
+    <MudLink Href="@PhotoCloudService.GetOriginalPhotoUrl(CloudId, Version)" Target="_blank">
+        <MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(CloudId, Version)" @onmouseenter="ShowBiggerImage" @onmouseleave="HideBiggerImage" />
+    </MudLink>
     <MudPopover Open="Open" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
         <MudImage Src="@PhotoCloudService.GetBiggerPhotoUrlForLists(CloudId, Version)" />
     </MudPopover>
