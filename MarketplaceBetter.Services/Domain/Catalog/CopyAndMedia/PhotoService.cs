@@ -172,7 +172,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "variant", "instance", "file_name", "type", "kind", "height", "width" };
+                string[] searchFieldNames = new[] { "id", "product", "product_id", "variant", "size", "color", "instance", "file_name", "type", "kind", "height", "width" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -181,7 +181,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     {
                         "id" => photos.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "product" => photos.Where(p => p.Variant.Product.Name.Contains(searchField.Value)),
+                        "product_id" => photos.Where(p => p.Variant.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         "variant" => photos.Where(p => p.Variant.Sku.Contains(searchField.Value)),
+                        "size" => photos.Where(p => p.Variant.Size.Name.Contains(searchField.Value)),
+                        "color" => photos.Where(p => p.Variant.Color.Name.Contains(searchField.Value)),
                         "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "file_name" => photos.Where(p => p.FileName.Contains(searchField.Value)),
                         "type" => photos.Where(p => p.Type.Name.Contains(searchField.Value)),
@@ -195,7 +198,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 {
                     photos = photos.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Variant.Product.Name.Contains(searchString)
+                        || p.Variant.Product.Id == searchString.ParseToIntOrDefault()
                         || p.Variant.Sku.Contains(searchString)
+                        || p.Variant.Size.Name.Contains(searchString)
+                        || p.Variant.Color.Name.Contains(searchString)
                         || p.Instance.Name.Contains(searchString)
                         || p.FileName.Contains(searchString)
                         || p.Type.Name.Contains(searchString)
@@ -214,16 +220,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             {
                 photos = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Id) : photos.OrderByDescending(p => p.Id),
-                    "product" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Product.Name) : photos.OrderByDescending(p => p.Variant.Product.Name),
-                    "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku) : photos.OrderByDescending(p => p.Variant.Sku),
-                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.Name) : photos.OrderByDescending(p => p.Type.Name),
-                    "kind" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Kind.Name) : photos.OrderByDescending(p => p.Kind.Name),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name) : photos.OrderByDescending(p => p.Instance.Name),
-                    "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName) : photos.OrderByDescending(p => p.FileName),
-                    "height" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Height) : photos.OrderByDescending(p => p.Height),
-                    "width" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Width) : photos.OrderByDescending(p => p.Width),
-                    "uploaded" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Uploaded) : photos.OrderByDescending(p => p.Uploaded),
+                    "id" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Id).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Id).ThenBy(p => p.Type.Id),
+                    "product" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Product.Name).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Variant.Product.Name).ThenBy(p => p.Type.Id),
+                    "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Variant.Sku).ThenBy(p => p.Type.Id),
+                    "type" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Type.Name).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Type.Name).ThenBy(p => p.Type.Id),
+                    "kind" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Kind.Name).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Kind.Name).ThenBy(p => p.Type.Id),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Instance.Name).ThenBy(p => p.Type.Id),
+                    "filename" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.FileName).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.FileName).ThenBy(p => p.Type.Id),
+                    "height" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Height).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Height).ThenBy(p => p.Type.Id),
+                    "width" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Width).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Width).ThenBy(p => p.Type.Id),
+                    "uploaded" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Uploaded).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Uploaded).ThenBy(p => p.Type.Id),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

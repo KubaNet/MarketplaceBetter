@@ -1,13 +1,13 @@
 ﻿IF NOT EXISTS (SELECT NULL FROM [dbo].[PhotoType] WHERE [SystemName] = 1)
     INSERT INTO [dbo].[PhotoType] ([Name], [SystemName], [AmazonUploadCode])
-    VALUES ('Main', 1, 'MAIN')
-ELSE UPDATE [dbo].[PhotoType] SET [Name] = 'Main', [AmazonUploadCode] = 'MAIN' WHERE [SystemName] = 1
+    VALUES ('Swatch', 1, 'SWCH')
+ELSE UPDATE [dbo].[PhotoType] SET [Name] = 'Swatch', [AmazonUploadCode] = 'SWCH' WHERE [SystemName] = 1
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[PhotoType] WHERE [SystemName] = 2)
     INSERT INTO [dbo].[PhotoType] ([Name], [SystemName], [AmazonUploadCode])
-    VALUES ('Swatch', 2, 'SWCH')
-ELSE UPDATE [dbo].[PhotoType] SET [Name] = 'Swatch', [AmazonUploadCode] = 'SWCH' WHERE [SystemName] = 2
+    VALUES ('Main', 2, 'MAIN')
+ELSE UPDATE [dbo].[PhotoType] SET [Name] = 'Main', [AmazonUploadCode] = 'MAIN' WHERE [SystemName] = 2
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[PhotoType] WHERE [SystemName] = 3)

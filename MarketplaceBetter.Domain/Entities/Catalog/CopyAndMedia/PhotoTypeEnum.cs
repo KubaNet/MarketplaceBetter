@@ -10,9 +10,9 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
     {
         None = 0,
 
-        Main = 1,
+        Swatch = 1,
 
-        Swatch = 2,
+        Main = 2,
 
         Other1 = 3,
 
