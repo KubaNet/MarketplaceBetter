@@ -16,7 +16,8 @@
     <DialogContent>
         <MudContainer>
             <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
-            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b>. Saving photo @CurrentPhoto for variant @CurrentVariant</MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b>. Saving photo @CurrentPhoto for variant @CurrentVariant</MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">Saving photos complete. Removing temporary files, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
         </MudContainer>
     </DialogContent>
 </MudDialog>
@@ -30,6 +31,8 @@
     private double CurrentProgressValue;
     private int CurrentPhotoNumber = 0;
     private int TotalPhotoCount;
+    private bool PhotoInfoHidden = false;
+    private bool RemovingInfoHidden = true;
 
     protected override void OnInitialized()
     {
@@ -40,9 +43,9 @@
 
     private async void Save()
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
 
-        double progressStep = 100 / TotalPhotoCount;
+        double progressStep = (double)100 / (double)TotalPhotoCount;
 
         foreach (var photoUpload in PhotoUploads)
         {
@@ -59,14 +62,17 @@
             }
         }
 
+        CurrentProgressValue = 100;
+        PhotoInfoHidden = true;
+        RemovingInfoHidden = false;
+        StateHasChanged();
+
         foreach (var photoUpload in PhotoUploads)
         {
             PhotoUploadService.Remove(photoUpload);
         }
 
-        CurrentProgressValue = 100;
-        StateHasChanged();
-        await Task.Delay(1000);
+        await Task.Delay(500);
         MudDialog.Close();
     }
 }
