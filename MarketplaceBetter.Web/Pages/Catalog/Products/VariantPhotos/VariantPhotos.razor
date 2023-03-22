@@ -1,0 +1,74 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Model;
+
+@page "/variant-photos"
+@inject IVariantPhotosService VariantPhotosService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h4" Class="mt-2">Variant Photos</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(ReloadVariantPhotos))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariantPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="variant" T="VariantPhotosModel">Variant</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @if (!ShowAll.HasValue || ShowAll == false)
+            {
+                <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+            }
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
+
+    private MudTable<VariantPhotosModel> Table;
+    private ListRequest ListRequest = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+        if (ShowAll.HasValue)
+        {
+            ListRequest.ShowAll = ShowAll.Value;
+        }
+    }
+
+    private Task<TableData<VariantPhotosModel>> ReloadVariantPhotos(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<VariantPhotosModel> variantPhotos = VariantPhotosService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<VariantPhotosModel>() { TotalItems = VariantPhotosService.CountForListRequest(ListRequest), Items = variantPhotos });
+    }
+
+    private void FilterVariantPhotos(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+}
