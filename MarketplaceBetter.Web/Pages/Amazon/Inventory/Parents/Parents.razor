@@ -18,7 +18,6 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ParentModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="ParentModel">SKU</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="child_sku" T="ParentModel">Child SKU</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="product" T="ParentModel">Product</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ParentModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
@@ -26,7 +25,6 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">@context.Sku</MudTd>
-            <MudTd DataLabel="Child SKU">@context.ChildSku</MudTd>
             <MudTd DataLabel="Product">@context.Product.Name</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditParent(context.Id))">Edit</MudButton></MudTd>

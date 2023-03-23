@@ -20,6 +20,7 @@
             <MudTh><MudTableSortLabel SortLabel="sku" T="VariantModel">SKU</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="status" T="VariantModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="product" T="VariantModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product_code" T="VariantModel">Product code</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="color" T="VariantModel">Color</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="size" T="VariantModel">Size</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="ean" T="VariantModel">EAN</MudTableSortLabel></MudTh>
@@ -33,9 +34,10 @@
                 <VariantStatusDisplay Status="@context.Status" />
             </MudTd>
             <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="ProductCode">@context.Product.Code</MudTd>
             <MudTd DataLabel="Color">@context.Color.Name</MudTd>
             <MudTd DataLabel="Size">@context.Size.Name</MudTd>
-            <MudTd DataLabel="Size">@context.Ean</MudTd>
+            <MudTd DataLabel="EAN">@context.Ean</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarVariant(context.Id))">Add</MudButton>

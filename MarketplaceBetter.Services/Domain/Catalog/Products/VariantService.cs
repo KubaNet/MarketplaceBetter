@@ -106,7 +106,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "brand", "color", "size", "ean", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "product_code", "brand", "color", "size", "ean", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -117,6 +117,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         "sku" => variants.Where(v => v.Sku.Contains(searchField.Value)),
                         "status" => variants.Where(v => v.Status.Name.Contains(searchField.Value)),
                         "product" => variants.Where(v => v.Product.Name.Contains(searchField.Value)),
+                        "product_code" => variants.Where(v => v.Product.Code.Contains(searchField.Value)),
                         "brand" => variants.Where(v => v.Product.Brand.Name.Contains(searchField.Value)),
                         "color" => variants.Where(v => v.Color.Name.Contains(searchField.Value)),
                         "size" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
@@ -131,6 +132,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                       || v.Sku.Contains(searchString)
                       || v.Status.Name.Contains(searchString)
                       || v.Product.Name.Contains(searchString)
+                      || v.Product.Code.Contains(searchString)
                       || v.Product.Brand.Name.Contains(searchString)
                       || v.Color.Name.Contains(searchString)
                       || v.Size.Name.Contains(searchString)
@@ -151,6 +153,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     "sku" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Sku) : variants.OrderByDescending(v => v.Sku),
                     "status" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Status.Name) : variants.OrderByDescending(v => v.Status.Name),
                     "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
+                    "product_code" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Code) : variants.OrderByDescending(v => v.Product.Code),
                     "brand" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Brand.Name) : variants.OrderByDescending(v => v.Product.Brand.Name),
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
                     "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),

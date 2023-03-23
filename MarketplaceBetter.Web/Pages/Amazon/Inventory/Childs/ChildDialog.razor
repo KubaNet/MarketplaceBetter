@@ -144,7 +144,7 @@
 
     private void SetChildSku()
     {
-        Child.Sku = ChildService.GetSkuFor(Child.Parent?.Id, Child.Variant?.Id);
+        Child.Sku = ChildService.GetSkuFor(Child.Variant?.Id);
     }
 
     private void HandleValidSubmit()

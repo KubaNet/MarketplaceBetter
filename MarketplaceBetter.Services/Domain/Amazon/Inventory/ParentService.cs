@@ -93,7 +93,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         {
             toParent.ProductId = fromParent.Product.Id;
             toParent.Sku = fromParent.Sku;
-            toParent.ChildSku = fromParent.ChildSku;
         }
 
         private IQueryable<Parent> ApplyFilter(IQueryable<Parent> parents, ListRequest request)
@@ -107,7 +106,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "child_sku", "product", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "product", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -116,7 +115,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     {
                         "id" => parents.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => parents.Where(p => p.Sku.Contains(searchField.Value)),
-                        "child_sku" => parents.Where(p => p.ChildSku.Contains(searchField.Value)),
                         "product" => parents.Where(p => p.Product.Name.Contains(searchField.Value)),
                         "brand" => parents.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
                         "product_id" => parents.Where(p => p.Product.Id == searchField.Value.ParseToIntOrDefault()),
@@ -127,7 +125,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 {
                     parents = parents.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Sku.Contains(searchString)
-                        || p.ChildSku.Contains(searchString)
                         || p.Product.Name.Contains(searchString)
                         || p.Product.Brand.Name.Contains(searchString));
                 }
@@ -144,7 +141,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Id) : parents.OrderByDescending(p => p.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Sku) : parents.OrderByDescending(p => p.Sku),
-                    "child_sku" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.ChildSku) : parents.OrderByDescending(p => p.ChildSku),
                     "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Name) : parents.OrderByDescending(p => p.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Brand.Name) : parents.OrderByDescending(p => p.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)

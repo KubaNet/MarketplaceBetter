@@ -2,7 +2,6 @@
 (
 	[Id]			BIGINT				NOT NULL	IDENTITY,
 	[Sku]			NVARCHAR(255)		NOT NULL,
-	[ChildSku]		NVARCHAR(255)		NOT NULL,
 	[ProductId]		BIGINT				NOT NULL,
 	CONSTRAINT		[PK_Parent]			PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_Parent_Product]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),

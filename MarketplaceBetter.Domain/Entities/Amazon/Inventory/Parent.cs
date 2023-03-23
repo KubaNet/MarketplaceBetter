@@ -12,8 +12,6 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
     {
         public string Sku { get; set; }
 
-        public string ChildSku { get; set; }
-
         public long ProductId { get; set; }
 
         public virtual Product Product { get; set; }

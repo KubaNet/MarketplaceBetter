@@ -29,6 +29,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void Update(ChildModel child);
 
-        string GetSkuFor(long? parentId, long? VariantId);
+        string GetSkuFor(long? VariantId);
     }
 }

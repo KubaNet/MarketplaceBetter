@@ -21,10 +21,5 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         [Required]
         [StringLength(Standard.AmazonSkuMaxLength, MinimumLength = 2)]
         public string Sku { get; set; }
-
-        [Display(Name = "Child SKU")]
-        [Required]
-        [BetterLength]
-        public string ChildSku { get; set; }
     }
 }

@@ -91,8 +91,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     continue;
                 }
 
-                Child child = new Child { ParentId = parentId, VariantId = Variant.Id, 
-                    Sku = GetSkuFor(parentId, Variant.Id) };
+                Child child = new Child { ParentId = parentId, VariantId = Variant.Id, Sku = GetSkuFor(Variant.Id) };
 
                 _repository.Add(child);
                 _unitOfWork.Save();
@@ -116,8 +115,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     return;
                 }
 
-                child = new Child { ParentId = parent.Id, VariantId = VariantId,
-                    Sku = GetSkuFor(parent.Id, VariantId) };
+                child = new Child { ParentId = parent.Id, VariantId = VariantId, Sku = GetSkuFor(VariantId) };
 
                 _repository.Add(child);
                 _unitOfWork.Save();
@@ -138,27 +136,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _childInstanceService.AddForChild(childToUpdate.Id);
         }
 
-        public string GetSkuFor(long? parentId, long? VariantId)
+        public string GetSkuFor(long? VariantId)
         {
-            if (parentId.HasValue && VariantId.HasValue)
+            if (VariantId.HasValue)
             {
-                Parent parent = _parentRepository.Get(parentId.Value);
                 Variant Variant = _variantRepository.Get(VariantId.Value);
 
-                if (Variant.Size.IsOneSize)
-                {
-                    return $"{parent.ChildSku}_{Variant.Color.Code}";
-                }
-                else
-                {
-                    return $"{parent.ChildSku}_{Variant.Color.Code}_{Variant.Size.Code}";
-                }
-            }
-            else if (parentId.HasValue)
-            {
-                Parent parent = _parentRepository.Get(parentId.Value);
-
-                return $"{parent.ChildSku}";
+                return Variant.Sku;
             }
 
             return null;
