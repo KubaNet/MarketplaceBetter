@@ -126,16 +126,15 @@
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoKind.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoKindBeginning.sql" />
     <None Include="Scripts\Inserts\06_PhotoKindBeginnings.sql" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Scripts\CustomScripts\UpdatingParentsSKU.sql" />
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Prod_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Test_SchemaCompare.scmp" />
     <None Include="Scripts\Inserts\03_VariantStatuses.sql" />
     <None Include="Scripts\CustomScripts\InsertingColorTranslations.sql" />
     <None Include="Scripts\CustomScripts\UpdatingVariantsSKU.sql" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Scripts\CustomScripts\UpdatingParentInstancesSKU.sql" />
+    <None Include="Scripts\CustomScripts\UpdatingChildInstancesSKU.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Collection.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Product.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Variant.sql" />

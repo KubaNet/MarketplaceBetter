@@ -76,7 +76,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         public void AddForChild(long childId)
         {
-            foreach (var instance in _instanceRepository.Where(i => i.SystemName != InstanceEnum.All).OrderBy(i => i.Id))
+            foreach (var instance in _instanceRepository.Where(i => i.IsNormal).OrderBy(i => i.Id))
             {
                 if (_repository.Any(c => c.ChildId == childId && c.InstanceId == instance.Id))
                 {

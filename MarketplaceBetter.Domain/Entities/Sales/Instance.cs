@@ -13,5 +13,7 @@ namespace MarketplaceBetter.Domain.Entities.Sales
         public InstanceEnum SystemName { get; set; }
 
         public string ShortName { get; set; }
+
+        public bool IsNormal { get; set; }
     }
 }

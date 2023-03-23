@@ -119,7 +119,7 @@
 
         ActivateProduct(brand.Id);
 
-        Variant.Sku = brand.Code;
+        SetVariantSku();
     }
 
     private void HandleProductChanged(ProductModel product)
@@ -190,17 +190,25 @@
 
     private void SetVariantSku()
     {
-        if (Variant.Product != null)
+        if (Brand != null)
         {
-            Variant.Sku = string.Format("{0}_{1}", Variant.Product.Brand.Code, Variant.Product.Code);
+            Variant.Sku = Brand.Code.ToLower();
 
-            if (Variant.Color != null)
+            if (Variant.Product != null)
             {
-                Variant.Sku += string.Format("_{0}", Variant.Color.Code);
+                Variant.Sku += $"_{Variant.Product.Code}";
 
-                if (Variant.Size != null)
+                if (Variant.Color != null && Variant.Size != null)
                 {
-                    Variant.Sku += string.Format("_{0}", Variant.Size.Code);
+                    Variant.Sku += $"_{Variant.Size.Code}_{Variant.Color.Code}";
+                }
+                else if (Variant.Size != null)
+                {
+                    Variant.Sku += $"_{Variant.Size.Code}";
+                }
+                else if (Variant.Color != null)
+                {
+                    Variant.Sku += $"_{Variant.Color.Code}";
                 }
             }
         }

@@ -109,7 +109,7 @@
 
         if (Parent.Product != null)
         {
-            Parent.Sku = Parent.Product.Name.ToLower().Replace(" ", "_");
+            Parent.Sku = $"{Parent.Product.Brand.Code.ToLower()}_{Parent.Product.Code}";
         }
     }
 

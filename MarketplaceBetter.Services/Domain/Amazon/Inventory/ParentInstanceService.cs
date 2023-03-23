@@ -97,15 +97,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         public void AddForParent(long parentId)
         {
-            foreach (var instance in _instanceRepository.GetAll().OrderBy(i => i.Id))
+            foreach (var instance in _instanceRepository.Where(i => i.IsNormal).OrderBy(i => i.Id))
             {
                 if (_repository.Any(p => p.ParentId == parentId && p.InstanceId == instance.Id))
                 {
                     continue;
                 }
 
-                ParentInstance parentInstance = new ParentInstance { 
-                    ParentId = parentId, InstanceId = instance.Id, Sku = GetSkuFor(parentId, instance.Id) };
+                ParentInstance parentInstance = new ParentInstance { ParentId = parentId, InstanceId = instance.Id, Sku = GetSkuFor(parentId, instance.Id) };
 
                 _repository.Add(parentInstance);
                 _unitOfWork.Save();

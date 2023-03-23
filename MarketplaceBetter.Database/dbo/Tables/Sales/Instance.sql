@@ -4,6 +4,7 @@
 	[Name]				NVARCHAR (255)				NOT NULL,
 	[SystemName]		INT							NOT NULL,
 	[ShortName]			NVARCHAR (255)				NOT NULL,
+	[IsNormal]			BIT							NOT NULL,
 	CONSTRAINT			[PK_Instance]				PRIMARY KEY ([Id]),
 );
 GO
