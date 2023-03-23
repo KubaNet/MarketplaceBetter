@@ -19,7 +19,7 @@ namespace MarketplaceBetter.Specialized.Interfaces
 
         string GetOriginalPhotoUrl(string cloudId, string version);
 
-        string GetPhotoUrlForLists(string cloudId, string version);
+        string GetPhotoUrlForLists(string cloudId, string version, PhotoOnListSizeEnum size);
 
         string GetBiggerPhotoUrlForLists(string cloudId, string version);
 

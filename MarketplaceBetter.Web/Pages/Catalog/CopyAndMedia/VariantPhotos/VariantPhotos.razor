@@ -32,7 +32,7 @@
                 <MudTd>
                     @if (context.Photos.Any(t => t.Type.Id == type.Id))
                     {
-                        <PhotoOnListDisplay CloudId="@context.Photos.Single(t => t.Type.Id == type.Id).CloudId" Version="@context.Photos.Single(t => t.Type.Id == type.Id).Version"></PhotoOnListDisplay>
+                        <PhotoOnListDisplay CloudId="@context.Photos.Single(t => t.Type.Id == type.Id).CloudId" Version="@context.Photos.Single(t => t.Type.Id == type.Id).Version" Size="PhotoOnListSizeEnum.S200"></PhotoOnListDisplay>
                     }
                 </MudTd>
             }

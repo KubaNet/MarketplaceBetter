@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -97,9 +98,25 @@ namespace MarketplaceBetter.Specialized
             return _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
         }
 
-        public string GetPhotoUrlForLists(string cloudId, string version)
+        public string GetPhotoUrlForLists(string cloudId, string version, PhotoOnListSizeEnum size)
         {
-            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(100)).BuildUrl(cloudId);
+            int width;
+            switch (size)
+            {
+                case PhotoOnListSizeEnum.S100:
+                    width = 100;
+                    break;
+                case PhotoOnListSizeEnum.S150:
+                    width = 150;
+                    break;
+                case PhotoOnListSizeEnum.S200:
+                    width = 200;
+                    break;
+                default:
+                    throw new UnrecognizedEnumValueException<PhotoOnListSizeEnum>(size);
+            }
+
+            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(width)).BuildUrl(cloudId);
         }
 
         public string GetBiggerPhotoUrlForLists(string cloudId, string version)

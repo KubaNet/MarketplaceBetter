@@ -36,7 +36,7 @@
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Photo"><PhotoOnListDisplay CloudId="@context.CloudId" Version="@context.Version" /></MudTd>
+            <MudTd DataLabel="Photo"><PhotoOnListDisplay CloudId="@context.CloudId" Version="@context.Version" Size="PhotoOnListSizeEnum.S100" /></MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
             <MudTd DataLabel="Variant"><PhotoUploadVariantsDisplay Variants="@context.Variants" /></MudTd>
             <MudTd DataLabel="Type">

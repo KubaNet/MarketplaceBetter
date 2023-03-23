@@ -6,9 +6,7 @@
         {
             <MudNavGroup Title="Products" Icon="@Icons.Material.Filled.ShoppingBasket" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/products">Products</MudNavLink>
-                <MudNavLink Href="/product-colors">Product Colors</MudNavLink>
                 <MudNavLink Href="/variants">Variants</MudNavLink>
-                <MudNavLink Href="/variant-photos">Variant Photos</MudNavLink>
                 <MudNavLink Href="/collections">Collections</MudNavLink>
                 <MudNavLink Href="/brands">Brands</MudNavLink>
             </MudNavGroup>
@@ -18,10 +16,24 @@
             <MudNavLink Href="/products" Icon="@Icons.Material.Filled.ShoppingBasket">Products</MudNavLink>
         }
 
+        @if (IsCopyAndMediaModule())
+        {
+            <MudNavGroup Title="Copy & Media" Icon="@Icons.Material.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
+                <MudNavLink Href="/photos">Photos</MudNavLink>
+                <MudNavLink Href="/variant-photos">Variant Photos</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/copywriting" Icon="@Icons.Material.Filled.PhotoLibrary">Copy & Media</MudNavLink>
+        }
+
         @if (IsColorsAndSizesModule())
         {
             <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Material.Filled.Palette" Expanded="true" HideExpandIcon="true">
                 <MudNavLink Href="/colors">Colors</MudNavLink>
+                <MudNavLink Href="/product-colors">Product Colors</MudNavLink>
                 <MudNavLink Href="/color-translations">Color Translations</MudNavLink>
                 <MudNavLink Href="/color-groups">Color Groups</MudNavLink>
                 <MudNavLink Href="/sizes">Sizes</MudNavLink>
@@ -31,18 +43,6 @@
         else
         {
             <MudNavLink Href="/colors" Icon="@Icons.Material.Filled.Palette">Colors & Sizes</MudNavLink>
-        }
-
-        @if (IsCopyAndMediaModule())
-        {
-            <MudNavGroup Title="Copy & Media" Icon="@Icons.Material.Filled.PhotoLibrary" Expanded="true" HideExpandIcon="true">
-                <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
-                <MudNavLink Href="/photos">Photos</MudNavLink>
-            </MudNavGroup>
-        }
-        else
-        {
-            <MudNavLink Href="/copywriting" Icon="@Icons.Material.Filled.PhotoLibrary">Copy & Media</MudNavLink>
         }
     </MudNavGroup>
     <MudNavGroup Title="Amazon" Icon="@Icons.Material.Filled.BrightnessAuto" Expanded="true" HideExpandIcon="true">
@@ -110,9 +110,7 @@
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
         if (path == "products"
-            || path == "product-colors"
             || path == "variants"
-            || path == "variant-photos"
             || path == "collections"
             || path == "brands")
         {
@@ -128,6 +126,7 @@
 
         if (path == "copywriting"
             || path == "photos"
+            || path == "variant-photos"
             || path == "add-photos")
         {
             return true;
@@ -142,6 +141,7 @@
 
         if (path == "colors"
             || path == "color-translations"
+            || path == "product-colors"
             || path == "color-groups"
             || path == "sizes"
             || path == "size-groups")
