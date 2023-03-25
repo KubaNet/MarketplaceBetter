@@ -26,5 +26,7 @@ namespace MarketplaceBetter.Specialized.Interfaces
         void Delete(string cloudId);
 
         void Delete(IList<string> cloudIds);
+
+        void PrepareForDownload(string cloudId, string version, string fileName);
     }
 }

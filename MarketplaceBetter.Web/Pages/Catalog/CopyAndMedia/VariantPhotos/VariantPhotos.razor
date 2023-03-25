@@ -12,9 +12,11 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variant Photos</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(ReloadVariantPhotos))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(ReloadVariantPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariantPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="variant" T="VariantPhotosModel">Variant</MudTableSortLabel></MudTh>
@@ -54,6 +56,9 @@
     private ListRequest ListRequest = new();
     private IList<PhotoTypeModel> Types;
 
+    private HashSet<VariantPhotosModel> SelectedVariantPhotos = new HashSet<VariantPhotosModel>();
+    private bool NoneSelected = true;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -91,5 +96,32 @@
         Table.ReloadServerData();
 
         StateHasChanged();
+    }
+
+    private void OnSelectedItemsChanged(HashSet<VariantPhotosModel> selectedVariantPhotos)
+    {
+        SelectedVariantPhotos = selectedVariantPhotos;
+
+        if (SelectedVariantPhotos.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+
+    private void DownloadPhotos()
+    {
+        string folderName = DateTime.Now.ToString().Replace(' ', '_');
+
+        foreach (var variantPhoto in SelectedVariantPhotos)
+        {
+            foreach (var photo in variantPhoto.Photos)
+            {
+                VariantPhotosService.PrepareForDownload(variantPhoto.Variant, photo, folderName);
+            }
+        }
     }
 }

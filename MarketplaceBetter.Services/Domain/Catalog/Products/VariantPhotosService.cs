@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
@@ -10,6 +11,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -23,13 +25,18 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Photo> _repository;
+        private readonly IRepository<Child> _childRepository;
+        private readonly IPhotoCloudService _photoCloudService;
 
         public VariantPhotosService(
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IPhotoCloudService photoCloudService)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
+            _childRepository = unitOfWork.GetRepository<Child>();
+            _photoCloudService = photoCloudService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -63,6 +70,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 Instance = _mapper.Map<InstanceModel>(p.First().Instance),
                 Photos = _mapper.Map<IList<PhotoModel>>(p.ToList()),
             }).ToList();
+        }
+
+        public void PrepareForDownload(VariantModel variant, PhotoModel photo, string folder)
+        {
+            Child child = _childRepository.SingleOrDefault(c => c.VariantId == variant.Id && c.Asin != null);
+            if (child == null)
+            {
+                return;
+            }
+
+            string fileName = $"{folder}/{child.Asin}.{photo.Type.AmazonUploadCode}";
+
+            _photoCloudService.PrepareForDownload(photo.CloudId, photo.Version, fileName);
         }
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)

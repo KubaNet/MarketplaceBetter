@@ -1,16 +1,13 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
 using Microsoft.Extensions.Configuration;
-using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -132,6 +129,22 @@ namespace MarketplaceBetter.Specialized
         public void Delete(IList<string> cloudIds)
         {
             _cloudinary.DeleteResources(ResourceType.Image, cloudIds.ToArray());
+        }
+
+        public void PrepareForDownload(string cloudId, string version, string fileName)
+        {
+            string fullFileName = $"download/{fileName}";
+
+            string originalFileUrl = _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
+
+            ImageUploadParams parameters = new ImageUploadParams
+            {
+                AllowedFormats = _allowedFormats,
+                PublicId = fullFileName,
+                File = new FileDescription(fullFileName, originalFileUrl)
+            };
+
+            _cloudinary.Upload(parameters);
         }
 
         private string ClearFileName(string fileName)
