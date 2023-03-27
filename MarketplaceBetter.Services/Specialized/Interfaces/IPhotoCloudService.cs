@@ -28,5 +28,9 @@ namespace MarketplaceBetter.Specialized.Interfaces
         void Delete(IList<string> cloudIds);
 
         void PrepareForDownload(string cloudId, string version, string fileName);
+
+        string GetDownloadUrl(string folderName);
+
+        void DeleteDownloadFolder(string folderName);
     }
 }

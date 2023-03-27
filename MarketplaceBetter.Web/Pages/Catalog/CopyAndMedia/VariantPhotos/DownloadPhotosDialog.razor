@@ -1,0 +1,84 @@
+﻿@using System.IO;
+@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+@using MarketplaceBetter.Domain.Model.Catalog.Products;
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+@using MarketplaceBetter.Specialized.Interfaces;
+
+@inject IVariantPhotosService VariantPhotosService
+@inject IPhotoCloudService PhotoCloudService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+
+<MudDialog Style="min-width: 60%;">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Preparing @TotalPhotoCount photos to download.</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer>
+            <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">Downloading photos started. Removing temporary files, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<VariantPhotosModel> VariantPhotos { get; set; }
+
+    private PhotoModel CurrentPhoto;
+    private string CurrentVariant;
+    private double CurrentProgressValue;
+    private int CurrentPhotoNumber = 0;
+    private int TotalPhotoCount;
+    private bool PhotoInfoHidden = false;
+    private bool RemovingInfoHidden = true;
+
+    protected override void OnInitialized()
+    {
+        TotalPhotoCount = VariantPhotos.SelectMany(v => v.Photos).Count();
+
+        Download();
+    }
+
+    private async void Download()
+    {
+        await Task.Delay(500);
+
+        double progressStep = (double)100 / (double)TotalPhotoCount;
+
+        string folderName = DateTime.Now.ToString().Replace(' ', '_').Replace(':', '_').Replace('.', '_');
+
+        foreach (var variantPhoto in VariantPhotos)
+        {
+            foreach (var photo in variantPhoto.Photos)
+            {
+                CurrentPhoto = photo;
+                CurrentVariant = variantPhoto.Variant.Sku;
+                StateHasChanged();
+
+                await Task.Delay(500);
+                VariantPhotosService.PrepareForDownload(variantPhoto.Variant, photo, folderName);
+
+                CurrentProgressValue += progressStep;
+                CurrentPhotoNumber++;
+            }
+        }
+
+        CurrentProgressValue = 100;
+        PhotoInfoHidden = true;
+        RemovingInfoHidden = false;
+        StateHasChanged();
+
+        string downloadUrl = PhotoCloudService.GetDownloadUrl(folderName);
+
+        JS.InvokeVoidAsync("open", downloadUrl, "_black");
+
+        await Task.Delay(5000);
+
+        PhotoCloudService.DeleteDownloadFolder(folderName);
+
+        MudDialog.Close();
+    }
+}

@@ -128,7 +128,10 @@ namespace MarketplaceBetter.Specialized
 
         public void Delete(IList<string> cloudIds)
         {
-            _cloudinary.DeleteResources(ResourceType.Image, cloudIds.ToArray());
+            foreach (var cloudIdsChunk in cloudIds.Chunk(50))
+            {
+                _cloudinary.DeleteResources(ResourceType.Image, cloudIdsChunk);
+            }
         }
 
         public void PrepareForDownload(string cloudId, string version, string fileName)
@@ -145,6 +148,28 @@ namespace MarketplaceBetter.Specialized
             };
 
             _cloudinary.Upload(parameters);
+        }
+
+        public string GetDownloadUrl(string folderName)
+        {
+            ArchiveParams parameters = new ArchiveParams();
+
+            parameters.FlattenFolders(true);
+
+            return _cloudinary.DownloadFolder($"download/{folderName}", parameters);
+        }
+
+        public void DeleteDownloadFolder(string folderName)
+        {
+            string fullFolderName = $"download/{folderName}";
+
+            ListResourcesResult listResult = _cloudinary.ListResourcesByPrefix(fullFolderName);
+
+            IList<string> cloudIds = listResult.Resources.Select(r => r.PublicId).ToList();
+
+            Delete(cloudIds);
+
+            _cloudinary.DeleteFolder(fullFolderName);
         }
 
         private string ClearFileName(string fileName)
