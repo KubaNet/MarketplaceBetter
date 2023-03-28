@@ -34,6 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Child> _childRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IWebHostEnvironment _environment;
+        private readonly string _downloadFolderPath;
 
         public VariantPhotosService(
             IMapper mapper,
@@ -46,6 +47,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _childRepository = unitOfWork.GetRepository<Child>();
             _photoCloudService = photoCloudService;
             _environment = environment;
+            _downloadFolderPath = Path.Combine(_environment.WebRootPath, "_download");
         }
 
         public int CountForListRequest(ListRequest request)
@@ -97,7 +99,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             using HttpClient client = new HttpClient();
             using Stream stream = await client.GetStreamAsync(url);
 
-            string path = Path.Combine(_environment.WebRootPath, "_download", fileName);
+            string path = Path.Combine(_downloadFolderPath, fileName);
             using FileStream file = new FileStream(path, FileMode.Create);
 
             stream.CopyTo(file);
@@ -107,22 +109,35 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         {
             MemoryStream memoryStream = new MemoryStream();
 
-            ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true);
-            string path = Path.Combine(_environment.WebRootPath, "_download");
+            using (ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                foreach (var file in Directory.GetFiles(_downloadFolderPath))
+                {
+                    if (file.Contains("_placeholder", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
 
-            foreach (var file in Directory.GetFiles(path))
+                    archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                }
+            }
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return memoryStream;
+        }
+
+        public void ClearPhotosToDownload()
+        {
+            foreach (var file in Directory.GetFiles(_downloadFolderPath))
             {
                 if (file.Contains("_placeholder", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                File.Delete(file);
             }
-
-            memoryStream.Seek(0, SeekOrigin.Begin);
-
-            return memoryStream;
         }
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)

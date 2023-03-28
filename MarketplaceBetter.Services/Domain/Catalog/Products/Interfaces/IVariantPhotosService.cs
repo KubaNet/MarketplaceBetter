@@ -19,5 +19,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
         void PrepareForDownload(PhotoModel photo, VariantModel variant);
 
         Stream DownloadPhotos();
+
+        void ClearPhotosToDownload();
     }
 }
