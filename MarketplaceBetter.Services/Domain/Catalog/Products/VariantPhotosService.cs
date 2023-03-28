@@ -23,6 +23,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using System.IO.Compression;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -80,20 +81,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             }).ToList();
         }
 
-        public void PrepareForDownload(VariantModel variant, PhotoModel photo)
-        {
-            Child child = _childRepository.SingleOrDefault(c => c.VariantId == variant.Id && c.Asin != null);
-            if (child == null)
-            {
-                return;
-            }
-
-            string fileName = $"{child.Asin}.{photo.Type.AmazonUploadCode}";
-
-            _photoCloudService.PrepareForDownload(photo.CloudId, photo.Version, fileName);
-        }
-
-        public async void DownloadPhoto(PhotoModel photo, VariantModel variant)
+        public async void PrepareForDownload(PhotoModel photo, VariantModel variant)
         {
             Child child = _childRepository.SingleOrDefault(c => c.VariantId == variant.Id && c.Asin != null);
             if (child == null)
@@ -113,6 +101,28 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             using FileStream file = new FileStream(path, FileMode.Create);
 
             stream.CopyTo(file);
+        }
+
+        public Stream DownloadPhotos()
+        {
+            MemoryStream memoryStream = new MemoryStream();
+
+            ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true);
+            string path = Path.Combine(_environment.WebRootPath, "_download");
+
+            foreach (var file in Directory.GetFiles(path))
+            {
+                if (file.Contains("_placeholder", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+            }
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return memoryStream;
         }
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)

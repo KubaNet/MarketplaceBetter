@@ -139,40 +139,6 @@ namespace MarketplaceBetter.Specialized
             }
         }
 
-        public void PrepareForDownload(string cloudId, string version, string fileName)
-        {
-            string fullFileName = $"download/{_instanceFolder}/{fileName}";
-
-            string originalFileUrl = _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
-
-            ImageUploadParams parameters = new ImageUploadParams
-            {
-                AllowedFormats = _allowedFormats,
-                PublicId = fullFileName,
-                File = new FileDescription(fullFileName, originalFileUrl)
-            };
-
-            _cloudinary.Upload(parameters);
-        }
-
-        public string GetDownloadUrl()
-        {
-            ArchiveParams parameters = new ArchiveParams();
-
-            parameters.FlattenFolders(true);
-
-            return _cloudinary.DownloadFolder($"download/{_instanceFolder}", parameters);
-        }
-
-        public void DeleteDownloadFolder()
-        {
-            ListResourcesResult listResult = _cloudinary.ListResourcesByPrefix("download/{_instanceFolder}/");
-
-            IList<string> cloudIds = listResult.Resources.Select(r => r.PublicId).ToList();
-
-            Delete(cloudIds);
-        }
-
         private string ClearFileName(string fileName)
         {
             foreach (var format in _allowedFormats)

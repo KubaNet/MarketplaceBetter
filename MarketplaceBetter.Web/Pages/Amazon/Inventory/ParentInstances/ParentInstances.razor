@@ -116,10 +116,10 @@
 
     private async Task ExportParentInstance(long id, string sku)
     {
-        Stream fileStream = ParentInstanceService.Export(id);
+        using Stream fileStream = ParentInstanceService.Export(id);
 
-        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        using var streamReference = new DotNetStreamReference(fileStream);
 
-        await JS.InvokeVoidAsync("DownloadFileFromStream", $"{sku}.csv", streamRef);
+        await JS.InvokeVoidAsync("DownloadFileFromStream", $"{sku}.csv", streamReference);
     }
 }

@@ -57,7 +57,7 @@
                 StateHasChanged();
 
                 await Task.Delay(500);
-                VariantPhotosService.DownloadPhoto(photo, variantPhoto.Variant);
+                VariantPhotosService.PrepareForDownload(photo, variantPhoto.Variant);
 
                 CurrentProgressValue += progressStep;
                 CurrentPhotoNumber++;
@@ -69,13 +69,15 @@
         RemovingInfoHidden = false;
         StateHasChanged();
 
-        string downloadUrl = PhotoCloudService.GetDownloadUrl();
+        using Stream archiveStream = VariantPhotosService.DownloadPhotos();
 
-        JS.InvokeVoidAsync("open", downloadUrl, "_black");
+        using var streamReference = new DotNetStreamReference(archiveStream);
 
-        await Task.Delay(5000);
+        JS.InvokeVoidAsync("DownloadFileFromStream", "photos.zip", streamReference);
 
-        PhotoCloudService.DeleteDownloadFolder();
+        await Task.Delay(1000);
+
+        //PhotoCloudService.DeleteDownloadFolder();
 
         MudDialog.Close();
     }

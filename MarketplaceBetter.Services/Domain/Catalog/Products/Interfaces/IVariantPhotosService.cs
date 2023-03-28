@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 
         IList<VariantPhotosModel> GetForListRequest(ListRequest request);
 
-        void PrepareForDownload(VariantModel variant, PhotoModel photo);
+        void PrepareForDownload(PhotoModel photo, VariantModel variant);
 
-        void DownloadPhoto(PhotoModel photo, VariantModel variant);
+        Stream DownloadPhotos();
     }
 }
