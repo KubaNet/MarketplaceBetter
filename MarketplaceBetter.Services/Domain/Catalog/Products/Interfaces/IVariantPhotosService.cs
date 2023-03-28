@@ -15,6 +15,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 
         IList<VariantPhotosModel> GetForListRequest(ListRequest request);
 
-        void PrepareForDownload(VariantModel variant, PhotoModel photo, string folder);
+        void PrepareForDownload(VariantModel variant, PhotoModel photo);
+
+        void DownloadPhoto(PhotoModel photo, VariantModel variant);
     }
 }

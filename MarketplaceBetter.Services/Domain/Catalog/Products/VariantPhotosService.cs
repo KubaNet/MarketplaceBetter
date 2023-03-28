@@ -15,9 +15,14 @@ using MarketplaceBetter.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -27,16 +32,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Photo> _repository;
         private readonly IRepository<Child> _childRepository;
         private readonly IPhotoCloudService _photoCloudService;
+        private readonly IWebHostEnvironment _environment;
 
         public VariantPhotosService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IPhotoCloudService photoCloudService)
+            IPhotoCloudService photoCloudService,
+            IWebHostEnvironment environment)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
             _childRepository = unitOfWork.GetRepository<Child>();
             _photoCloudService = photoCloudService;
+            _environment = environment;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -72,7 +80,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             }).ToList();
         }
 
-        public void PrepareForDownload(VariantModel variant, PhotoModel photo, string folder)
+        public void PrepareForDownload(VariantModel variant, PhotoModel photo)
         {
             Child child = _childRepository.SingleOrDefault(c => c.VariantId == variant.Id && c.Asin != null);
             if (child == null)
@@ -80,9 +88,31 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 return;
             }
 
-            string fileName = $"{folder}/{child.Asin}.{photo.Type.AmazonUploadCode}";
+            string fileName = $"{child.Asin}.{photo.Type.AmazonUploadCode}";
 
             _photoCloudService.PrepareForDownload(photo.CloudId, photo.Version, fileName);
+        }
+
+        public async void DownloadPhoto(PhotoModel photo, VariantModel variant)
+        {
+            Child child = _childRepository.SingleOrDefault(c => c.VariantId == variant.Id && c.Asin != null);
+            if (child == null)
+            {
+                return;
+            }
+
+            string url = _photoCloudService.GetOriginalPhotoUrl(photo.CloudId, photo.Version);
+            string format = _photoCloudService.GetPhotoFormat(photo.CloudId);
+
+            string fileName = $"{child.Asin}.{photo.Type.AmazonUploadCode}.{format}";
+
+            using HttpClient client = new HttpClient();
+            using Stream stream = await client.GetStreamAsync(url);
+
+            string path = Path.Combine(_environment.WebRootPath, "_download", fileName);
+            using FileStream file = new FileStream(path, FileMode.Create);
+
+            stream.CopyTo(file);
         }
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)

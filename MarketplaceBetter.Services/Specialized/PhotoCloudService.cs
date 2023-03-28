@@ -95,6 +95,11 @@ namespace MarketplaceBetter.Specialized
             return _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
         }
 
+        public string GetPhotoFormat(string cloudId)
+        {
+            return _cloudinary.GetResource(cloudId).Format;
+        }
+
         public string GetPhotoUrlForLists(string cloudId, string version, PhotoOnListSizeEnum size)
         {
             int width;
@@ -136,7 +141,7 @@ namespace MarketplaceBetter.Specialized
 
         public void PrepareForDownload(string cloudId, string version, string fileName)
         {
-            string fullFileName = $"download/{fileName}";
+            string fullFileName = $"download/{_instanceFolder}/{fileName}";
 
             string originalFileUrl = _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
 
@@ -150,26 +155,22 @@ namespace MarketplaceBetter.Specialized
             _cloudinary.Upload(parameters);
         }
 
-        public string GetDownloadUrl(string folderName)
+        public string GetDownloadUrl()
         {
             ArchiveParams parameters = new ArchiveParams();
 
             parameters.FlattenFolders(true);
 
-            return _cloudinary.DownloadFolder($"download/{folderName}", parameters);
+            return _cloudinary.DownloadFolder($"download/{_instanceFolder}", parameters);
         }
 
-        public void DeleteDownloadFolder(string folderName)
+        public void DeleteDownloadFolder()
         {
-            string fullFolderName = $"download/{folderName}";
-
-            ListResourcesResult listResult = _cloudinary.ListResourcesByPrefix(fullFolderName);
+            ListResourcesResult listResult = _cloudinary.ListResourcesByPrefix("download/{_instanceFolder}/");
 
             IList<string> cloudIds = listResult.Resources.Select(r => r.PublicId).ToList();
 
             Delete(cloudIds);
-
-            _cloudinary.DeleteFolder(fullFolderName);
         }
 
         private string ClearFileName(string fileName)

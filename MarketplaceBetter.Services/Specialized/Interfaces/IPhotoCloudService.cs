@@ -19,6 +19,8 @@ namespace MarketplaceBetter.Specialized.Interfaces
 
         string GetOriginalPhotoUrl(string cloudId, string version);
 
+        string GetPhotoFormat(string cloudId);
+
         string GetPhotoUrlForLists(string cloudId, string version, PhotoOnListSizeEnum size);
 
         string GetBiggerPhotoUrlForLists(string cloudId, string version);
@@ -29,8 +31,8 @@ namespace MarketplaceBetter.Specialized.Interfaces
 
         void PrepareForDownload(string cloudId, string version, string fileName);
 
-        string GetDownloadUrl(string folderName);
+        string GetDownloadUrl();
 
-        void DeleteDownloadFolder(string folderName);
+        void DeleteDownloadFolder();
     }
 }

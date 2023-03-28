@@ -17,7 +17,7 @@
     <DialogContent>
         <MudContainer>
             <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
-            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b>. Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
             <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">Downloading photos started. Removing temporary files, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
         </MudContainer>
     </DialogContent>
@@ -48,8 +48,6 @@
 
         double progressStep = (double)100 / (double)TotalPhotoCount;
 
-        string folderName = DateTime.Now.ToString().Replace(' ', '_').Replace(':', '_').Replace('.', '_');
-
         foreach (var variantPhoto in VariantPhotos)
         {
             foreach (var photo in variantPhoto.Photos)
@@ -59,7 +57,7 @@
                 StateHasChanged();
 
                 await Task.Delay(500);
-                VariantPhotosService.PrepareForDownload(variantPhoto.Variant, photo, folderName);
+                VariantPhotosService.DownloadPhoto(photo, variantPhoto.Variant);
 
                 CurrentProgressValue += progressStep;
                 CurrentPhotoNumber++;
@@ -71,13 +69,13 @@
         RemovingInfoHidden = false;
         StateHasChanged();
 
-        string downloadUrl = PhotoCloudService.GetDownloadUrl(folderName);
+        string downloadUrl = PhotoCloudService.GetDownloadUrl();
 
         JS.InvokeVoidAsync("open", downloadUrl, "_black");
 
         await Task.Delay(5000);
 
-        PhotoCloudService.DeleteDownloadFolder(folderName);
+        PhotoCloudService.DeleteDownloadFolder();
 
         MudDialog.Close();
     }
