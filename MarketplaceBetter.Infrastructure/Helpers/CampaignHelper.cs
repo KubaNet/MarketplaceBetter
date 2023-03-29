@@ -1,7 +1,7 @@
 ﻿using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;

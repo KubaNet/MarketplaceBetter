@@ -1,5 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Sales;
+﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

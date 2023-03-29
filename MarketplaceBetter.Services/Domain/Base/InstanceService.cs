@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Sales;
-using MarketplaceBetter.Domain.Model.Sales;
+using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
-using MarketplaceBetter.Services.Domain.Sales.Interfaces;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Domain.Sales
+namespace MarketplaceBetter.Services.Domain.Base
 {
     public class InstanceService : IInstanceService
     {

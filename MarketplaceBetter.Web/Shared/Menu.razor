@@ -90,6 +90,18 @@
             <MudNavLink Href="/researches" Icon="@Icons.Material.Filled.ManageSearch">Keywords</MudNavLink>
         }
     </MudNavGroup>
+    <MudNavGroup Title="Sales" Icon="@Icons.Material.Filled.MonetizationOn" Expanded="true" HideExpandIcon="true">
+        @if (IsInputDataModule())
+        {
+            <MudNavGroup Title="Input Data" Icon="@Icons.Material.Filled.TableView" Expanded="true" HideExpandIcon="true">
+                <MudNavLink Href="/amazon-fulfilled-shipments">Amazon Shipments</MudNavLink>
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="/amazon-fulfilled-shipments" Icon="@Icons.Material.Filled.TableView">Input Data</MudNavLink>
+        }
+    </MudNavGroup>
 </MudNavMenu>
 
 @code {
@@ -192,6 +204,18 @@
         if (path == "researches"
             || path == "research-targets"
             || path == "research-results")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool IsInputDataModule()
+    {
+        string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
+
+        if (path == "amazon-fulfilled-shipments")
         {
             return true;
         }

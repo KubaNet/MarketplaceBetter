@@ -1,5 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
-using MarketplaceBetter.Domain.Entities.Sales;
+﻿using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

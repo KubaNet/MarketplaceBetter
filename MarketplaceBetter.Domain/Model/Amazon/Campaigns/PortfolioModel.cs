@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Sales;
+﻿using MarketplaceBetter.Domain.Model.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

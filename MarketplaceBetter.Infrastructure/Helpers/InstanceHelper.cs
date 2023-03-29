@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Domain.Entities.Sales;
+﻿using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;

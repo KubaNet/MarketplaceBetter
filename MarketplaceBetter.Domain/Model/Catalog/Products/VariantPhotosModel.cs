@@ -1,5 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
-using MarketplaceBetter.Domain.Model.Sales;
+﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using System;
 using System.Collections.Generic;
 using System.Linq;

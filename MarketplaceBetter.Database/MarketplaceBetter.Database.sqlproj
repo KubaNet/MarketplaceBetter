@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Template.sql" />
-    <Build Include="dbo\Tables\Sales\Instance.sql" />
     <None Include="Scripts\Inserts\02_Instances.sql" />
     <Build Include="dbo\Tables\Base\Country.sql" />
     <None Include="Scripts\Inserts\01_Countries.sql" />
@@ -138,5 +137,6 @@
     <Build Include="dbo\Tables\Catalog\Products\Collection.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Product.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Variant.sql" />
+    <Build Include="dbo\Tables\Base\Instance.sql" />
   </ItemGroup>
 </Project>

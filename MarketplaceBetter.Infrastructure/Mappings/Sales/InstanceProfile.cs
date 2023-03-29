@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Sales;
-using MarketplaceBetter.Domain.Model.Sales;
+using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Model.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

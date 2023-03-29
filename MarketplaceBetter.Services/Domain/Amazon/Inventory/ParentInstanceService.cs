@@ -2,10 +2,10 @@
 using CsvHelper;
 using CsvHelper.Configuration;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
-using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Infrastructure.Data;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Entities.Sales
+namespace MarketplaceBetter.Domain.Entities.Base
 {
     public class Instance : Entity
     {

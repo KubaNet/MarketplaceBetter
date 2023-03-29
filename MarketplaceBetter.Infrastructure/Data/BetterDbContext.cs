@@ -4,13 +4,13 @@ using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
-using MarketplaceBetter.Domain.Entities.Sales;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarketplaceBetter.Domain.Entities.Base;
 
 namespace MarketplaceBetter.Infrastructure.Data
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
-using MarketplaceBetter.Domain.Entities.Sales;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;

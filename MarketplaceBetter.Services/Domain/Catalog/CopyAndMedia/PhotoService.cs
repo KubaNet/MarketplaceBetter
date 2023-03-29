@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
-using MarketplaceBetter.Domain.Entities.Sales;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Sales;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
-using MarketplaceBetter.Services.Domain.Sales.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;

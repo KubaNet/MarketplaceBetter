@@ -4,4 +4,9 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\Sales\InputData\" />
+    <Folder Include="Model\Sales\" />
+  </ItemGroup>
+
 </Project>
