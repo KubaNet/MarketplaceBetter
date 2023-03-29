@@ -11,6 +11,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
     {
         BrandModel Get(long id);
 
+        BrandModel GetByName(string name);
+
         IList<BrandModel> GetAll();
 
         void Add(BrandModel brand);

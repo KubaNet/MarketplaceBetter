@@ -1,5 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+@using MarketplaceBetter.Services.Specialized.Interfaces;
+
+@inject IBrandService BrandService
+@inject ICurrentBrandService CurrentBrandService
+
 <AuthorizeView>
     <Authorized>
         <MudThemeProvider Theme="BetterTheme" />
@@ -8,7 +15,19 @@
 
         <MudLayout>
             <MudAppBar Dense="true" Elevation="1">
-                <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
+                <div class="d-flex flex-grow-1">
+                    <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
+                    <div class="flex-grow-1"></div>
+                    <div>
+                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
+                            <MudSelectItem Value="AllBrands">@AllBrands.Name</MudSelectItem>
+                            @foreach (var brand in Brands)
+                            {
+                                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </div>
+                </div>
             </MudAppBar>
             <MudDrawer Open="true" ClipMode="DrawerClipMode.Always" Elevation="2">
                 <Menu />
@@ -26,6 +45,27 @@
 </AuthorizeView>
 
 @code{
+    private BrandModel AllBrands = new BrandModel() { Name = "All" };
+    private BrandModel Brand;
+    private IList<BrandModel> Brands;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll();
+        Brand = AllBrands;
+
+        OnSelectedBrandChange(Brand);
+    }
+
+    private void OnSelectedBrandChange(BrandModel brand)
+    {
+        Brand = brand;
+
+        CurrentBrandService.SetCurrentBrand(brand);
+    }
+
     MudTheme BetterTheme = new MudTheme()
     {
         Palette = new Palette()

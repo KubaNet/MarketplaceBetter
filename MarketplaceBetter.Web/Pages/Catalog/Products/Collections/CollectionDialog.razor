@@ -13,9 +13,9 @@
         <DataAnnotationsValidator />
         <MudTextField Label="Name" @bind-Value="Collection.Name" For="() => Collection.Name" />
         <MudSelect Label="Brand" T="BrandModel" @bind-Value="Collection.Brand" For="() => Collection.Brand">
-            @foreach (var group in Brands)
+            @foreach (var brand in Brands)
             {
-                <MudSelectItem Value="group">@group.Name</MudSelectItem>
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
     </FormDialog>
