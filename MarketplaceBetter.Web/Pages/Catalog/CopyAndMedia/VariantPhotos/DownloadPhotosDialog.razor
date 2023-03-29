@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Domain.Model.Catalog.Products;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Specialized.Interfaces;
+@using System.Threading;
 
 @inject IVariantPhotosService VariantPhotosService
 @inject IPhotoCloudService PhotoCloudService
@@ -18,7 +19,7 @@
         <MudContainer>
             <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
             <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b>. Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
-            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">Downloading photos started. Removing temporary files, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">All photos prepared. Downloading will start soon, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
         </MudContainer>
     </DialogContent>
 </MudDialog>
@@ -69,13 +70,13 @@
         RemovingInfoHidden = false;
         StateHasChanged();
 
-        using Stream archiveStream = VariantPhotosService.DownloadPhotos();
+        Stream archiveStream = VariantPhotosService.DownloadPhotos();
 
-        using var streamReference = new DotNetStreamReference(archiveStream);
+        DotNetStreamReference streamReference = new DotNetStreamReference(archiveStream);
 
-        JS.InvokeVoidAsync("DownloadFileFromStream", "photos.zip", streamReference);
+        await JS.InvokeVoidAsync("DownloadFileFromStream", CancellationToken.None, "photos.zip", streamReference);
 
-        await Task.Delay(1000);
+        await Task.Delay(500);
 
         VariantPhotosService.ClearPhotosToDownload();
 
