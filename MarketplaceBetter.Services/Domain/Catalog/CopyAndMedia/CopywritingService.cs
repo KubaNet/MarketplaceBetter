@@ -7,6 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -18,17 +19,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
     public class CopywritingService : ICopywritingService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Copywriting> _repository;
-        private readonly IMapper _mapper;
+        private readonly ICurrentBrandService _currentBrandService;
 
         public CopywritingService(
+            IMapper mapper,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            ICurrentBrandService currentBrandService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Copywriting>();
-            _mapper = mapper;
+            _currentBrandService = currentBrandService;
         }
 
         public CopywritingModel Get(long id) => _mapper.Map<CopywritingModel>(_repository.Get(id));
@@ -91,6 +95,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Copywriting> ApplyFilter(IQueryable<Copywriting> copywritings, ListRequest request)
         {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                copywritings = copywritings.Where(c => c.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return copywritings;

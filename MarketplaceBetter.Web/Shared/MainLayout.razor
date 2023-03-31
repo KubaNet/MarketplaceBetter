@@ -20,10 +20,10 @@
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudSelect T="long" Value="BrandId" Label="Brand" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
+                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
                             @foreach (var brand in Brands)
                             {
-                                <MudSelectItem Value="brand.Id">@brand.Name</MudSelectItem>
+                                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
                             }
                         </MudSelect>
                     </div>
@@ -46,7 +46,7 @@
 
 @code{
     private BrandModel AllBrands = new BrandModel() { Name = "All" };
-    private long BrandId;
+    private BrandModel Brand;
     private List<BrandModel> Brands;
 
     protected override void OnInitialized()
@@ -59,15 +59,19 @@
 
         if (CurrentBrandService.IsSpecificBrand())
         {
-            BrandId = CurrentBrandService.GetCurrentBrand().Id;
+            Brand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+        }
+        else
+        {
+            Brand = Brands.Single(b => b.Id == 0);
         }
     }
 
-    private void OnSelectedBrandChange(long brandId)
+    private void OnSelectedBrandChange(BrandModel brand)
     {
-        BrandId = brandId;
+        Brand = brand;
 
-        CurrentBrandService.SetCurrentBrand(brandId);
+        CurrentBrandService.SetCurrentBrand(brand);
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }

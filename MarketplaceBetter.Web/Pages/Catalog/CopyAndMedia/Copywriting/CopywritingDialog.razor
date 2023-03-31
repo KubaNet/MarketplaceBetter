@@ -4,15 +4,17 @@
 @using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces
 
+@inject ISnackbar Snackbar
 @inject ICopywritingService CopywritingService
 @inject ICopywritingValidator CopywritingValidator
 @inject IBrandService BrandService
 @inject IProductService ProductService
 @inject IInstanceService InstanceService
 @inject ICopywritingElementService CopywritingElementService
-@inject ISnackbar Snackbar
+@inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="Copywriting" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -77,6 +79,13 @@
         {
             SetInitialValues();
         }
+        else
+        {
+            if (CurrentBrandService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+        }
     }
 
     private void SetInitialValues()
@@ -94,6 +103,13 @@
         Copywriting.Product = Products.Single(p => p.Id == Copywriting.Product.Id);
         Copywriting.Instance = Instances.Single(i => i.Id == Copywriting.Instance.Id);
         Copywriting.Element = Elements.Single(e => e.Id == Copywriting.Element.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+
+        HandleBrandChanged(currentBrand);
     }
 
     private void HandleBrandChanged(BrandModel brand)

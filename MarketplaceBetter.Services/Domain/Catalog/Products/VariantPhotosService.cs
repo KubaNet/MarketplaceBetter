@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO.Compression;
 using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Specialized;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -33,6 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Photo> _repository;
         private readonly IRepository<Child> _childRepository;
         private readonly IPhotoCloudService _photoCloudService;
+        private readonly ICurrentBrandService _currentBrandService;
         private readonly IWebHostEnvironment _environment;
         private readonly string _downloadFolderPath;
 
@@ -40,12 +43,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
+            ICurrentBrandService currentBrandService,
             IWebHostEnvironment environment)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
             _childRepository = unitOfWork.GetRepository<Child>();
             _photoCloudService = photoCloudService;
+            _currentBrandService = currentBrandService;
             _environment = environment;
             _downloadFolderPath = Path.Combine(_environment.WebRootPath, "_download");
         }
@@ -142,6 +147,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return photos;

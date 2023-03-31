@@ -12,7 +12,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variant Photos</MudText>
 
 <MainBody>
-    <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(ReloadVariantPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(ReloadVariantPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariantPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -58,6 +58,7 @@
 
     private HashSet<VariantPhotosModel> SelectedVariantPhotos = new HashSet<VariantPhotosModel>();
     private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
     {
@@ -87,6 +88,11 @@
         IList<VariantPhotosModel> variantPhotos = VariantPhotosService.GetForListRequest(ListRequest);
 
         return Task.FromResult(new TableData<VariantPhotosModel>() { TotalItems = VariantPhotosService.CountForListRequest(ListRequest), Items = variantPhotos });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
     }
 
     private void FilterVariantPhotos(string searchString)

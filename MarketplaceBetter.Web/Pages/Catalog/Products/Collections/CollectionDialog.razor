@@ -1,11 +1,13 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.Products.Interfaces
 
+@inject ISnackbar Snackbar
 @inject ICollectionService CollectionService
 @inject IBrandService BrandService
 @inject ICollectionValidator CollectionValidator
-@inject ISnackbar Snackbar
+@inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="Collection" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -42,12 +44,26 @@
         {
             SetInitialValues();
         }
+        else
+        {
+            if (CurrentBrandService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+        }
     }
 
     private void SetInitialValues()
     {
         Collection = CollectionService.Get(CollectionId);
         Collection.Brand = Brands.Single(b => b.Id == Collection.Brand.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+
+        Collection.Brand = currentBrand;
     }
 
     private void HandleValidSubmit()
