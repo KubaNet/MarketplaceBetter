@@ -6,6 +6,7 @@
 
 @inject IBrandService BrandService
 @inject ICurrentBrandService CurrentBrandService
+@inject NavigationManager NavigationManager
 
 <AuthorizeView>
     <Authorized>
@@ -19,11 +20,10 @@
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
-                            <MudSelectItem Value="AllBrands">@AllBrands.Name</MudSelectItem>
+                        <MudSelect T="long" Value="BrandId" Label="Brand" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
                             @foreach (var brand in Brands)
                             {
-                                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+                                <MudSelectItem Value="brand.Id">@brand.Name</MudSelectItem>
                             }
                         </MudSelect>
                     </div>
@@ -46,24 +46,30 @@
 
 @code{
     private BrandModel AllBrands = new BrandModel() { Name = "All" };
-    private BrandModel Brand;
-    private IList<BrandModel> Brands;
+    private long BrandId;
+    private List<BrandModel> Brands;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Brands = BrandService.GetAll();
-        Brand = AllBrands;
+        Brands = new List<BrandModel>();
+        Brands.Add(AllBrands);
+        Brands.AddRange(BrandService.GetAll());
 
-        OnSelectedBrandChange(Brand);
+        if (CurrentBrandService.IsSpecificBrand())
+        {
+            BrandId = CurrentBrandService.GetCurrentBrand().Id;
+        }
     }
 
-    private void OnSelectedBrandChange(BrandModel brand)
+    private void OnSelectedBrandChange(long brandId)
     {
-        Brand = brand;
+        BrandId = brandId;
 
-        CurrentBrandService.SetCurrentBrand(brand);
+        CurrentBrandService.SetCurrentBrand(brandId);
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 
     MudTheme BetterTheme = new MudTheme()

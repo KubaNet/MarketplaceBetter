@@ -72,7 +72,7 @@
 		base.OnInitialized();
 
 		Instances = InstanceService.GetAllNormal();
-		Brands = BrandService.GetAll();
+		Brands = BrandService.GetAll(true);
 
 		if (IsEdit || AddingSimilar)
 		{

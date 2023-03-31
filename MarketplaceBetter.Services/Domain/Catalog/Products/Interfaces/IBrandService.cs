@@ -15,6 +15,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 
         IList<BrandModel> GetAll();
 
+        IList<BrandModel> GetAll(bool onlyCurrent);
+
         void Add(BrandModel brand);
 
         void Update(BrandModel brand);

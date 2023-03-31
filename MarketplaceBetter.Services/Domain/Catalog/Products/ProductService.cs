@@ -7,6 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using System;
@@ -19,22 +20,37 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
     public class ProductService : IProductService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Product> _repository;
-        private readonly IMapper _mapper;
+        private readonly ICurrentBrandService _currentBrandService;
 
         public ProductService(
+            IMapper mapper,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            ICurrentBrandService currentBrandService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Product>();
-            _mapper = mapper;
+            _currentBrandService = currentBrandService;
         }
 
         public ProductModel Get(long id) => _mapper.Map<ProductModel>(_repository.Get(id));
 
-        public IList<ProductModel> GetAll() => _mapper.Map<IList<ProductModel>>(_repository.GetQuery().OrderBy(g => g.Name));
+        public IList<ProductModel> GetAll()
+        {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                BrandModel currentBrand = _currentBrandService.GetCurrentBrand();
+
+                return _mapper.Map<IList<ProductModel>>(_repository.Where(p => p.BrandId == currentBrand.Id).OrderBy(g => g.Name));
+            }
+            else
+            {
+                return _mapper.Map<IList<ProductModel>>(_repository.GetQuery().OrderBy(g => g.Name));
+            }
+        }
 
         public IList<ProductModel> GetAllForBrand(long brandId) => _mapper.Map<IList<ProductModel>>(_repository.GetQuery().Where(p => p.BrandId == brandId).OrderBy(p => p.Order));
 
@@ -103,6 +119,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
         {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                products = products.Where(p => p.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return products;

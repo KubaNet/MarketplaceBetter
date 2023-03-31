@@ -69,7 +69,7 @@
     {
         base.OnInitialized();
 
-        Brands = BrandService.GetAll();
+        Brands = BrandService.GetAll(true);
         Instances = InstanceService.GetAllNormal();
         Elements = CopywritingElementService.GetAll();
 

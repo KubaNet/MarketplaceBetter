@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,24 +14,39 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
     public class BrandService : IBrandService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Brand> _repository;
-        private readonly IMapper _mapper;
+        private readonly ICurrentBrandService _currentBrandService;
 
         public BrandService(
+            IMapper mapper,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            ICurrentBrandService currentBrandService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Brand>();
-            _mapper = mapper;
+            _currentBrandService = currentBrandService;
         }
 
         public BrandModel Get(long id) => _mapper.Map<BrandModel>(_repository.Get(id));
 
         public BrandModel GetByName(string name) => _mapper.Map<BrandModel>(_repository.Single(b => b.Name == name));
 
-        public IList<BrandModel> GetAll() => _mapper.Map<IList<BrandModel>>(_repository.GetQuery().OrderBy(b => b.Id));
+        public IList<BrandModel> GetAll() => GetAll(false);
+
+        public IList<BrandModel> GetAll(bool onlyCurrent)
+        {
+            if (onlyCurrent && _currentBrandService.IsSpecificBrand())
+            {
+                return _mapper.Map<IList<BrandModel>>(_repository.Where(b => b.Id == _currentBrandService.GetCurrentBrand().Id));
+            }
+            else
+            {
+                return _mapper.Map<IList<BrandModel>>(_repository.GetQuery().OrderBy(b => b.Name));
+            }
+        }
 
         public void Add(BrandModel brand)
         {

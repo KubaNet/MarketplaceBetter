@@ -36,7 +36,7 @@
     {
         base.OnInitialized();
 
-        Brands = BrandService.GetAll();
+        Brands = BrandService.GetAll(true);
 
         if (IsEdit)
         {

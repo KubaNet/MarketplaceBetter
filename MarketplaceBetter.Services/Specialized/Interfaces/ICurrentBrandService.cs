@@ -11,6 +11,10 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
     {
         void SetCurrentBrand(BrandModel brand);
 
-        Task<BrandModel> GetCurrentBrand();
+        void SetCurrentBrand(long brandId);
+
+        BrandModel GetCurrentBrand();
+
+        bool IsSpecificBrand();
     }
 }

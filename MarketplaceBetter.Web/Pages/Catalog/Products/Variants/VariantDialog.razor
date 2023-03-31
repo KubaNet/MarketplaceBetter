@@ -79,7 +79,7 @@
     {
         base.OnInitialized();
 
-        Brands = BrandService.GetAll();
+        Brands = BrandService.GetAll(true);
         Statuses = StatusService.GetAll();
 
         Variant.Status = Statuses.Single(s => s.SystemName == VariantStatusEnum.Active);

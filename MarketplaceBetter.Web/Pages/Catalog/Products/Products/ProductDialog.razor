@@ -2,6 +2,7 @@
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.Products.Interfaces
 
 @inject IProductService ProductService
@@ -10,6 +11,7 @@
 @inject ICollectionService CollectionService
 @inject IColorGroupService ColorGroupService
 @inject ISizeGroupService SizeGroupService
+@inject ICurrentBrandService CurrentBrandService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
@@ -24,19 +26,19 @@
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Collection" T="CollectionModel" @bind-Value="Product.Collection" For="() => Product.Collection" Disabled="CollectionSelectDisabled">
+        <MudSelect Label="Collection" T="CollectionModel" @bind-Value="Product.Collection" For="() => Product.Collection" Disabled="CollectionDisabled">
             @foreach (var collection in Collections)
             {
                 <MudSelectItem Value="collection">@collection.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Color group" T="ColorGroupModel" @bind-Value="Product.ColorGroup" For="() => Product.ColorGroup">
+        <MudSelect Label="Color group" T="ColorGroupModel" @bind-Value="Product.ColorGroup" For="() => Product.ColorGroup" Disabled="ColorGroupDisabled">
             @foreach (var colorGroup in ColorGroups)
             {
                 <MudSelectItem Value="colorGroup">@colorGroup.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Size group" T="SizeGroupModel" @bind-Value="Product.SizeGroup" For="() => Product.SizeGroup">
+        <MudSelect Label="Size group" T="SizeGroupModel" @bind-Value="Product.SizeGroup" For="() => Product.SizeGroup" Disabled="SizeGroupDisabled">
             @foreach (var sizeGroup in SizeGroups)
             {
                 <MudSelectItem Value="sizeGroup">@sizeGroup.Name</MudSelectItem>
@@ -57,18 +59,18 @@
 
     private IList<BrandModel> Brands;
     private IList<CollectionModel> Collections = new List<CollectionModel>();
-    private IList<ColorGroupModel> ColorGroups;
-    private IList<SizeGroupModel> SizeGroups;
+    private IList<ColorGroupModel> ColorGroups = new List<ColorGroupModel>();
+    private IList<SizeGroupModel> SizeGroups = new List<SizeGroupModel>();
 
-    private bool CollectionSelectDisabled = true;
+    private bool CollectionDisabled = true;
+    private bool ColorGroupDisabled = true;
+    private bool SizeGroupDisabled = true;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Brands = BrandService.GetAll();
-        ColorGroups = ColorGroupService.GetAll();
-        SizeGroups = SizeGroupService.GetAll();
+        Brands = BrandService.GetAll(true);
 
         Product.Order = ProductService.GetMaxOrder() + 1;
 
@@ -76,18 +78,37 @@
         {
             SetInitialValues();
         }
+        else
+        {
+            if (CurrentBrandService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+        }
     }
 
     private void SetInitialValues()
     {
         Product = ProductService.Get(ProductId);
         Product.Brand = Brands.Single(b => b.Id == Product.Brand.Id);
-        Product.ColorGroup = ColorGroups.Single(g => g.Id == Product.ColorGroup.Id);
-        Product.SizeGroup = SizeGroups.Single(g => g.Id == Product.SizeGroup.Id);
 
         ActivateCollection(Product.Brand.Id);
+        ActivateColorGroup(Product.Brand.Id);
+        ActivateSizeGroup(Product.Brand.Id);
 
         Product.Collection = Collections.Single(c => c.Id == Product.Collection.Id);
+        Product.ColorGroup = ColorGroups.Single(g => g.Id == Product.ColorGroup.Id);
+        Product.SizeGroup = SizeGroups.Single(g => g.Id == Product.SizeGroup.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = CurrentBrandService.GetCurrentBrand();
+        Product.Brand = Brands.Single(b => b.Id == currentBrand.Id);
+
+        ActivateCollection(Product.Brand.Id);
+        ActivateColorGroup(Product.Brand.Id);
+        ActivateSizeGroup(Product.Brand.Id);
     }
 
     private void HandleBrandChanged(BrandModel brand)
@@ -95,20 +116,51 @@
         Product.Brand = brand;
 
         ResetCollection();
+        ResetColorGroup();
+        ResetSizeGroup();
+
         ActivateCollection(brand.Id);
+        ActivateColorGroup(brand.Id);
+        ActivateSizeGroup(brand.Id);
     }
 
     private void ResetCollection()
     {
         Product.Collection = null;
-        CollectionSelectDisabled = true;
+        CollectionDisabled = true;
         Collections = new List<CollectionModel>();
     }
 
     private void ActivateCollection(long brandId)
     {
-        CollectionSelectDisabled = false;
+        CollectionDisabled = false;
         Collections = CollectionService.GetAllForBrand(brandId);
+    }
+
+    private void ResetColorGroup()
+    {
+        Product.ColorGroup = null;
+        ColorGroupDisabled = true;
+        ColorGroups = new List<ColorGroupModel>();
+    }
+
+    private void ActivateColorGroup(long brandId)
+    {
+        ColorGroupDisabled = false;
+        ColorGroups = ColorGroupService.GetAllForBrand(brandId);
+    }
+
+    private void ResetSizeGroup()
+    {
+        Product.SizeGroup = null;
+        SizeGroupDisabled = true;
+        SizeGroups = new List<SizeGroupModel>();
+    }
+
+    private void ActivateSizeGroup(long brandId)
+    {
+        SizeGroupDisabled = false;
+        SizeGroups = SizeGroupService.GetAllForBrand(brandId);
     }
 
     private void HandleValidSubmit()

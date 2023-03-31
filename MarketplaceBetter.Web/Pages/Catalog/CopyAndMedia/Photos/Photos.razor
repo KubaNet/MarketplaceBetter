@@ -44,7 +44,6 @@
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
             <MudTd>
-                @*<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarPhoto(context.Id))">Add</MudButton>*@
                 <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.FileName))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
