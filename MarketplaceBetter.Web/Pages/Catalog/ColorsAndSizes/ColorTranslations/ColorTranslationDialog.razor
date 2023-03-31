@@ -4,15 +4,17 @@
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes.Interfaces
 
+@inject ISnackbar Snackbar
 @inject IColorTranslationService ColorTranslationService
 @inject IColorTranslationValidator ColorTranslationValidator
 @inject IInstanceService InstanceService
 @inject IBrandService BrandService
 @inject IColorGroupService ColorGroupService
 @inject IColorService ColorService
-@inject ISnackbar Snackbar
+@inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="ColorTranslation" OnValidSubmit="@HandleValidSubmit">
 	<CustomValidation @ref="CustomValidation" />
@@ -78,6 +80,13 @@
 		{
 			SetInitialValues();
 		}
+		else
+		{
+			if (CurrentBrandService.IsSpecificBrand())
+			{
+				SetValuesForCurrentBrand();
+			}
+		}
 	}
 
 	private void SetInitialValues()
@@ -95,6 +104,13 @@
 		Brand = Brands.Single(b => b.Id == ColorTranslation.Color.Group.Brand.Id);
 		ColorGroup = ColorGroups.Single(g => g.Id == ColorTranslation.Color.Group.Id);
 		ColorTranslation.Color = Colors.Single(c => c.Id == ColorTranslation.Color.Id);
+	}
+
+	private void SetValuesForCurrentBrand()
+	{
+		BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+
+		HandleBrandChanged(currentBrand);
 	}
 
 	private void HandleBrandChanged(BrandModel brand)

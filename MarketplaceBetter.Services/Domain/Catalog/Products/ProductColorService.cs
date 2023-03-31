@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
@@ -9,6 +10,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -24,20 +26,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Variant> _repository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Color> _colorRepository;
-        private readonly IRepository<VariantStatus> _variantStatusRepository;
+		private readonly ICurrentBrandService _currentBrandService;
 
-        public ProductColorService(
+		public ProductColorService(
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ICurrentBrandService currentBrandService)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Variant>();
-            _productRepository = unitOfWork.GetRepository<Product>();
-            _colorRepository = unitOfWork.GetRepository<Color>();
-            _variantStatusRepository = unitOfWork.GetRepository<VariantStatus>();
-        }
+            _currentBrandService = currentBrandService;
+		}
 
         public int CountForListRequest(ListRequest request)
         {
@@ -75,7 +74,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.SearchString))
+			if (_currentBrandService.IsSpecificBrand())
+			{
+				variants = variants.Where(v => v.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+			}
+
+			if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return variants;
             }

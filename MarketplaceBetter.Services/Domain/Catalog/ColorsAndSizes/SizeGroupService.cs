@@ -7,6 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -18,17 +19,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 {
     public class SizeGroupService : ISizeGroupService
     {
-        private readonly IUnitOfWork _unitOfWork;
+		private readonly IMapper _mapper;
+		private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<SizeGroup> _repository;
-        private readonly IMapper _mapper;
+		private readonly ICurrentBrandService _currentBrandService;
 
-        public SizeGroupService(
-            IUnitOfWork unitOfWork,
-            IMapper mapper)
+		public SizeGroupService(
+			IMapper mapper,
+			IUnitOfWork unitOfWork,
+            ICurrentBrandService currentBrandService)
         {
-            _unitOfWork = unitOfWork;
+			_mapper = mapper;
+			_unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<SizeGroup>();
-            _mapper = mapper;
+            _currentBrandService = currentBrandService;
         }
 
         public SizeGroupModel Get(long id) => _mapper.Map<SizeGroupModel>(_repository.Get(id));
@@ -85,7 +89,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<SizeGroup> ApplyFilter(IQueryable<SizeGroup> groups, ListRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.SearchString))
+			if (_currentBrandService.IsSpecificBrand())
+			{
+				groups = groups.Where(g => g.BrandId == _currentBrandService.GetCurrentBrand().Id);
+			}
+
+			if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return groups;
             }
@@ -101,17 +110,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
                 {
                     groups = searchField.Name switch
                     {
-                        "id" => groups.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
-                        "name" => groups.Where(p => p.Name.Contains(searchField.Value)),
-                        "brand" => groups.Where(p => p.Brand.Name.Contains(searchField.Value)),
+                        "id" => groups.Where(g => g.Id == searchField.Value.ParseToIntOrDefault()),
+                        "name" => groups.Where(g => g.Name.Contains(searchField.Value)),
+                        "brand" => groups.Where(g => g.Brand.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    groups = groups.Where(p => p.Id == searchString.ParseToIntOrDefault()
-                        || p.Name.Contains(searchString)
-                        || p.Brand.Name.Contains(searchString));
+                    groups = groups.Where(g => g.Id == searchString.ParseToIntOrDefault()
+                        || g.Name.Contains(searchString)
+                        || g.Brand.Name.Contains(searchString));
                 }
             }
 
@@ -124,9 +133,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
             {
                 groups = request.SortBy switch
                 {
-                    "id" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(p => p.Id) : groups.OrderByDescending(p => p.Id),
-                    "name" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(p => p.Name) : groups.OrderByDescending(p => p.Name),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(p => p.Brand.Name) : groups.OrderByDescending(p => p.Brand.Name),
+                    "id" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(g => g.Id) : groups.OrderByDescending(g => g.Id),
+                    "name" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(g => g.Name) : groups.OrderByDescending(g => g.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? groups.OrderBy(g => g.Brand.Name) : groups.OrderByDescending(g => g.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

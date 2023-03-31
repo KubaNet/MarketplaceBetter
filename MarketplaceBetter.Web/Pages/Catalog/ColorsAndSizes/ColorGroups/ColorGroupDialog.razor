@@ -2,12 +2,14 @@
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes.Interfaces
 
+@inject ISnackbar Snackbar
 @inject IColorGroupService ColorGroupService
 @inject IColorGroupValidator ColorGroupValidator
 @inject IBrandService BrandService
-@inject ISnackbar Snackbar
+@inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="ColorGroup" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -43,12 +45,26 @@
         {
             SetInitialValues();
         }
+        else
+        {
+            if (CurrentBrandService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+        }
     }
 
     private void SetInitialValues()
     {
         ColorGroup = ColorGroupService.Get(ColorGroupId);
         ColorGroup.Brand = Brands.Single(b => b.Id == ColorGroup.Brand.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+
+        ColorGroup.Brand = currentBrand;
     }
 
     private void HandleValidSubmit()

@@ -16,25 +16,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
     public class PhotoService : IPhotoService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Photo> _repository;
-        private readonly IMapper _mapper;
         private readonly IPhotoCloudService _photoCloudService;
+        private readonly ICurrentBrandService _currentBrandService;
 
         public PhotoService(
-            IUnitOfWork unitOfWork,
             IMapper mapper,
-            IPhotoCloudService photoCloudService)
+            IUnitOfWork unitOfWork,
+            IPhotoCloudService photoCloudService,
+            ICurrentBrandService currentBrandService)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
-            _mapper = mapper;
             _photoCloudService = photoCloudService;
+            _currentBrandService = currentBrandService;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -161,6 +165,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return photos;

@@ -7,6 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using System;
@@ -20,17 +21,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 {
     public class ColorService : IColorService
     {
-        private readonly IUnitOfWork _unitOfWork;
+		private readonly IMapper _mapper;
+		private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Color> _repository;
-        private readonly IMapper _mapper;
+		private readonly ICurrentBrandService _currentBrandService;
 
-        public ColorService(
-            IUnitOfWork unitOfWork,
-            IMapper mapper)
+		public ColorService(
+			IMapper mapper,
+			IUnitOfWork unitOfWork,
+			ICurrentBrandService currentBrandService)
         {
-            _unitOfWork = unitOfWork;
+			_mapper = mapper;
+			_unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Color>();
-            _mapper = mapper;
+            _currentBrandService = currentBrandService;
         }
 
         public ColorModel Get(long id) => _mapper.Map<ColorModel>(_repository.Get(id));
@@ -88,7 +92,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<Color> ApplyFilter(IQueryable<Color> colors, ListRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.SearchString))
+			if (_currentBrandService.IsSpecificBrand())
+			{
+				colors = colors.Where(c => c.Group.BrandId == _currentBrandService.GetCurrentBrand().Id);
+			}
+
+			if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return colors;
             }

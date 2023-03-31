@@ -2,13 +2,15 @@
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes.Interfaces
 
+@inject ISnackbar Snackbar
 @inject ISizeService SizeService
 @inject IBrandService BrandService
 @inject ISizeGroupService SizeGroupService
 @inject ISizeValidator SizeValidator
-@inject ISnackbar Snackbar
+@inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="Size" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -57,6 +59,13 @@
         {
             SetInitialValues();
         }
+        else
+        {
+            if (CurrentBrandService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+        }
     }
 
     private void SetInitialValues()
@@ -67,6 +76,13 @@
 
         Brand = Brands.Single(b => b.Id == Size.Group.Brand.Id);
         Size.Group = SizeGroups.Single(g => g.Id == Size.Group.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+
+        HandleBrandChanged(currentBrand);
     }
 
     private void HandleBrandChanged(BrandModel brand)
