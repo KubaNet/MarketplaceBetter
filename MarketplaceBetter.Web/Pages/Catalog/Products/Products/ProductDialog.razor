@@ -5,6 +5,7 @@
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.Products.Interfaces
 
+@inject ISnackbar Snackbar
 @inject IProductService ProductService
 @inject IProductValidator ProductValidator
 @inject IBrandService BrandService
@@ -12,7 +13,6 @@
 @inject IColorGroupService ColorGroupService
 @inject ISizeGroupService SizeGroupService
 @inject ICurrentBrandService CurrentBrandService
-@inject ISnackbar Snackbar
 
 <EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -103,12 +103,9 @@
 
     private void SetValuesForCurrentBrand()
     {
-        BrandModel currentBrand = CurrentBrandService.GetCurrentBrand();
-        Product.Brand = Brands.Single(b => b.Id == currentBrand.Id);
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
 
-        ActivateCollection(Product.Brand.Id);
-        ActivateColorGroup(Product.Brand.Id);
-        ActivateSizeGroup(Product.Brand.Id);
+        HandleBrandChanged(currentBrand);
     }
 
     private void HandleBrandChanged(BrandModel brand)

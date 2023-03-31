@@ -9,7 +9,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variants</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -59,6 +59,7 @@
 
     private MudTable<VariantModel> Table;
     private ListRequest ListRequest = new();
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
     {
@@ -86,6 +87,11 @@
         IList<VariantModel> variants = VariantService.GetForListRequest(ListRequest);
 
         return Task.FromResult(new TableData<VariantModel>() { TotalItems = VariantService.CountForListRequest(ListRequest), Items = variants });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
     }
 
     private void FilterVariants(string searchString)
