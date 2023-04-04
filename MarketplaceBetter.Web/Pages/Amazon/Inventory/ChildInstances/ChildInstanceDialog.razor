@@ -5,15 +5,17 @@
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces
 
+@inject ISnackbar Snackbar
 @inject IChildInstanceService ChildInstanceService
 @inject IChildInstanceValidator ChildInstanceValidator
 @inject IBrandService BrandService
 @inject IParentService ParentService
 @inject IChildService ChildService
 @inject IInstanceService InstanceService
-@inject ISnackbar Snackbar
+@inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="ChildInstance" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -78,6 +80,13 @@
         {
             SetInitialValues();
         }
+        else
+        {
+            if (CurrentBrandService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+        }
     }
 
     private void SetInitialValues()
@@ -91,6 +100,13 @@
         Parent = Parents.Single(b => b.Id == ChildInstance.Child.Parent.Id);
         ChildInstance.Child = Childs.Single(p => p.Id == ChildInstance.Child.Id);
         ChildInstance.Instance = Instances.Single(i => i.Id == ChildInstance.Instance.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+
+        HandleBrandChanged(currentBrand);
     }
 
     private void HandleBrandChanged(BrandModel brand)

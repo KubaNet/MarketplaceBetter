@@ -117,7 +117,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     copywritings = searchField.Name switch
                     {
                         "id" => copywritings.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
-                        "product" => copywritings.Where(c => c.Product.Name.Contains(searchField.Value)),
+                        "product" => copywritings.Where(c => c.Product.Code.Contains(searchField.Value)),
                         "instance" => copywritings.Where(c => c.Instance.Name.Contains(searchField.Value)),
                         "element" => copywritings.Where(c => c.Element.Name.Contains(searchField.Value)),
                         "value" => copywritings.Where(c => c.Value.Contains(searchField.Value)),
@@ -127,6 +127,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 else
                 {
                     copywritings = copywritings.Where(c => c.Id == searchString.ParseToIntOrDefault()
+                        || c.Product.Code.Contains(searchString)
                         || c.Product.Name.Contains(searchString)
                         || c.Instance.Name.Contains(searchString)
                         || c.Element.Name.Contains(searchString)
@@ -144,7 +145,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 copywritings = request.SortBy switch
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Id) : copywritings.OrderByDescending(c => c.Id),
-                    "product" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Product.Name) : copywritings.OrderByDescending(c => c.Product.Name),
+                    "product" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Product.Code) : copywritings.OrderByDescending(c => c.Product.Code),
                     "instance" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Instance.Name) : copywritings.OrderByDescending(c => c.Instance.Name),
                     "element" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Element.Name) : copywritings.OrderByDescending(c => c.Element.Name),
                     "value" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Value) : copywritings.OrderByDescending(c => c.Value),

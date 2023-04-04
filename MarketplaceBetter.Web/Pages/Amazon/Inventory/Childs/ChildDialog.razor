@@ -5,15 +5,17 @@
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces
 
+@inject ISnackbar Snackbar
 @inject IChildService ChildService
 @inject IChildValidator ChildValidator
 @inject IBrandService BrandService
 @inject IInstanceService InstanceService
 @inject IParentService ParentService
 @inject IVariantService VariantService
-@inject ISnackbar Snackbar
+@inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="Child" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -70,6 +72,13 @@
         {
             SetInitialValues();
         }
+        else
+        {
+            if (CurrentBrandService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+        }
     }
 
     private void SetInitialValues()
@@ -83,6 +92,13 @@
 
         Child.Parent = Parents.Single(p => p.Id == Child.Parent.Id);
         Child.Variant = Variants.Single(v => v.Id == Child.Variant.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+
+        HandleBrandChanged(currentBrand);
     }
 
     private void HandleBrandChanged(BrandModel brand)

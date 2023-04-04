@@ -9,6 +9,7 @@ using MarketplaceBetter.Infrastructure.Helpers;
 using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -25,16 +26,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<ChildInstance> _repository;
         private readonly IRepository<Child> _childRepository;
         private readonly IRepository<Instance> _instanceRepository;
+        private readonly ICurrentBrandService _currentBrandService;
 
         public ChildInstanceService(
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ICurrentBrandService currentBrandService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ChildInstance>();
             _childRepository = unitOfWork.GetRepository<Child>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
+            _currentBrandService = currentBrandService;
         }
 
         public ChildInstanceModel Get(long id) => _mapper.Map<ChildInstanceModel>(_repository.Get(id));
@@ -139,6 +143,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<ChildInstance> ApplyFilter(IQueryable<ChildInstance> childs, ListRequest request)
         {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                childs = childs.Where(c => c.Child.Parent.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return childs;

@@ -16,6 +16,7 @@ using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -40,12 +41,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<ChildInstance> _childInstanceRepository;
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
+        private readonly ICurrentBrandService _currentBrandService;
 
         public ParentInstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoService photoService,
-            ICopywritingService copywritingService)
+            ICopywritingService copywritingService,
+            ICurrentBrandService currentBrandService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -56,6 +59,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
+            _currentBrandService = currentBrandService;
         }
 
         public ParentInstanceModel Get(long id) => _mapper.Map<ParentInstanceModel>(_repository.Get(id));
@@ -282,6 +286,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<ParentInstance> ApplyFilter(IQueryable<ParentInstance> parents, ListRequest request)
         {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                parents = parents.Where(p => p.Parent.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return parents;
