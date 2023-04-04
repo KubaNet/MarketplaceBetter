@@ -4,11 +4,11 @@
 @using MarketplaceBetter.Specialized.Interfaces
 
 @page "/photos"
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 @inject IPhotoService PhotoService
 @inject IDialogService DialogService
 @inject IPhotoCloudService PhotoCloudService
-@inject ISnackbar Snackbar
 
 <MudText Typo="Typo.h4" Class="mt-2">Photos</MudText>
 
@@ -43,7 +43,7 @@
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
             <MudTd>
-                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.FileName))">Delete</MudButton>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.FileName))" Color="Color.Secondary">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>

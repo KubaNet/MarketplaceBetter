@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Model
 
 @page "/childs"
+@inject ISnackbar Snackbar
 @inject IChildService ChildService
 @inject IDialogService DialogService
 
@@ -22,7 +23,7 @@
             <MudTh><MudTableSortLabel SortLabel="variant" T="ChildModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="parent" T="ChildModel">Parent</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
+            <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -31,7 +32,10 @@
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Product.Brand.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChild(context.Id))">Edit</MudButton></MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChild(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteChild(context.Id, context.Sku))" Color="Color.Secondary">Delete</MudButton>
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             @if (!ShowAll.HasValue || ShowAll == false)
@@ -98,6 +102,20 @@
         var result = await DialogService.Show<ChildDialog>(null, new DialogParameters { ["Title"] = "Edit Child", ["IsEdit"] = true, ["ChildId"] = id }).Result;
 
         ProcessChildDialogResult(result);
+    }
+
+    private async void DeleteChild(long id, string sku)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child \"{sku}\" and all its child instances?" }).Result;
+
+        if (!result.Canceled)
+        {
+            ChildService.Delete(id);
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Child"));
+        }
     }
 
     private void ProcessChildDialogResult(DialogResult result)

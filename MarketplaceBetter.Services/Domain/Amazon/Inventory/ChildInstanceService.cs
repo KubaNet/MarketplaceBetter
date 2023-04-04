@@ -109,6 +109,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
+        public void DeleteAllForChild(long childId)
+        {
+            foreach (var childInstance in _repository.Where(c => c.ChildId == childId))
+            {
+                _repository.Delete(childInstance);
+            }
+
+            _unitOfWork.Save();
+        }
+
         public string GetSkuFor(long? childId, long? instanceId)
         {
             if (childId.HasValue && instanceId.HasValue)

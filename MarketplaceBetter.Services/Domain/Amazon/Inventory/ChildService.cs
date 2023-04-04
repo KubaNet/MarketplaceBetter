@@ -140,6 +140,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _childInstanceService.AddForChild(childToUpdate.Id);
         }
 
+        public void Delete(long id)
+        {
+            _childInstanceService.DeleteAllForChild(id);
+
+            Child child = _repository.Get(id);
+
+            _repository.Delete(child);
+            _unitOfWork.Save();
+        }
+
         public string GetSkuFor(long? VariantId)
         {
             if (VariantId.HasValue)
