@@ -106,9 +106,9 @@
     <None Include="Scripts\Inserts\14_ResearchTargetStatuses.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchResult.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\CampaignType.sql" />
-    <None Include="Scripts\Inserts\08_CampaignTypes.sql" />
+    <None Include="Scripts\Inserts\15_CampaignTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\CampaignStrategy.sql" />
-    <None Include="Scripts\Inserts\09_CampaignStrategies.sql" />
+    <None Include="Scripts\Inserts\16_CampaignStrategies.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\AdEntityStatus.sql" />
     <None Include="Scripts\Inserts\10_AdEntityStatuses.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\AdGroup.sql" />
@@ -138,5 +138,7 @@
     <Build Include="dbo\Tables\Catalog\Products\Product.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Variant.sql" />
     <Build Include="dbo\Tables\Base\Instance.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\AmazonEntityStatus.sql" />
+    <None Include="Scripts\Inserts\07_AmazonEntityStatuses.sql" />
   </ItemGroup>
 </Project>
