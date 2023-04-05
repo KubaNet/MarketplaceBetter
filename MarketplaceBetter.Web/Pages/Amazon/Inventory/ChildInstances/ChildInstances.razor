@@ -10,16 +10,18 @@
 <MudText Typo="Typo.h4" Class="mt-2">Child Instances</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildInstanceModel>>>(ReloadChildInstances))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable T="ChildInstanceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildInstanceModel>>>(ReloadChildInstances))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterChildInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="AddChildInstance" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Child Instance</MudButton>
+            <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
+            <MudButton OnClick="AddChildInstance" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Child Instance</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ChildInstanceModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="ChildInstanceModel">SKU</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="ChildInstanceModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ChildInstanceModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="child" T="ChildInstanceModel">Child</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildInstanceModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 170px;">Actions</MudTh>
@@ -31,6 +33,7 @@
                 <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Child.Asin" />
             </MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Status"><AmazonEntityStatusDisplay Status="@context.Status" /></MudTd>
             <MudTd DataLabel="Child">@context.Child.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Child.Parent.Product.Brand.Name</MudTd>
             <MudTd>
@@ -53,6 +56,10 @@
 
     private MudTable<ChildInstanceModel> Table;
     private ListRequest ListRequest = new();
+
+    private HashSet<ChildInstanceModel> SelectedChilds = new HashSet<ChildInstanceModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
     {
@@ -80,6 +87,11 @@
         IList<ChildInstanceModel> childInstances = ChildInstanceService.GetForListRequest(ListRequest);
 
         return Task.FromResult(new TableData<ChildInstanceModel>() { TotalItems = ChildInstanceService.CountForListRequest(ListRequest), Items = childInstances });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
     }
 
     private void FilterChildInstances(string searchString)
@@ -124,6 +136,27 @@
         if (!result.Canceled)
         {
             Table.ReloadServerData();
+        }
+    }
+
+    private async void ChangeStatusOfSelected()
+    {
+        var result = await DialogService.Show<ChildInstancesSetStatusDialog>(null, new DialogParameters { ["ChildInstances"] = SelectedChilds.ToList() }).Result;
+
+        ProcessChildInstanceDialogResult(result);
+    }
+
+    private void OnSelectedItemsChanged(HashSet<ChildInstanceModel> selectedChilds)
+    {
+        SelectedChilds = selectedChilds;
+
+        if (SelectedChilds.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
         }
     }
 }

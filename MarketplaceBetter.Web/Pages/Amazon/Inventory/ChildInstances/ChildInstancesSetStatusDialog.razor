@@ -1,0 +1,46 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
+
+@inject IAmazonEntityStatusService AmazonEntityStatusService
+@inject IChildInstanceService ChildInstanceService
+@inject ISnackbar Snackbar
+
+<EditForm Model="Status" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title="Change status of child instances">
+        <ValidationSummary />
+        <MudSelect Label="Status" T="AmazonEntityStatusModel" @bind-Value="Status">
+            @foreach (var status in Statuses)
+            {
+                <MudSelectItem Value="status">@status.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<ChildInstanceModel> ChildInstances { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private AmazonEntityStatusModel Status = new AmazonEntityStatusModel();
+    private IList<AmazonEntityStatusModel> Statuses;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Statuses = AmazonEntityStatusService.GetAll();
+
+        Status = Statuses.First();
+    }
+
+    private void HandleValidSubmit()
+    {
+        ChildInstanceService.ChangeStatus(ChildInstances, Status);
+
+        Snackbar.AddSuccess("Status of child instances was successfully changed.");
+
+        MudDialog.Close();
+    }
+}

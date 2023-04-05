@@ -20,6 +20,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
 
         public virtual Instance Instance { get; set; }
 
+        public long StatusId { get; set; }
+
+        public virtual AmazonEntityStatus Status { get; set; }
+
         public override string ToString()
         {
             return Sku;

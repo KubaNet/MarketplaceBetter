@@ -4,9 +4,11 @@
 	[Sku]				NVARCHAR(255)				NOT NULL,
 	[ChildId]			BIGINT						NOT NULL,
 	[InstanceId]		BIGINT						NOT NULL,
+	[StatusId]			BIGINT						NOT NULL	DEFAULT(3),
 	CONSTRAINT			[PK_ChildInstance]			PRIMARY KEY ([Id]),
 	CONSTRAINT			[FK_ChildInstance_Child]	FOREIGN KEY ([ChildId])		REFERENCES [dbo].[Child] ([Id]),
 	CONSTRAINT			[FK_ChildInstance_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
+	CONSTRAINT			[FK_ChildInstance_Status]	FOREIGN KEY ([StatusId])	REFERENCES [dbo].[AmazonEntityStatus] ([Id]),
 );
 GO
 

@@ -30,6 +30,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void DeleteAllForChild(long childId);
 
+        void ChangeStatus(IList<ChildInstanceModel> childInstances, AmazonEntityStatusModel status);
+
         string GetSkuFor(long? childId, long? instanceId);
     }
 }

@@ -27,6 +27,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<ChildInstance> _repository;
         private readonly IRepository<Child> _childRepository;
         private readonly IRepository<Instance> _instanceRepository;
+        private readonly IRepository<AmazonEntityStatus> _statusRepository;
         private readonly ICurrentBrandService _currentBrandService;
         private readonly ICurrentInstanceService _currentInstanceService;
 
@@ -41,6 +42,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _repository = unitOfWork.GetRepository<ChildInstance>();
             _childRepository = unitOfWork.GetRepository<Child>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
+            _statusRepository = unitOfWork.GetRepository<AmazonEntityStatus>();
             _currentBrandService = currentBrandService;
             _currentInstanceService = currentInstanceService;
         }
@@ -77,6 +79,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             ChildInstance childInstanceToAdd = new();
 
             TransferValues(childInstanceToAdd, childInstance);
+            childInstanceToAdd.Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Active);
 
             _repository.Add(childInstanceToAdd);
             _unitOfWork.Save();
@@ -95,7 +98,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 {
                     ChildId = childId,
                     InstanceId = instance.Id,
-                    Sku = GetSkuFor(childId, instance.Id)
+                    Sku = GetSkuFor(childId, instance.Id),
+                    Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Active)
                 };
 
                 _repository.Add(childInstance);
@@ -127,6 +131,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             foreach (var childInstance in childInstances)
             {
                 _repository.Delete(childInstance);
+            }
+
+            _unitOfWork.Save();
+        }
+
+        public void ChangeStatus(IList<ChildInstanceModel> childInstances, AmazonEntityStatusModel status)
+        {
+            foreach (var childInstance in childInstances)
+            {
+                ChildInstance childToUpdate = _repository.Get(childInstance.Id);
+
+                childToUpdate.StatusId = status.Id;
+                _repository.Update(childToUpdate);
             }
 
             _unitOfWork.Save();
