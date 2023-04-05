@@ -19,5 +19,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
         void Add(VariantModel Variant);
 
         void Update(VariantModel Variant);
+
+        void Delete(long id);
     }
 }

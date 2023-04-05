@@ -7,7 +7,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton Disabled="Processing" OnClick="Cancel">Cancel</MudButton>
-        <MudButton Disabled="Processing" OnClick="Submit" Color="Color.Primary">
+        <MudButton @ref="SubmitButton" Disabled="Processing" OnClick="Submit" Color="Color.Primary">
             @if (Processing)
             {
                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -21,7 +21,15 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Question { get; set; }
 
+    private MudButton SubmitButton;
     private bool Processing = false;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        await SubmitButton.FocusAsync();
+    }
 
     private async void Submit()
     {

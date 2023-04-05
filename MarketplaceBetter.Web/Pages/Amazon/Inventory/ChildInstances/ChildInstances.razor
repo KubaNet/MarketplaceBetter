@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Model
 
 @page "/child-instances"
+@inject ISnackbar Snackbar
 @inject IChildInstanceService ChildInstanceService
 @inject IDialogService DialogService
 
@@ -21,15 +22,21 @@
             <MudTh><MudTableSortLabel SortLabel="instance" T="ChildInstanceModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="child" T="ChildInstanceModel">Child</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildInstanceModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 100px;">Actions</MudTh>
+            <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="SKU">@context.Sku</MudTd>
+            <MudTd DataLabel="SKU">
+                @context.Sku
+                <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Child.Asin" />
+            </MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Child">@context.Child.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Child.Parent.Product.Brand.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChildInstance(context.Id))">Edit</MudButton></MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChildInstance(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteChildInstance(context.Id, context.Sku))" Color="Color.Secondary">Delete</MudButton>
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             @if (!ShowAll.HasValue || ShowAll == false)
@@ -96,6 +103,20 @@
         var result = await DialogService.Show<ChildInstanceDialog>(null, new DialogParameters { ["Title"] = "Edit Child Instance", ["IsEdit"] = true, ["ChildInstanceId"] = id }).Result;
 
         ProcessChildInstanceDialogResult(result);
+    }
+
+    private async void DeleteChildInstance(long id, string sku)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child instance \"{sku}\"?" }).Result;
+
+        if (!result.Canceled)
+        {
+            ChildInstanceService.Delete(id);
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Child"));
+        }
     }
 
     private void ProcessChildInstanceDialogResult(DialogResult result)

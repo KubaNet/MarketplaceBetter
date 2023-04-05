@@ -26,5 +26,27 @@ namespace MarketplaceBetter.Infrastructure.Helpers
                 _ => throw new UnrecognizedEnumValueException<InstanceEnum>(instance)
             };
         }
+
+        public static string GetUrlFor(InstanceEnum instance)
+        {
+            return instance switch
+            {
+                InstanceEnum.US => "https://www.amazon.com/",
+                InstanceEnum.CA => "https://www.amazon.ca/",
+                InstanceEnum.UK => "https://www.amazon.co.uk/",
+                InstanceEnum.DE => "https://www.amazon.de/",
+                InstanceEnum.FR => "https://www.amazon.fr/",
+                InstanceEnum.IT => "https://www.amazon.it/",
+                InstanceEnum.ES => "https://www.amazon.es/",
+                InstanceEnum.NL => "https://www.amazon.nl/",
+                InstanceEnum.SE => "https://www.amazon.se/",
+                _ => throw new UnrecognizedEnumValueException<InstanceEnum>(instance)
+            };
+        }
+
+        public static string GetUrlForProductPage(InstanceEnum instance, string asin)
+        {
+            return $"{GetUrlFor(instance)}dp\\{asin}";
+        }
     }
 }

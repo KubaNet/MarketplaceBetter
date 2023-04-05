@@ -1,0 +1,11 @@
+﻿@using MarketplaceBetter.Domain.Model.Base;
+
+@if (!string.IsNullOrWhiteSpace(Asin))
+{
+    <MudIconButton Icon="@Icons.Material.Filled.Link" Href="@InstanceHelper.GetUrlForProductPage(Instance.SystemName, Asin)" Color="Color.Warning" Size="Size.Small"></MudIconButton>
+}
+
+@code {
+    [Parameter] public InstanceModel Instance { get; set; }
+    [Parameter] public string Asin { get; set; }
+}

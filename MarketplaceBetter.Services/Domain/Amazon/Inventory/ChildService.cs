@@ -150,6 +150,15 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
+        public void DeleteAllForVariant(long variantId)
+        {
+            IList<Child> childs = _repository.Where(c => c.VariantId == variantId).ToList();
+            foreach (var child in childs)
+            {
+                Delete(child.Id);
+            }
+        }
+
         public string GetSkuFor(long? VariantId)
         {
             if (VariantId.HasValue)

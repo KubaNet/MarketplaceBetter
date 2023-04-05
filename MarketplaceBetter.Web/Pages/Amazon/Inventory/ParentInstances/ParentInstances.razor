@@ -25,18 +25,21 @@
             <MudTh><MudTableSortLabel SortLabel="instance" T="ParentInstanceModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="parent" T="ParentInstanceModel">Parent</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ParentInstanceModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 160px;">Actions</MudTh>
+            <MudTh Style="width: 190px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="SKU">@context.Sku</MudTd>
+            <MudTd DataLabel="SKU">
+                @context.Sku
+                <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Asin" />
+            </MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Parent.Product.Brand.Name</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => ExportParentInstance(context.Id, context.Sku))">Export data</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditParentInstance(context.Id))" Class="mt-1">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => ExportParentInstance(context.Id, context.Sku))">Export</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditParentInstance(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>

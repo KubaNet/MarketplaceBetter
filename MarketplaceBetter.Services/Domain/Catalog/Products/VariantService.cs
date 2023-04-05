@@ -101,6 +101,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _childService.AddForVariant(variantToUpdate.Id);
         }
 
+        public void Delete(long id)
+        {
+            _childService.DeleteAllForVariant(id);
+
+            Variant variant = _repository.Get(id);
+
+            _repository.Delete(variant);
+            _unitOfWork.Save();
+        }
+
         private void TransferValues(Variant toVariant, VariantModel fromVariant)
         {
             toVariant.Sku = fromVariant.Sku;

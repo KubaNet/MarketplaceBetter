@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Model;
 
 @page "/variants"
+@inject ISnackbar Snackbar
 @inject IVariantService VariantService
 @inject IDialogService DialogService
 
@@ -25,7 +26,7 @@
             <MudTh><MudTableSortLabel SortLabel="size" T="VariantModel">Size</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="ean" T="VariantModel">EAN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="VariantModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 170px;">Actions</MudTh>
+            <MudTh Style="width: 240px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -42,6 +43,7 @@
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarVariant(context.Id))">Add</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditVariant(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteVariant(context.Id, context.Sku))" Color="Color.Secondary">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -122,6 +124,20 @@
         var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Edit Variant", ["IsEdit"] = true, ["VariantId"] = id }).Result;
 
         ProcessVariantDialogResult(result);
+    }
+
+    private async void DeleteVariant(long id, string sku)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete variant \"{sku}\" and all its childs and child instances?" }).Result;
+
+        if (!result.Canceled)
+        {
+            VariantService.Delete(id);
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Variant"));
+        }
     }
 
     private void ProcessVariantDialogResult(DialogResult result)

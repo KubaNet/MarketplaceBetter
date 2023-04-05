@@ -109,9 +109,18 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
+        public void Delete(long id)
+        {
+            ChildInstance child = _repository.Get(id);
+
+            _repository.Delete(child);
+            _unitOfWork.Save();
+        }
+
         public void DeleteAllForChild(long childId)
         {
-            foreach (var childInstance in _repository.Where(c => c.ChildId == childId))
+            IList<ChildInstance> childInstances = _repository.Where(c => c.ChildId == childId).ToList();
+            foreach (var childInstance in childInstances)
             {
                 _repository.Delete(childInstance);
             }

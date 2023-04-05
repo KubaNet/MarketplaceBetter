@@ -31,6 +31,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void Delete(long id);
 
+        void DeleteAllForVariant(long variantId);
+
         string GetSkuFor(long? VariantId);
     }
 }

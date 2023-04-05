@@ -26,6 +26,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void Update(ChildInstanceModel child);
 
+        void Delete(long id);
+
         void DeleteAllForChild(long childId);
 
         string GetSkuFor(long? childId, long? instanceId);
