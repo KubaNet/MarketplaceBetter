@@ -42,13 +42,15 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<ChildInstance> _childInstanceRepository;
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
         private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentInstanceService _currentInstanceService;
 
         public ParentInstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoService photoService,
             ICopywritingService copywritingService,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandService currentBrandService,
+            ICurrentInstanceService currentInstanceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -60,6 +62,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
             _currentBrandService = currentBrandService;
+            _currentInstanceService = currentInstanceService;
         }
 
         public ParentInstanceModel Get(long id) => _mapper.Map<ParentInstanceModel>(_repository.Get(id));
@@ -289,6 +292,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             if (_currentBrandService.IsSpecificBrand())
             {
                 parents = parents.Where(p => p.Parent.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
+            if (_currentInstanceService.IsSpecificInstance())
+            {
+                parents = parents.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

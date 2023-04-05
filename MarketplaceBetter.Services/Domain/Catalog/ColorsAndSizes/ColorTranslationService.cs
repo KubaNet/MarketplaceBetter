@@ -23,17 +23,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 		private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<ColorTranslation> _repository;
 		private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentInstanceService _currentInstanceService;
 
-		public ColorTranslationService(
+        public ColorTranslationService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandService currentBrandService,
+            ICurrentInstanceService currentInstanceService)
         {
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ColorTranslation>();
 			_currentBrandService = currentBrandService;
-		}
+            _currentInstanceService = currentInstanceService;
+
+        }
 
         public ColorTranslationModel Get(long id) => _mapper.Map<ColorTranslationModel>(_repository.Get(id));
 
@@ -94,7 +98,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 				translations = translations.Where(t => t.Color.Group.BrandId == _currentBrandService.GetCurrentBrand().Id);
 			}
 
-			if (string.IsNullOrWhiteSpace(request.SearchString))
+            if (_currentInstanceService.IsSpecificInstance())
+            {
+                translations = translations.Where(t => t.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+            }
+
+            if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return translations;
             }

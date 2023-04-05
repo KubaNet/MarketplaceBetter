@@ -16,6 +16,7 @@
 @inject IParentService ParentService
 @inject IInstanceService InstanceService
 @inject ICurrentBrandService CurrentBrandService
+@inject ICurrentInstanceService CurrentInstanceService
 
 <EditForm Model="ParentInstance" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -66,7 +67,7 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll(true);
-        Instances = InstanceService.GetAllNormal();
+        Instances = InstanceService.GetAllNormal(true);
 
         if (IsEdit)
         {
@@ -77,6 +78,11 @@
             if (CurrentBrandService.IsSpecificBrand())
             {
                 SetValuesForCurrentBrand();
+            }
+
+            if (CurrentInstanceService.IsSpecificInstance())
+            {
+                SetValuesForCurrentInstance();
             }
         }
     }
@@ -97,6 +103,13 @@
         BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
 
         HandleBrandChanged(currentBrand);
+    }
+
+    private void SetValuesForCurrentInstance()
+    {
+        InstanceModel currentInstance = Instances.Single(b => b.Id == CurrentInstanceService.GetCurrentInstance().Id);
+
+        HandleInstanceChanged(currentInstance);
     }
 
     private void HandleBrandChanged(BrandModel brand)

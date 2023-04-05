@@ -15,6 +15,7 @@
 @inject IColorGroupService ColorGroupService
 @inject IColorService ColorService
 @inject ICurrentBrandService CurrentBrandService
+@inject ICurrentInstanceService CurrentInstanceService
 
 <EditForm Model="ColorTranslation" OnValidSubmit="@HandleValidSubmit">
 	<CustomValidation @ref="CustomValidation" />
@@ -73,7 +74,7 @@
 	{
 		base.OnInitialized();
 
-		Instances = InstanceService.GetAllNormal();
+		Instances = InstanceService.GetAllNormal(true);
 		Brands = BrandService.GetAll(true);
 
 		if (IsEdit || AddingSimilar)
@@ -85,6 +86,11 @@
 			if (CurrentBrandService.IsSpecificBrand())
 			{
 				SetValuesForCurrentBrand();
+			}
+
+			if (CurrentInstanceService.IsSpecificInstance())
+			{
+				SetValuesForCurrentInstance();
 			}
 		}
 	}
@@ -113,6 +119,13 @@
 		HandleBrandChanged(currentBrand);
 	}
 
+	private void SetValuesForCurrentInstance()
+	{
+		InstanceModel currentInstance = Instances.Single(b => b.Id == CurrentInstanceService.GetCurrentInstance().Id);
+
+		HandleInstanceChanged(currentInstance);
+	}
+
 	private void HandleBrandChanged(BrandModel brand)
 	{
 		Brand = brand;
@@ -121,6 +134,11 @@
 		ActivateColorGroup(brand.Id);
 
 		ResetColor();
+	}
+
+	private void HandleInstanceChanged(InstanceModel instance)
+	{
+		ColorTranslation.Instance = instance;
 	}
 
 	private void HandleColorGroupChanged(ColorGroupModel group)

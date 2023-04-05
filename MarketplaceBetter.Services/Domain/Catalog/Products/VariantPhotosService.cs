@@ -36,6 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Child> _childRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentInstanceService _currentInstanceService;
         private readonly IWebHostEnvironment _environment;
         private readonly string _downloadFolderPath;
 
@@ -44,6 +45,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
             ICurrentBrandService currentBrandService,
+            ICurrentInstanceService currentInstanceService,
             IWebHostEnvironment environment)
         {
             _mapper = mapper;
@@ -51,6 +53,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _childRepository = unitOfWork.GetRepository<Child>();
             _photoCloudService = photoCloudService;
             _currentBrandService = currentBrandService;
+            _currentInstanceService = currentInstanceService;
             _environment = environment;
             _downloadFolderPath = Path.Combine(_environment.WebRootPath, "_download");
         }
@@ -150,6 +153,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             if (_currentBrandService.IsSpecificBrand())
             {
                 photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
+            if (_currentInstanceService.IsSpecificInstance())
+            {
+                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

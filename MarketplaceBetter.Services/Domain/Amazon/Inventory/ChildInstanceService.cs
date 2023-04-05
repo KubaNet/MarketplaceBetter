@@ -9,6 +9,7 @@ using MarketplaceBetter.Infrastructure.Helpers;
 using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized;
 using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
@@ -27,11 +28,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<Child> _childRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentInstanceService _currentInstanceService;
 
         public ChildInstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandService currentBrandService,
+            ICurrentInstanceService currentInstanceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -39,6 +42,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _childRepository = unitOfWork.GetRepository<Child>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _currentBrandService = currentBrandService;
+            _currentInstanceService = currentInstanceService;
         }
 
         public ChildInstanceModel Get(long id) => _mapper.Map<ChildInstanceModel>(_repository.Get(id));
@@ -165,6 +169,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             if (_currentBrandService.IsSpecificBrand())
             {
                 childs = childs.Where(c => c.Child.Parent.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+            if (_currentInstanceService.IsSpecificInstance())
+            {
+                childs = childs.Where(c => c.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

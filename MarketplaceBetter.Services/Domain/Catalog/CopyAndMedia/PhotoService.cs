@@ -173,9 +173,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
             }
 
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentInstanceService.IsSpecificInstance())
             {
-                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
