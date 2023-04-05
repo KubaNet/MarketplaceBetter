@@ -27,18 +27,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Photo> _repository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentInstanceService _currentInstanceService;
 
         public PhotoService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandService currentBrandService,
+            ICurrentInstanceService currentInstanceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
             _photoCloudService = photoCloudService;
             _currentBrandService = currentBrandService;
+            _currentInstanceService = currentInstanceService;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -165,6 +168,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
+            if (_currentBrandService.IsSpecificBrand())
+            {
+                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
             if (_currentBrandService.IsSpecificBrand())
             {
                 photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);

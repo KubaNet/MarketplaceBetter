@@ -15,6 +15,7 @@
 @inject IInstanceService InstanceService
 @inject ICopywritingElementService CopywritingElementService
 @inject ICurrentBrandService CurrentBrandService
+@inject ICurrentInstanceService CurrentInstanceService
 
 <EditForm Model="Copywriting" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -72,7 +73,7 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll(true);
-        Instances = InstanceService.GetAllNormal();
+        Instances = InstanceService.GetAllNormal(true);
         Elements = CopywritingElementService.GetAll();
 
         if (IsEdit || AddingSimilar)
@@ -84,6 +85,11 @@
             if (CurrentBrandService.IsSpecificBrand())
             {
                 SetValuesForCurrentBrand();
+            }
+
+            if (CurrentInstanceService.IsSpecificInstance())
+            {
+                SetValuesForCurrentInstance();
             }
         }
     }
@@ -112,12 +118,24 @@
         HandleBrandChanged(currentBrand);
     }
 
+    private void SetValuesForCurrentInstance()
+    {
+        InstanceModel currentInstance = Instances.Single(b => b.Id == CurrentInstanceService.GetCurrentInstance().Id);
+
+        HandleInstanceChanged(currentInstance);
+    }
+
     private void HandleBrandChanged(BrandModel brand)
     {
         Brand = brand;
 
         ResetProduct();
         ActivateProduct(brand.Id);
+    }
+
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        Copywriting.Instance = instance;
     }
 
     private void ResetProduct()

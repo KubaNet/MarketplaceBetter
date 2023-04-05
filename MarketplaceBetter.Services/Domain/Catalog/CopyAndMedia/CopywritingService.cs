@@ -23,16 +23,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Copywriting> _repository;
         private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentInstanceService _currentInstanceService;
 
         public CopywritingService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandService currentBrandService,
+            ICurrentInstanceService currentInstanceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Copywriting>();
             _currentBrandService = currentBrandService;
+            _currentInstanceService = currentInstanceService;
         }
 
         public CopywritingModel Get(long id) => _mapper.Map<CopywritingModel>(_repository.Get(id));
@@ -98,6 +101,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             if (_currentBrandService.IsSpecificBrand())
             {
                 copywritings = copywritings.Where(c => c.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
+            if (_currentInstanceService.IsSpecificInstance())
+            {
+                copywritings = copywritings.Where(c => c.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

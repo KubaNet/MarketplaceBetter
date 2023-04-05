@@ -1,11 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
+@using MarketplaceBetter.Domain.Entities.Base;
+@using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 
 @inject IBrandService BrandService
+@inject IInstanceService InstanceService
 @inject ICurrentBrandService CurrentBrandService
+@inject ICurrentInstanceService CurrentInstanceService
 @inject NavigationManager NavigationManager
 
 <AuthorizeView>
@@ -20,10 +25,18 @@
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
+                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
                             @foreach (var brand in Brands)
                             {
                                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </div>
+                    <div>
+                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedInstanceChange" Class="ml-4">
+                            @foreach (var instance in Instances)
+                            {
+                                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
                             }
                         </MudSelect>
                     </div>
@@ -44,15 +57,23 @@
     </NotAuthorized>
 </AuthorizeView>
 
-@code{
+@code {
     private BrandModel AllBrands = new BrandModel() { Name = "All" };
     private BrandModel Brand;
     private List<BrandModel> Brands;
+    private InstanceModel Instance;
+    private IList<InstanceModel> Instances;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
+        InitializeCurrentBrand();
+        InitializeCurrentInstance();
+    }
+
+    private void InitializeCurrentBrand()
+    {
         Brands = new List<BrandModel>();
         Brands.Add(AllBrands);
         Brands.AddRange(BrandService.GetAll());
@@ -67,6 +88,19 @@
         }
     }
 
+    private void InitializeCurrentInstance()
+    {
+        Instances = InstanceService.GetAll();
+        if (CurrentInstanceService.IsSpecificInstance())
+        {
+            Instance = Instances.Single(i => i.Id == CurrentInstanceService.GetCurrentInstance().Id);
+        }
+        else
+        {
+            Instance = Instances.Single(i => i.SystemName == InstanceEnum.All);
+        }
+    }
+
     private void OnSelectedBrandChange(BrandModel brand)
     {
         Brand = brand;
@@ -76,12 +110,21 @@
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 
-    MudTheme BetterTheme = new MudTheme()
+    private void OnSelectedInstanceChange(InstanceModel instance)
     {
-        Palette = new Palette()
+        Instance = instance;
+
+        CurrentInstanceService.SetCurrentInstance(instance);
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    MudTheme BetterTheme = new MudTheme()
         {
-            Primary = "#32ae70",
-            AppbarBackground = Colors.Grey.Lighten3,
-        }
-    };
+            Palette = new Palette()
+            {
+                Primary = "#32ae70",
+                AppbarBackground = Colors.Grey.Lighten3,
+            }
+        };
 }

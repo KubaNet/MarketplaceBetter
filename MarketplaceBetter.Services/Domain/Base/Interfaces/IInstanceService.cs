@@ -12,5 +12,7 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
         IList<InstanceModel> GetAll();
 
         IList<InstanceModel> GetAllNormal();
+
+        IList<InstanceModel> GetAllNormal(bool onlyCurrent);
     }
 }

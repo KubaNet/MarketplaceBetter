@@ -2,7 +2,6 @@
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
-using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Specialized.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -45,20 +44,6 @@ namespace MarketplaceBetter.Services.Specialized
         public void SetCurrentBrand(BrandModel brand)
         {
             _configuration[STORAGE_KEY] = brand.Name;
-        }
-
-        public void SetCurrentBrand(long brandId)
-        {
-            if (brandId == 0)
-            {
-                _configuration[STORAGE_KEY] = "All";
-            }
-            else
-            {
-                Brand brand = _brandRepository.Get(brandId);
-
-                _configuration[STORAGE_KEY] = brand.Name;
-            }
         }
 
         public bool IsSpecificBrand()
