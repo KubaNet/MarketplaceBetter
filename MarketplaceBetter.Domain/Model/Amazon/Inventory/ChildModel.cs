@@ -27,5 +27,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         [Display(Name = "ASIN")]
         [StringLength(Standard.AmazonAsinLength, MinimumLength = 0)]
         public string Asin { get; set; }
+
+        public AmazonEntityStatusModel Status { get; set; }
     }
 }

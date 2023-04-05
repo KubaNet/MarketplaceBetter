@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Services.Model;
 using System;
@@ -32,6 +33,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         void Delete(long id);
 
         void DeleteAllForVariant(long variantId);
+
+        void ChangeStatus(IList<ChildModel> childs, AmazonEntityStatusModel status);
 
         string GetSkuFor(long? VariantId);
     }

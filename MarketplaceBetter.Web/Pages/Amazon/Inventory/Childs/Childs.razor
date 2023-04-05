@@ -10,16 +10,18 @@
 <MudText Typo="Typo.h4" Class="mt-2">Childs</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(ReloadChilds))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable T="ChildModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(ReloadChilds))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterChilds" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="AddChild" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Child</MudButton>
+            <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
+            <MudButton OnClick="AddChild" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Child</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ChildModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="ChildModel">SKU</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="asin" T="ChildModel">ASIN</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ChildModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="variant" T="ChildModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="parent" T="ChildModel">Parent</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildModel">Brand</MudTableSortLabel></MudTh>
@@ -29,6 +31,7 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">@context.Sku</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
+            <MudTd DataLabel="Status"><AmazonEntityStatusDisplay Status="@context.Status" /></MudTd>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Product.Brand.Name</MudTd>
@@ -52,6 +55,10 @@
 
     private MudTable<ChildModel> Table;
     private ListRequest ListRequest = new();
+
+    private HashSet<ChildModel> SelectedChilds = new HashSet<ChildModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
     {
@@ -79,6 +86,11 @@
         IList<ChildModel> childs = ChildService.GetForListRequest(ListRequest);
 
         return Task.FromResult(new TableData<ChildModel>() { TotalItems = ChildService.CountForListRequest(ListRequest), Items = childs });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
     }
 
     private void FilterChilds(string searchString)
@@ -123,6 +135,27 @@
         if (!result.Canceled)
         {
             Table.ReloadServerData();
+        }
+    }
+
+    private async void ChangeStatusOfSelected()
+    {
+        var result = await DialogService.Show<ChildsSetStatusDialog>(null, new DialogParameters { ["Childs"] = SelectedChilds.ToList() }).Result;
+
+        ProcessChildDialogResult(result);
+    }
+
+    private void OnSelectedItemsChanged(HashSet<ChildModel> selectedChilds)
+    {
+        SelectedChilds = selectedChilds;
+
+        if (SelectedChilds.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
         }
     }
 }

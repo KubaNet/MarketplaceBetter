@@ -2,11 +2,11 @@
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 
 @inject IAmazonEntityStatusService AmazonEntityStatusService
-@inject IChildInstanceService ChildInstanceService
+@inject IChildService ChildService
 @inject ISnackbar Snackbar
 
 <EditForm Model="Status" OnValidSubmit="@HandleValidSubmit">
-    <FormDialog Title="Change status of child instances">
+    <FormDialog Title="Change status of childs">
         <MudSelect Label="Status" T="AmazonEntityStatusModel" @bind-Value="Status">
             @foreach (var status in Statuses)
             {
@@ -18,7 +18,7 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public IList<ChildInstanceModel> ChildInstances { get; set; }
+    [Parameter] public IList<ChildModel> Childs { get; set; }
 
     private AmazonEntityStatusModel Status = new AmazonEntityStatusModel();
     private IList<AmazonEntityStatusModel> Statuses;
@@ -34,9 +34,9 @@
 
     private void HandleValidSubmit()
     {
-        ChildInstanceService.ChangeStatus(ChildInstances, Status);
+        ChildService.ChangeStatus(Childs, Status);
 
-        Snackbar.AddSuccess("Status of child instances was successfully changed.");
+        Snackbar.AddSuccess("Status of childs was successfully changed.");
 
         MudDialog.Close();
     }

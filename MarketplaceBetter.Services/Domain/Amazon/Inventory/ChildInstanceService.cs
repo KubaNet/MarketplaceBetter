@@ -79,7 +79,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             ChildInstance childInstanceToAdd = new();
 
             TransferValues(childInstanceToAdd, childInstance);
-            childInstanceToAdd.Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Active);
+            childInstanceToAdd.Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Draft);
 
             _repository.Add(childInstanceToAdd);
             _unitOfWork.Save();
@@ -99,7 +99,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     ChildId = childId,
                     InstanceId = instance.Id,
                     Sku = GetSkuFor(childId, instance.Id),
-                    Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Active)
+                    Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Draft)
                 };
 
                 _repository.Add(childInstance);
@@ -201,7 +201,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "instance", "child", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "instance", "status", "child", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -211,6 +211,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "id" => childs.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => childs.Where(c => c.Sku.Contains(searchField.Value)),
                         "instance" => childs.Where(c => c.Instance.Name.Contains(searchField.Value)),
+                        "status" => childs.Where(c => c.Status.Name.Contains(searchField.Value)),
                         "child" => childs.Where(c => c.Child.Sku.Contains(searchField.Value)),
                         "brand" => childs.Where(c => c.Child.Parent.Product.Brand.Name.Contains(searchField.Value)),
                         "product_id" => childs.Where(c => c.Child.Parent.Product.Id == searchField.Value.ParseToIntOrDefault()),
@@ -222,6 +223,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     childs = childs.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Sku.Contains(searchString)
                         || c.Instance.Name.Contains(searchString)
+                        || c.Status.Name.Contains(searchString)
                         || c.Child.Sku.Contains(searchString)
                         || c.Child.Parent.Product.Brand.Name.Contains(searchString));
                 }
@@ -239,6 +241,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "id" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Id) : childs.OrderByDescending(c => c.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Sku) : childs.OrderByDescending(c => c.Sku),
                     "instance" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Instance.Name) : childs.OrderByDescending(c => c.Instance.Name),
+                    "status" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Status.Name) : childs.OrderByDescending(c => c.Status.Name),
                     "child" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Child.Sku) : childs.OrderByDescending(c => c.Child.Sku),
                     "brand" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Child.Parent.Product.Brand.Name) : childs.OrderByDescending(c => c.Child.Parent.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
