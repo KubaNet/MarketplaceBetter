@@ -49,15 +49,13 @@
         @if (IsAmazonInventoryModule())
         {
             <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="true" HideExpandIcon="true">
-                <MudNavLink Href="/parents">Parents</MudNavLink>
                 <MudNavLink Href="/parent-instances">Parent Instances</MudNavLink>
-                <MudNavLink Href="/childs">Childs</MudNavLink>
                 <MudNavLink Href="/child-instances">Child Instances</MudNavLink>
             </MudNavGroup>
         }
         else
         {
-            <MudNavLink Href="/parents" Icon="@Icons.Material.Filled.Inventory">Inventory</MudNavLink>
+            <MudNavLink Href="/parent-instances" Icon="@Icons.Material.Filled.Inventory">Inventory</MudNavLink>
         }
 
         @if (IsCampaignsModule())

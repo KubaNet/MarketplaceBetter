@@ -33,7 +33,7 @@
                         </MudSelect>
                     </div>
                     <div>
-                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedInstanceChange" Class="ml-4">
+                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedInstanceChange" MaxHeight="600" Class="ml-4">
                             @foreach (var instance in Instances)
                             {
                                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
