@@ -5,8 +5,8 @@ using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -39,6 +39,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<ParentInstance> _repository;
         private readonly IRepository<Parent> _parentRepository;
         private readonly IRepository<Instance> _instanceRepository;
+        private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IRepository<ChildInstance> _childInstanceRepository;
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
         private readonly ICurrentBrandService _currentBrandService;
@@ -59,6 +60,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _repository = unitOfWork.GetRepository<ParentInstance>();
             _parentRepository = unitOfWork.GetRepository<Parent>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
+            _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
             _currentBrandService = currentBrandService;
@@ -97,6 +99,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             ParentInstance parentInstanceToAdd = new();
 
             TransferValues(parentInstanceToAdd, parentInstance);
+            parentInstanceToAdd.Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft);
 
             _repository.Add(parentInstanceToAdd);
             _unitOfWork.Save();
@@ -111,7 +114,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     continue;
                 }
 
-                ParentInstance parentInstance = new ParentInstance { ParentId = parentId, InstanceId = instance.Id, Sku = GetSkuFor(parentId, instance.Id) };
+                ParentInstance parentInstance = new ParentInstance 
+                { 
+                    ParentId = parentId, 
+                    InstanceId = instance.Id, 
+                    Sku = GetSkuFor(parentId, instance.Id),
+                    Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft)
+                };
 
                 _repository.Add(parentInstance);
                 _unitOfWork.Save();
@@ -125,6 +134,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             TransferValues(parentInstanceToUpdate, parentInstance);
 
             _repository.Update(parentInstanceToUpdate);
+            _unitOfWork.Save();
+        }
+
+        public void ChangeStatus(IList<ParentInstanceModel> parentInstances, EntityStatusModel status)
+        {
+            foreach (var parentInstance in parentInstances)
+            {
+                ParentInstance parentToUpdate = _repository.Get(parentInstance.Id);
+
+                parentToUpdate.StatusId = status.Id;
+                _repository.Update(parentToUpdate);
+            }
+
             _unitOfWork.Save();
         }
 
@@ -308,7 +330,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "parent", "product", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "parent", "product", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -319,6 +341,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "sku" => parents.Where(p => p.Sku.Contains(searchField.Value)),
                         "asin" => parents.Where(p => p.Asin.Contains(searchField.Value)),
                         "instance" => parents.Where(p => p.Instance.Name.Contains(searchField.Value)),
+                        "status" => parents.Where(p => p.Status.Name.Contains(searchField.Value)),
                         "parent" => parents.Where(p => p.Parent.Sku.Contains(searchField.Value)),
                         "product" => parents.Where(p => p.Parent.Product.Name.Contains(searchField.Value)),
                         "brand" => parents.Where(p => p.Parent.Product.Brand.Name.Contains(searchField.Value)),
@@ -332,6 +355,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || p.Sku.Contains(searchString)
                         || p.Asin.Contains(searchString)
                         || p.Instance.Name.Contains(searchString)
+                        || p.Status.Name.Contains(searchString)
                         || p.Parent.Sku.Contains(searchString)
                         || p.Parent.Product.Name.Contains(searchString)
                         || p.Parent.Product.Brand.Name.Contains(searchString));
@@ -351,6 +375,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "sku" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Sku) : parents.OrderByDescending(p => p.Sku),
                     "asin" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Asin) : parents.OrderByDescending(p => p.Asin),
                     "instance" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Instance.Name) : parents.OrderByDescending(p => p.Instance.Name),
+                    "status" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Status.Name) : parents.OrderByDescending(p => p.Status.Name),
                     "parent" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Sku) : parents.OrderByDescending(p => p.Parent.Sku),
                     "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Product.Name) : parents.OrderByDescending(p => p.Parent.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Product.Brand.Name) : parents.OrderByDescending(p => p.Parent.Product.Brand.Name),

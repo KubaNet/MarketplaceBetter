@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         void AddForParent(long parentId);
 
         void Update(ParentInstanceModel parent);
+
+        void ChangeStatus(IList<ParentInstanceModel> parentInstances, EntityStatusModel status);
 
         string GetSkuFor(long? parentId, long? instanceId);
 

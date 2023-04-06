@@ -1,0 +1,45 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+@using MarketplaceBetter.Domain.Model.Base;
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IEntityStatusService EntityStatusService
+@inject IParentInstanceService ParentInstanceService
+
+<EditForm Model="Status" OnValidSubmit="@HandleValidSubmit">
+    <FormDialog Title="Change status of parent instances">
+        <MudSelect Label="Status" T="EntityStatusModel" @bind-Value="Status">
+            @foreach (var status in Statuses)
+            {
+                <MudSelectItem Value="status">@status.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<ParentInstanceModel> ParentInstances { get; set; }
+
+    private EntityStatusModel Status = new EntityStatusModel();
+    private IList<EntityStatusModel> Statuses;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Statuses = EntityStatusService.GetAll();
+
+        Status = Statuses.First();
+    }
+
+    private void HandleValidSubmit()
+    {
+        ParentInstanceService.ChangeStatus(ParentInstances, Status);
+
+        Snackbar.AddSuccess("Status of parent instances was successfully changed.");
+
+        MudDialog.Close();
+    }
+}

@@ -12,17 +12,19 @@
 <MudText Typo="Typo.h4" Class="mt-2">Parent Instances</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ParentInstanceModel>>>(ReloadParentInstances))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable T="ParentInstanceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ParentInstanceModel>>>(ReloadParentInstances))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterParentInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="AddParentInstance" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Parent Instance</MudButton>
+            <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
+            <MudButton OnClick="AddParentInstance" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Parent Instance</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ParentInstanceModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="ParentInstanceModel">SKU</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="asin" T="ParentInstanceModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="ParentInstanceModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ParentInstanceModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="parent" T="ParentInstanceModel">Parent</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ParentInstanceModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 190px;">Actions</MudTh>
@@ -35,6 +37,7 @@
             </MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
             <MudTd DataLabel="Parent">@context.Parent.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Parent.Product.Brand.Name</MudTd>
             <MudTd>
@@ -57,6 +60,10 @@
 
     private MudTable<ParentInstanceModel> Table;
     private ListRequest ListRequest = new();
+
+    private HashSet<ParentInstanceModel> SelectedParents = new HashSet<ParentInstanceModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
     {
@@ -84,6 +91,11 @@
         IList<ParentInstanceModel> parentInstances = ParentInstanceService.GetForListRequest(ListRequest);
 
         return Task.FromResult(new TableData<ParentInstanceModel>() { TotalItems = ParentInstanceService.CountForListRequest(ListRequest), Items = parentInstances });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
     }
 
     private void FilterParentInstances(string searchString)
@@ -114,6 +126,27 @@
         if (!result.Canceled)
         {
             Table.ReloadServerData();
+        }
+    }
+
+    private async void ChangeStatusOfSelected()
+    {
+        var result = await DialogService.Show<ParentInstancesSetStatusDialog>(null, new DialogParameters { ["ParentInstances"] = SelectedParents.ToList() }).Result;
+
+        ProcessParentInstanceDialogResult(result);
+    }
+
+    private void OnSelectedItemsChanged(HashSet<ParentInstanceModel> selectedParents)
+    {
+        SelectedParents = selectedParents;
+
+        if (SelectedParents.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
         }
     }
 
