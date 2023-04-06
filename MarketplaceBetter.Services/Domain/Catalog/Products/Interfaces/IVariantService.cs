@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
 using System.Collections.Generic;
 
@@ -21,5 +22,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
         void Update(VariantModel Variant);
 
         void Delete(long id);
+
+        void ChangeStatus(IList<VariantModel> variants, EntityStatusModel status);
     }
 }
