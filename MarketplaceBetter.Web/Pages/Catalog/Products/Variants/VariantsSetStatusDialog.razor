@@ -1,0 +1,45 @@
+﻿@using MarketplaceBetter.Domain.Model.Base;
+@using MarketplaceBetter.Domain.Model.Catalog.Products;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IEntityStatusService EntityStatusService
+@inject IVariantService VariantService
+
+<EditForm Model="Status" OnValidSubmit="@HandleValidSubmit">
+    <FormDialog Title="Change status of variants">
+        <MudSelect Label="Status" T="EntityStatusModel" @bind-Value="Status">
+            @foreach (var status in Statuses)
+            {
+                <MudSelectItem Value="status">@status.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<VariantModel> Variants { get; set; }
+
+    private EntityStatusModel Status = new EntityStatusModel();
+    private IList<EntityStatusModel> Statuses;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Statuses = EntityStatusService.GetAll();
+
+        Status = Statuses.First();
+    }
+
+    private void HandleValidSubmit()
+    {
+        VariantService.ChangeStatus(Variants, Status);
+
+        Snackbar.AddSuccess("Status of variants was successfully changed.");
+
+        MudDialog.Close();
+    }
+}

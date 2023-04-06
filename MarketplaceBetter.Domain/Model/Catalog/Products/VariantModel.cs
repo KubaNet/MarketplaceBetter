@@ -28,11 +28,10 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         [Required]
         public SizeModel Size { get; set; }
 
-        [Required]
-        public EntityStatusModel Status { get; set; }
-
         [Display(Name = "EAN")]
         [BetterMaxLength]
         public string Ean { get; set; }
+
+        public EntityStatusModel Status { get; set; }
     }
 }

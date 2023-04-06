@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
+using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -23,6 +27,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Variant> _repository;
+        private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IChildService _childService;
         private readonly ICurrentBrandService _currentBrandService;
 
@@ -35,6 +40,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Variant>();
+            _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _childService = childService;
             _currentBrandService = currentBrandService;
         }
@@ -82,6 +88,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             Variant variantToAdd = new();
 
             TransferValues(variantToAdd, variant);
+            variantToAdd.Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft);
 
             _repository.Add(variantToAdd);
             _unitOfWork.Save();
@@ -111,10 +118,22 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork.Save();
         }
 
+        public void ChangeStatus(IList<VariantModel> variants, EntityStatusModel status)
+        {
+            foreach (var variant in variants)
+            {
+                Variant variantToUpdate = _repository.Get(variant.Id);
+
+                variantToUpdate.StatusId = status.Id;
+                _repository.Update(variantToUpdate);
+            }
+
+            _unitOfWork.Save();
+        }
+
         private void TransferValues(Variant toVariant, VariantModel fromVariant)
         {
             toVariant.Sku = fromVariant.Sku;
-            toVariant.StatusId = fromVariant.Status.Id;
             toVariant.ProductId = fromVariant.Product.Id;
             toVariant.ColorId = fromVariant.Color.Id;
             toVariant.SizeId = fromVariant.Size.Id;

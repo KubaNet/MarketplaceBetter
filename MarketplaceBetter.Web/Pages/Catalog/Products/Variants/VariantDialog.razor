@@ -16,7 +16,6 @@
 @inject IProductService ProductService
 @inject IColorService ColorService
 @inject ISizeService SizeService
-@inject IEntityStatusService StatusService
 @inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="Variant" OnValidSubmit="@HandleValidSubmit">
@@ -48,12 +47,6 @@
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Status" T="EntityStatusModel" @bind-Value="Variant.Status" For="() => Variant.Status">
-            @foreach (var status in Statuses)
-            {
-                <MudSelectItem Value="status">@status.Name</MudSelectItem>
-            }
-        </MudSelect>
         <MudTextField Label="SKU" @bind-Value="Variant.Sku" For="() => Variant.Sku" />
         <MudTextField Label="EAN" @bind-Value="Variant.Ean" For="() => Variant.Ean" />
     </FormDialog>
@@ -71,7 +64,6 @@
     private BrandModel Brand;
 
     private IList<BrandModel> Brands;
-    private IList<EntityStatusModel> Statuses = new List<EntityStatusModel>();
     private IList<ProductModel> Products = new List<ProductModel>();
     private IList<ColorModel> Colors = new List<ColorModel>();
     private IList<SizeModel> Sizes = new List<SizeModel>();
@@ -85,9 +77,6 @@
         base.OnInitialized();
 
         Brands = BrandService.GetAll(true);
-        Statuses = StatusService.GetAll();
-
-        Variant.Status = Statuses.Single(s => s.SystemName == EntityStatusEnum.Active);
 
         if (IsEdit || AddingSimilar)
         {
@@ -118,7 +107,6 @@
         Variant.Product = Products.Single(p => p.Id == Variant.Product.Id);
         Variant.Color = Colors.Single(c => c.Id == Variant.Color.Id);
         Variant.Size = Sizes.Single(s => s.Id == Variant.Size.Id);
-        Variant.Status = Statuses.Single(s => s.Id == Variant.Status.Id);
     }
 
     private void SetValuesForCurrentBrand()

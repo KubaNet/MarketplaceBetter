@@ -10,7 +10,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variants</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="VariantModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -31,9 +31,7 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Sku">@context.Sku</MudTd>
-            <MudTd DataLabel="Status">
-                <EntityStatusDisplay Status="@context.Status" />
-            </MudTd>
+            <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
             <MudTd DataLabel="Product">@context.Product.Name</MudTd>
             <MudTd DataLabel="ProductCode">@context.Product.Code</MudTd>
             <MudTd DataLabel="Color">@context.Color.Name</MudTd>
@@ -61,6 +59,9 @@
 
     private MudTable<VariantModel> Table;
     private ListRequest ListRequest = new();
+
+    private HashSet<VariantModel> SelectedVariants = new HashSet<VariantModel>();
+    private bool NoneSelected = true;
     private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
@@ -145,6 +146,27 @@
         if (!result.Canceled)
         {
             Table.ReloadServerData();
+        }
+    }
+
+    private async void ChangeStatusOfSelected()
+    {
+        var result = await DialogService.Show<VariantsSetStatusDialog>(null, new DialogParameters { ["Variants"] = SelectedVariants.ToList() }).Result;
+
+        ProcessVariantDialogResult(result);
+    }
+
+    private void OnSelectedItemsChanged(HashSet<VariantModel> selectedVariants)
+    {
+        SelectedVariants = selectedVariants;
+
+        if (SelectedVariants.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
         }
     }
 }
