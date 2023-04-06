@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
 
         public ColorModel Color { get; set; }
 
-        public VariantStatusModel Status { get; set; }
+        public EntityStatusModel Status { get; set; }
 
         public IList<SizeModel> Sizes { get; set; }
     }

@@ -2,6 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -27,7 +28,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<ChildInstance> _repository;
         private readonly IRepository<Child> _childRepository;
         private readonly IRepository<Instance> _instanceRepository;
-        private readonly IRepository<AmazonEntityStatus> _statusRepository;
+        private readonly IRepository<EntityStatus> _statusRepository;
         private readonly ICurrentBrandService _currentBrandService;
         private readonly ICurrentInstanceService _currentInstanceService;
 
@@ -42,7 +43,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _repository = unitOfWork.GetRepository<ChildInstance>();
             _childRepository = unitOfWork.GetRepository<Child>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
-            _statusRepository = unitOfWork.GetRepository<AmazonEntityStatus>();
+            _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _currentBrandService = currentBrandService;
             _currentInstanceService = currentInstanceService;
         }
@@ -79,7 +80,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             ChildInstance childInstanceToAdd = new();
 
             TransferValues(childInstanceToAdd, childInstance);
-            childInstanceToAdd.Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Draft);
+            childInstanceToAdd.Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft);
 
             _repository.Add(childInstanceToAdd);
             _unitOfWork.Save();
@@ -99,7 +100,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     ChildId = childId,
                     InstanceId = instance.Id,
                     Sku = GetSkuFor(childId, instance.Id),
-                    Status = _statusRepository.Single(s => s.SystemName == AmazonEntityStatusEnum.Draft)
+                    Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft)
                 };
 
                 _repository.Add(childInstance);
@@ -136,7 +137,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
-        public void ChangeStatus(IList<ChildInstanceModel> childInstances, AmazonEntityStatusModel status)
+        public void ChangeStatus(IList<ChildInstanceModel> childInstances, EntityStatusModel status)
         {
             foreach (var childInstance in childInstances)
             {

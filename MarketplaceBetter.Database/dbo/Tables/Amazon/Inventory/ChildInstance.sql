@@ -8,7 +8,7 @@
 	CONSTRAINT			[PK_ChildInstance]			PRIMARY KEY ([Id]),
 	CONSTRAINT			[FK_ChildInstance_Child]	FOREIGN KEY ([ChildId])		REFERENCES [dbo].[Child] ([Id]),
 	CONSTRAINT			[FK_ChildInstance_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
-	CONSTRAINT			[FK_ChildInstance_Status]	FOREIGN KEY ([StatusId])	REFERENCES [dbo].[AmazonEntityStatus] ([Id]),
+	CONSTRAINT			[FK_ChildInstance_Status]	FOREIGN KEY ([StatusId])	REFERENCES [dbo].[EntityStatus] ([Id]),
 );
 GO
 

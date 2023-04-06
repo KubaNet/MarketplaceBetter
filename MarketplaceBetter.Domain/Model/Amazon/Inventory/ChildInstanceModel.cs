@@ -26,6 +26,6 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         [StringLength(Standard.AmazonSkuMaxLength, MinimumLength = 2)]
         public string Sku { get; set; }
 
-        public AmazonEntityStatusModel Status { get; set; }
+        public EntityStatusModel Status { get; set; }
     }
 }

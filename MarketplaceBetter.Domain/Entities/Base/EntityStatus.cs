@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Entities.Catalog.Products
+namespace MarketplaceBetter.Domain.Entities.Base
 {
-    public class VariantStatus : Entity
+    public class EntityStatus : Entity
     {
         public string Name { get; set; }
 
-        public VariantStatusEnum SystemName { get; set; }
+        public EntityStatusEnum SystemName { get; set; }
     }
 }

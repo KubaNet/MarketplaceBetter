@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Constants;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,6 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         [StringLength(Standard.AmazonAsinLength, MinimumLength = 0)]
         public string Asin { get; set; }
 
-        public AmazonEntityStatusModel Status { get; set; }
+        public EntityStatusModel Status { get; set; }
     }
 }

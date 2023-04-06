@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Validation.Attributes;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         public SizeModel Size { get; set; }
 
         [Required]
-        public VariantStatusModel Status { get; set; }
+        public EntityStatusModel Status { get; set; }
 
         [Display(Name = "EAN")]
         [BetterMaxLength]

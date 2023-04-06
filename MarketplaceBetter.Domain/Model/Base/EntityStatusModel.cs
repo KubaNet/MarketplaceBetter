@@ -1,18 +1,18 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Model.Catalog.Products
+namespace MarketplaceBetter.Domain.Model.Base
 {
-    public class VariantStatusModel
+    public class EntityStatusModel
     {
         public long Id { get; set; }
 
         public string Name { get; set; }
 
-        public VariantStatusEnum SystemName { get; set; }
+        public EntityStatusEnum SystemName { get; set; }
     }
 }

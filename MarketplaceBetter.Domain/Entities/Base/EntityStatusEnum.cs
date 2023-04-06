@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
+namespace MarketplaceBetter.Domain.Entities.Base
 {
-    public enum AmazonEntityStatusEnum
+    public enum EntityStatusEnum
     {
         None = 0,
 

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -61,7 +61,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
         public void AddForAdGroup(long adGroupId, long productId)
         {
-            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == productId && v.Status.SystemName == VariantStatusEnum.Active).ToList();
+            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == productId && v.Status.SystemName == EntityStatusEnum.Active).ToList();
 
             foreach (var variant in variants)
             {
@@ -80,7 +80,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Campaigns
 
         public void UpdateForAdGroup(long adGroupId, long productId)
         {
-            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == productId && v.Status.SystemName == VariantStatusEnum.Active).ToList();
+            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == productId && v.Status.SystemName == EntityStatusEnum.Active).ToList();
 
             foreach (var variant in variants)
             {

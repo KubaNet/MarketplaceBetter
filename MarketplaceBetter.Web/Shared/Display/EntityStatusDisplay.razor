@@ -1,0 +1,36 @@
+﻿@using MarketplaceBetter.Domain.Entities.Base;
+@using MarketplaceBetter.Domain.Model.Base;
+
+<MudChip Variant="Variant.Text" Color="Color" Style="font-weight:500;">@Status.Name</MudChip>
+
+@code {
+    [Parameter] public EntityStatusModel Status { get; set; }
+
+    private Color Color = Color.Success;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        switch (Status.SystemName)
+        {
+            case EntityStatusEnum.Draft:
+                Color = Color.Default;
+                break;
+            case EntityStatusEnum.ToAdd:
+                Color = Color.Info;
+                break;
+            case EntityStatusEnum.Active:
+                Color = Color.Success;
+                break;
+            case EntityStatusEnum.ToWithdrawn:
+                Color = Color.Warning;
+                break;
+            case EntityStatusEnum.Withdrawn:
+                Color = Color.Error;
+                break;
+            default:
+                throw new UnrecognizedEnumValueException<EntityStatusEnum>(Status.SystemName);
+        }
+    }
+}

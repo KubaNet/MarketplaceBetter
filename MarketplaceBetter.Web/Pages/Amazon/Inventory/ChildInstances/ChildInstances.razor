@@ -33,7 +33,7 @@
                 <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Child.Asin" />
             </MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
-            <MudTd DataLabel="Status"><AmazonEntityStatusDisplay Status="@context.Status" /></MudTd>
+            <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
             <MudTd DataLabel="Child">@context.Child.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Child.Parent.Product.Brand.Name</MudTd>
             <MudTd>

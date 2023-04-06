@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void DeleteAllForChild(long childId);
 
-        void ChangeStatus(IList<ChildInstanceModel> childInstances, AmazonEntityStatusModel status);
+        void ChangeStatus(IList<ChildInstanceModel> childInstances, EntityStatusModel status);
 
         string GetSkuFor(long? childId, long? instanceId);
     }

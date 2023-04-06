@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
 
         public long StatusId { get; set; }
 
-        public virtual AmazonEntityStatus Status { get; set; }
+        public virtual EntityStatus Status { get; set; }
 
         public override string ToString()
         {

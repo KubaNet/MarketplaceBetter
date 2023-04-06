@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
@@ -25,7 +24,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO.Compression;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Services.Specialized.Interfaces;
-using MarketplaceBetter.Services.Specialized;
+using MarketplaceBetter.Domain.Entities.Base;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -60,7 +59,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == VariantStatusEnum.Active || p.Variant.Status.SystemName == VariantStatusEnum.ToAdd);
+            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
 
             photos = ApplyFilter(photos, request);
 
@@ -71,7 +70,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public IList<VariantPhotosModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == VariantStatusEnum.Active || p.Variant.Status.SystemName == VariantStatusEnum.ToAdd);
+            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
 
             photos = ApplyFilter(photos, request);
             photos = ApplySorting(photos, request);

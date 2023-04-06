@@ -1,6 +1,9 @@
-﻿@using MarketplaceBetter.Domain.Entities.Catalog.Products
+﻿@using MarketplaceBetter.Domain.Entities.Base;
+@using MarketplaceBetter.Domain.Entities.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
 @using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Specialized.Interfaces;
@@ -10,10 +13,10 @@
 @inject IVariantService VariantService
 @inject IVariantValidator VariantValidator
 @inject IBrandService BrandService
-@inject IVariantStatusService StatusService
 @inject IProductService ProductService
 @inject IColorService ColorService
 @inject ISizeService SizeService
+@inject IEntityStatusService StatusService
 @inject ICurrentBrandService CurrentBrandService
 
 <EditForm Model="Variant" OnValidSubmit="@HandleValidSubmit">
@@ -45,7 +48,7 @@
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Status" T="VariantStatusModel" @bind-Value="Variant.Status" For="() => Variant.Status">
+        <MudSelect Label="Status" T="EntityStatusModel" @bind-Value="Variant.Status" For="() => Variant.Status">
             @foreach (var status in Statuses)
             {
                 <MudSelectItem Value="status">@status.Name</MudSelectItem>
@@ -68,7 +71,7 @@
     private BrandModel Brand;
 
     private IList<BrandModel> Brands;
-    private IList<VariantStatusModel> Statuses = new List<VariantStatusModel>();
+    private IList<EntityStatusModel> Statuses = new List<EntityStatusModel>();
     private IList<ProductModel> Products = new List<ProductModel>();
     private IList<ColorModel> Colors = new List<ColorModel>();
     private IList<SizeModel> Sizes = new List<SizeModel>();
@@ -84,7 +87,7 @@
         Brands = BrandService.GetAll(true);
         Statuses = StatusService.GetAll();
 
-        Variant.Status = Statuses.Single(s => s.SystemName == VariantStatusEnum.Active);
+        Variant.Status = Statuses.Single(s => s.SystemName == EntityStatusEnum.Active);
 
         if (IsEdit || AddingSimilar)
         {

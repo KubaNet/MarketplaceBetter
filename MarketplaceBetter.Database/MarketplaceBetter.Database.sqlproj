@@ -92,7 +92,6 @@
     <Build Include="dbo\Tables\Catalog\ColorsAndSizes\Size.sql" />
     <Build Include="dbo\Tables\Catalog\ColorsAndSizes\SizeGroup.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Brand.sql" />
-    <Build Include="dbo\Tables\Catalog\Products\VariantStatus.sql" />
     <None Include="Scripts\Inserts\04_CopywritingElements.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\Copywriting.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\CopywritingElement.sql" />
@@ -129,7 +128,6 @@
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Prod_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Test_SchemaCompare.scmp" />
-    <None Include="Scripts\Inserts\03_VariantStatuses.sql" />
     <None Include="Scripts\CustomScripts\InsertingColorTranslations.sql" />
     <None Include="Scripts\CustomScripts\UpdatingVariantsSKU.sql" />
     <None Include="Scripts\CustomScripts\UpdatingParentInstancesSKU.sql" />
@@ -138,7 +136,7 @@
     <Build Include="dbo\Tables\Catalog\Products\Product.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Variant.sql" />
     <Build Include="dbo\Tables\Base\Instance.sql" />
-    <Build Include="dbo\Tables\Amazon\Inventory\AmazonEntityStatus.sql" />
-    <None Include="Scripts\Inserts\07_AmazonEntityStatuses.sql" />
+    <None Include="Scripts\Inserts\03_EntityStatuses.sql" />
+    <Build Include="dbo\Tables\Base\EntityStatus.sql" />
   </ItemGroup>
 </Project>

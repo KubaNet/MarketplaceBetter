@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+﻿using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Products
 
         public long StatusId { get; set; }
 
-        public virtual VariantStatus Status { get; set; }
+        public virtual EntityStatus Status { get; set; }
 
         public string Ean { get; set; }
 

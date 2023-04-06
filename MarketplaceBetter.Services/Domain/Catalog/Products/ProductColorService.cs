@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
-using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
@@ -17,7 +15,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
@@ -67,7 +64,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             {
                 Product = _mapper.Map<ProductModel>(v.First().Product),
                 Color = _mapper.Map<ColorModel>(v.First().Color),
-                Status = _mapper.Map<VariantStatusModel>(v.First().Status),
+                Status = _mapper.Map<EntityStatusModel>(v.First().Status),
                 Sizes = _mapper.Map<IList<SizeModel>>(v.Select(g => g.Size))
             }).ToList();
         }

@@ -28,7 +28,7 @@
             <MudTd DataLabel="Color">@context.Color.Name</MudTd>
             <MudTd DataLabel="ColorCode">@context.Color.Code</MudTd>
             <MudTd DataLabel="Status">
-                <VariantStatusDisplay Status="@context.Status" />
+                <EntityStatusDisplay Status="@context.Status" />
             </MudTd>
             <MudTd DataLabel="Sizes">@string.Join("; ", context.Sizes.Select(s => s.Name))</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>

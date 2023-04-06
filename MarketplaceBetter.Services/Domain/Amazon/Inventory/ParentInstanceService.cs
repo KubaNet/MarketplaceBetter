@@ -171,7 +171,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             Instance instance = parentInstance.Instance;
             IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => 
                 c.Child.ParentId == parentInstance.ParentId && c.InstanceId == instance.Id 
-                && c.Child.Variant.Status.SystemName != VariantStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
+                && c.Child.Variant.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
 
             csv.WriteField("Seller SKU");
             csv.WriteField("Brand Name");

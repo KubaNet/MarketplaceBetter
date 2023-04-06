@@ -11,7 +11,7 @@
 	CONSTRAINT  [FK_Variant_Product]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
 	CONSTRAINT  [FK_Variant_Color]		FOREIGN KEY ([ColorId])		REFERENCES [dbo].[Color] ([Id]),
 	CONSTRAINT  [FK_Variant_Size]		FOREIGN KEY ([SizeId])		REFERENCES [dbo].[Size] ([Id]),
-	CONSTRAINT  [FK_Variant_Status]		FOREIGN KEY ([StatusId])	REFERENCES [dbo].[VariantStatus] ([Id]),
+	CONSTRAINT  [FK_Variant_Status]		FOREIGN KEY ([StatusId])	REFERENCES [dbo].[EntityStatus] ([Id]),
 );
 GO
 
