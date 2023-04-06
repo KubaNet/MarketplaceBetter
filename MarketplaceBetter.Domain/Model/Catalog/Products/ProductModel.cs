@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Validation.Attributes;
 using System;
 using System.Collections.Generic;
@@ -37,5 +38,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
 
         [Required]
         public int Order { get; set; }
+
+        public EntityStatusModel Status { get; set; }
     }
 }

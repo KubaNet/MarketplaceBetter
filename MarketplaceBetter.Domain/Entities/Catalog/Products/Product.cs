@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+﻿using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,10 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Products
         public virtual SizeGroup SizeGroup { get; set; }
 
         public int Order { get; set; }
+
+        public long StatusId { get; set; }
+
+        public virtual EntityStatus Status { get; set; }
 
         public override string ToString()
         {

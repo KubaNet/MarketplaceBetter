@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -23,7 +25,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Product> _repository;
-        private readonly ICurrentBrandService _currentBrandService;
+		private readonly IRepository<EntityStatus> _statusRepository;
+		private readonly ICurrentBrandService _currentBrandService;
 
         public ProductService(
             IMapper mapper,
@@ -33,7 +36,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Product>();
-            _currentBrandService = currentBrandService;
+			_statusRepository = unitOfWork.GetRepository<EntityStatus>();
+			_currentBrandService = currentBrandService;
         }
 
         public ProductModel Get(long id) => _mapper.Map<ProductModel>(_repository.Get(id));
@@ -79,6 +83,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             Product productToAdd = new();
 
             TransferValues(productToAdd, product);
+            productToAdd.Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft);
 
             _repository.Add(productToAdd);
             _unitOfWork.Save();
@@ -94,7 +99,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork.Save();
         }
 
-        public int GetMaxOrder()
+		public void ChangeStatus(IList<ProductModel> products, EntityStatusModel status)
+		{
+			foreach (var product in products)
+			{
+				Product productToUpdate = _repository.Get(product.Id);
+
+				productToUpdate.StatusId = status.Id;
+				_repository.Update(productToUpdate);
+			}
+
+			_unitOfWork.Save();
+		}
+
+		public int GetMaxOrder()
         {
             if (_repository.GetQuery().Any())
             {

@@ -10,16 +10,18 @@
 <MudText Typo="Typo.h4" Class="mt-2">Products</MudText>
 
 <MainBody>
-	<MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(ReloadProducts))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+	<MudTable T="ProductModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(ReloadProducts))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
 			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterProducts" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-			<MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Product</MudButton>
+			<MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
+			<MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Product</MudButton>
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="ProductModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="name" T="ProductModel">Name</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="code" T="ProductModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="status" T="ProductModel">Status</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="brand" T="ProductModel">Brand</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="collection" T="ProductModel">Collection</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="color_group" T="ProductModel">Color group</MudTableSortLabel></MudTh>
@@ -29,10 +31,9 @@
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
-			<MudTd DataLabel="Name">
-				<ProductDisplay Product="@context" />
-			</MudTd>
+			<MudTd DataLabel="Name"><ProductDisplay Product="@context" /></MudTd>
 			<MudTd DataLabel="Code">@context.Code</MudTd>
+			<MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
 			<MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
 			<MudTd DataLabel="Collection">@context.Collection.Name</MudTd>
 			<MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
@@ -49,6 +50,9 @@
 @code {
 	private MudTable<ProductModel> Table;
 	private ListRequest ListRequest = new();
+
+	private HashSet<ProductModel> SelectedProducts = new HashSet<ProductModel>();
+	private bool NoneSelected = true;
 	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
 	private Task<TableData<ProductModel>> ReloadProducts(TableState state)
@@ -93,6 +97,27 @@
 		if (!result.Canceled)
 		{
 			Table.ReloadServerData();
+		}
+	}
+
+	private async void ChangeStatusOfSelected()
+	{
+		var result = await DialogService.Show<ProductsSetStatusDialog>(null, new DialogParameters { ["Products"] = SelectedProducts.ToList() }).Result;
+
+		ProcessProductDialogResult(result);
+	}
+
+	private void OnSelectedItemsChanged(HashSet<ProductModel> selectedProducts)
+	{
+		SelectedProducts = selectedProducts;
+
+		if (SelectedProducts.Any())
+		{
+			NoneSelected = false;
+		}
+		else
+		{
+			NoneSelected = true;
 		}
 	}
 }

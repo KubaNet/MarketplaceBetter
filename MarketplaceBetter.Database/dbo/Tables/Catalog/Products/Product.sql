@@ -8,11 +8,13 @@
 	[ColorGroupId]	BIGINT				NOT NULL,
 	[SizeGroupId]	BIGINT				NOT NULL,
 	[Order]			INT					NOT NULL,
+	[StatusId]		BIGINT				NOT NULL DEFAULT(3),
 	CONSTRAINT	[PK_Product]			PRIMARY KEY ([Id]),
 	CONSTRAINT  [FK_Product_Brand]		FOREIGN KEY ([BrandId])			REFERENCES [dbo].[Brand] ([Id]),
 	CONSTRAINT  [FK_Product_Collection]	FOREIGN KEY ([CollectionId])	REFERENCES [dbo].[Collection] ([Id]),
 	CONSTRAINT  [FK_Product_ColorGroup]	FOREIGN KEY ([ColorGroupId])	REFERENCES [dbo].[ColorGroup] ([Id]),
 	CONSTRAINT  [FK_Product_SizeGroup]	FOREIGN KEY ([SizeGroupId])		REFERENCES [dbo].[SizeGroup] ([Id]),
+	CONSTRAINT  [FK_Product_Status]		FOREIGN KEY ([StatusId])		REFERENCES [dbo].[EntityStatus] ([Id]),
 );
 GO
 
