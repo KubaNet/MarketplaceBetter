@@ -202,7 +202,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "instance", "status", "child", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asins", "instance", "status", "child", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -211,6 +211,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     {
                         "id" => childs.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
                         "sku" => childs.Where(c => c.Sku.Contains(searchField.Value)),
+                        "asin" => childs.Where(c => c.Child.Asin.Contains(searchField.Value)),
                         "instance" => childs.Where(c => c.Instance.Name.Contains(searchField.Value)),
                         "status" => childs.Where(c => c.Status.Name.Contains(searchField.Value)),
                         "child" => childs.Where(c => c.Child.Sku.Contains(searchField.Value)),
@@ -223,6 +224,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 {
                     childs = childs.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Sku.Contains(searchString)
+                        || c.Child.Asin.Contains(searchString)
                         || c.Instance.Name.Contains(searchString)
                         || c.Status.Name.Contains(searchString)
                         || c.Child.Sku.Contains(searchString)
@@ -241,6 +243,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Id) : childs.OrderByDescending(c => c.Id),
                     "sku" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Sku) : childs.OrderByDescending(c => c.Sku),
+                    "asin" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Child.Asin) : childs.OrderByDescending(c => c.Child.Asin),
                     "instance" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Instance.Name) : childs.OrderByDescending(c => c.Instance.Name),
                     "status" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Status.Name) : childs.OrderByDescending(c => c.Status.Name),
                     "child" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Child.Sku) : childs.OrderByDescending(c => c.Child.Sku),
