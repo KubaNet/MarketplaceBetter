@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -11,7 +10,6 @@ using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Specialized.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -29,12 +27,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 		private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IParentInstanceService _parentInstanceService;
 		private readonly ICurrentBrandService _currentBrandService;
+        private readonly IDraftsSettingService _draftsSettingService;
 
         public ProductService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IParentInstanceService parentInstanceService,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandService currentBrandService,
+            IDraftsSettingService draftsSettingService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -42,6 +42,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 			_statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _parentInstanceService = parentInstanceService;
 			_currentBrandService = currentBrandService;
+            _draftsSettingService = draftsSettingService;
         }
 
         public ProductModel Get(long id) => _mapper.Map<ProductModel>(_repository.Get(id));
@@ -135,6 +136,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             if (_currentBrandService.IsSpecificBrand())
             {
                 products = products.Where(p => p.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
+            bool showDrafts = _draftsSettingService.GetDraftsSetting();
+            if (!showDrafts)
+            {
+                products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Domain.Model.Amazon.Inventory;
-using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -33,6 +30,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IPhotoService _photoService;
         private readonly IPhotoUploadService _photoUploadService;
         private readonly ICurrentBrandService _currentBrandService;
+        private readonly IDraftsSettingService _draftsSettingService;
 
         public VariantService(
             IMapper mapper,
@@ -40,7 +38,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             IChildInstanceService childInstanceService,
             IPhotoService photoService,
             IPhotoUploadService photoUploadService,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandService currentBrandService,
+            IDraftsSettingService draftsSettingService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -50,6 +49,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _photoService = photoService;
             _photoUploadService = photoUploadService;
             _currentBrandService = currentBrandService;
+            _draftsSettingService = draftsSettingService;
         }
 
         public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
@@ -142,6 +142,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             if (_currentBrandService.IsSpecificBrand())
             {
                 variants = variants.Where(v => v.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+            }
+
+            bool showDrafts = _draftsSettingService.GetDraftsSetting();
+            if (!showDrafts)
+            {
+                variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Draft);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

@@ -44,6 +44,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
         private readonly ICurrentBrandService _currentBrandService;
         private readonly ICurrentInstanceService _currentInstanceService;
+        private readonly IDraftsSettingService _draftsSettingService;
 
         public ParentInstanceService(
             IMapper mapper,
@@ -51,7 +52,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             IPhotoService photoService,
             ICopywritingService copywritingService,
             ICurrentBrandService currentBrandService,
-            ICurrentInstanceService currentInstanceService)
+            ICurrentInstanceService currentInstanceService,
+            IDraftsSettingService draftsSettingService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -65,6 +67,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
             _currentBrandService = currentBrandService;
             _currentInstanceService = currentInstanceService;
+            _draftsSettingService = draftsSettingService;
         }
 
         public ParentInstanceModel Get(long id) => _mapper.Map<ParentInstanceModel>(_repository.Get(id));
@@ -306,6 +309,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             if (_currentInstanceService.IsSpecificInstance())
             {
                 parents = parents.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+            }
+
+            bool showDrafts = _draftsSettingService.GetDraftsSetting();
+            if (!showDrafts)
+            {
+                parents = parents.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

@@ -2,7 +2,6 @@
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
-using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -11,7 +10,6 @@ using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Specialized.Interfaces;
-using Microsoft.AspNetCore.Builder;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -32,12 +30,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly ICurrentBrandService _currentBrandService;
         private readonly ICurrentInstanceService _currentInstanceService;
+        private readonly IDraftsSettingService _draftsSettingService;
 
         public ChildInstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICurrentBrandService currentBrandService,
-            ICurrentInstanceService currentInstanceService)
+            ICurrentInstanceService currentInstanceService,
+            IDraftsSettingService draftsSettingService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -47,6 +47,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _currentBrandService = currentBrandService;
             _currentInstanceService = currentInstanceService;
+            _draftsSettingService = draftsSettingService;
         }
 
         public ChildInstanceModel Get(long id) => _mapper.Map<ChildInstanceModel>(_repository.Get(id));
@@ -176,9 +177,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             {
                 childs = childs.Where(c => c.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
             }
+
             if (_currentInstanceService.IsSpecificInstance())
             {
                 childs = childs.Where(c => c.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+            }
+
+            bool showDrafts = _draftsSettingService.GetDraftsSetting();
+            if (!showDrafts)
+            {
+                childs = childs.Where(c => c.Status.SystemName != EntityStatusEnum.Draft);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

@@ -11,6 +11,7 @@
 @inject IInstanceService InstanceService
 @inject ICurrentBrandService CurrentBrandService
 @inject ICurrentInstanceService CurrentInstanceService
+@inject IDraftsSettingService DraftsSettingService
 @inject NavigationManager NavigationManager
 
 <AuthorizeView>
@@ -25,7 +26,10 @@
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedBrandChange">
+                        <MudCheckBox T="bool" Checked="ShowDrafts" Label="Show Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1" CheckedChanged="OnShowDraftsChange"></MudCheckBox>
+                    </div>
+                    <div>
+                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 180px;" Class="ml-5" ValueChanged="OnSelectedBrandChange">
                             @foreach (var brand in Brands)
                             {
                                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
@@ -33,7 +37,7 @@
                         </MudSelect>
                     </div>
                     <div>
-                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" DisableUnderLine="true" Style="width: 200px;" ValueChanged="OnSelectedInstanceChange" MaxHeight="600" Class="ml-4">
+                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" DisableUnderLine="true" Style="width: 180px;" MaxHeight="600" Class="ml-4" ValueChanged="OnSelectedInstanceChange">
                             @foreach (var instance in Instances)
                             {
                                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
@@ -63,6 +67,7 @@
     private List<BrandModel> Brands;
     private InstanceModel Instance;
     private IList<InstanceModel> Instances;
+    private bool ShowDrafts = false;
 
     protected override void OnInitialized()
     {
@@ -70,6 +75,7 @@
 
         InitializeCurrentBrand();
         InitializeCurrentInstance();
+        InitializeDraftsSetting();
     }
 
     private void InitializeCurrentBrand()
@@ -101,6 +107,11 @@
         }
     }
 
+    private void InitializeDraftsSetting()
+    {
+        ShowDrafts = DraftsSettingService.GetDraftsSetting();
+    }
+
     private void OnSelectedBrandChange(BrandModel brand)
     {
         Brand = brand;
@@ -115,6 +126,13 @@
         Instance = instance;
 
         CurrentInstanceService.SetCurrentInstance(instance);
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private void OnShowDraftsChange(bool showDrafts)
+    {
+        DraftsSettingService.SetDraftsSetting(showDrafts);
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
