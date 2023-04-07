@@ -2,7 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,16 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized
+namespace MarketplaceBetter.Services.Settings
 {
-    public class CurrentBrandService : ICurrentBrandService
+    public class CurrentBrandSetting : ICurrentBrandSetting
     {
         private const string STORAGE_KEY = "CurrentBrand";
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IRepository<Brand> _brandRepository;
 
-        public CurrentBrandService(
+        public CurrentBrandSetting(
             IConfiguration configuration,
             IMapper mapper,
             IUnitOfWork unitOfWork)

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized.Interfaces
+namespace MarketplaceBetter.Services.Settings.Interfaces
 {
-    public interface ICurrentInstanceService
+    public interface ICurrentInstanceSetting
     {
         void SetCurrentInstance(InstanceModel brand);
 

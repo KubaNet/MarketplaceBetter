@@ -3,7 +3,7 @@ using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +17,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Brand> _repository;
-        private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentBrandSetting _currentBrandSetting;
 
         public BrandService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandSetting currentBrandSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Brand>();
-            _currentBrandService = currentBrandService;
+            _currentBrandSetting = currentBrandSetting;
         }
 
         public BrandModel Get(long id) => _mapper.Map<BrandModel>(_repository.Get(id));
@@ -38,9 +38,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public IList<BrandModel> GetAll(bool onlyCurrent)
         {
-            if (onlyCurrent && _currentBrandService.IsSpecificBrand())
+            if (onlyCurrent && _currentBrandSetting.IsSpecificBrand())
             {
-                return _mapper.Map<IList<BrandModel>>(_repository.Where(b => b.Id == _currentBrandService.GetCurrentBrand().Id));
+                return _mapper.Map<IList<BrandModel>>(_repository.Where(b => b.Id == _currentBrandSetting.GetCurrentBrand().Id));
             }
             else
             {

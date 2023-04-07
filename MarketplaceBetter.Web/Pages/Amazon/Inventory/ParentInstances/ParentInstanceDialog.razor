@@ -6,7 +6,7 @@
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
-@using MarketplaceBetter.Services.Specialized.Interfaces;
+@using MarketplaceBetter.Services.Settings.Interfaces;
 @using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces
 
 @inject ISnackbar Snackbar
@@ -15,8 +15,8 @@
 @inject IBrandService BrandService
 @inject IProductService ProductService
 @inject IInstanceService InstanceService
-@inject ICurrentBrandService CurrentBrandService
-@inject ICurrentInstanceService CurrentInstanceService
+@inject ICurrentBrandSetting CurrentBrandSetting
+@inject ICurrentInstanceSetting CurrentInstanceSetting
 
 <EditForm Model="ParentInstance" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -75,12 +75,12 @@
         }
         else
         {
-            if (CurrentBrandService.IsSpecificBrand())
+            if (CurrentBrandSetting.IsSpecificBrand())
             {
                 SetValuesForCurrentBrand();
             }
 
-            if (CurrentInstanceService.IsSpecificInstance())
+            if (CurrentInstanceSetting.IsSpecificInstance())
             {
                 SetValuesForCurrentInstance();
             }
@@ -100,14 +100,14 @@
 
     private void SetValuesForCurrentBrand()
     {
-        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+        BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandSetting.GetCurrentBrand().Id);
 
         HandleBrandChanged(currentBrand);
     }
 
     private void SetValuesForCurrentInstance()
     {
-        InstanceModel currentInstance = Instances.Single(b => b.Id == CurrentInstanceService.GetCurrentInstance().Id);
+        InstanceModel currentInstance = Instances.Single(b => b.Id == CurrentInstanceSetting.GetCurrentInstance().Id);
 
         HandleInstanceChanged(currentInstance);
     }

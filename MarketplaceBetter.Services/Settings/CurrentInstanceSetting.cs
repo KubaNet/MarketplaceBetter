@@ -2,7 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,16 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized
+namespace MarketplaceBetter.Services.Settings
 {
-    public class CurrentInstanceService : ICurrentInstanceService
+    public class CurrentInstanceSetting : ICurrentInstanceSetting
     {
         private const string STORAGE_KEY = "CurrentInstance";
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IRepository<Instance> _instanceRepository;
 
-        public CurrentInstanceService(
+        public CurrentInstanceSetting(
             IConfiguration configuration,
             IMapper mapper,
             IUnitOfWork unitOfWork)

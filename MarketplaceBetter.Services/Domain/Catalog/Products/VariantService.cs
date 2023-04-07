@@ -9,7 +9,7 @@ using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -29,8 +29,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IChildInstanceService _childInstanceService;
         private readonly IPhotoService _photoService;
         private readonly IPhotoUploadService _photoUploadService;
-        private readonly ICurrentBrandService _currentBrandService;
-        private readonly IDraftsSettingService _draftsSettingService;
+        private readonly ICurrentBrandSetting _currentBrandSetting;
+        private readonly IShowDraftsSetting _showDraftsSetting;
 
         public VariantService(
             IMapper mapper,
@@ -38,8 +38,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             IChildInstanceService childInstanceService,
             IPhotoService photoService,
             IPhotoUploadService photoUploadService,
-            ICurrentBrandService currentBrandService,
-            IDraftsSettingService draftsSettingService)
+            ICurrentBrandSetting currentBrandSetting,
+            IShowDraftsSetting showDraftsSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -48,17 +48,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _childInstanceService = childInstanceService;
             _photoService = photoService;
             _photoUploadService = photoUploadService;
-            _currentBrandService = currentBrandService;
-            _draftsSettingService = draftsSettingService;
+            _currentBrandSetting = currentBrandSetting;
+            _showDraftsSetting = showDraftsSetting;
         }
 
         public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
 
         public IList<VariantModel> GetAll()
         {
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentBrandSetting.IsSpecificBrand())
             {
-                BrandModel currentBrand = _currentBrandService.GetCurrentBrand();
+                BrandModel currentBrand = _currentBrandSetting.GetCurrentBrand();
 
                 return _mapper.Map<IList<VariantModel>>(_repository.Where(v => v.Product.BrandId == currentBrand.Id).OrderBy(v => v.Sku));
             }
@@ -139,12 +139,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
         {
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentBrandSetting.IsSpecificBrand())
             {
-                variants = variants.Where(v => v.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                variants = variants.Where(v => v.Product.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
             }
 
-            bool showDrafts = _draftsSettingService.GetDraftsSetting();
+            bool showDrafts = _showDraftsSetting.GetDraftsSetting();
             if (!showDrafts)
             {
                 variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Draft);

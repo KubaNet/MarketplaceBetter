@@ -1,13 +1,12 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.Products;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized.Interfaces
+namespace MarketplaceBetter.Services.Settings.Interfaces
 {
-    public interface IDraftsSettingService
+    public interface IShowDraftsSetting
     {
         void SetDraftsSetting(bool showDrafts);
 

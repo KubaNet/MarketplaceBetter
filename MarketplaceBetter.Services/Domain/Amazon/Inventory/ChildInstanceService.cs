@@ -9,7 +9,7 @@ using MarketplaceBetter.Infrastructure.Helpers;
 using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -28,16 +28,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<Variant> _variantRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
-        private readonly ICurrentBrandService _currentBrandService;
-        private readonly ICurrentInstanceService _currentInstanceService;
-        private readonly IDraftsSettingService _draftsSettingService;
+        private readonly ICurrentBrandSetting _currentBrandSetting;
+        private readonly ICurrentInstanceSetting _currentInstanceSetting;
+        private readonly IShowDraftsSetting _showDraftsSetting;
 
         public ChildInstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService,
-            ICurrentInstanceService currentInstanceService,
-            IDraftsSettingService draftsSettingService)
+            ICurrentBrandSetting currentBrandSetting,
+            ICurrentInstanceSetting currentInstanceSetting,
+            IShowDraftsSetting showDraftsSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -45,9 +45,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _variantRepository = unitOfWork.GetRepository<Variant>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
-            _currentBrandService = currentBrandService;
-            _currentInstanceService = currentInstanceService;
-            _draftsSettingService = draftsSettingService;
+            _currentBrandSetting = currentBrandSetting;
+            _currentInstanceSetting = currentInstanceSetting;
+            _showDraftsSetting = showDraftsSetting;
         }
 
         public ChildInstanceModel Get(long id) => _mapper.Map<ChildInstanceModel>(_repository.Get(id));
@@ -173,17 +173,17 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<ChildInstance> ApplyFilter(IQueryable<ChildInstance> childs, ListRequest request)
         {
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentBrandSetting.IsSpecificBrand())
             {
-                childs = childs.Where(c => c.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                childs = childs.Where(c => c.Variant.Product.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
             }
 
-            if (_currentInstanceService.IsSpecificInstance())
+            if (_currentInstanceSetting.IsSpecificInstance())
             {
-                childs = childs.Where(c => c.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+                childs = childs.Where(c => c.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id);
             }
 
-            bool showDrafts = _draftsSettingService.GetDraftsSetting();
+            bool showDrafts = _showDraftsSetting.GetDraftsSetting();
             if (!showDrafts)
             {
                 childs = childs.Where(c => c.Status.SystemName != EntityStatusEnum.Draft);

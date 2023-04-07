@@ -7,7 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -22,20 +22,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<ColorTranslation> _repository;
-		private readonly ICurrentBrandService _currentBrandService;
-        private readonly ICurrentInstanceService _currentInstanceService;
+		private readonly ICurrentBrandSetting _currentBrandSetting;
+        private readonly ICurrentInstanceSetting _currentInstanceSetting;
 
         public ColorTranslationService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService,
-            ICurrentInstanceService currentInstanceService)
+            ICurrentBrandSetting currentBrandSetting,
+            ICurrentInstanceSetting currentInstanceSetting)
         {
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ColorTranslation>();
-			_currentBrandService = currentBrandService;
-            _currentInstanceService = currentInstanceService;
+			_currentBrandSetting = currentBrandSetting;
+            _currentInstanceSetting = currentInstanceSetting;
 
         }
 
@@ -93,14 +93,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<ColorTranslation> ApplyFilter(IQueryable<ColorTranslation> translations, ListRequest request)
         {
-			if (_currentBrandService.IsSpecificBrand())
+			if (_currentBrandSetting.IsSpecificBrand())
 			{
-				translations = translations.Where(t => t.Color.Group.BrandId == _currentBrandService.GetCurrentBrand().Id);
+				translations = translations.Where(t => t.Color.Group.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
 			}
 
-            if (_currentInstanceService.IsSpecificInstance())
+            if (_currentInstanceSetting.IsSpecificInstance())
             {
-                translations = translations.Where(t => t.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+                translations = translations.Where(t => t.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

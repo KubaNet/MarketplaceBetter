@@ -5,13 +5,13 @@
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
-@using MarketplaceBetter.Services.Specialized.Interfaces;
+@using MarketplaceBetter.Services.Settings.Interfaces;
 
 @inject IBrandService BrandService
 @inject IInstanceService InstanceService
-@inject ICurrentBrandService CurrentBrandService
-@inject ICurrentInstanceService CurrentInstanceService
-@inject IDraftsSettingService DraftsSettingService
+@inject ICurrentBrandSetting CurrentBrandSetting
+@inject ICurrentInstanceSetting CurrentInstanceSetting
+@inject IShowDraftsSetting ShowDraftsSetting
 @inject NavigationManager NavigationManager
 
 <AuthorizeView>
@@ -84,9 +84,9 @@
         Brands.Add(AllBrands);
         Brands.AddRange(BrandService.GetAll());
 
-        if (CurrentBrandService.IsSpecificBrand())
+        if (CurrentBrandSetting.IsSpecificBrand())
         {
-            Brand = Brands.Single(b => b.Id == CurrentBrandService.GetCurrentBrand().Id);
+            Brand = Brands.Single(b => b.Id == CurrentBrandSetting.GetCurrentBrand().Id);
         }
         else
         {
@@ -97,9 +97,9 @@
     private void InitializeCurrentInstance()
     {
         Instances = InstanceService.GetAll();
-        if (CurrentInstanceService.IsSpecificInstance())
+        if (CurrentInstanceSetting.IsSpecificInstance())
         {
-            Instance = Instances.Single(i => i.Id == CurrentInstanceService.GetCurrentInstance().Id);
+            Instance = Instances.Single(i => i.Id == CurrentInstanceSetting.GetCurrentInstance().Id);
         }
         else
         {
@@ -109,14 +109,14 @@
 
     private void InitializeDraftsSetting()
     {
-        ShowDrafts = DraftsSettingService.GetDraftsSetting();
+        ShowDrafts = ShowDraftsSetting.GetDraftsSetting();
     }
 
     private void OnSelectedBrandChange(BrandModel brand)
     {
         Brand = brand;
 
-        CurrentBrandService.SetCurrentBrand(brand);
+        CurrentBrandSetting.SetCurrentBrand(brand);
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
@@ -125,14 +125,14 @@
     {
         Instance = instance;
 
-        CurrentInstanceService.SetCurrentInstance(instance);
+        CurrentInstanceSetting.SetCurrentInstance(instance);
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 
     private void OnShowDraftsChange(bool showDrafts)
     {
-        DraftsSettingService.SetDraftsSetting(showDrafts);
+        ShowDraftsSetting.SetDraftsSetting(showDrafts);
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }

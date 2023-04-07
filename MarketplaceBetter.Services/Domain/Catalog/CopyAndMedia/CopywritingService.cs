@@ -7,7 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -22,20 +22,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Copywriting> _repository;
-        private readonly ICurrentBrandService _currentBrandService;
-        private readonly ICurrentInstanceService _currentInstanceService;
+        private readonly ICurrentBrandSetting _currentBrandSetting;
+        private readonly ICurrentInstanceSetting _currentInstanceSetting;
 
         public CopywritingService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService,
-            ICurrentInstanceService currentInstanceService)
+            ICurrentBrandSetting currentBrandSetting,
+            ICurrentInstanceSetting currentInstanceSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Copywriting>();
-            _currentBrandService = currentBrandService;
-            _currentInstanceService = currentInstanceService;
+            _currentBrandSetting = currentBrandSetting;
+            _currentInstanceSetting = currentInstanceSetting;
         }
 
         public CopywritingModel Get(long id) => _mapper.Map<CopywritingModel>(_repository.Get(id));
@@ -98,14 +98,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Copywriting> ApplyFilter(IQueryable<Copywriting> copywritings, ListRequest request)
         {
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentBrandSetting.IsSpecificBrand())
             {
-                copywritings = copywritings.Where(c => c.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                copywritings = copywritings.Where(c => c.Product.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
             }
 
-            if (_currentInstanceService.IsSpecificInstance())
+            if (_currentInstanceSetting.IsSpecificInstance())
             {
-                copywritings = copywritings.Where(c => c.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+                copywritings = copywritings.Where(c => c.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

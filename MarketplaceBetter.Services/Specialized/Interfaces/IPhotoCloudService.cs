@@ -1,5 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
-using MarketplaceBetter.Services.Model;
+﻿using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;

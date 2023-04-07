@@ -4,7 +4,7 @@ using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +17,16 @@ namespace MarketplaceBetter.Services.Domain.Base
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Instance> _repository;
-        private readonly ICurrentInstanceService _currentInstanceService;
+        private readonly ICurrentInstanceSetting _currentInstanceSetting;
 
         public InstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentInstanceService currentInstanceService)
+            ICurrentInstanceSetting currentInstanceSetting)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Instance>();
-            _currentInstanceService = currentInstanceService;
+            _currentInstanceSetting = currentInstanceSetting;
         }
 
         public IList<InstanceModel> GetAll() => _mapper.Map<IList<InstanceModel>>(_repository.GetQuery().OrderBy(i => i.Id));
@@ -35,9 +35,9 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         public IList<InstanceModel> GetAllNormal(bool onlyCurrent)
         {
-            if (onlyCurrent && _currentInstanceService.IsSpecificInstance())
+            if (onlyCurrent && _currentInstanceSetting.IsSpecificInstance())
             {
-                return _mapper.Map<IList<InstanceModel>>(_repository.Where(i => i.Id == _currentInstanceService.GetCurrentInstance().Id));
+                return _mapper.Map<IList<InstanceModel>>(_repository.Where(i => i.Id == _currentInstanceSetting.GetCurrentInstance().Id));
             }
             else
             {

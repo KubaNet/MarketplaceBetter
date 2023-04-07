@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Services.Specialized.Interfaces;
+﻿using MarketplaceBetter.Services.Settings.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized
+namespace MarketplaceBetter.Services.Settings
 {
-    public class DraftsSettingService : IDraftsSettingService
+    public class ShowDraftsSetting : IShowDraftsSetting
     {
         private const string STORAGE_KEY = "ShowDrafts";
         private readonly IConfiguration _configuration;
 
-        public DraftsSettingService(
+        public ShowDraftsSetting(
             IConfiguration configuration)
         {
             _configuration = configuration;

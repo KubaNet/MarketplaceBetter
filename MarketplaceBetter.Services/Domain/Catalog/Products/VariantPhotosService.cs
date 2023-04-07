@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
@@ -16,14 +19,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO.Compression;
-using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Services.Specialized.Interfaces;
-using MarketplaceBetter.Domain.Entities.Base;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -33,8 +32,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Photo> _repository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
-        private readonly ICurrentBrandService _currentBrandService;
-        private readonly ICurrentInstanceService _currentInstanceService;
+        private readonly ICurrentBrandSetting _currentBrandSetting;
+        private readonly ICurrentInstanceSetting _currentInstanceSetting;
         private readonly IWebHostEnvironment _environment;
         private readonly string _downloadFolderPath;
 
@@ -42,16 +41,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
-            ICurrentBrandService currentBrandService,
-            ICurrentInstanceService currentInstanceService,
+            ICurrentBrandSetting currentBrandSetting,
+            ICurrentInstanceSetting currentInstanceSetting,
             IWebHostEnvironment environment)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
-            _currentBrandService = currentBrandService;
-            _currentInstanceService = currentInstanceService;
+            _currentBrandSetting = currentBrandSetting;
+            _currentInstanceSetting = currentInstanceSetting;
             _environment = environment;
             _downloadFolderPath = Path.Combine(_environment.WebRootPath, "_download");
         }
@@ -147,15 +146,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentBrandSetting.IsSpecificBrand())
             {
-                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
             }
 
-            if (_currentInstanceService.IsSpecificInstance())
+            if (_currentInstanceSetting.IsSpecificInstance())
             {
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
-                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
+                photos = photos.Where(p => p.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

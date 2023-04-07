@@ -7,7 +7,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using System;
@@ -24,17 +24,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Size> _repository;
-        private readonly ICurrentBrandService _currentBrandService;
+        private readonly ICurrentBrandSetting _currentBrandSetting;
 
         public SizeService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandService currentBrandService)
+            ICurrentBrandSetting currentBrandSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Size>();
-            _currentBrandService = currentBrandService;
+            _currentBrandSetting = currentBrandSetting;
         }
 
         public SizeModel Get(long id) => _mapper.Map<SizeModel>(_repository.Get(id));
@@ -93,9 +93,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<Size> ApplyFilter(IQueryable<Size> sizes, ListRequest request)
         {
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentBrandSetting.IsSpecificBrand())
             {
-                sizes = sizes.Where(s => s.Group.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                sizes = sizes.Where(s => s.Group.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

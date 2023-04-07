@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -18,9 +20,6 @@ using System.Threading.Tasks;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
 using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
-using MarketplaceBetter.Domain.Model.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Domain.Entities.Base;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {

@@ -9,16 +9,15 @@ using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
+using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Services.Settings.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MarketplaceBetter.Services.Specialized.Interfaces;
-using MarketplaceBetter.Services.Domain.Base.Interfaces;
-using MarketplaceBetter.Services.Domain.Base;
-using MarketplaceBetter.Domain.Entities.Base;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -29,24 +28,24 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Photo> _repository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
-        private readonly ICurrentBrandService _currentBrandService;
-        private readonly ICurrentInstanceService _currentInstanceService;
+        private readonly ICurrentBrandSetting _currentBrandSetting;
+        private readonly ICurrentInstanceSetting _currentInstanceSetting;
 
         public PhotoService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
             IInstanceService instanceService,
-            ICurrentBrandService currentBrandService,
-            ICurrentInstanceService currentInstanceService)
+            ICurrentBrandSetting currentBrandSetting,
+            ICurrentInstanceSetting currentInstanceSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
-            _currentBrandService = currentBrandService;
-            _currentInstanceService = currentInstanceService;
+            _currentBrandSetting = currentBrandSetting;
+            _currentInstanceSetting = currentInstanceSetting;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -180,15 +179,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
-            if (_currentBrandService.IsSpecificBrand())
+            if (_currentBrandSetting.IsSpecificBrand())
             {
-                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
             }
 
-            if (_currentInstanceService.IsSpecificInstance())
+            if (_currentInstanceSetting.IsSpecificInstance())
             {
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
-                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
+                photos = photos.Where(p => p.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
