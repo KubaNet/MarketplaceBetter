@@ -138,6 +138,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork.Save();
         }
 
+        public void DeleteAllForVariant(long variantId)
+        {
+            IList<PhotoModel> photos = _mapper.Map<IList<PhotoModel>>(_repository.Where(p => p.VariantId == variantId).ToList());
+
+            Delete(photos);
+        }
+
         private void TransferValues(Photo toPhoto, PhotoModel fromPhoto)
         {
             toPhoto.VariantId = fromPhoto.Variant.Id;

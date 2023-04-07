@@ -43,7 +43,7 @@
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
             <MudTd>
-                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.FileName))" Color="Color.Secondary">Delete</MudButton>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.Type.Name, context.Variant.Sku))" Color="Color.Secondary">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -109,9 +109,9 @@
         ProcessPhotoDialogResult(result);
     }
 
-    private async void DeletePhoto(long id, string fileName)
+    private async void DeletePhoto(long id, string type, string variant)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete photo \"{fileName}\"?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete <b>{type}</b> photo for variant \"<b>{variant}</b>\" ?" }).Result;
 
         if (!result.Canceled)
         {

@@ -2,11 +2,11 @@
 (
 	[Id]		BIGINT					NOT NULL	IDENTITY,
 	[Sku]		NVARCHAR (255)			NOT NULL,
-	[Asin]		NVARCHAR (255)			NULL,
 	[ProductId]	BIGINT					NOT NULL,
 	[ColorId]	BIGINT					NOT NULL,
 	[SizeId]	BIGINT					NOT NULL,
 	[Ean]		NVARCHAR (255)			NULL,
+	[Asin]		NVARCHAR (255)			NULL,
 	[StatusId]	BIGINT					NOT NULL,
 	CONSTRAINT	[PK_Variant]			PRIMARY KEY ([Id]),
 	CONSTRAINT  [FK_Variant_Product]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),

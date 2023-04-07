@@ -6,6 +6,7 @@ using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
+using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -26,17 +27,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Product> _repository;
 		private readonly IRepository<EntityStatus> _statusRepository;
+        private readonly IParentInstanceService _parentInstanceService;
 		private readonly ICurrentBrandService _currentBrandService;
 
         public ProductService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
+            IParentInstanceService parentInstanceService,
             ICurrentBrandService currentBrandService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Product>();
 			_statusRepository = unitOfWork.GetRepository<EntityStatus>();
+            _parentInstanceService = parentInstanceService;
 			_currentBrandService = currentBrandService;
         }
 
@@ -87,6 +91,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             _repository.Add(productToAdd);
             _unitOfWork.Save();
+
+            _parentInstanceService.AddForProduct(productToAdd.Id);
         }
 
         public void Update(ProductModel product)
@@ -97,6 +103,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             _repository.Update(productToUpdate);
             _unitOfWork.Save();
+
+            _parentInstanceService.AddForProduct(productToUpdate.Id);
         }
 
 		public void ChangeStatus(IList<ProductModel> products, EntityStatusModel status)

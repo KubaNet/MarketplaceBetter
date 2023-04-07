@@ -29,6 +29,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IRepository<PhotoUpload> _repository;
+        private readonly IRepository<PhotoUploadVariant> _photoUploadVariantRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<PhotoKind> _photoKindRepository;
         private readonly IRepository<PhotoKindBeginning> _photoKindBeginningRepository;
@@ -49,6 +50,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<PhotoUpload>();
+            _photoUploadVariantRepository = unitOfWork.GetRepository<PhotoUploadVariant>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoKindRepository = unitOfWork.GetRepository<PhotoKind>();
             _photoKindBeginningRepository = unitOfWork.GetRepository<PhotoKindBeginning>();
@@ -103,6 +105,23 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             }
 
             _unitOfWork.Save();
+        }
+
+        public void RemoveAllForVariant(long  variantId)
+        {
+            IList<PhotoUploadVariant> photoUploadsVariants = _photoUploadVariantRepository.Where(p => p.VariantId == variantId).ToList();
+
+            foreach (var photoUploadVariant in photoUploadsVariants)
+            {
+                _photoUploadVariantRepository.Delete(photoUploadVariant);
+                _unitOfWork.Save();
+
+                PhotoUpload photoUpload = _repository.Single(p => p.Id == photoUploadVariant.PhotoUploadId);
+                if (!photoUpload.Variants.Any())
+                {
+                    Remove(_mapper.Map<PhotoUploadModel>(photoUpload));
+                }
+            }
         }
 
         public void SetType(IList<PhotoUploadModel> photoUploads, PhotoTypeModel type)

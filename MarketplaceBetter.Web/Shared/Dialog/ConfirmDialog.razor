@@ -3,7 +3,7 @@
         <MudText Typo="Typo.h6">Please confirm</MudText>
     </TitleContent>
     <DialogContent>
-        @Question
+        @((MarkupString)Question)
     </DialogContent>
     <DialogActions>
         <MudButton Disabled="Processing" OnClick="Cancel">Cancel</MudButton>

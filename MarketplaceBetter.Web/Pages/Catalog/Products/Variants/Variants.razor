@@ -26,6 +26,7 @@
             <MudTh><MudTableSortLabel SortLabel="color" T="VariantModel">Color</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="size" T="VariantModel">Size</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="ean" T="VariantModel">EAN</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="asin" T="VariantModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="VariantModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 250px;">Actions</MudTh>
         </HeaderContent>
@@ -38,11 +39,12 @@
             <MudTd DataLabel="Color">@context.Color.Name</MudTd>
             <MudTd DataLabel="Size">@context.Size.Name</MudTd>
             <MudTd DataLabel="EAN">@context.Ean</MudTd>
+            <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarVariant(context.Id))">Add</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditVariant(context.Id))">Edit</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteVariant(context.Id, context.Sku))" Color="Color.Secondary">Delete</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilarVariant(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => EditVariant(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => DeleteVariant(context.Id, context.Sku))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -130,7 +132,7 @@
 
     private async void DeleteVariant(long id, string sku)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete variant \"{sku}\" and all its childs and child instances?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete variant \"<b>{sku}</b>\" ? <br><br>Child instances and photos associated with this variant will be also deleted." }).Result;
 
         if (!result.Canceled)
         {

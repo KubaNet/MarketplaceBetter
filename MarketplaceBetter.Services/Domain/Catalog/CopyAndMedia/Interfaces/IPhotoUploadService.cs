@@ -19,6 +19,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 
         void Remove(IList<PhotoUploadModel> photoUploads);
 
+        void RemoveAllForVariant(long variantId);
+
         void SetType(IList<PhotoUploadModel> photoUploads, PhotoTypeModel type);
 
         void Save(PhotoUploadModel photoUpload, VariantModel variant);

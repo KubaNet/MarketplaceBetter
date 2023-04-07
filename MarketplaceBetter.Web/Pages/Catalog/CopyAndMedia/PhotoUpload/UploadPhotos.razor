@@ -132,7 +132,7 @@
 
     private async void Remove(PhotoUploadModel photoUpload)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove photo \"{photoUpload.FileName}\"?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove photo \"<b>{photoUpload.FileName}</b>\" ?" }).Result;
 
         if (!result.Canceled)
         {

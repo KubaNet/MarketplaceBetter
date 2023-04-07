@@ -106,20 +106,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
-        public void AddForProduct(long parentId)
+        public void AddForProduct(long productId)
         {
             foreach (var instance in _instanceRepository.Where(i => i.IsNormal).OrderBy(i => i.Id))
             {
-                if (_repository.Any(p => p.ProductId == parentId && p.InstanceId == instance.Id))
+                if (_repository.Any(p => p.ProductId == productId && p.InstanceId == instance.Id))
                 {
                     continue;
                 }
 
                 ParentInstance parentInstance = new ParentInstance 
                 { 
-                    ProductId = parentId, 
+                    ProductId = productId, 
                     InstanceId = instance.Id, 
-                    Sku = GetSkuFor(parentId, instance.Id),
+                    Sku = GetSkuFor(productId, instance.Id),
                     Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft)
                 };
 
@@ -158,13 +158,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 Product product = _productRepository.Get(productId.Value);
                 Instance instance = _instanceRepository.Get(instanceId.Value);
 
-                return $"{InstanceHelper.GetCodeFor(instance.SystemName)}_{product.Code}";
+                return $"{InstanceHelper.GetCodeFor(instance.SystemName)}_{product.Brand.Code.ToLower()}_{product.Code}";
             }
             else if (productId.HasValue)
             {
-                Product parent = _productRepository.Get(productId.Value);
+                Product product = _productRepository.Get(productId.Value);
 
-                return parent.Code;
+                return $"{product.Brand.Code.ToLower()}_{product.Code}"; ;
             }
             else if (instanceId.HasValue)
             {

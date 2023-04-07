@@ -96,7 +96,6 @@
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoType.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\Photo.sql" />
     <None Include="Scripts\Inserts\05_PhotoTypes.sql" />
-    <None Include="Scripts\CustomScripts\UpdatingChildsSKU.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetSource.sql" />
     <None Include="Scripts\Inserts\13_ResearchTargetSources.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetStatus.sql" />
@@ -122,7 +121,6 @@
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoKind.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoKindBeginning.sql" />
     <None Include="Scripts\Inserts\06_PhotoKindBeginnings.sql" />
-    <None Include="Scripts\CustomScripts\UpdatingParentsSKU.sql" />
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Prod_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Test_SchemaCompare.scmp" />
@@ -136,5 +134,9 @@
     <Build Include="dbo\Tables\Base\Instance.sql" />
     <None Include="Scripts\Inserts\03_EntityStatuses.sql" />
     <Build Include="dbo\Tables\Base\EntityStatus.sql" />
+    <None Include="Scripts\CustomScripts\UpdatingParentInstanceProduct.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\CustomScripts\UpdatingChildInstanceVariant.sql" />
   </ItemGroup>
 </Project>

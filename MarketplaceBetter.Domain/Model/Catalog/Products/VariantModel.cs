@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Base;
+﻿using MarketplaceBetter.Domain.Constants;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Validation.Attributes;
 using System;
@@ -19,9 +20,6 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         [BetterLength]
         public string Sku { get; set; }
 
-        [Display(Name = "ASIN")]
-        public string Asin { get; set; }
-
         [Required]
         public ProductModel Product { get; set; }
 
@@ -34,6 +32,10 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         [Display(Name = "EAN")]
         [BetterMaxLength]
         public string Ean { get; set; }
+
+        [Display(Name = "ASIN")]
+        [StringLength(Standard.AmazonAsinLength, MinimumLength = 0)]
+        public string Asin { get; set; }
 
         public EntityStatusModel Status { get; set; }
     }

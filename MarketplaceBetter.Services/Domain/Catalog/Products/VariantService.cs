@@ -8,6 +8,7 @@ using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
+using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -29,12 +30,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Variant> _repository;
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IChildInstanceService _childInstanceService;
+        private readonly IPhotoService _photoService;
+        private readonly IPhotoUploadService _photoUploadService;
         private readonly ICurrentBrandService _currentBrandService;
 
         public VariantService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IChildInstanceService childInstanceService,
+            IPhotoService photoService,
+            IPhotoUploadService photoUploadService,
             ICurrentBrandService currentBrandService)
         {
             _mapper = mapper;
@@ -42,6 +47,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository = unitOfWork.GetRepository<Variant>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _childInstanceService = childInstanceService;
+            _photoService = photoService;
+            _photoUploadService = photoUploadService;
             _currentBrandService = currentBrandService;
         }
 
@@ -111,6 +118,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         public void Delete(long id)
         {
             _childInstanceService.DeleteAllForVariant(id);
+            _photoService.DeleteAllForVariant(id);
+            _photoUploadService.RemoveAllForVariant(id);
 
             Variant variant = _repository.Get(id);
 
@@ -138,6 +147,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             toVariant.ColorId = fromVariant.Color.Id;
             toVariant.SizeId = fromVariant.Size.Id;
             toVariant.Ean = fromVariant.Ean;
+            toVariant.Asin = fromVariant.Asin;
         }
 
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
@@ -156,7 +166,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "product_code", "brand", "color", "size", "ean", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "product_code", "brand", "color", "size", "ean", "asin", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -172,6 +182,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         "color" => variants.Where(v => v.Color.Name.Contains(searchField.Value)),
                         "size" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
                         "ean" => variants.Where(v => v.Ean.Contains(searchField.Value)),
+                        "asin" => variants.Where(v => v.Asin.Contains(searchField.Value)),
                         "product_id" => variants.Where(v => v.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -186,7 +197,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                       || v.Product.Brand.Name.Contains(searchString)
                       || v.Color.Name.Contains(searchString)
                       || v.Size.Name.Contains(searchString)
-                      || v.Ean.Contains(searchString));
+                      || v.Ean.Contains(searchString)
+                      || v.Asin.Contains(searchString));
                 }
             }
 
@@ -208,6 +220,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
                     "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
                     "ean" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Ean) : variants.OrderByDescending(v => v.Ean),
+                    "asin" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Asin) : variants.OrderByDescending(v => v.Asin),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

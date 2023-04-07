@@ -25,7 +25,7 @@
             <MudTh><MudTableSortLabel SortLabel="instance" T="ChildInstanceModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="variant" T="ChildInstanceModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildInstanceModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 170px;">Actions</MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -40,7 +40,6 @@
             <MudTd DataLabel="Brand">@context.Variant.Product.Brand.Name</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChildInstance(context.Id))">Edit</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteChildInstance(context.Id, context.Sku))" Color="Color.Secondary">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -121,7 +120,7 @@
 
     private async void DeleteChildInstance(long id, string sku)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child instance \"{sku}\"?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child instance \"<b>{sku}</b>\" ?" }).Result;
 
         if (!result.Canceled)
         {

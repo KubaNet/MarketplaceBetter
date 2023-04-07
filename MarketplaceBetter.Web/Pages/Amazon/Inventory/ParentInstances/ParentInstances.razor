@@ -42,7 +42,7 @@
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => ExportParentInstance(context.Id, context.Sku))">Export</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditParentInstance(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" OnClick="@(() => EditParentInstance(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
