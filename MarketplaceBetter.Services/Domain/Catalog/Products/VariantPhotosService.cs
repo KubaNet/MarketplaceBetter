@@ -24,7 +24,6 @@ using System.IO.Compression;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Services.Specialized.Interfaces;
 using MarketplaceBetter.Domain.Entities.Base;
-using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -32,6 +31,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Photo> _repository;
+        private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly ICurrentBrandService _currentBrandService;
         private readonly ICurrentInstanceService _currentInstanceService;
@@ -48,6 +48,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
+            _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
             _currentBrandService = currentBrandService;
             _currentInstanceService = currentInstanceService;
@@ -153,7 +154,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             if (_currentInstanceService.IsSpecificInstance())
             {
-                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+                long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
+                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

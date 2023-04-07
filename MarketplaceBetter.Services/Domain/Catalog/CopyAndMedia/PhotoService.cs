@@ -2,7 +2,6 @@
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -17,6 +16,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
+using MarketplaceBetter.Services.Domain.Base;
+using MarketplaceBetter.Domain.Entities.Base;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -25,6 +27,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Photo> _repository;
+        private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly ICurrentBrandService _currentBrandService;
         private readonly ICurrentInstanceService _currentInstanceService;
@@ -33,12 +36,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
+            IInstanceService instanceService,
             ICurrentBrandService currentBrandService,
             ICurrentInstanceService currentInstanceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
+            _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
             _currentBrandService = currentBrandService;
             _currentInstanceService = currentInstanceService;
@@ -182,7 +187,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             if (_currentInstanceService.IsSpecificInstance())
             {
-                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id);
+                long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
+                photos = photos.Where(p => p.InstanceId == _currentInstanceService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
