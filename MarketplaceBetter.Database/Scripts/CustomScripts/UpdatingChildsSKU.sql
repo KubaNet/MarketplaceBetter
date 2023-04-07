@@ -1,4 +1,4 @@
-﻿UPDATE [dbo].[Child]
+﻿UPDATE [dbo].[Variant]
    SET [Sku] = v.Sku
-   FROM Child ch JOIN Variant v ON ch.VariantId = v.Id
+   FROM Variant ch JOIN Variant v ON ch.VariantId = v.Id
 GO

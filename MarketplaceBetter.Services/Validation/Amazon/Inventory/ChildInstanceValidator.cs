@@ -19,10 +19,10 @@ namespace MarketplaceBetter.Services.Validation.Amazon.Inventory
         {
             ValidationResult result = new();
 
-            if (_repository.Any(c => c.Id != childInstance.Id && c.ChildId == childInstance.Child.Id 
+            if (_repository.Any(c => c.Id != childInstance.Id && c.VariantId == childInstance.Variant.Id 
                 && c.InstanceId == childInstance.Instance.Id))
             {
-                result.AddError("There already exists a Child Instance for this Child and Instance.");
+                result.AddError("There already exists a Child Instance for this Variant and Instance.");
             }
 
             if (_repository.Any(c => c.Id != childInstance.Id && c.Sku == childInstance.Sku))

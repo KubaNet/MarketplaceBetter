@@ -100,7 +100,7 @@ namespace MarketplaceBetter.Services.Specialized
 
         private string GetProductSku(Campaign campaign, Variant variant)
         {
-            ChildInstance childInstance = _childInstanceRepository.SingleOrDefault(c => c.Child.VariantId == variant.Id && c.InstanceId == campaign.InstanceId);
+            ChildInstance childInstance = _childInstanceRepository.SingleOrDefault(c => c.Variant.Id == variant.Id && c.InstanceId == campaign.InstanceId);
 
             if (childInstance != null)
             {

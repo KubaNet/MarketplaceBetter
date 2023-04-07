@@ -1,5 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
     {
         public string Sku { get; set; }
 
-        public long ChildId { get; set; }
+        public long VariantId { get; set; }
 
-        public virtual Child Child { get; set; }
+        public virtual Variant Variant { get; set; }
 
         public long InstanceId { get; set; }
 

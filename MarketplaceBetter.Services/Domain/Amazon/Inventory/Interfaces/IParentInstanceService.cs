@@ -24,7 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void Add(ParentInstanceModel parent);
 
-        void AddForParent(long parentId);
+        void AddForProduct(long parentId);
 
         void Update(ParentInstanceModel parent);
 

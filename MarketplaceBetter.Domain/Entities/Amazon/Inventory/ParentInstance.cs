@@ -1,5 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +14,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
 
         public string Asin { get; set; }
 
-        public long ParentId { get; set; }
+        public long ProductId { get; set; }
 
-        public virtual Parent Parent { get; set; }
+        public virtual Product Product { get; set; }
 
         public long InstanceId { get; set; }
 

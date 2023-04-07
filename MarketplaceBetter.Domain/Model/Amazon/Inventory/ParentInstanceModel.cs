@@ -1,7 +1,6 @@
 ﻿using MarketplaceBetter.Domain.Constants;
 using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
-using MarketplaceBetter.Domain.Validation.Attributes;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +15,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         public long Id { get; set; }
 
         [Required]
-        public ParentModel Parent { get; set; }
+        public ProductModel Product { get; set; }
 
         [Required]
         public InstanceModel Instance { get; set; }

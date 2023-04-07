@@ -13,7 +13,7 @@
 @inject IParentInstanceService ParentInstanceService
 @inject IParentInstanceValidator ParentInstanceValidator
 @inject IBrandService BrandService
-@inject IParentService ParentService
+@inject IProductService ProductService
 @inject IInstanceService InstanceService
 @inject ICurrentBrandService CurrentBrandService
 @inject ICurrentInstanceService CurrentInstanceService
@@ -29,10 +29,10 @@
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Parent" T="ParentModel" Value="ParentInstance.Parent" For="() => ParentInstance.Parent" ValueChanged="HandleParentChanged" Disabled="ParentSelectDisabled">
-            @foreach (var parent in Parents)
+        <MudSelect Label="Product" T="ProductModel" Value="ParentInstance.Product" For="() => ParentInstance.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+            @foreach (var product in Products)
             {
-                <MudSelectItem Value="parent">@parent.Sku</MudSelectItem>
+                <MudSelectItem Value="product">@product.Code</MudSelectItem>
             }
         </MudSelect>
         <MudSelect Label="Instance" T="InstanceModel" Value="ParentInstance.Instance" For="() => ParentInstance.Instance" ValueChanged="HandleInstanceChanged">
@@ -58,9 +58,9 @@
 
     private IList<BrandModel> Brands;
     private IList<InstanceModel> Instances;
-    private IList<ParentModel> Parents = new List<ParentModel>();
+    private IList<ProductModel> Products = new List<ProductModel>();
 
-    private bool ParentSelectDisabled = true;
+    private bool ProductSelectDisabled = true;
 
     protected override void OnInitialized()
     {
@@ -91,10 +91,10 @@
     {
         ParentInstance = ParentInstanceService.Get(ParentInstanceId);
 
-        ActivateParent(ParentInstance.Parent.Product.Brand.Id);
+        ActivateProduct(ParentInstance.Product.Brand.Id);
 
-        Brand = Brands.Single(b => b.Id == ParentInstance.Parent.Product.Brand.Id);
-        ParentInstance.Parent = Parents.Single(p => p.Id == ParentInstance.Parent.Id);
+        Brand = Brands.Single(b => b.Id == ParentInstance.Product.Brand.Id);
+        ParentInstance.Product = Products.Single(p => p.Id == ParentInstance.Product.Id);
         ParentInstance.Instance = Instances.Single(i => i.Id == ParentInstance.Instance.Id);
     }
 
@@ -116,8 +116,8 @@
     {
         Brand = brand;
 
-        ResetParent();
-        ActivateParent(brand.Id);
+        ResetProduct();
+        ActivateProduct(brand.Id);
         SetParentInstanceSku();
     }
 
@@ -127,28 +127,28 @@
         SetParentInstanceSku();
     }
 
-    private void HandleParentChanged(ParentModel parent)
+    private void HandleProductChanged(ProductModel product)
     {
-        ParentInstance.Parent = parent;
+        ParentInstance.Product = product;
         SetParentInstanceSku();
     }
 
-    private void ResetParent()
+    private void ResetProduct()
     {
-        ParentInstance.Parent = null;
-        ParentSelectDisabled = true;
-        Parents = new List<ParentModel>();
+        ParentInstance.Product = null;
+        ProductSelectDisabled = true;
+        Products = new List<ProductModel>();
     }
 
-    private void ActivateParent(long brandId)
+    private void ActivateProduct(long brandId)
     {
-        ParentSelectDisabled = false;
-        Parents = ParentService.GetAllForBrand(brandId);
+        ProductSelectDisabled = false;
+        Products = ProductService.GetAllForBrand(brandId);
     }
 
     private void SetParentInstanceSku()
     {
-        ParentInstance.Sku = ParentInstanceService.GetSkuFor(ParentInstance.Parent?.Id, ParentInstance.Instance?.Id);
+        ParentInstance.Sku = ParentInstanceService.GetSkuFor(ParentInstance.Product?.Id, ParentInstance.Instance?.Id);
     }
 
     private void HandleValidSubmit()

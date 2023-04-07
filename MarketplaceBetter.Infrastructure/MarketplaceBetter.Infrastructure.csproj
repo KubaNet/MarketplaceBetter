@@ -17,4 +17,8 @@
     <ProjectReference Include="..\MarketplaceBetter.Domain\MarketplaceBetter.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mappings\Sales\" />
+  </ItemGroup>
+
 </Project>

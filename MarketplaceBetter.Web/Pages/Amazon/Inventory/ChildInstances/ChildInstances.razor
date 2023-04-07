@@ -23,7 +23,7 @@
             <MudTh><MudTableSortLabel SortLabel="asin" T="ChildInstanceModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="status" T="ChildInstanceModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="ChildInstanceModel">Instance</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="child" T="ChildInstanceModel">Child</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="variant" T="ChildInstanceModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildInstanceModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
@@ -31,13 +31,13 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">
                 @context.Sku
-                <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Child.Asin" />
+                <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Variant.Asin" />
             </MudTd>
-            <MudTd DataLabel="ASIN">@context.Child.Asin</MudTd>
+            <MudTd DataLabel="ASIN">@context.Variant.Asin</MudTd>
             <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
-            <MudTd DataLabel="Child">@context.Child.Sku</MudTd>
-            <MudTd DataLabel="Brand">@context.Child.Parent.Product.Brand.Name</MudTd>
+            <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd DataLabel="Brand">@context.Variant.Product.Brand.Name</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChildInstance(context.Id))">Edit</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeleteChildInstance(context.Id, context.Sku))" Color="Color.Secondary">Delete</MudButton>
@@ -129,7 +129,7 @@
 
             await Table.ReloadServerData();
 
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Child"));
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Variant"));
         }
     }
 

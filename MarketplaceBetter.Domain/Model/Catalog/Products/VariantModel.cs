@@ -19,6 +19,9 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         [BetterLength]
         public string Sku { get; set; }
 
+        [Display(Name = "ASIN")]
+        public string Asin { get; set; }
+
         [Required]
         public ProductModel Product { get; set; }
 

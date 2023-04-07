@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Infrastructure.Mappings.Sales
+namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Base
 {
     public class InstanceProfile : Profile
     {

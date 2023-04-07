@@ -23,16 +23,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void Add(ChildInstanceModel child);
 
-        void AddForChild(long childId);
+        void AddForVariant(long variantId);
 
         void Update(ChildInstanceModel child);
 
         void Delete(long id);
 
-        void DeleteAllForChild(long childId);
+        void DeleteAllForVariant(long variantId);
 
         void ChangeStatus(IList<ChildInstanceModel> childInstances, EntityStatusModel status);
 
-        string GetSkuFor(long? childId, long? instanceId);
+        string GetSkuFor(long? variantId, long? instanceId);
     }
 }

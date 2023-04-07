@@ -28,20 +28,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Variant> _repository;
         private readonly IRepository<EntityStatus> _statusRepository;
-        private readonly IChildService _childService;
+        private readonly IChildInstanceService _childInstanceService;
         private readonly ICurrentBrandService _currentBrandService;
 
         public VariantService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IChildService childService,
+            IChildInstanceService childInstanceService,
             ICurrentBrandService currentBrandService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Variant>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
-            _childService = childService;
+            _childInstanceService = childInstanceService;
             _currentBrandService = currentBrandService;
         }
 
@@ -93,7 +93,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Add(variantToAdd);
             _unitOfWork.Save();
 
-            _childService.AddForVariant(variantToAdd.Id);
+            _childInstanceService.AddForVariant(variantToAdd.Id);
         }
 
         public void Update(VariantModel variant)
@@ -105,12 +105,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Update(variantToUpdate);
             _unitOfWork.Save();
 
-            _childService.AddForVariant(variantToUpdate.Id);
+            _childInstanceService.AddForVariant(variantToUpdate.Id);
         }
 
         public void Delete(long id)
         {
-            _childService.DeleteAllForVariant(id);
+            _childInstanceService.DeleteAllForVariant(id);
 
             Variant variant = _repository.Get(id);
 

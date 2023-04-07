@@ -81,9 +81,7 @@
     <None Include="Scripts\Inserts\AmazonTargetingTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchTarget.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\Research.sql" />
-    <Build Include="dbo\Tables\Amazon\Inventory\Child.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\ChildInstance.sql" />
-    <Build Include="dbo\Tables\Amazon\Inventory\Parent.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\ParentInstance.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\Campaign.sql" />
     <Build Include="dbo\Tables\Catalog\ColorsAndSizes\Color.sql" />

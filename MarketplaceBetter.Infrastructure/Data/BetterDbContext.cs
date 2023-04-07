@@ -24,8 +24,9 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseLazyLoadingProxies();
 
-        // Sales
+        // Base
         public DbSet<Instance> Instance { get; set; }
+        public DbSet<EntityStatus> EntityStatus { get; set; }
 
         // Catalog
         // => Products
@@ -51,11 +52,8 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         // Amazon
         // => Inventory
-        public DbSet<Parent> Parent { get; set; }
         public DbSet<ParentInstance> ParentInstance { get; set; }
-        public DbSet<Child> Child { get; set; }
         public DbSet<ChildInstance> ChildInstance { get; set; }
-        public DbSet<EntityStatus> EntityStatus { get; set; }
         // => Campaigns
         public DbSet<Campaign> Campaign { get; set; }
         public DbSet<CampaignType> CampaignType { get; set; }
@@ -66,7 +64,6 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<MatchType> MatchType { get; set; }
         public DbSet<NegativeKeyword> NegativeKeyword { get; set; }
         public DbSet<NegativeProduct> NegativeProduct { get; set; }
-
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }
         // => Keywords

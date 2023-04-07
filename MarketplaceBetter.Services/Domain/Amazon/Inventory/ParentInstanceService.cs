@@ -5,6 +5,7 @@ using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
@@ -37,7 +38,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IPhotoService _photoService;
         private readonly ICopywritingService _copywritingService;
         private readonly IRepository<ParentInstance> _repository;
-        private readonly IRepository<Parent> _parentRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IRepository<ChildInstance> _childInstanceRepository;
@@ -58,7 +59,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _photoService = photoService;
             _copywritingService = copywritingService;
             _repository = unitOfWork.GetRepository<ParentInstance>();
-            _parentRepository = unitOfWork.GetRepository<Parent>();
+            _productRepository = unitOfWork.GetRepository<Product>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
@@ -72,7 +73,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         public IList<ParentInstanceModel> GetAll() => _mapper.Map<IList<ParentInstanceModel>>(_repository.GetQuery().OrderBy(p => p.Sku));
 
         public IList<ParentInstanceModel> GetAllForBrand(long brandId, long instanceId) => _mapper.Map<IList<ParentInstanceModel>>(
-                _repository.GetQuery().Where(p => p.Parent.Product.BrandId == brandId).OrderBy(p => p.Sku));
+                _repository.GetQuery().Where(p => p.Product.BrandId == brandId).OrderBy(p => p.Sku));
 
         public int CountForListRequest(ListRequest request)
         {
@@ -105,18 +106,18 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
-        public void AddForParent(long parentId)
+        public void AddForProduct(long parentId)
         {
             foreach (var instance in _instanceRepository.Where(i => i.IsNormal).OrderBy(i => i.Id))
             {
-                if (_repository.Any(p => p.ParentId == parentId && p.InstanceId == instance.Id))
+                if (_repository.Any(p => p.ProductId == parentId && p.InstanceId == instance.Id))
                 {
                     continue;
                 }
 
                 ParentInstance parentInstance = new ParentInstance 
                 { 
-                    ParentId = parentId, 
+                    ProductId = parentId, 
                     InstanceId = instance.Id, 
                     Sku = GetSkuFor(parentId, instance.Id),
                     Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft)
@@ -150,20 +151,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
-        public string GetSkuFor(long? parentId, long? instanceId)
+        public string GetSkuFor(long? productId, long? instanceId)
         {
-            if (parentId.HasValue && instanceId.HasValue)
+            if (productId.HasValue && instanceId.HasValue)
             {
-                Parent parent = _parentRepository.Get(parentId.Value);
+                Product product = _productRepository.Get(productId.Value);
                 Instance instance = _instanceRepository.Get(instanceId.Value);
 
-                return $"{InstanceHelper.GetCodeFor(instance.SystemName)}_{parent.Sku}";
+                return $"{InstanceHelper.GetCodeFor(instance.SystemName)}_{product.Code}";
             }
-            else if (parentId.HasValue)
+            else if (productId.HasValue)
             {
-                Parent parent = _parentRepository.Get(parentId.Value);
+                Product parent = _productRepository.Get(productId.Value);
 
-                return parent.Sku;
+                return parent.Code;
             }
             else if (instanceId.HasValue)
             {
@@ -192,8 +193,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             ParentInstance parentInstance = _repository.Get(id);
             Instance instance = parentInstance.Instance;
             IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => 
-                c.Child.ParentId == parentInstance.ParentId && c.InstanceId == instance.Id 
-                && c.Child.Variant.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
+                c.Variant.ProductId == parentInstance.ProductId && c.InstanceId == instance.Id 
+                && c.Variant.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
 
             csv.WriteField("Seller SKU");
             csv.WriteField("Brand Name");
@@ -225,15 +226,15 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             foreach (var childInstance in childInstances)
             {
                 ColorTranslation colorTranslation = _colorTranslationRepository.SingleOrDefault(t =>
-                    t.ColorId == childInstance.Child.Variant.Color.Id && t.InstanceId == instance.Id);
+                    t.ColorId == childInstance.Variant.Color.Id && t.InstanceId == instance.Id);
 
                 csv.WriteField(childInstance.Sku);
-                csv.WriteField(childInstance.Child.Parent.Product.Brand.Name);
+                csv.WriteField(childInstance.Variant.Product.Brand.Name);
                 csv.WriteField(GetProductName(childInstance, colorTranslation));
-                csv.WriteField(childInstance.Child.Asin);
+                csv.WriteField(childInstance.Variant.Asin);
                 csv.WriteField(colorTranslation?.Translation);
                 csv.WriteField(colorTranslation?.Mapping);
-                csv.WriteField(childInstance.Child.Variant.Size.Name);
+                csv.WriteField(childInstance.Variant.Size.Name);
                 WriteCopywriting(csv, childInstance);
                 WritePhotos(csv, childInstance);
                 csv.NextRecord();
@@ -247,47 +248,47 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private void WriteCopywriting(CsvWriter csv, ChildInstance childInstance)
         {
-            CopywritingModel description = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.Description);
+            CopywritingModel description = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.Description);
             csv.WriteField(description?.Value);
-            CopywritingModel bulletPoint1 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint1);
+            CopywritingModel bulletPoint1 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint1);
             csv.WriteField(bulletPoint1?.Value);
-            CopywritingModel bulletPoint2 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint2);
+            CopywritingModel bulletPoint2 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint2);
             csv.WriteField(bulletPoint2?.Value);
-            CopywritingModel bulletPoint3 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint3);
+            CopywritingModel bulletPoint3 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint3);
             csv.WriteField(bulletPoint3?.Value);
-            CopywritingModel bulletPoint4 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint4);
+            CopywritingModel bulletPoint4 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint4);
             csv.WriteField(bulletPoint4?.Value);
-            CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(childInstance.Child.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint5);
+            CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint5);
             csv.WriteField(bulletPoint5?.Value);
         }
 
         private void WritePhotos(CsvWriter csv, ChildInstance childInstance)
         {
-            PhotoModel main = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Main);
+            PhotoModel main = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Main);
             csv.WriteField(main?.Url);
-            PhotoModel other1 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other1);
+            PhotoModel other1 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other1);
             csv.WriteField(other1?.Url);
-            PhotoModel other2 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other2);
+            PhotoModel other2 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other2);
             csv.WriteField(other2?.Url);
-            PhotoModel other3 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other3);
+            PhotoModel other3 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other3);
             csv.WriteField(other3?.Url);
-            PhotoModel other4 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other4);
+            PhotoModel other4 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other4);
             csv.WriteField(other4?.Url);
-            PhotoModel other5 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other5);
+            PhotoModel other5 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other5);
             csv.WriteField(other5?.Url);
-            PhotoModel other6 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other6);
+            PhotoModel other6 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other6);
             csv.WriteField(other6?.Url);
-            PhotoModel other7 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other7);
+            PhotoModel other7 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other7);
             csv.WriteField(other7?.Url);
-            PhotoModel other8 = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Other8);
+            PhotoModel other8 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other8);
             csv.WriteField(other8?.Url);
-            PhotoModel swatch = _photoService.GetForVariant(childInstance.Child.VariantId, PhotoTypeEnum.Swatch);
+            PhotoModel swatch = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Swatch);
             csv.WriteField(swatch?.Url);
         }
 
         private string GetProductName(ChildInstance childInstance, ColorTranslation colorTranslation)
         {
-            Variant variant = childInstance.Child.Variant;
+            Variant variant = childInstance.Variant;
             Size size = variant.Size;
             CopywritingModel title = _copywritingService.GetForProduct(variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.Title);
 
@@ -303,7 +304,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private void TransferValues(ParentInstance toParentInstance, ParentInstanceModel fromParentInstance)
         {
-            toParentInstance.ParentId = fromParentInstance.Parent.Id;
+            toParentInstance.ProductId = fromParentInstance.Product.Id;
             toParentInstance.InstanceId = fromParentInstance.Instance.Id;
             toParentInstance.Sku = fromParentInstance.Sku;
             toParentInstance.Asin = fromParentInstance.Asin;
@@ -313,7 +314,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         {
             if (_currentBrandService.IsSpecificBrand())
             {
-                parents = parents.Where(p => p.Parent.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
+                parents = parents.Where(p => p.Product.BrandId == _currentBrandService.GetCurrentBrand().Id);
             }
 
             if (_currentInstanceService.IsSpecificInstance())
@@ -330,7 +331,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "parent", "product", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "product", "brand", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -342,10 +343,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "asin" => parents.Where(p => p.Asin.Contains(searchField.Value)),
                         "instance" => parents.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "status" => parents.Where(p => p.Status.Name.Contains(searchField.Value)),
-                        "parent" => parents.Where(p => p.Parent.Sku.Contains(searchField.Value)),
-                        "product" => parents.Where(p => p.Parent.Product.Name.Contains(searchField.Value)),
-                        "brand" => parents.Where(p => p.Parent.Product.Brand.Name.Contains(searchField.Value)),
-                        "product_id" => parents.Where(p => p.Parent.Product.Id == searchField.Value.ParseToIntOrDefault()),
+                        "product" => parents.Where(p => p.Product.Name.Contains(searchField.Value)),
+                        "brand" => parents.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
+                        "product_id" => parents.Where(p => p.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -356,9 +356,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || p.Asin.Contains(searchString)
                         || p.Instance.Name.Contains(searchString)
                         || p.Status.Name.Contains(searchString)
-                        || p.Parent.Sku.Contains(searchString)
-                        || p.Parent.Product.Name.Contains(searchString)
-                        || p.Parent.Product.Brand.Name.Contains(searchString));
+                        || p.Product.Name.Contains(searchString)
+                        || p.Product.Brand.Name.Contains(searchString));
                 }
             }
 
@@ -376,9 +375,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "asin" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Asin) : parents.OrderByDescending(p => p.Asin),
                     "instance" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Instance.Name) : parents.OrderByDescending(p => p.Instance.Name),
                     "status" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Status.Name) : parents.OrderByDescending(p => p.Status.Name),
-                    "parent" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Sku) : parents.OrderByDescending(p => p.Parent.Sku),
-                    "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Product.Name) : parents.OrderByDescending(p => p.Parent.Product.Name),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Parent.Product.Brand.Name) : parents.OrderByDescending(p => p.Parent.Product.Brand.Name),
+                    "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Name) : parents.OrderByDescending(p => p.Product.Name),
+                    "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Brand.Name) : parents.OrderByDescending(p => p.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -25,6 +24,7 @@ using System.IO.Compression;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Services.Specialized.Interfaces;
 using MarketplaceBetter.Domain.Entities.Base;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -32,7 +32,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Photo> _repository;
-        private readonly IRepository<Child> _childRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly ICurrentBrandService _currentBrandService;
         private readonly ICurrentInstanceService _currentInstanceService;
@@ -49,7 +48,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
-            _childRepository = unitOfWork.GetRepository<Child>();
             _photoCloudService = photoCloudService;
             _currentBrandService = currentBrandService;
             _currentInstanceService = currentInstanceService;
@@ -92,8 +90,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public async void PrepareForDownload(PhotoModel photo, VariantModel variant)
         {
-            Child child = _childRepository.SingleOrDefault(c => c.VariantId == variant.Id && c.Asin != null);
-            if (child == null)
+            if (variant.Asin == null)
             {
                 return;
             }
@@ -101,7 +98,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             string url = _photoCloudService.GetOriginalPhotoUrl(photo.CloudId, photo.Version);
             string format = _photoCloudService.GetPhotoFormat(photo.CloudId);
 
-            string fileName = $"{child.Asin}.{photo.Type.AmazonUploadCode}.{format}";
+            string fileName = $"{variant.Asin}.{photo.Type.AmazonUploadCode}.{format}";
 
             using HttpClient client = new HttpClient();
             using Stream stream = await client.GetStreamAsync(url);

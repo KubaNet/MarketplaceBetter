@@ -166,9 +166,7 @@
     {
         string path = new Uri(NavigationManager.Uri).AbsolutePath.TrimStart('/');
 
-        if (path == "parents"
-            || path == "parent-instances"
-            || path == "childs"
+        if (path == "parent-instances"
             || path == "child-instances")
         {
             return true;

@@ -2,6 +2,7 @@
 (
 	[Id]		BIGINT					NOT NULL	IDENTITY,
 	[Sku]		NVARCHAR (255)			NOT NULL,
+	[Asin]		NVARCHAR (255)			NULL,
 	[ProductId]	BIGINT					NOT NULL,
 	[ColorId]	BIGINT					NOT NULL,
 	[SizeId]	BIGINT					NOT NULL,
