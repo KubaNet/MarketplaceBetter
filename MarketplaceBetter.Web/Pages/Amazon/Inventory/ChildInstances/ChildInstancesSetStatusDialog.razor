@@ -5,7 +5,6 @@
 
 @inject ISnackbar Snackbar
 @inject IEntityStatusService EntityStatusService
-@inject IChildInstanceService ChildInstanceService
 
 <EditForm Model="Status" OnValidSubmit="@HandleValidSubmit">
     <FormDialog Title="Change status of child instances">
@@ -36,7 +35,7 @@
 
     private void HandleValidSubmit()
     {
-        ChildInstanceService.ChangeStatus(ChildInstances, Status);
+        EntityStatusService.ChangeStatus(ChildInstances, Status);
 
         Snackbar.AddSuccess("Status of child instances was successfully changed.");
 

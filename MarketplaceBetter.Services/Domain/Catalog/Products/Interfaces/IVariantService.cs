@@ -22,7 +22,5 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
         void Update(VariantModel Variant);
 
         void Delete(long id);
-
-        void ChangeStatus(IList<VariantModel> variants, EntityStatusModel status);
     }
 }

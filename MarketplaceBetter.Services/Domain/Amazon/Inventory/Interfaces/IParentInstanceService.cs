@@ -28,8 +28,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
         void Update(ParentInstanceModel parent);
 
-        void ChangeStatus(IList<ParentInstanceModel> parentInstances, EntityStatusModel status);
-
         string GetSkuFor(long? parentId, long? instanceId);
 
         Stream Export(long id);

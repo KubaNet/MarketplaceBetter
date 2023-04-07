@@ -11,6 +11,7 @@ using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Specialized.Interfaces;
+using Microsoft.AspNetCore.Builder;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -132,19 +133,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             foreach (var childInstance in childInstances)
             {
                 _repository.Delete(childInstance);
-            }
-
-            _unitOfWork.Save();
-        }
-
-        public void ChangeStatus(IList<ChildInstanceModel> childInstances, EntityStatusModel status)
-        {
-            foreach (var childInstance in childInstances)
-            {
-                ChildInstance childToUpdate = _repository.Get(childInstance.Id);
-
-                childToUpdate.StatusId = status.Id;
-                _repository.Update(childToUpdate);
             }
 
             _unitOfWork.Save();

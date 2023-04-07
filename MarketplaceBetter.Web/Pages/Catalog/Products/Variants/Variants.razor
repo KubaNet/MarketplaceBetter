@@ -132,7 +132,7 @@
 
     private async void DeleteVariant(long id, string sku)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete variant \"<b>{sku}</b>\" ? <br><br>Child instances and photos associated with this variant will be also deleted." }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete variant \"<b>{sku}</b>\" ? <br><br>All entities (child instances, photos etc.) associated with this variant will be also deleted." }).Result;
 
         if (!result.Canceled)
         {

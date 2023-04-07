@@ -127,19 +127,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork.Save();
         }
 
-        public void ChangeStatus(IList<VariantModel> variants, EntityStatusModel status)
-        {
-            foreach (var variant in variants)
-            {
-                Variant variantToUpdate = _repository.Get(variant.Id);
-
-                variantToUpdate.StatusId = status.Id;
-                _repository.Update(variantToUpdate);
-            }
-
-            _unitOfWork.Save();
-        }
-
         private void TransferValues(Variant toVariant, VariantModel fromVariant)
         {
             toVariant.Sku = fromVariant.Sku;

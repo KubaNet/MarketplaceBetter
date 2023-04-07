@@ -5,7 +5,6 @@
 
 @inject ISnackbar Snackbar
 @inject IEntityStatusService EntityStatusService
-@inject IVariantService VariantService
 
 <EditForm Model="Status" OnValidSubmit="@HandleValidSubmit">
     <FormDialog Title="Change status of variants">
@@ -36,7 +35,7 @@
 
     private void HandleValidSubmit()
     {
-        VariantService.ChangeStatus(Variants, Status);
+        EntityStatusService.ChangeStatus(Variants, Status);
 
         Snackbar.AddSuccess("Status of variants was successfully changed.");
 

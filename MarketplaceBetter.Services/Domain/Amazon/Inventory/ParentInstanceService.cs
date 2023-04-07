@@ -7,7 +7,6 @@ using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
-using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -135,19 +134,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             TransferValues(parentInstanceToUpdate, parentInstance);
 
             _repository.Update(parentInstanceToUpdate);
-            _unitOfWork.Save();
-        }
-
-        public void ChangeStatus(IList<ParentInstanceModel> parentInstances, EntityStatusModel status)
-        {
-            foreach (var parentInstance in parentInstances)
-            {
-                ParentInstance parentToUpdate = _repository.Get(parentInstance.Id);
-
-                parentToUpdate.StatusId = status.Id;
-                _repository.Update(parentToUpdate);
-            }
-
             _unitOfWork.Save();
         }
 

@@ -107,19 +107,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _parentInstanceService.AddForProduct(productToUpdate.Id);
         }
 
-		public void ChangeStatus(IList<ProductModel> products, EntityStatusModel status)
-		{
-			foreach (var product in products)
-			{
-				Product productToUpdate = _repository.Get(product.Id);
-
-				productToUpdate.StatusId = status.Id;
-				_repository.Update(productToUpdate);
-			}
-
-			_unitOfWork.Save();
-		}
-
 		public int GetMaxOrder()
         {
             if (_repository.GetQuery().Any())

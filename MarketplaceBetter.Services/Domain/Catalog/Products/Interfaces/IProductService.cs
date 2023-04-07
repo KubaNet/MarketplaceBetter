@@ -1,5 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Domain.Model.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -24,8 +23,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
         void Add(ProductModel product);
 
         void Update(ProductModel product);
-
-        void ChangeStatus(IList<ProductModel> products, EntityStatusModel status);
 
 		int GetMaxOrder();
     }
