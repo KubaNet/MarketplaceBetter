@@ -67,7 +67,7 @@ namespace MarketplaceBetter.Services.Domain.Base
                 _unitOfWork.Save();
 
                 OnVariantStatusChangeDown(variant.Id, status.Id);
-                OnVariantStatusChangeUp(variantToUpdate, status.Id);
+                OnVariantStatusChangeUp(variantToUpdate, status.Id, true);
             }
         }
 
@@ -83,6 +83,7 @@ namespace MarketplaceBetter.Services.Domain.Base
                 _unitOfWork.Save();
 
                 OnParentInstanceStatusChangeUp(parentInstanceToUpdate, status.Id);
+                OnParentInstanceStatusChangeOfChilds(parentInstanceToUpdate, status.Id);
             }
         }
 
@@ -96,7 +97,7 @@ namespace MarketplaceBetter.Services.Domain.Base
                 _childInstanceRepository.Update(childInstanceToUpdate);
                 _unitOfWork.Save();
 
-                OnChildInstanceStatusChangeUp(childInstanceToUpdate, status.Id);
+                OnChildInstanceStatusChangeUp(childInstanceToUpdate, status.Id, true);
             }
         }
 
@@ -145,6 +146,21 @@ namespace MarketplaceBetter.Services.Domain.Base
             }
         }
 
+        private void OnParentInstanceStatusChangeOfChilds(ParentInstance parentInstance, long statusId)
+        {
+            IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => c.Variant.ProductId == parentInstance.ProductId).ToList();
+            foreach (var childInstance in childInstances)
+            {
+                ChildInstance childInstanceToUpdate = _childInstanceRepository.Get(childInstance.Id);
+                childInstanceToUpdate.StatusId = statusId;
+
+                _childInstanceRepository.Update(childInstanceToUpdate);
+                _unitOfWork.Save();
+
+                OnChildInstanceStatusChangeUp(childInstanceToUpdate, statusId, false);
+            }
+        }
+
         private void OnVariantStatusChangeDown(long variantId, long statusId)
         {
             IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => c.VariantId == variantId).ToList();
@@ -158,7 +174,7 @@ namespace MarketplaceBetter.Services.Domain.Base
             _unitOfWork.Save();
         }
 
-        private void OnVariantStatusChangeUp(Variant variant, long statusId)
+        private void OnVariantStatusChangeUp(Variant variant, long statusId, bool updateParentInstances)
         {
             if (!_variantRepository.Any(v => v.ProductId == variant.ProductId && v.StatusId != statusId))
             {
@@ -168,11 +184,11 @@ namespace MarketplaceBetter.Services.Domain.Base
                 _productRepository.Update(product);
                 _unitOfWork.Save();
 
-                OnProductStatusChangeDown(product.Id, statusId, false, true);
+                OnProductStatusChangeDown(product.Id, statusId, false, updateParentInstances);
             }
         }
 
-        private void OnChildInstanceStatusChangeUp(ChildInstance childInstance, long statusId)
+        private void OnChildInstanceStatusChangeUp(ChildInstance childInstance, long statusId, bool updateParentInstances)
         {
             if (!_childInstanceRepository.Any(c => c.VariantId == childInstance.VariantId && c.StatusId != statusId))
             {
@@ -182,7 +198,7 @@ namespace MarketplaceBetter.Services.Domain.Base
                 _variantRepository.Update(variant);
                 _unitOfWork.Save();
 
-                OnVariantStatusChangeUp(variant, statusId);
+                OnVariantStatusChangeUp(variant, statusId, updateParentInstances);
             }
         }
     }

@@ -183,7 +183,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             Instance instance = parentInstance.Instance;
             IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => 
                 c.Variant.ProductId == parentInstance.ProductId && c.InstanceId == instance.Id 
-                && c.Variant.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
+                && c.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
 
             csv.WriteField("Seller SKU");
             csv.WriteField("Brand Name");
@@ -283,11 +283,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             if (size.IsOneSize)
             {
-                return $"{title.Value} ({colorTranslation?.Translation})";
+                return $"{title?.Value} ({colorTranslation?.Translation})";
             }
             else
             {
-                return $"{title.Value} ({size.Code}, {colorTranslation?.Translation})";
+                return $"{title?.Value} ({size.Code}, {colorTranslation?.Translation})";
             }
         }
 
