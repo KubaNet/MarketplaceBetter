@@ -12,6 +12,7 @@
 @inject ICurrentBrandSetting CurrentBrandSetting
 @inject ICurrentInstanceSetting CurrentInstanceSetting
 @inject IShowDraftsSetting ShowDraftsSetting
+@inject IShowWithdrawnSetting ShowWithdrawnSetting
 @inject NavigationManager NavigationManager
 
 <AuthorizeView>
@@ -26,10 +27,13 @@
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudCheckBox T="bool" Checked="ShowDrafts" Label="Show Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1" CheckedChanged="OnShowDraftsChange"></MudCheckBox>
+                        <MudCheckBox T="bool" Checked="ShowDrafts" Label="Show Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnShowDraftsChange"></MudCheckBox>
                     </div>
                     <div>
-                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 180px;" Class="ml-5" ValueChanged="OnSelectedBrandChange">
+                        <MudCheckBox T="bool" Checked="ShowWithdrawn" Label="Show Withdrawn" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnShowWithdrawnChange"></MudCheckBox>
+                    </div>
+                    <div>
+                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedBrandChange">
                             @foreach (var brand in Brands)
                             {
                                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
@@ -68,6 +72,7 @@
     private InstanceModel Instance;
     private IList<InstanceModel> Instances;
     private bool ShowDrafts = false;
+    private bool ShowWithdrawn = false;
 
     protected override void OnInitialized()
     {
@@ -76,6 +81,7 @@
         InitializeCurrentBrand();
         InitializeCurrentInstance();
         InitializeDraftsSetting();
+        InitializeWithdrawnSetting();
     }
 
     private void InitializeCurrentBrand()
@@ -112,6 +118,11 @@
         ShowDrafts = ShowDraftsSetting.GetDraftsSetting();
     }
 
+    private void InitializeWithdrawnSetting()
+    {
+        ShowWithdrawn = ShowWithdrawnSetting.GetWithdrawnSetting();
+    }
+
     private void OnSelectedBrandChange(BrandModel brand)
     {
         Brand = brand;
@@ -133,6 +144,13 @@
     private void OnShowDraftsChange(bool showDrafts)
     {
         ShowDraftsSetting.SetDraftsSetting(showDrafts);
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private void OnShowWithdrawnChange(bool showWithdrawn)
+    {
+        ShowWithdrawnSetting.SetWithdrawnSetting(showWithdrawn);
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }

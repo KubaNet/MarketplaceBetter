@@ -31,6 +31,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IPhotoUploadService _photoUploadService;
         private readonly ICurrentBrandSetting _currentBrandSetting;
         private readonly IShowDraftsSetting _showDraftsSetting;
+        private readonly IShowWithdrawnSetting _showWithdrawnSetting;
 
         public VariantService(
             IMapper mapper,
@@ -39,7 +40,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             IPhotoService photoService,
             IPhotoUploadService photoUploadService,
             ICurrentBrandSetting currentBrandSetting,
-            IShowDraftsSetting showDraftsSetting)
+            IShowDraftsSetting showDraftsSetting,
+            IShowWithdrawnSetting showWithdrawnSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -50,6 +52,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _photoUploadService = photoUploadService;
             _currentBrandSetting = currentBrandSetting;
             _showDraftsSetting = showDraftsSetting;
+            _showWithdrawnSetting = showWithdrawnSetting;
         }
 
         public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
@@ -148,6 +151,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             if (!showDrafts)
             {
                 variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool showWithdrawn = _showWithdrawnSetting.GetWithdrawnSetting();
+            if (!showWithdrawn)
+            {
+                variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

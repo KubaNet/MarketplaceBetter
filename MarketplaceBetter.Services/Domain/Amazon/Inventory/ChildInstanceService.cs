@@ -31,13 +31,15 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly ICurrentBrandSetting _currentBrandSetting;
         private readonly ICurrentInstanceSetting _currentInstanceSetting;
         private readonly IShowDraftsSetting _showDraftsSetting;
+        private readonly IShowWithdrawnSetting _showWithdrawnSetting;
 
         public ChildInstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICurrentBrandSetting currentBrandSetting,
             ICurrentInstanceSetting currentInstanceSetting,
-            IShowDraftsSetting showDraftsSetting)
+            IShowDraftsSetting showDraftsSetting,
+            IShowWithdrawnSetting showWithdrawnSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -48,6 +50,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _currentBrandSetting = currentBrandSetting;
             _currentInstanceSetting = currentInstanceSetting;
             _showDraftsSetting = showDraftsSetting;
+            _showWithdrawnSetting = showWithdrawnSetting;
         }
 
         public ChildInstanceModel Get(long id) => _mapper.Map<ChildInstanceModel>(_repository.Get(id));
@@ -187,6 +190,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             if (!showDrafts)
             {
                 childs = childs.Where(c => c.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool showWithdrawn = _showWithdrawnSetting.GetWithdrawnSetting();
+            if (!showWithdrawn)
+            {
+                childs = childs.Where(c => c.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

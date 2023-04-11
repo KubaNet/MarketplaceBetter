@@ -148,7 +148,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private void OnParentInstanceStatusChangeOfChilds(ParentInstance parentInstance, long statusId)
         {
-            IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => c.Variant.ProductId == parentInstance.ProductId).ToList();
+            IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => c.Variant.ProductId == parentInstance.ProductId && c.InstanceId == parentInstance.InstanceId).ToList();
             foreach (var childInstance in childInstances)
             {
                 ChildInstance childInstanceToUpdate = _childInstanceRepository.Get(childInstance.Id);

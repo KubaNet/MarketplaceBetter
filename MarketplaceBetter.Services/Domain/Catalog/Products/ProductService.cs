@@ -28,13 +28,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IParentInstanceService _parentInstanceService;
 		private readonly ICurrentBrandSetting _currentBrandSetting;
         private readonly IShowDraftsSetting _showDraftsSetting;
+        private readonly IShowWithdrawnSetting _showWithdrawnSetting;
 
         public ProductService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IParentInstanceService parentInstanceService,
             ICurrentBrandSetting currentBrandSetting,
-            IShowDraftsSetting showDraftsSetting)
+            IShowDraftsSetting showDraftsSetting,
+            IShowWithdrawnSetting showWithdrawnSetting)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -43,6 +45,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _parentInstanceService = parentInstanceService;
 			_currentBrandSetting = currentBrandSetting;
             _showDraftsSetting = showDraftsSetting;
+            _showWithdrawnSetting = showWithdrawnSetting;
         }
 
         public ProductModel Get(long id) => _mapper.Map<ProductModel>(_repository.Get(id));
@@ -142,6 +145,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             if (!showDrafts)
             {
                 products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool showWithdrawn = _showWithdrawnSetting.GetWithdrawnSetting();
+            if (!showWithdrawn)
+            {
+                products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
