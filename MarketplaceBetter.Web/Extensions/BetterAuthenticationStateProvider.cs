@@ -1,4 +1,4 @@
-﻿using Blazored.SessionStorage;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,18 +7,18 @@ namespace MarketplaceBetter.Web.Extensions
 {
     public class BetterAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly ISessionStorageService _sessionStorageService;
+        private readonly ILocalStorageService _localStorageService;
         private const string SESSION_KEY = "a$3rU72D";
         private const string USER_NAME = "BetterAdmin";
 
-        public BetterAuthenticationStateProvider(ISessionStorageService sessionStorageService)
+        public BetterAuthenticationStateProvider(ILocalStorageService localStorageService)
         {
-            _sessionStorageService = sessionStorageService;
+            _localStorageService = localStorageService;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            string userName = await _sessionStorageService.GetItemAsStringAsync(SESSION_KEY);
+            string userName = await _localStorageService.GetItemAsStringAsync(SESSION_KEY);
 
             ClaimsIdentity identity = new ClaimsIdentity();
 
@@ -34,7 +34,7 @@ namespace MarketplaceBetter.Web.Extensions
 
         public void LoginUser()
         {
-            _sessionStorageService.SetItemAsStringAsync(SESSION_KEY, USER_NAME);
+            _localStorageService.SetItemAsStringAsync(SESSION_KEY, USER_NAME);
         }
     }
 }

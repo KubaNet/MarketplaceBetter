@@ -135,6 +135,7 @@
     <None Include="Scripts\Inserts\03_EntityStatuses.sql" />
     <Build Include="dbo\Tables\Base\EntityStatus.sql" />
     <None Include="Scripts\CustomScripts\UpdatingParentInstanceProduct.sql" />
+    <Build Include="dbo\Tables\Base\User.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\CustomScripts\UpdatingChildInstanceVariant.sql" />
