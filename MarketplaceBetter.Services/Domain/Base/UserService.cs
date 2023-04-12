@@ -123,7 +123,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         public bool IsExpanded(MenuItemEnum menu)
         {
-            throw new NotImplementedException();
+            return GetExpandedMenuItems().Contains(menu);
         }
 
         public void SetExpanded(MenuItemEnum menu, bool expanded)
@@ -156,24 +156,58 @@ namespace MarketplaceBetter.Services.Domain.Base
             SaveExpandedMenuItems(menuItems);
         }
 
-        public void SetShowDrafts(bool showDrafts)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetShowWithdrawn(bool showWithdrawn)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool ShowDrafts()
         {
-            throw new NotImplementedException();
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            return user.ShowDrafts;
+        }
+
+        public void SetShowDrafts(bool showDrafts)
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return;
+            }
+
+            user.ShowDrafts = showDrafts;
+
+            _repository.Update(user);
+            _unitOfWork.Save();
         }
 
         public bool ShowWithdrawn()
         {
-            throw new NotImplementedException();
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            return user.ShowWithdrawn;
+        }
+
+        public void SetShowWithdrawn(bool showWithdrawn)
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return;
+            }
+
+            user.ShowWithdrawn = showWithdrawn;
+
+            _repository.Update(user);
+            _unitOfWork.Save();
         }
 
         private User GetCurrentUser()
