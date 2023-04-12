@@ -19,7 +19,7 @@ namespace MarketplaceBetter.Services.Settings
             _configuration = configuration;
         }
 
-        public bool GetDraftsSetting()
+        public bool ShowDrafts()
         {
             return _configuration.GetValue<bool>(STORAGE_KEY);
         }

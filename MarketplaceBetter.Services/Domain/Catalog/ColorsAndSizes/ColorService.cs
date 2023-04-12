@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -7,8 +6,7 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Settings.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -24,17 +22,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Color> _repository;
-		private readonly ICurrentBrandSetting _currentBrandSetting;
+		private readonly IUserService _userService;
 
 		public ColorService(
 			IMapper mapper,
 			IUnitOfWork unitOfWork,
-			ICurrentBrandSetting currentBrandSetting)
+			IUserService userService)
         {
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Color>();
-            _currentBrandSetting = currentBrandSetting;
+            _userService = userService;
         }
 
         public ColorModel Get(long id) => _mapper.Map<ColorModel>(_repository.Get(id));
@@ -92,9 +90,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<Color> ApplyFilter(IQueryable<Color> colors, ListRequest request)
         {
-			if (_currentBrandSetting.IsSpecificBrand())
+			if (_userService.IsSpecificBrand())
 			{
-				colors = colors.Where(c => c.Group.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
+				colors = colors.Where(c => c.Group.BrandId == _userService.GetCurrentBrand().Id);
 			}
 
 			if (string.IsNullOrWhiteSpace(request.SearchString))

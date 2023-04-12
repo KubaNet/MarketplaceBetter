@@ -10,6 +10,6 @@ namespace MarketplaceBetter.Services.Settings.Interfaces
     {
         void SetDraftsSetting(bool showDrafts);
 
-        bool GetDraftsSetting();
+        bool ShowDrafts();
     }
 }

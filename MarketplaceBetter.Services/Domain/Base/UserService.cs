@@ -95,20 +95,33 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         public InstanceModel GetCurrentInstance()
         {
-            throw new NotImplementedException();
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<InstanceModel>(user.CurrentInstance);
         }
 
-        public bool IsExpanded(MenuItemEnum menu)
+        public void SetCurrentInstance(InstanceModel instance)
         {
-            throw new NotImplementedException();
+            User user = GetCurrentUser();
+            user.CurrentInstanceId = instance.Id;
+
+            _repository.Update(user);
+            _unitOfWork.Save();
         }
 
         public bool IsSpecificInstance()
         {
-            throw new NotImplementedException();
+            InstanceModel instance = GetCurrentInstance();
+
+            return instance != null && instance.SystemName != InstanceEnum.All;
         }
 
-        public void SetCurrentInstance(InstanceModel brand)
+        public bool IsExpanded(MenuItemEnum menu)
         {
             throw new NotImplementedException();
         }

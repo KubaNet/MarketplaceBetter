@@ -8,6 +8,7 @@ using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Settings.Interfaces;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -22,20 +23,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<ColorTranslation> _repository;
-		private readonly ICurrentBrandSetting _currentBrandSetting;
-        private readonly ICurrentInstanceSetting _currentInstanceSetting;
+		private readonly IUserService _userService;
 
         public ColorTranslationService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandSetting currentBrandSetting,
-            ICurrentInstanceSetting currentInstanceSetting)
+            IUserService userService)
         {
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ColorTranslation>();
-			_currentBrandSetting = currentBrandSetting;
-            _currentInstanceSetting = currentInstanceSetting;
+			_userService = userService;
 
         }
 
@@ -93,14 +91,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<ColorTranslation> ApplyFilter(IQueryable<ColorTranslation> translations, ListRequest request)
         {
-			if (_currentBrandSetting.IsSpecificBrand())
+			if (_userService.IsSpecificBrand())
 			{
-				translations = translations.Where(t => t.Color.Group.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
+				translations = translations.Where(t => t.Color.Group.BrandId == _userService.GetCurrentBrand().Id);
 			}
 
-            if (_currentInstanceSetting.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
-                translations = translations.Where(t => t.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id);
+                translations = translations.Where(t => t.InstanceId == _userService.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

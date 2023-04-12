@@ -25,7 +25,7 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
 
         InstanceModel GetCurrentInstance();
 
-        void SetCurrentInstance(InstanceModel brand);
+        void SetCurrentInstance(InstanceModel instance);
 
         bool IsSpecificInstance();
 

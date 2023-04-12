@@ -22,17 +22,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<ColorGroup> _repository;
-        private readonly ICurrentBrandSetting _currentBrandSetting;
+        private readonly IUserService _userService;
 
         public ColorGroupService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandSetting currentBrandSetting)
+            IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ColorGroup>();
-            _currentBrandSetting = currentBrandSetting;
+            _userService = userService;
         }
 
         public ColorGroupModel Get(long id) => _mapper.Map<ColorGroupModel>(_repository.Get(id));
@@ -89,9 +89,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<ColorGroup> ApplyFilter(IQueryable<ColorGroup> groups, ListRequest request)
         {
-            if (_currentBrandSetting.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
-                groups = groups.Where(g => g.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
+                groups = groups.Where(g => g.BrandId == _userService.GetCurrentBrand().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

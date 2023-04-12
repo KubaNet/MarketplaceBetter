@@ -10,6 +10,6 @@ namespace MarketplaceBetter.Services.Settings.Interfaces
     {
         void SetWithdrawnSetting(bool showWithdrawn);
 
-        bool GetWithdrawnSetting();
+        bool ShowWithdrawn();
     }
 }

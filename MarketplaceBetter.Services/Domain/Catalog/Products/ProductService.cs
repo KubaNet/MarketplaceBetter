@@ -10,6 +10,7 @@ using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Settings.Interfaces;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -26,35 +27,29 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Product> _repository;
 		private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IParentInstanceService _parentInstanceService;
-		private readonly ICurrentBrandSetting _currentBrandSetting;
-        private readonly IShowDraftsSetting _showDraftsSetting;
-        private readonly IShowWithdrawnSetting _showWithdrawnSetting;
+		private readonly IUserService _userService;
 
         public ProductService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IParentInstanceService parentInstanceService,
-            ICurrentBrandSetting currentBrandSetting,
-            IShowDraftsSetting showDraftsSetting,
-            IShowWithdrawnSetting showWithdrawnSetting)
+            IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Product>();
 			_statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _parentInstanceService = parentInstanceService;
-			_currentBrandSetting = currentBrandSetting;
-            _showDraftsSetting = showDraftsSetting;
-            _showWithdrawnSetting = showWithdrawnSetting;
+			_userService = userService;
         }
 
         public ProductModel Get(long id) => _mapper.Map<ProductModel>(_repository.Get(id));
 
         public IList<ProductModel> GetAll()
         {
-            if (_currentBrandSetting.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
-                BrandModel currentBrand = _currentBrandSetting.GetCurrentBrand();
+                BrandModel currentBrand = _userService.GetCurrentBrand();
 
                 return _mapper.Map<IList<ProductModel>>(_repository.Where(p => p.BrandId == currentBrand.Id).OrderBy(g => g.Name));
             }
@@ -136,18 +131,18 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
         {
-            if (_currentBrandSetting.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
-                products = products.Where(p => p.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
+                products = products.Where(p => p.BrandId == _userService.GetCurrentBrand().Id);
             }
 
-            bool showDrafts = _showDraftsSetting.GetDraftsSetting();
+            bool showDrafts = _userService.ShowDrafts();
             if (!showDrafts)
             {
                 products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
             }
 
-            bool showWithdrawn = _showWithdrawnSetting.GetWithdrawnSetting();
+            bool showWithdrawn = _userService.ShowWithdrawn();
             if (!showWithdrawn)
             {
                 products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);

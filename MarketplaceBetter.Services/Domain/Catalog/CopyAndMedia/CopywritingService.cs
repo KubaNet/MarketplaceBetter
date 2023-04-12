@@ -8,6 +8,7 @@ using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Settings.Interfaces;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -22,20 +23,17 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Copywriting> _repository;
-        private readonly ICurrentBrandSetting _currentBrandSetting;
-        private readonly ICurrentInstanceSetting _currentInstanceSetting;
+        private readonly IUserService _userService;
 
         public CopywritingService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentBrandSetting currentBrandSetting,
-            ICurrentInstanceSetting currentInstanceSetting)
+            IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Copywriting>();
-            _currentBrandSetting = currentBrandSetting;
-            _currentInstanceSetting = currentInstanceSetting;
+            _userService = userService;
         }
 
         public CopywritingModel Get(long id) => _mapper.Map<CopywritingModel>(_repository.Get(id));
@@ -98,14 +96,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Copywriting> ApplyFilter(IQueryable<Copywriting> copywritings, ListRequest request)
         {
-            if (_currentBrandSetting.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
-                copywritings = copywritings.Where(c => c.Product.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
+                copywritings = copywritings.Where(c => c.Product.BrandId == _userService.GetCurrentBrand().Id);
             }
 
-            if (_currentInstanceSetting.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
-                copywritings = copywritings.Where(c => c.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id);
+                copywritings = copywritings.Where(c => c.InstanceId == _userService.GetCurrentInstance().Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -28,24 +29,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IRepository<Photo> _repository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
-        private readonly ICurrentBrandSetting _currentBrandSetting;
-        private readonly ICurrentInstanceSetting _currentInstanceSetting;
+        private readonly IUserService _userService;
 
         public PhotoService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
             IInstanceService instanceService,
-            ICurrentBrandSetting currentBrandSetting,
-            ICurrentInstanceSetting currentInstanceSetting)
+            IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Photo>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
-            _currentBrandSetting = currentBrandSetting;
-            _currentInstanceSetting = currentInstanceSetting;
+            _userService = userService;
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -179,15 +177,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
-            if (_currentBrandSetting.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
-                photos = photos.Where(p => p.Variant.Product.BrandId == _currentBrandSetting.GetCurrentBrand().Id);
+                photos = photos.Where(p => p.Variant.Product.BrandId == _userService.GetCurrentBrand().Id);
             }
 
-            if (_currentInstanceSetting.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
-                photos = photos.Where(p => p.InstanceId == _currentInstanceSetting.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
+                photos = photos.Where(p => p.InstanceId == _userService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
