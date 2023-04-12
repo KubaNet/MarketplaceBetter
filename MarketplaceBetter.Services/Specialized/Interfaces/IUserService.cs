@@ -11,15 +11,17 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
 {
     public interface IUserService
     {
-        void SetCurrentBrand(BrandModel brand);
+        bool IsCorrectPassword(string login, string password);
 
         BrandModel GetCurrentBrand();
 
+        void SetCurrentBrand(BrandModel brand);
+
         bool IsSpecificBrand();
 
-        void SetCurrentInstance(InstanceModel brand);
-
         InstanceModel GetCurrentInstance();
+
+        void SetCurrentInstance(InstanceModel brand);
 
         bool IsSpecificInstance();
 
@@ -27,12 +29,12 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
 
         void SetExpanded(MenuItemEnum menu, bool expanded);
 
-        void SetShowDrafts(bool showDrafts);
-
         bool ShowDrafts();
 
-        void SetShowWithdrawn(bool showWithdrawn);
+        void SetShowDrafts(bool showDrafts);
 
         bool ShowWithdrawn();
+
+        void SetShowWithdrawn(bool showWithdrawn);
     }
 }

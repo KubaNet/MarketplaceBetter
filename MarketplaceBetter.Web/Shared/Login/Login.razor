@@ -1,7 +1,9 @@
-﻿@using Microsoft.Extensions.Configuration
+﻿@using MarketplaceBetter.Services.Specialized.Interfaces;
+@using Microsoft.Extensions.Configuration
 
 @page "/login"
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IUserService UserService
 @inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
 
@@ -17,10 +19,9 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudText>You have to login to view this page.</MudText>
-                <MudForm @ref="Form" @bind-IsValid="@Success" @bind-Errors="@Errors">
-                    <MudTextField T="string" Label="Password" @ref="Password" InputType="InputType.Password"
-                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordIsValid))" Required="true"
-                                  RequiredError="Password is required!" />
+                <MudForm @ref="Form" @bind-IsValid="@Success">
+                    <MudTextField T="string" Label="Login" @bind-Value="LoginText" InputType="InputType.Text" Required="true" RequiredError="Login is required!" />
+                    <MudTextField T="string" Label="Password" @ref="Password" InputType="InputType.Password" Validation="PasswordIsValid" Required="true" RequiredError="Password is required!" />
                 </MudForm>
             </MudCardContent>
             <MudCardActions>
@@ -36,7 +37,7 @@
     public string? ReturnUrl { get; set; }
 
     private bool Success;
-    private string[] Errors = { };
+    private string LoginText;
     private MudTextField<string> Password;
     private MudForm Form;
 
@@ -50,7 +51,7 @@
 
     private void LoginUser()
     {
-        if (PasswordMatches(Password.Value))
+        if (PasswordMatches(LoginText, Password.Value))
         {
             ((BetterAuthenticationStateProvider)AuthenticationStateProvider).LoginUser();
 
@@ -60,22 +61,14 @@
 
     private IEnumerable<string> PasswordIsValid(string password)
     {
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            yield return "Please provide a password";
-            yield break;
-        }
-
-        if (!PasswordMatches(password))
+        if (!PasswordMatches(LoginText, password))
         {
             yield return "Password is invalid!";
         }
     }
 
-    private bool PasswordMatches(string password)
+    private bool PasswordMatches(string login, string password)
     {
-        string appPassword = Configuration.GetValue<string>("Password");
-
-        return appPassword == password;
+        return UserService.IsCorrectPassword(login, password);
     }
 }

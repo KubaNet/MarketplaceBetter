@@ -6,9 +6,11 @@
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Settings.Interfaces;
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 
 @inject IBrandService BrandService
 @inject IInstanceService InstanceService
+@inject IUserService UserService
 @inject ICurrentBrandSetting CurrentBrandSetting
 @inject ICurrentInstanceSetting CurrentInstanceSetting
 @inject IShowDraftsSetting ShowDraftsSetting
@@ -82,6 +84,8 @@
         InitializeCurrentInstance();
         InitializeDraftsSetting();
         InitializeWithdrawnSetting();
+
+        UserService.GetCurrentBrand();
     }
 
     private void InitializeCurrentBrand()

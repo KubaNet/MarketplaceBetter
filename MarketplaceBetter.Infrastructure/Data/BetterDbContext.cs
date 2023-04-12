@@ -25,6 +25,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseLazyLoadingProxies();
 
         // Base
+        public DbSet<User> User { get; set; }
         public DbSet<Instance> Instance { get; set; }
         public DbSet<EntityStatus> EntityStatus { get; set; }
 

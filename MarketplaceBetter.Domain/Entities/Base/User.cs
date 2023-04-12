@@ -13,7 +13,11 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         public string Password { get; set; }
 
-        public long CurrentBrandId { get; set; }
+        public string IpAddress { get; set; }
+
+        public DateTime IpLastPing { get; set; }
+
+        public long? CurrentBrandId { get; set; }
 
         public virtual Brand CurrentBrand { get; set; }
 
