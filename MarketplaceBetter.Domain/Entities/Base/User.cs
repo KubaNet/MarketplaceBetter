@@ -15,7 +15,7 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         public string IpAddress { get; set; }
 
-        public DateTime IpLastPing { get; set; }
+        public DateTime? IpLastPing { get; set; }
 
         public long? CurrentBrandId { get; set; }
 

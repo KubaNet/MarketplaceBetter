@@ -13,6 +13,10 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
     {
         bool IsCorrectPassword(string login, string password);
 
+        void Login(string login);
+
+        string GetCurrentUserLogin();
+
         BrandModel GetCurrentBrand();
 
         void SetCurrentBrand(BrandModel brand);

@@ -39,17 +39,35 @@ namespace MarketplaceBetter.Services.Domain.Base
                 return false;
             }
 
-            return true;
+            User user = _repository.SingleOrDefault(u => u.Login == login);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            return user.Password == password;
         }
 
-        public void Login(string login, string password)
+        public void Login(string login)
         {
+            User user = _repository.Single(u => u.Login == login);
 
+            user.IpAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            user.IpLastPing = DateTime.Now;
+
+            _repository.Update(user);
+            _unitOfWork.Save();
+        }
+
+        public string GetCurrentUserLogin()
+        {
+            return GetCurrentUser()?.Login;
         }
 
         public BrandModel GetCurrentBrand()
         {
-            User user = GetUser();
+            User user = GetCurrentUser();
 
             if (user == null)
             {
@@ -61,7 +79,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         public void SetCurrentBrand(BrandModel brand)
         {
-            User user = GetUser();
+            User user = GetCurrentUser();
             user.CurrentBrandId = brand.Id;
 
             _repository.Update(user);
@@ -120,7 +138,7 @@ namespace MarketplaceBetter.Services.Domain.Base
             throw new NotImplementedException();
         }
 
-        private User GetUser()
+        private User GetCurrentUser()
         {
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
 

@@ -53,7 +53,7 @@
     {
         if (PasswordMatches(LoginText, Password.Value))
         {
-            ((BetterAuthenticationStateProvider)AuthenticationStateProvider).LoginUser();
+            ((BetterAuthenticationStateProvider)AuthenticationStateProvider).LoginUser(LoginText);
 
             NavigationManager.NavigateTo($"{ReturnUrl ?? "/products"}");
         }
