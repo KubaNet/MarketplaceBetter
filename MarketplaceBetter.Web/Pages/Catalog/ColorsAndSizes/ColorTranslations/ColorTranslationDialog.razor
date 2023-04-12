@@ -4,7 +4,6 @@
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
-@using MarketplaceBetter.Services.Settings.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes.Interfaces
 
 @inject ISnackbar Snackbar
@@ -14,8 +13,8 @@
 @inject IBrandService BrandService
 @inject IColorGroupService ColorGroupService
 @inject IColorService ColorService
-@inject ICurrentBrandSetting CurrentBrandSetting
-@inject ICurrentInstanceSetting CurrentInstanceSetting
+@inject IUserService UserService
+@inject IUserService UserService
 
 <EditForm Model="ColorTranslation" OnValidSubmit="@HandleValidSubmit">
 	<CustomValidation @ref="CustomValidation" />
@@ -83,12 +82,12 @@
 		}
 		else
 		{
-			if (CurrentBrandSetting.IsSpecificBrand())
+			if (UserService.IsSpecificBrand())
 			{
 				SetValuesForCurrentBrand();
 			}
 
-			if (CurrentInstanceSetting.IsSpecificInstance())
+			if (UserService.IsSpecificInstance())
 			{
 				SetValuesForCurrentInstance();
 			}
@@ -114,14 +113,14 @@
 
 	private void SetValuesForCurrentBrand()
 	{
-		BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandSetting.GetCurrentBrand().Id);
+		BrandModel currentBrand = Brands.Single(b => b.Id == UserService.GetCurrentBrand().Id);
 
 		HandleBrandChanged(currentBrand);
 	}
 
 	private void SetValuesForCurrentInstance()
 	{
-		InstanceModel currentInstance = Instances.Single(b => b.Id == CurrentInstanceSetting.GetCurrentInstance().Id);
+		InstanceModel currentInstance = Instances.Single(b => b.Id == UserService.GetCurrentInstance().Id);
 
 		HandleInstanceChanged(currentInstance);
 	}

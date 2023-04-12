@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Specialized.Interfaces
+namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 {
     public interface IUserService
     {

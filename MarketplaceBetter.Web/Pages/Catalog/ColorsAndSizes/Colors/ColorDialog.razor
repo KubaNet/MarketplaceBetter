@@ -2,7 +2,7 @@
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
-@using MarketplaceBetter.Services.Settings.Interfaces;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes.Interfaces
 
 @inject ISnackbar Snackbar
@@ -10,7 +10,7 @@
 @inject IColorValidator ColorValidator
 @inject IBrandService BrandService
 @inject IColorGroupService ColorGroupService
-@inject ICurrentBrandSetting CurrentBrandSetting
+@inject IUserService UserService
 
 <EditForm Model="Color" OnValidSubmit="@HandleValidSubmit">
 	<CustomValidation @ref="CustomValidation" />
@@ -60,7 +60,7 @@
 		}
 		else
 		{
-			if (CurrentBrandSetting.IsSpecificBrand())
+			if (UserService.IsSpecificBrand())
 			{
 				SetValuesForCurrentBrand();
 			}
@@ -79,7 +79,7 @@
 
 	private void SetValuesForCurrentBrand()
 	{
-		BrandModel currentBrand = Brands.Single(b => b.Id == CurrentBrandSetting.GetCurrentBrand().Id);
+		BrandModel currentBrand = Brands.Single(b => b.Id == UserService.GetCurrentBrand().Id);
 
 		HandleBrandChanged(currentBrand);
 	}

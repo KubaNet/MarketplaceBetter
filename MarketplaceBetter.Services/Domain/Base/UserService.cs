@@ -3,8 +3,8 @@ using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Model;
-using MarketplaceBetter.Services.Specialized.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -128,7 +128,32 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         public void SetExpanded(MenuItemEnum menu, bool expanded)
         {
-            throw new NotImplementedException();
+            IList<MenuItemEnum> menuItems = GetExpandedMenuItems();
+
+            if (expanded)
+            {
+                if (menuItems.Contains(menu))
+                {
+                    return;
+                }
+                else
+                {
+                    menuItems.Add(menu);
+                }
+            }
+            else
+            {
+                if (menuItems.Contains(menu))
+                {
+                    menuItems.Remove(menu);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            SaveExpandedMenuItems(menuItems);
         }
 
         public void SetShowDrafts(bool showDrafts)
@@ -156,6 +181,35 @@ namespace MarketplaceBetter.Services.Domain.Base
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
 
             return _repository.SingleOrDefault(u => u.IpAddress == ipAddress);
+        }
+
+        private IList<MenuItemEnum> GetExpandedMenuItems()
+        {
+            IList<MenuItemEnum> menuItems = new List<MenuItemEnum>();
+
+            IList<string> menuItemsStrings = GetCurrentUser().ExpandedMenu.Split(';');
+            foreach (string menuItemString in menuItemsStrings)
+            {
+                if (string.IsNullOrWhiteSpace(menuItemString))
+                {
+                    continue;
+                }
+
+                MenuItemEnum menuItem = Enum.Parse<MenuItemEnum>(menuItemString);
+
+                menuItems.Add(menuItem);
+            }
+
+            return menuItems;
+        }
+
+        private void SaveExpandedMenuItems(IList<MenuItemEnum> menuItems)
+        {
+            User user = GetCurrentUser();
+            user.ExpandedMenu = string.Join(";", menuItems.Cast<int>());
+
+            _repository.Update(user);
+            _unitOfWork.Save();
         }
     }
 }

@@ -11,14 +11,12 @@ using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Services.Settings.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MarketplaceBetter.Services.Specialized.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {

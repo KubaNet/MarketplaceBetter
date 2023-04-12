@@ -2,9 +2,8 @@
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
-using MarketplaceBetter.Services.Settings.Interfaces;
-using MarketplaceBetter.Services.Specialized.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

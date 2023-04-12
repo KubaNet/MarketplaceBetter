@@ -1,25 +1,25 @@
 ﻿@using MarketplaceBetter.Services.Model;
-@using MarketplaceBetter.Services.Settings.Interfaces;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
 
 @inject NavigationManager NavigationManager
-@inject IExpandedMenuSetting ExpandedMenuSetting
+@inject IUserService UserService
 
 <MudNavMenu>
-    <MudNavGroup Title="Catalog" Icon="@Icons.Material.Filled.Folder" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.Catalog)" HideExpandIcon="true" ExpandedChanged="CatalogExpandedChanged">
-        <MudNavGroup Title="Products" Icon="@Icons.Material.Filled.ShoppingBasket" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.Products)" HideExpandIcon="true" ExpandedChanged="ProductsExpandedChanged">
+    <MudNavGroup Title="Catalog" Icon="@Icons.Material.Filled.Folder" Expanded="UserService.IsExpanded(MenuItemEnum.Catalog)" HideExpandIcon="true" ExpandedChanged="CatalogExpandedChanged">
+        <MudNavGroup Title="Products" Icon="@Icons.Material.Filled.ShoppingBasket" Expanded="UserService.IsExpanded(MenuItemEnum.Products)" HideExpandIcon="true" ExpandedChanged="ProductsExpandedChanged">
             <MudNavLink Href="/products">Products</MudNavLink>
             <MudNavLink Href="/variants">Variants</MudNavLink>
             <MudNavLink Href="/collections">Collections</MudNavLink>
             <MudNavLink Href="/brands">Brands</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Copy & Media" Icon="@Icons.Material.Filled.PhotoLibrary" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.CopyAndMedia)" HideExpandIcon="true" ExpandedChanged="CopyAndMediaExpandedChanged">
+        <MudNavGroup Title="Copy & Media" Icon="@Icons.Material.Filled.PhotoLibrary" Expanded="UserService.IsExpanded(MenuItemEnum.CopyAndMedia)" HideExpandIcon="true" ExpandedChanged="CopyAndMediaExpandedChanged">
             <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
             <MudNavLink Href="/photos">Photos</MudNavLink>
             <MudNavLink Href="/variant-photos">Variant Photos</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Material.Filled.Palette" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.ColorsAndSizes)" HideExpandIcon="true" ExpandedChanged="ColorsAndSizesExpandedChanged">
+        <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Material.Filled.Palette" Expanded="UserService.IsExpanded(MenuItemEnum.ColorsAndSizes)" HideExpandIcon="true" ExpandedChanged="ColorsAndSizesExpandedChanged">
             <MudNavLink Href="/colors">Colors</MudNavLink>
             <MudNavLink Href="/product-colors">Product Colors</MudNavLink>
             <MudNavLink Href="/color-translations">Color Translations</MudNavLink>
@@ -28,13 +28,13 @@
             <MudNavLink Href="/size-groups">Size Groups</MudNavLink>
         </MudNavGroup>
     </MudNavGroup>
-    <MudNavGroup Title="Amazon" Icon="@Icons.Material.Filled.BrightnessAuto" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.Amazon)" HideExpandIcon="true" ExpandedChanged="AmazonExpandedChanged">
-        <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.Inventory)" HideExpandIcon="true" ExpandedChanged="InventoryExpandedChanged">
+    <MudNavGroup Title="Amazon" Icon="@Icons.Material.Filled.BrightnessAuto" Expanded="UserService.IsExpanded(MenuItemEnum.Amazon)" HideExpandIcon="true" ExpandedChanged="AmazonExpandedChanged">
+        <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="UserService.IsExpanded(MenuItemEnum.Inventory)" HideExpandIcon="true" ExpandedChanged="InventoryExpandedChanged">
             <MudNavLink Href="/parent-instances">Parent Instances</MudNavLink>
             <MudNavLink Href="/child-instances">Child Instances</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Campaigns" Icon="@Icons.Material.Filled.SwitchAccessShortcutAdd" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.Campaigns)" HideExpandIcon="true" ExpandedChanged="CampaignsExpandedChanged">
+        <MudNavGroup Title="Campaigns" Icon="@Icons.Material.Filled.SwitchAccessShortcutAdd" Expanded="UserService.IsExpanded(MenuItemEnum.Campaigns)" HideExpandIcon="true" ExpandedChanged="CampaignsExpandedChanged">
             <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
             <MudNavLink Href="/portfolios">Portfolios</MudNavLink>
             <MudNavLink Href="/ad-groups">Ad Groups</MudNavLink>
@@ -44,14 +44,14 @@
             <MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Keywords" Icon="@Icons.Material.Filled.ManageSearch" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.Keywords)" HideExpandIcon="true" ExpandedChanged="KeywordsExpandedChanged">
+        <MudNavGroup Title="Keywords" Icon="@Icons.Material.Filled.ManageSearch" Expanded="UserService.IsExpanded(MenuItemEnum.Keywords)" HideExpandIcon="true" ExpandedChanged="KeywordsExpandedChanged">
             <MudNavLink Href="/researches">Researches</MudNavLink>
             <MudNavLink Href="/research-targets">Research Targets</MudNavLink>
             <MudNavLink Href="/research-results">Research Results</MudNavLink>
         </MudNavGroup>
     </MudNavGroup>
-    <MudNavGroup Title="Sales" Icon="@Icons.Material.Filled.MonetizationOn" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.Sales)" HideExpandIcon="true" ExpandedChanged="SalesExpandedChanged">
-        <MudNavGroup Title="Input Data" Icon="@Icons.Material.Filled.TableView" Expanded="ExpandedMenuSetting.IsExpanded(MenuItemEnum.InputData)" HideExpandIcon="true" ExpandedChanged="InputDataExpandedChanged">
+    <MudNavGroup Title="Sales" Icon="@Icons.Material.Filled.MonetizationOn" Expanded="UserService.IsExpanded(MenuItemEnum.Sales)" HideExpandIcon="true" ExpandedChanged="SalesExpandedChanged">
+        <MudNavGroup Title="Input Data" Icon="@Icons.Material.Filled.TableView" Expanded="UserService.IsExpanded(MenuItemEnum.InputData)" HideExpandIcon="true" ExpandedChanged="InputDataExpandedChanged">
             <MudNavLink Href="/amazon-fulfilled-shipments">Amazon Shipments</MudNavLink>
         </MudNavGroup>
     </MudNavGroup>
@@ -72,52 +72,52 @@
 
     private void CatalogExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.Catalog, expaned);
+        UserService.SetExpanded(MenuItemEnum.Catalog, expaned);
     }
 
     private void ProductsExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.Products, expaned);
+        UserService.SetExpanded(MenuItemEnum.Products, expaned);
     }
 
     private void CopyAndMediaExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.CopyAndMedia, expaned);
+        UserService.SetExpanded(MenuItemEnum.CopyAndMedia, expaned);
     }
 
     private void ColorsAndSizesExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.ColorsAndSizes, expaned);
+        UserService.SetExpanded(MenuItemEnum.ColorsAndSizes, expaned);
     }
 
     private void AmazonExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.Amazon, expaned);
+        UserService.SetExpanded(MenuItemEnum.Amazon, expaned);
     }
 
     private void InventoryExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.Inventory, expaned);
+        UserService.SetExpanded(MenuItemEnum.Inventory, expaned);
     }
 
     private void CampaignsExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.Campaigns, expaned);
+        UserService.SetExpanded(MenuItemEnum.Campaigns, expaned);
     }
 
     private void KeywordsExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.Keywords, expaned);
+        UserService.SetExpanded(MenuItemEnum.Keywords, expaned);
     }
 
     private void SalesExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.Sales, expaned);
+        UserService.SetExpanded(MenuItemEnum.Sales, expaned);
     }
 
     private void InputDataExpandedChanged(bool expaned)
     {
-        ExpandedMenuSetting.SetExpanded(MenuItemEnum.InputData, expaned);
+        UserService.SetExpanded(MenuItemEnum.InputData, expaned);
     }
 
     public void Dispose()

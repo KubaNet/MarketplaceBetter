@@ -8,7 +8,6 @@ using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
-using MarketplaceBetter.Services.Settings.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
@@ -23,6 +22,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO.Compression;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -33,7 +33,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IUserService _userService;
-        private readonly ICurrentInstanceSetting _userService;
         private readonly IWebHostEnvironment _environment;
         private readonly string _downloadFolderPath;
 
@@ -42,14 +41,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
             IUserService userService,
-            ICurrentInstanceSetting userService,
             IWebHostEnvironment environment)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
-            _userService = userService;
             _userService = userService;
             _environment = environment;
             _downloadFolderPath = Path.Combine(_environment.WebRootPath, "_download");

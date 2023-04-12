@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Services.Specialized.Interfaces;
+﻿using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Threading.Tasks;

@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
-using MarketplaceBetter.Services.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +15,12 @@ namespace MarketplaceBetter.Services.Domain.Base
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Instance> _repository;
-        private readonly ICurrentInstanceSetting _userService;
+        private readonly IUserService _userService;
 
         public InstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICurrentInstanceSetting userService)
+            IUserService userService)
         {
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Instance>();
