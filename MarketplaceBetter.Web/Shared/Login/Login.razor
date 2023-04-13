@@ -1,34 +1,39 @@
-﻿@using MarketplaceBetter.Services.Domain.Base.Interfaces
+﻿@using MarketplaceBetter.Domain.Model.Other;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces
 @using MarketplaceBetter.Services.Specialized.Interfaces
 @using Microsoft.Extensions.Configuration
 
 @page "/login"
+@inject ISnackbar Snackbar
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserService UserService
 @inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
 
 <MudThemeProvider Theme="BetterTheme" />
+<MudSnackbarProvider />
 
 <div style="position:fixed; padding:0; margin:0; top:0; left:0; width: 100%; height: 100%; background-color:@(Colors.Grey.Lighten4);">
     <div class="d-flex justify-center pt-10" style="position: relative; top: 30%;">
-        <MudCard Style="width: 400px;">
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h6">Welcome</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudText>You have to login to view this page.</MudText>
-                <MudForm @ref="Form" @bind-IsValid="@Success">
-                    <MudTextField T="string" Label="Login" @bind-Value="LoginText" InputType="InputType.Text" Required="true" RequiredError="Login is required!" />
-                    <MudTextField T="string" Label="Password" @ref="Password" InputType="InputType.Password" Validation="PasswordIsValid" Required="true" RequiredError="Password is required!" />
-                </MudForm>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton OnClick="LoginUser" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!Success)">Login</MudButton>
-            </MudCardActions>
-        </MudCard>
+        <EditForm Model="LoginModel" OnValidSubmit="LoginUser">
+            <CustomValidation @ref="CustomValidation" />
+            <DataAnnotationsValidator />
+            <MudCard Style="width: 400px;">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Welcome</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>You have to login to view this page.</MudText>
+                    <MudTextField T="string" Label="Username" @bind-Value="LoginModel.Username" InputType="InputType.Text" For="() => LoginModel.Username" />
+                    <MudTextField T="string" Label="Password" @bind-Value="LoginModel.Password" InputType="InputType.Password" For="() => LoginModel.Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Login</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
     </div>
 </div>
 
@@ -37,10 +42,8 @@
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
 
-    private bool Success;
-    private string LoginText;
-    private MudTextField<string> Password;
-    private MudForm Form;
+    private CustomValidation CustomValidation = new();
+    private LoginModel LoginModel = new();
 
     MudTheme BetterTheme = new MudTheme()
     {
@@ -52,24 +55,16 @@
 
     private void LoginUser()
     {
-        if (PasswordMatches(LoginText, Password.Value))
+        if (UserService.IsCorrectPassword(LoginModel.Username, LoginModel.Password))
         {
-            ((BetterAuthenticationStateProvider)AuthenticationStateProvider).LoginUser(LoginText);
+            ((BetterAuthenticationStateProvider)AuthenticationStateProvider).LoginUser(LoginModel.Username);
 
             NavigationManager.NavigateTo($"{ReturnUrl ?? "/products"}");
         }
-    }
-
-    private IEnumerable<string> PasswordIsValid(string password)
-    {
-        if (!PasswordMatches(LoginText, password))
+        else
         {
-            yield return "Password is invalid!";
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+            Snackbar.Add("Username and/or password is incorrect", Severity.Error);
         }
-    }
-
-    private bool PasswordMatches(string login, string password)
-    {
-        return UserService.IsCorrectPassword(login, password);
     }
 }

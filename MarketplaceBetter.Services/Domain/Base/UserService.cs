@@ -123,12 +123,24 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         public bool IsExpanded(MenuItemEnum menu)
         {
-            return GetExpandedMenuItems().Contains(menu);
+            IList<MenuItemEnum> menuItems = GetExpandedMenuItems();
+
+            if (menuItems == null)
+            {
+                return false;
+            }
+
+            return menuItems.Contains(menu);
         }
 
         public void SetExpanded(MenuItemEnum menu, bool expanded)
         {
             IList<MenuItemEnum> menuItems = GetExpandedMenuItems();
+
+            if (menuItems == null)
+            {
+                return;
+            }
 
             if (expanded)
             {
@@ -221,7 +233,13 @@ namespace MarketplaceBetter.Services.Domain.Base
         {
             IList<MenuItemEnum> menuItems = new List<MenuItemEnum>();
 
-            IList<string> menuItemsStrings = GetCurrentUser().ExpandedMenu.Split(';');
+            User user = GetCurrentUser();
+            if (user == null)
+            {
+                return null;
+            }
+
+            IList<string> menuItemsStrings = user.ExpandedMenu.Split(';');
             foreach (string menuItemString in menuItemsStrings)
             {
                 if (string.IsNullOrWhiteSpace(menuItemString))

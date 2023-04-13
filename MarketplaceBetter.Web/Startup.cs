@@ -1,5 +1,4 @@
 using Autofac;
-using Blazored.SessionStorage;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Catalog.Products;
 using MarketplaceBetter.Web.Extensions;
@@ -38,7 +37,6 @@ namespace MarketplaceBetter.Web
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<BetterDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BetterConnection")));
             services.AddScoped<AuthenticationStateProvider, BetterAuthenticationStateProvider>();
-            services.AddBlazoredSessionStorage();
             services.AddHttpContextAccessor();
         }
 
