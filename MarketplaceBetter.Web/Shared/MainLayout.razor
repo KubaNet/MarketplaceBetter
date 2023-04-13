@@ -71,6 +71,15 @@
     private bool ShowDrafts = false;
     private bool ShowWithdrawn = false;
 
+    MudTheme BetterTheme = new MudTheme()
+        {
+            Palette = new PaletteLight()
+            {
+                Primary = "#32ae70",
+                AppbarBackground = Colors.Grey.Lighten3,
+            }
+        };
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -153,13 +162,4 @@
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
-
-    MudTheme BetterTheme = new MudTheme()
-    {
-        Palette = new Palette()
-        {
-            Primary = "#32ae70",
-            AppbarBackground = Colors.Grey.Lighten3,
-        }
-    };
 }
