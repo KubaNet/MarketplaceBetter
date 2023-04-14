@@ -67,7 +67,10 @@
 
     private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
     {
-        StateHasChanged();
+        if (UserService.LoginExpired())
+        {
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
     }
 
     private void CatalogExpandedChanged(bool expaned)

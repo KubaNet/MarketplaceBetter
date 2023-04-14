@@ -1,0 +1,15 @@
+﻿@using MarketplaceBetter.Services.Domain.Base.Interfaces;
+
+@page "/logout"
+
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        UserService.Logout();
+
+        NavigationManager.NavigateTo("products", forceLoad: true);
+    }
+ } 

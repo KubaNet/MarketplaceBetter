@@ -1,13 +1,9 @@
 ﻿@using MarketplaceBetter.Domain.Model.Other;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
-@using MarketplaceBetter.Services.Specialized.Interfaces
-@using Microsoft.Extensions.Configuration
 
 @page "/login"
 @inject ISnackbar Snackbar
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserService UserService
-@inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
 
 <MudThemeProvider Theme="BetterTheme" />
@@ -57,7 +53,7 @@
     {
         if (UserService.IsCorrectPassword(LoginModel.Username, LoginModel.Password))
         {
-            ((BetterAuthenticationStateProvider)AuthenticationStateProvider).LoginUser(LoginModel.Username);
+            UserService.Login(LoginModel.Username);
 
             NavigationManager.NavigateTo($"{ReturnUrl ?? "/products"}");
         }

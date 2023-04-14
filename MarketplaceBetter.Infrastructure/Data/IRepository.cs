@@ -18,6 +18,8 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         TEntity Get(long id);
 
+        void Reload(TEntity entity);
+
         IList<TEntity> GetAll();
 
         IQueryable<TEntity> GetQuery();

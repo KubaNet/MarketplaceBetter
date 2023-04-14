@@ -7,7 +7,9 @@ using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -295,14 +297,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<ParentInstance> ApplyFilter(IQueryable<ParentInstance> parents, ListRequest request)
         {
-            if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                parents = parents.Where(p => p.Product.BrandId == _userService.GetCurrentBrand().Id);
+                parents = parents.Where(p => p.Product.BrandId == currentBrand.Id);
             }
 
-            if (_userService.IsSpecificInstance())
+            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (currentInstance != null && _userService.IsSpecificInstance())
             {
-                parents = parents.Where(p => p.InstanceId == _userService.GetCurrentInstance().Id);
+                parents = parents.Where(p => p.InstanceId == currentInstance.Id);
             }
 
             bool showDrafts = _userService.ShowDrafts();

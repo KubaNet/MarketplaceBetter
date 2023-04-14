@@ -20,6 +20,7 @@ namespace MarketplaceBetter.Services.Domain.Base
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<User> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly TimeSpan LOGIN_TIMEOUT = TimeSpan.FromMinutes(30);
 
         public UserService(
             IMapper mapper,
@@ -60,6 +61,34 @@ namespace MarketplaceBetter.Services.Domain.Base
             _unitOfWork.Save();
         }
 
+        public void Logout()
+        {
+            User user = GetCurrentUser();
+            
+            if (user == null)
+            {
+                return;
+            }
+
+            user.IpAddress = null;
+            user.IpLastPing = null;
+
+            _repository.Update(user);
+            _unitOfWork.Save();
+        }
+
+        public bool LoginExpired()
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public string GetCurrentUserLogin()
         {
             return GetCurrentUser()?.Login;
@@ -80,7 +109,15 @@ namespace MarketplaceBetter.Services.Domain.Base
         public void SetCurrentBrand(BrandModel brand)
         {
             User user = GetCurrentUser();
-            user.CurrentBrandId = brand.Id;
+
+            if (brand == null || brand.Id == 0)
+            {
+                user.CurrentBrandId = null;
+            }
+            else
+            {
+                user.CurrentBrandId = brand.Id;
+            }
 
             _repository.Update(user);
             _unitOfWork.Save();
@@ -224,9 +261,32 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private User GetCurrentUser()
         {
-            string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            string ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress.ToString();
+            if (string.IsNullOrWhiteSpace(ipAddress))
+            {
+                return null;
+            }
 
-            return _repository.SingleOrDefault(u => u.IpAddress == ipAddress);
+            User user = _repository.SingleOrDefault(u => u.IpAddress == ipAddress);
+            if (user == null)
+            {
+                return null;
+            }
+
+            TimeSpan timeFromLastPing = DateTime.Now - user.IpLastPing.Value;
+            if (timeFromLastPing > LOGIN_TIMEOUT)
+            {
+                return null;
+            }
+
+            _repository.Reload(user);
+
+            user.IpLastPing = DateTime.Now;
+
+            _repository.Update(user);
+            _unitOfWork.Save();
+
+            return user;
         }
 
         private IList<MenuItemEnum> GetExpandedMenuItems()

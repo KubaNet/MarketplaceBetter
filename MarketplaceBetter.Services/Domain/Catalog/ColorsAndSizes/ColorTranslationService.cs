@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -90,14 +92,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<ColorTranslation> ApplyFilter(IQueryable<ColorTranslation> translations, ListRequest request)
         {
-			if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
 			{
-				translations = translations.Where(t => t.Color.Group.BrandId == _userService.GetCurrentBrand().Id);
+				translations = translations.Where(t => t.Color.Group.BrandId == currentBrand.Id);
 			}
 
-            if (_userService.IsSpecificInstance())
+            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (currentInstance != null && _userService.IsSpecificInstance())
             {
-                translations = translations.Where(t => t.InstanceId == _userService.GetCurrentInstance().Id);
+                translations = translations.Where(t => t.InstanceId == currentInstance.Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

@@ -15,6 +15,10 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 
         void Login(string login);
 
+        void Logout();
+
+        bool LoginExpired();
+
         string GetCurrentUserLogin();
 
         BrandModel GetCurrentBrand();

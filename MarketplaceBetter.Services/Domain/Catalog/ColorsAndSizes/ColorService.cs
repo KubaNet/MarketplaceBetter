@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -90,9 +91,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<Color> ApplyFilter(IQueryable<Color> colors, ListRequest request)
         {
-			if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
 			{
-				colors = colors.Where(c => c.Group.BrandId == _userService.GetCurrentBrand().Id);
+				colors = colors.Where(c => c.Group.BrandId == currentBrand.Id);
 			}
 
 			if (string.IsNullOrWhiteSpace(request.SearchString))

@@ -34,9 +34,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public IList<CollectionModel> GetAll()
         {
-            if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                return _mapper.Map<IList<CollectionModel>>(_repository.Where(c => c.BrandId == _userService.GetCurrentBrand().Id).OrderBy(g => g.Id));
+                return _mapper.Map<IList<CollectionModel>>(_repository.Where(c => c.BrandId == currentBrand.Id).OrderBy(g => g.Id));
             }
             else
             {

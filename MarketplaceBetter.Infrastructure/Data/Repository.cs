@@ -49,6 +49,11 @@ namespace MarketplaceBetter.Infrastructure.Data
             return null;
         }
 
+        public void Reload(TEntity entity)
+        {
+            _dbSet.Entry(entity).Reload();
+        }
+
         public IList<TEntity> GetAll()
         {
             return _dbSet.ToList();

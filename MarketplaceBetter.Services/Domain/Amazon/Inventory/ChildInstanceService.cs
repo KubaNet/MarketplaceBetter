@@ -2,6 +2,8 @@
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -167,14 +169,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<ChildInstance> ApplyFilter(IQueryable<ChildInstance> childs, ListRequest request)
         {
-            if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                childs = childs.Where(c => c.Variant.Product.BrandId == _userService.GetCurrentBrand().Id);
+                childs = childs.Where(c => c.Variant.Product.BrandId == currentBrand.Id);
             }
 
-            if (_userService.IsSpecificInstance())
+            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (currentInstance != null && _userService.IsSpecificInstance())
             {
-                childs = childs.Where(c => c.InstanceId == _userService.GetCurrentInstance().Id);
+                childs = childs.Where(c => c.InstanceId == currentInstance.Id);
             }
 
             bool showDrafts = _userService.ShowDrafts();

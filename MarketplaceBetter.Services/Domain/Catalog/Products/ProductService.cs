@@ -46,10 +46,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public IList<ProductModel> GetAll()
         {
-            if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                BrandModel currentBrand = _userService.GetCurrentBrand();
-
                 return _mapper.Map<IList<ProductModel>>(_repository.Where(p => p.BrandId == currentBrand.Id).OrderBy(g => g.Name));
             }
             else
@@ -130,9 +129,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
         {
-            if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                products = products.Where(p => p.BrandId == _userService.GetCurrentBrand().Id);
+                products = products.Where(p => p.BrandId == currentBrand.Id);
             }
 
             bool showDrafts = _userService.ShowDrafts();

@@ -143,12 +143,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
-            if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                photos = photos.Where(p => p.Variant.Product.BrandId == _userService.GetCurrentBrand().Id);
+                photos = photos.Where(p => p.Variant.Product.BrandId == currentBrand.Id);
             }
 
-            if (_userService.IsSpecificInstance())
+            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (currentInstance != null && _userService.IsSpecificInstance())
             {
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
                 photos = photos.Where(p => p.InstanceId == _userService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);

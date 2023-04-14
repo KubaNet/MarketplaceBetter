@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -95,14 +97,16 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private IQueryable<Copywriting> ApplyFilter(IQueryable<Copywriting> copywritings, ListRequest request)
         {
-            if (_userService.IsSpecificBrand())
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                copywritings = copywritings.Where(c => c.Product.BrandId == _userService.GetCurrentBrand().Id);
+                copywritings = copywritings.Where(c => c.Product.BrandId == currentBrand.Id);
             }
 
-            if (_userService.IsSpecificInstance())
+            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (currentInstance != null && _userService.IsSpecificInstance())
             {
-                copywritings = copywritings.Where(c => c.InstanceId == _userService.GetCurrentInstance().Id);
+                copywritings = copywritings.Where(c => c.InstanceId == currentInstance.Id);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
