@@ -22,6 +22,12 @@ namespace MarketplaceBetter.Services.Domain.Base
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TimeSpan LOGIN_TIMEOUT = TimeSpan.FromMinutes(30);
 
+        private long? CurrentBrandIdCache;
+        private long CurrentInstanceIdCache;
+        private bool ShowDraftsCache;
+        private bool ShowWithdrawnCache;
+        private string ExpandedMenuCache;
+
         public UserService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
@@ -31,6 +37,29 @@ namespace MarketplaceBetter.Services.Domain.Base
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<User>();
             _httpContextAccessor = httpContextAccessor;
+
+            UpdateSettingsCache();
+        }
+
+        private void UpdateSettingsCache()
+        {
+            User user = GetCurrentUser();
+
+            UpdateSettingsCache(user);
+        }
+
+        private void UpdateSettingsCache(User user)
+        {
+            if (user == null)
+            {
+                return;
+            }
+
+            CurrentBrandIdCache = user.CurrentBrandId;
+            CurrentInstanceIdCache = user.CurrentInstanceId;
+            ShowDraftsCache = user.ShowDrafts;
+            ShowWithdrawnCache = user.ShowWithdrawn;
+            ExpandedMenuCache = user.ExpandedMenu;
         }
 
         public bool IsCorrectPassword(string login, string password)
@@ -59,6 +88,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             _repository.Update(user);
             _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
         }
 
         public void Logout()
@@ -82,6 +113,43 @@ namespace MarketplaceBetter.Services.Domain.Base
             User user = GetCurrentUser();
 
             if (user == null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool SettingsChanged()
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (user.CurrentBrandId != CurrentBrandIdCache)
+            {
+                return true;
+            }
+
+            if (user.CurrentInstanceId != CurrentInstanceIdCache)
+            {
+                return true;
+            }
+
+            if (user.ShowDrafts != ShowDraftsCache)
+            {
+                return true;
+            }
+
+            if (user.ShowWithdrawn != ShowWithdrawnCache)
+            {
+                return true;
+            }
+
+            if (user.ExpandedMenu != ExpandedMenuCache)
             {
                 return true;
             }
@@ -121,6 +189,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             _repository.Update(user);
             _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
         }
 
         public bool IsSpecificBrand()
@@ -149,6 +219,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             _repository.Update(user);
             _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
         }
 
         public bool IsSpecificInstance()
@@ -230,6 +302,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             _repository.Update(user);
             _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
         }
 
         public bool ShowWithdrawn()
@@ -257,6 +331,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             _repository.Update(user);
             _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
         }
 
         private User GetCurrentUser()
@@ -322,6 +398,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             _repository.Update(user);
             _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
         }
     }
 }

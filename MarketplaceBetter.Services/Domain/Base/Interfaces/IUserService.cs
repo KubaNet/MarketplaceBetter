@@ -19,6 +19,8 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 
         bool LoginExpired();
 
+        bool SettingsChanged();
+
         string GetCurrentUserLogin();
 
         BrandModel GetCurrentBrand();

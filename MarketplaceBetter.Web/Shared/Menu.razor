@@ -67,7 +67,7 @@
 
     private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
     {
-        if (UserService.LoginExpired())
+        if (UserService.LoginExpired() || UserService.SettingsChanged())
         {
             NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
         }
