@@ -29,7 +29,5 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         void Update(ParentInstanceModel parent);
 
         string GetSkuFor(long? parentId, long? instanceId);
-
-        Stream Export(long id);
     }
 }

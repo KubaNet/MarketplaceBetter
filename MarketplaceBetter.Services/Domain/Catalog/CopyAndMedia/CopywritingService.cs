@@ -41,8 +41,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         public CopywritingModel GetForProduct(long productId, long instanceId, CopywritingElementEnum element)
         {
-            Copywriting copywriting = _repository.SingleOrDefault(c => c.ProductId == productId & c.InstanceId == instanceId
-                & c.Element.SystemName == element);
+            Copywriting copywriting = _repository.SingleOrDefault(c => c.ProductId == productId & c.InstanceId == instanceId & c.Element.SystemName == element);
 
             return _mapper.Map<CopywritingModel>(copywriting);
         }

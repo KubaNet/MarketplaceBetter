@@ -3,21 +3,23 @@
 @using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Model
 @using System.IO
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 
 @page "/parent-instances"
 @inject IJSRuntime JS
 @inject IParentInstanceService ParentInstanceService
+@inject ITemplateCreator TemplateCreator
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">Parent Instances</MudText>
 
 <MainBody>
-    <MudTable T="ParentInstanceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ParentInstanceModel>>>(ReloadParentInstances))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="ParentInstanceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ParentInstanceModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterParentInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
-            <MudButton OnClick="AddParentInstance" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Parent Instance</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Parent Instance</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ParentInstanceModel">Id</MudTableSortLabel></MudTh>
@@ -41,8 +43,8 @@
             <MudTd DataLabel="Product">@context.Product.Code</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => ExportParentInstance(context.Id, context.Sku))">Export</MudButton>
-                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" OnClick="@(() => EditParentInstance(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => Export(context.Id, context.Sku))">Export</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -84,7 +86,7 @@
         }
     }
 
-    private Task<TableData<ParentInstanceModel>> ReloadParentInstances(TableState state)
+    private Task<TableData<ParentInstanceModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -98,7 +100,7 @@
         CurrentRowsPerPageValue = rowsPerPage;
     }
 
-    private void FilterParentInstances(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -107,21 +109,21 @@
         StateHasChanged();
     }
 
-    private async void AddParentInstance()
+    private async void Add()
     {
         var result = await DialogService.Show<ParentInstanceDialog>(null, new DialogParameters { ["Title"] = "Add Parent Instance" }).Result;
 
-        ProcessParentInstanceDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditParentInstance(long id)
+    private async void Edit(long id)
     {
         var result = await DialogService.Show<ParentInstanceDialog>(null, new DialogParameters { ["Title"] = "Edit Parent Instance", ["IsEdit"] = true, ["ParentInstanceId"] = id }).Result;
 
-        ProcessParentInstanceDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private void ProcessParentInstanceDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {
@@ -133,7 +135,7 @@
     {
         var result = await DialogService.Show<ParentInstancesSetStatusDialog>(null, new DialogParameters { ["ParentInstances"] = SelectedParents.ToList() }).Result;
 
-        ProcessParentInstanceDialogResult(result);
+        ProcessDialogResult(result);
     }
 
     private void OnSelectedItemsChanged(HashSet<ParentInstanceModel> selectedParents)
@@ -150,9 +152,9 @@
         }
     }
 
-    private async Task ExportParentInstance(long id, string sku)
+    private async Task Export(long id, string sku)
     {
-        using Stream fileStream = ParentInstanceService.Export(id);
+        using Stream fileStream = TemplateCreator.CreateTemplateFor(id);
 
         using var streamReference = new DotNetStreamReference(fileStream);
 

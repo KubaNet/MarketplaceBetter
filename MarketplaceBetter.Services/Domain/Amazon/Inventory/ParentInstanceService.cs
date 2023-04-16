@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
-using CsvHelper;
-using CsvHelper.Configuration;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
-using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -16,19 +11,17 @@ using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Infrastructure.Helpers;
 using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
-using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
-using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 {
@@ -36,33 +29,23 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPhotoService _photoService;
-        private readonly ICopywritingService _copywritingService;
         private readonly IRepository<ParentInstance> _repository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
-        private readonly IRepository<ChildInstance> _childInstanceRepository;
-        private readonly IRepository<ColorTranslation> _colorTranslationRepository;
         private readonly IUserService _userService;
 
         public ParentInstanceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IPhotoService photoService,
-            ICopywritingService copywritingService,
             IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _photoService = photoService;
-            _copywritingService = copywritingService;
             _repository = unitOfWork.GetRepository<ParentInstance>();
             _productRepository = unitOfWork.GetRepository<Product>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
-            _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
-            _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
             _userService = userService;
         }
 
@@ -161,138 +144,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             return null;
         }
 
-        public Stream Export(long id)
+        private void TransferValues(ParentInstance toParent, ParentInstanceModel fromParent)
         {
-            MemoryStream stream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(stream);
-
-            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = ";",
-                Encoding = Encoding.UTF8,
-                HasHeaderRecord = false,
-            };
-
-            CsvWriter csv = new CsvWriter(writer, config);
-
-            ParentInstance parentInstance = _repository.Get(id);
-            Instance instance = parentInstance.Instance;
-            IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => 
-                c.Variant.ProductId == parentInstance.ProductId && c.InstanceId == instance.Id 
-                && c.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
-
-            csv.WriteField("Seller SKU");
-            csv.WriteField("Brand Name");
-            csv.WriteField("Product Name");
-            csv.WriteField("Product ID");
-            csv.WriteField("Color Name");
-            csv.WriteField("Color Map");
-            csv.WriteField("Size Name");
-            // copywriting
-            csv.WriteField("Description");
-            csv.WriteField("Bullet Point 1");
-            csv.WriteField("Bullet Point 2");
-            csv.WriteField("Bullet Point 3");
-            csv.WriteField("Bullet Point 4");
-            csv.WriteField("Bullet Point 5");
-            // images
-            csv.WriteField("Main Image");
-            csv.WriteField("Other Image 1");
-            csv.WriteField("Other Image 2");
-            csv.WriteField("Other Image 3");
-            csv.WriteField("Other Image 4");
-            csv.WriteField("Other Image 5");
-            csv.WriteField("Other Image 6");
-            csv.WriteField("Other Image 7");
-            csv.WriteField("Other Image 8");
-            csv.WriteField("Swatch Image");
-            csv.NextRecord();
-
-            foreach (var childInstance in childInstances)
-            {
-                ColorTranslation colorTranslation = _colorTranslationRepository.SingleOrDefault(t =>
-                    t.ColorId == childInstance.Variant.Color.Id && t.InstanceId == instance.Id);
-
-                csv.WriteField(childInstance.Sku);
-                csv.WriteField(childInstance.Variant.Product.Brand.Name);
-                csv.WriteField(GetProductName(childInstance, colorTranslation));
-                csv.WriteField(childInstance.Variant.Asin);
-                csv.WriteField(colorTranslation?.Translation);
-                csv.WriteField(colorTranslation?.Mapping);
-                csv.WriteField(childInstance.Variant.Size.Name);
-                WriteCopywriting(csv, childInstance);
-                WritePhotos(csv, childInstance);
-                csv.NextRecord();
-            }
-
-            writer.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
-
-            return stream;
-        }
-
-        private void WriteCopywriting(CsvWriter csv, ChildInstance childInstance)
-        {
-            CopywritingModel description = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.Description);
-            csv.WriteField(description?.Value);
-            CopywritingModel bulletPoint1 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint1);
-            csv.WriteField(bulletPoint1?.Value);
-            CopywritingModel bulletPoint2 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint2);
-            csv.WriteField(bulletPoint2?.Value);
-            CopywritingModel bulletPoint3 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint3);
-            csv.WriteField(bulletPoint3?.Value);
-            CopywritingModel bulletPoint4 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint4);
-            csv.WriteField(bulletPoint4?.Value);
-            CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(childInstance.Variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.BulletPoint5);
-            csv.WriteField(bulletPoint5?.Value);
-        }
-
-        private void WritePhotos(CsvWriter csv, ChildInstance childInstance)
-        {
-            PhotoModel main = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Main);
-            csv.WriteField(main?.Url);
-            PhotoModel other1 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other1);
-            csv.WriteField(other1?.Url);
-            PhotoModel other2 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other2);
-            csv.WriteField(other2?.Url);
-            PhotoModel other3 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other3);
-            csv.WriteField(other3?.Url);
-            PhotoModel other4 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other4);
-            csv.WriteField(other4?.Url);
-            PhotoModel other5 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other5);
-            csv.WriteField(other5?.Url);
-            PhotoModel other6 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other6);
-            csv.WriteField(other6?.Url);
-            PhotoModel other7 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other7);
-            csv.WriteField(other7?.Url);
-            PhotoModel other8 = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Other8);
-            csv.WriteField(other8?.Url);
-            PhotoModel swatch = _photoService.GetForVariant(childInstance.Variant.Id, PhotoTypeEnum.Swatch);
-            csv.WriteField(swatch?.Url);
-        }
-
-        private string GetProductName(ChildInstance childInstance, ColorTranslation colorTranslation)
-        {
-            Variant variant = childInstance.Variant;
-            Size size = variant.Size;
-            CopywritingModel title = _copywritingService.GetForProduct(variant.ProductId, childInstance.InstanceId, CopywritingElementEnum.Title);
-
-            if (size.IsOneSize)
-            {
-                return $"{title?.Value} ({colorTranslation?.Translation})";
-            }
-            else
-            {
-                return $"{title?.Value} ({size.Code}, {colorTranslation?.Translation})";
-            }
-        }
-
-        private void TransferValues(ParentInstance toParentInstance, ParentInstanceModel fromParentInstance)
-        {
-            toParentInstance.ProductId = fromParentInstance.Product.Id;
-            toParentInstance.InstanceId = fromParentInstance.Instance.Id;
-            toParentInstance.Sku = fromParentInstance.Sku;
-            toParentInstance.Asin = fromParentInstance.Asin;
+            toParent.ProductId = fromParent.Product.Id;
+            toParent.InstanceId = fromParent.Instance.Id;
+            toParent.Sku = fromParent.Sku;
+            toParent.Asin = fromParent.Asin;
         }
 
         private IQueryable<ParentInstance> ApplyFilter(IQueryable<ParentInstance> parents, ListRequest request)
