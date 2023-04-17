@@ -30,5 +30,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         public string Asin { get; set; }
 
         public EntityStatusModel Status { get; set; }
+
+        public TemplateModel Template { get; set; }
     }
 }

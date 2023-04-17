@@ -26,6 +26,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
 
         public virtual EntityStatus Status { get; set; }
 
+        public long? TemplateId { get; set; }
+
+        public virtual Template Template { get; set; }
+
         public override string ToString()
         {
             return Sku;

@@ -2,7 +2,7 @@
 
 @if (!string.IsNullOrWhiteSpace(Asin))
 {
-    <MudIconButton Icon="@Icons.Material.Filled.Link" Href="@InstanceHelper.GetUrlForProductPage(Instance.SystemName, Asin)" Color="Color.Warning" Size="Size.Small"></MudIconButton>
+    <MudIconButton Icon="@Icons.Material.Filled.Link" Href="@InstanceHelper.GetUrlForProductPage(Instance.SystemName, Asin)" Color="Color.Warning" Size="Size.Small" Title="View product on Amazon"></MudIconButton>
 }
 
 @code {

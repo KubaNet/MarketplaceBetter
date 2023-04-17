@@ -29,7 +29,8 @@
             <MudTh><MudTableSortLabel SortLabel="instance" T="ParentInstanceModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="product" T="ParentInstanceModel">Product</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ParentInstanceModel">Brand</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 190px;">Actions</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="template" T="ParentInstanceModel">Template</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 250px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -42,7 +43,9 @@
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Product">@context.Product.Code</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+            <MudTd DataLabel="Template">@context.Template?.FileName</MudTd>
             <MudTd>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="@(() => Export(context.Id, context.Sku))">Upload</MudButton>
                 <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => Export(context.Id, context.Sku))">Export</MudButton>
                 <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
             </MudTd>

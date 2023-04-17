@@ -73,7 +73,6 @@
     <Folder Include="Scripts\CustomScripts" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\Template.sql" />
     <None Include="Scripts\Inserts\02_Instances.sql" />
     <Build Include="dbo\Tables\Base\Country.sql" />
     <None Include="Scripts\Inserts\01_Countries.sql" />
@@ -137,11 +136,9 @@
     <None Include="Scripts\CustomScripts\UpdatingParentInstanceProduct.sql" />
     <Build Include="dbo\Tables\Base\User.sql" />
     <None Include="Scripts\Inserts\07_Users.sql" />
+    <Build Include="dbo\Tables\Amazon\Inventory\Template.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\CustomScripts\UpdatingChildInstanceVariant.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="MarketplaceBetter.Database.refactorlog" />
   </ItemGroup>
 </Project>

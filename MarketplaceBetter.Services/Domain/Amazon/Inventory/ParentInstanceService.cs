@@ -187,7 +187,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "product", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "product", "brand", "template", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -201,6 +201,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "status" => parents.Where(p => p.Status.Name.Contains(searchField.Value)),
                         "product" => parents.Where(p => p.Product.Name.Contains(searchField.Value)),
                         "brand" => parents.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
+                        "template" => parents.Where(p => p.Template.FileName.Contains(searchField.Value)),
                         "product_id" => parents.Where(p => p.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -213,7 +214,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || p.Instance.Name.Contains(searchString)
                         || p.Status.Name.Contains(searchString)
                         || p.Product.Name.Contains(searchString)
-                        || p.Product.Brand.Name.Contains(searchString));
+                        || p.Product.Brand.Name.Contains(searchString)
+                        || p.Template.FileName.Contains(searchString));
                 }
             }
 
@@ -233,6 +235,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "status" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Status.Name) : parents.OrderByDescending(p => p.Status.Name),
                     "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Name) : parents.OrderByDescending(p => p.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Brand.Name) : parents.OrderByDescending(p => p.Product.Brand.Name),
+                    "template" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Template.FileName) : parents.OrderByDescending(p => p.Template.FileName),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

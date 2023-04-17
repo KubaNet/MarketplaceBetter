@@ -6,10 +6,12 @@
 	[ProductId]		BIGINT							NOT NULL,
 	[InstanceId]	BIGINT							NOT NULL,
 	[StatusId]		BIGINT							NOT NULL,
+	[TemplateId]	BIGINT							NULL,
 	CONSTRAINT		[PK_ParentInstance]				PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_ParentInstance_Product]		FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
 	CONSTRAINT		[FK_ParentInstance_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
 	CONSTRAINT		[FK_ParentInstance_Status]		FOREIGN KEY ([StatusId])	REFERENCES [dbo].[EntityStatus] ([Id]),
+	CONSTRAINT		[FK_ParentInstance_Template]	FOREIGN KEY ([TemplateId])	REFERENCES [dbo].[Template] ([Id]),
 );
 GO
 

@@ -55,6 +55,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         // => Inventory
         public DbSet<ParentInstance> ParentInstance { get; set; }
         public DbSet<ChildInstance> ChildInstance { get; set; }
+        public DbSet<Template> Template { get; set; }
         // => Campaigns
         public DbSet<Campaign> Campaign { get; set; }
         public DbSet<CampaignType> CampaignType { get; set; }
