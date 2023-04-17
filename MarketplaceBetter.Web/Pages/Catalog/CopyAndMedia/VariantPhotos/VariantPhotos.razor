@@ -5,6 +5,7 @@
 @using MarketplaceBetter.Services.Model;
 
 @page "/variant-photos"
+@inject ISnackbar Snackbar
 @inject IVariantPhotosService VariantPhotosService
 @inject IPhotoTypeService PhotoTypeService
 @inject IDialogService DialogService
@@ -12,14 +13,15 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variant Photos</MudText>
 
 <MainBody>
-    <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(ReloadVariantPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariantPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="variant" T="VariantPhotosModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="asin" T="VariantPhotosModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="VariantPhotosModel">Instance</MudTableSortLabel></MudTh>
             @foreach (var type in Types)
             {
@@ -28,6 +30,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd DataLabel="Asin">@context.Variant.Asin</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             @foreach (var type in Types)
             {
@@ -81,7 +84,7 @@
         }
     }
 
-    private Task<TableData<VariantPhotosModel>> ReloadVariantPhotos(TableState state)
+    private Task<TableData<VariantPhotosModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -95,7 +98,7 @@
         CurrentRowsPerPageValue = rowsPerPage;
     }
 
-    private void FilterVariantPhotos(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -120,6 +123,14 @@
 
     private async void DownloadPhotos()
     {
+        if (SelectedVariantPhotos.Any(p => String.IsNullOrWhiteSpace(p.Variant.Asin)))
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter; ;
+            Snackbar.Add("Some of selected variants don't have assigned ASIN. This is necessary to download their photos.", Severity.Warning);
+
+            return;
+        }
+
         var result = await DialogService.Show<DownloadPhotosDialog>(null, new DialogParameters { ["VariantPhotos"] = SelectedVariantPhotos.ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
 
         Table.SelectedItems.Clear();

@@ -165,7 +165,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "variant", "instance", "product_id" };
+                string[] searchFieldNames = new[] { "variant", "asin", "instance", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -173,6 +173,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     photos = searchField.Name switch
                     {
                         "variant" => photos.Where(p => p.Variant.Sku.Contains(searchField.Value)),
+                        "asin" => photos.Where(p => p.Variant.Asin.Contains(searchField.Value)),
                         "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "product_id" => photos.Where(p => p.Variant.ProductId == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -181,6 +182,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 else
                 {
                     photos = photos.Where(p => p.Variant.Sku.Contains(searchString)
+                        || p.Variant.Asin.Contains(searchString)
                         || p.Instance.Name.Contains(searchString));
                 }
             }
@@ -195,7 +197,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 photos = request.SortBy switch
                 {
                     "variant" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Sku).ThenBy(p => p.InstanceId) : photos.OrderByDescending(p => p.Variant.Sku).ThenBy(p => p.InstanceId),
-                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name).ThenBy(p => p.InstanceId) : photos.OrderByDescending(p => p.Instance.Name).ThenBy(p => p.InstanceId),
+                    "asin" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Variant.Asin).ThenBy(p => p.InstanceId) : photos.OrderByDescending(p => p.Variant.Asin).ThenBy(p => p.InstanceId),
+                    "instance" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Instance.Name) : photos.OrderByDescending(p => p.Instance.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
