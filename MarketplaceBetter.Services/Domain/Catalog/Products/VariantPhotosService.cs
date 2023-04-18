@@ -33,7 +33,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IUserService _userService;
-        private readonly IWebHostEnvironment _environment;
         private readonly string _downloadFolderPath;
 
         public VariantPhotosService(
@@ -48,8 +47,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
             _userService = userService;
-            _environment = environment;
-            _downloadFolderPath = Path.Combine(_environment.WebRootPath, "_download");
+            _downloadFolderPath = Path.Combine(environment.WebRootPath, "_download");
         }
 
         public int CountForListRequest(ListRequest request)

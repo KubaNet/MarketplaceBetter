@@ -1,4 +1,6 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;
@@ -26,7 +28,17 @@ namespace MarketplaceBetter.Services.Validation.Catalog.Products
 
             if (_repository.Any(v => v.Id != variant.Id && v.Sku == variant.Sku))
             {
-                result.AddErrorFor<VariantModel>(v => v.Sku, ValidationMessages.PropertyNotUnique, "Variant", "Sku");
+                result.AddErrorFor<VariantModel>(v => v.Sku, ValidationMessages.PropertyNotUnique, "Variant", "SKU");
+            }
+
+            if (_repository.Any(v => v.Id != variant.Id && v.Asin != null && v.Asin == variant.Asin))
+            {
+                result.AddErrorFor<VariantModel>(v => v.Asin, ValidationMessages.PropertyNotUnique, "Variant", "ASIN");
+            }
+
+            if (variant.Asin != null && variant.Asin.Length != 0 && variant.Asin.Length != 10)
+            {
+                result.AddErrorFor<VariantModel>(v => v.Asin, "ASIN should be exactly 10 characters long.");
             }
 
             if (_repository.Any(v => v.Id != variant.Id && v.ProductId == variant.Product.Id && v.ColorId == variant.Color.Id && v.SizeId == variant.Size.Id))

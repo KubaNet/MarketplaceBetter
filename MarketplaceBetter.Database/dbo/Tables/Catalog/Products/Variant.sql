@@ -21,3 +21,6 @@ GO
 
 CREATE UNIQUE INDEX UIX_Variant_Product_Color_Size  ON [dbo].[Variant] ([ProductId] ASC, [ColorId] ASC, [SizeId] ASC);
 GO
+
+CREATE UNIQUE INDEX UIX_Variant_Asin  ON [dbo].[Variant] ([Asin] ASC) WHERE [Asin] IS NOT NULL;
+GO
