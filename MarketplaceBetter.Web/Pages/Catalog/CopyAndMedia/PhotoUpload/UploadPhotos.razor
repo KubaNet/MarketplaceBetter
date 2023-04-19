@@ -5,11 +5,11 @@
 @using MarketplaceBetter.Specialized.Interfaces
 
 @page "/add-photos"
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
 @inject NavigationManager NavigationManager
 @inject IPhotoUploadService PhotoUploadService
 @inject IPhotoCloudService PhotoCloudService
-@inject IDialogService DialogService
-@inject ISnackbar Snackbar
 
 <MudText Typo="Typo.h4" Class="mt-2">Add multiple Photos</MudText>
 

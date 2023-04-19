@@ -44,9 +44,9 @@
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Product">@context.Product.Code</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
-            <MudTd DataLabel="Template">@context.Template?.FileName</MudTd>
+            <MudTd DataLabel="Template"><TemplateDisplay Parent="@context" /></MudTd>
             <MudTd>
-                <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context.Id))">
+                <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context.Id))" Class="d-inline-flex mt-0">
                     <ButtonTemplate>
                         <MudButton for="@file" HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Upload</MudButton>
                     </ButtonTemplate>

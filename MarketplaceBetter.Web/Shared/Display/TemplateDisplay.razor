@@ -1,0 +1,39 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
+
+@inject IDialogService DialogService
+@inject ITemplateService TemplateService
+
+@if (Parent.Template != null)
+{
+    <MudLink Style="cursor:pointer;" title="Click to download">@Parent.Template.FileName</MudLink>
+
+    <MudIconButton OnClick="Delete" Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" Title="Delete" Class="ml-1"></MudIconButton>
+}
+
+@code {
+    [Parameter] public ParentInstanceModel Parent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+    }
+
+    private async void Delete()
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete template \"<b>{Parent.Template.FileName}</b>\" ?" }).Result;
+
+        if (!result.Canceled)
+        {
+            TemplateService.Delete(Parent.Template.Id);
+            Parent.Template = null;
+
+            StateHasChanged();
+        }
+    }
+}

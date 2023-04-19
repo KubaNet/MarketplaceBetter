@@ -39,8 +39,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 Delete(parent.Template);
             }
 
-            Create(parent, fileName);
-            SaveFile(fileStream, fileName);
+            string folderPath = $@"{parent.Product.Brand.Name}\{parent.Product.Code}\{parent.Instance.Name}";
+
+            Create(parent, fileName, folderPath);
+            SaveFile(fileStream, fileName, folderPath);
         }
 
         public void Delete(long id)
@@ -50,9 +52,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             Delete(template);
         }
 
-        private void Create(ParentInstance parent, string fileName)
+        private void Create(ParentInstance parent, string fileName, string folderPath)
         {
-            Template template = new Template { FileName = fileName, Path = fileName };
+            Template template = new Template { FileName = fileName, Path = folderPath };
+
             parent.Template = template;
 
             _parentRepository.Update(parent);
@@ -65,10 +68,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
-        private void SaveFile(Stream fileStream, string fileName)
+        private void SaveFile(Stream fileStream, string fileName, string folderPath)
         {
-            string path = Path.Combine(_templatesFolderPath, fileName);
-            using FileStream file = new FileStream(path, FileMode.Create);
+            string serverFolderPath = Path.Combine(_templatesFolderPath, folderPath);
+            Directory.CreateDirectory(serverFolderPath);
+
+            string fullFilePath = Path.Combine(serverFolderPath, fileName);
+            using FileStream file = new FileStream(fullFilePath, FileMode.Create);
 
             fileStream.CopyTo(file);
         }
