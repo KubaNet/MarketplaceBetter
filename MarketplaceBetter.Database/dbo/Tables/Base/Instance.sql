@@ -3,7 +3,6 @@
 	[Id]				BIGINT						NOT NULL	IDENTITY,
 	[Name]				NVARCHAR (255)				NOT NULL,
 	[SystemName]		INT							NOT NULL,
-	[ShortName]			NVARCHAR (255)				NOT NULL,
 	[IsNormal]			BIT							NOT NULL,
 	CONSTRAINT			[PK_Instance]				PRIMARY KEY ([Id]),
 );
@@ -13,7 +12,4 @@ CREATE UNIQUE INDEX UIX_Instance_Name  ON [dbo].[Instance] ([Name] ASC);
 GO
 
 CREATE UNIQUE INDEX UIX_Instance_SystemName  ON [dbo].[Instance] ([SystemName] ASC);
-GO
-
-CREATE UNIQUE INDEX UIX_Instance_ShortName  ON [dbo].[Instance] ([ShortName] ASC);
 GO

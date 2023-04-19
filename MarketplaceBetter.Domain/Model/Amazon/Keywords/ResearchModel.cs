@@ -22,7 +22,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Keywords
 
         public override string ToString()
         {
-            return $"{Name} ({Instance.ShortName})";
+            return $"{Name} ({Instance.Name})";
         }
     }
 }

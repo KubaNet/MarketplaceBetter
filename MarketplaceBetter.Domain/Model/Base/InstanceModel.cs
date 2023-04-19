@@ -15,8 +15,6 @@ namespace MarketplaceBetter.Domain.Model.Base
 
         public InstanceEnum SystemName { get; set; }
 
-        public string ShortName { get; set; }
-
         public bool IsNormal { get; set; }
     }
 }

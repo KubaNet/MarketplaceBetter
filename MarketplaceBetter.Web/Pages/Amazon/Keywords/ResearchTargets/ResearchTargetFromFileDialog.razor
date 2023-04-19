@@ -16,7 +16,7 @@
         <MudSelect Label="Research" T="ResearchModel" @bind-Value="AddTargetsModel.Research" For="() => AddTargetsModel.Research">
             @foreach (var research in Researches)
             {
-                <MudSelectItem Value="research">@($"{research.Name} ({research.Instance.ShortName})")</MudSelectItem>
+                <MudSelectItem Value="research">@($"{research.Name} ({research.Instance.Name})")</MudSelectItem>
             }
         </MudSelect>
         <MudSelect Label="Source" T="ResearchTargetSourceModel" @bind-Value="AddTargetsModel.Source" For="() => AddTargetsModel.Source">

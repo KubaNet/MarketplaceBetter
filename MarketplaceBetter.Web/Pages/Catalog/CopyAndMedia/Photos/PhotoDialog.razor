@@ -191,7 +191,7 @@
             string fileName = $"{Photo.Variant.Sku}_{Photo.Type.SystemName}";
             if (Photo.Instance != null)
             {
-                fileName = $"{Photo.Variant.Sku}_{Photo.Type.SystemName}_{Photo.Instance.ShortName}";
+                fileName = $"{Photo.Variant.Sku}_{Photo.Type.SystemName}_{Photo.Instance.Name}";
             }
 
             PhotoUploadResult uploadResult = PhotoCloudService.Upload(memoryStream, fileName);
