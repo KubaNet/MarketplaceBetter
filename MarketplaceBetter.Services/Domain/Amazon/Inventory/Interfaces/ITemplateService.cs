@@ -11,6 +11,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
     {
         void Save(Stream fileStream, string fileName, long parentId);
 
+        Stream Download(long id);
+
         void Delete(long id);
     }
 }

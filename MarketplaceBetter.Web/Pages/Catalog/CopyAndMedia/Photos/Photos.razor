@@ -111,7 +111,7 @@
 
     private async void DeletePhoto(long id, string type, string variant)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete <b>{type}</b> photo for variant \"<b>{variant}</b>\" ?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete <b>{type}</b> photo for variant <b>{variant}</b> ?" }).Result;
 
         if (!result.Canceled)
         {

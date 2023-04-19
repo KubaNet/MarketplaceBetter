@@ -45,7 +45,7 @@
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd DataLabel="Template"><TemplateDisplay Parent="@context" /></MudTd>
             <MudTd>
-                <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context.Id))" Class="d-inline-flex mt-0">
+                <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context))" Class="d-inline-flex mt-0">
                     <ButtonTemplate>
                         <MudButton for="@file" HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Upload</MudButton>
                     </ButtonTemplate>
@@ -163,13 +163,13 @@
         await JS.InvokeVoidAsync("DownloadFileFromStream", $"{sku}.csv", streamReference);
     }
 
-    private async void UploadTemplate(long parentId)
+    private async void UploadTemplate(ParentInstanceModel parent)
     {
         MemoryStream memoryStream = new MemoryStream();
         await File.OpenReadStream(Standard.UploadTemplateSizeLimit).CopyToAsync(memoryStream);
         memoryStream.Seek(0, SeekOrigin.Begin);
 
-        TemplateService.Save(memoryStream, File.Name, parentId);
+        TemplateService.Save(memoryStream, File.Name, parent.Id);
 
         await Table.ReloadServerData();
     }

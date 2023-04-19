@@ -36,7 +36,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             if (parent.Template != null)
             {
-                Delete(parent.Template);
+                DeleteFile(parent.Template);
+                DeleteTemplate(parent.Template);
             }
 
             string folderPath = $@"{parent.Product.Brand.Name}\{parent.Product.Code}\{parent.Instance.Name}";
@@ -45,11 +46,22 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             SaveFile(fileStream, fileName, folderPath);
         }
 
+        public Stream Download(long id)
+        {
+            Template template = _templateRepository.Get(id);
+
+            string fullFilePath = Path.Combine(_templatesFolderPath, template.Path, template.FileName);
+            FileStream file = new FileStream(fullFilePath, FileMode.Open);
+
+            return file;
+        }
+
         public void Delete(long id)
         {
             Template template = _templateRepository.Get(id);
 
-            Delete(template);
+            DeleteFile(template);
+            DeleteTemplate(template);
         }
 
         private void Create(ParentInstance parent, string fileName, string folderPath)
@@ -62,7 +74,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _unitOfWork.Save();
         }
 
-        private void Delete(Template template)
+        private void DeleteTemplate(Template template)
         {
             _templateRepository.Delete(template);
             _unitOfWork.Save();
@@ -77,6 +89,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             using FileStream file = new FileStream(fullFilePath, FileMode.Create);
 
             fileStream.CopyTo(file);
+        }
+
+        private void DeleteFile(Template template)
+        {
+            string fullFilePath = Path.Combine(_templatesFolderPath, template.Path, template.FileName);
+
+            File.Delete(fullFilePath);
         }
     }
 }

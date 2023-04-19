@@ -1,14 +1,16 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
+@using System.IO;
+@using System.Threading;
 
+@inject IJSRuntime JS
 @inject IDialogService DialogService
 @inject ITemplateService TemplateService
 
 @if (Parent.Template != null)
 {
-    <MudLink Style="cursor:pointer;" title="Click to download">@Parent.Template.FileName</MudLink>
-
-    <MudIconButton OnClick="Delete" Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" Title="Delete" Class="ml-1"></MudIconButton>
+    <MudLink OnClick="Download" Style="cursor:pointer; text-decoration: none;" title="Click to download">@Parent.Template.FileName</MudLink>
+    <MudIconButton OnClick="Delete" Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" Title="Delete"></MudIconButton>
 }
 
 @code {
@@ -19,14 +21,18 @@
         base.OnInitialized();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    private async void Download()
     {
+        Stream file = TemplateService.Download(Parent.Template.Id);
 
+        DotNetStreamReference streamReference = new DotNetStreamReference(file);
+
+        await JS.InvokeVoidAsync("DownloadFileFromStream", CancellationToken.None, Parent.Template.FileName, streamReference);
     }
 
     private async void Delete()
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete template \"<b>{Parent.Template.FileName}</b>\" ?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete template <b>{Parent.Template.FileName}</b> ?" }).Result;
 
         if (!result.Canceled)
         {

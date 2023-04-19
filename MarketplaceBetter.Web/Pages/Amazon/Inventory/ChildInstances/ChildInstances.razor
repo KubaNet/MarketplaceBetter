@@ -119,7 +119,7 @@
 
     private async void DeleteChildInstance(long id, string sku)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child instance \"<b>{sku}</b>\" ?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child instance <b>{sku}</b> ?" }).Result;
 
         if (!result.Canceled)
         {
