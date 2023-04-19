@@ -94,9 +94,12 @@
     private void SetInitialValues()
     {
         Variant = VariantService.Get(VariantId);
+
         if (AddingSimilar)
         {
             Variant.Id = 0;
+            Variant.Asin = null;
+            Variant.Ean = null;
         }
 
         ActivateProduct(Variant.Product.Brand.Id);

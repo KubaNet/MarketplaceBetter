@@ -20,7 +20,6 @@
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
-            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Parent Instance</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ParentInstanceModel">Id</MudTableSortLabel></MudTh>
@@ -117,13 +116,6 @@
         Table.ReloadServerData();
 
         StateHasChanged();
-    }
-
-    private async void Add()
-    {
-        var result = await DialogService.Show<ParentInstanceDialog>(null, new DialogParameters { ["Title"] = "Add Parent Instance" }).Result;
-
-        ProcessDialogResult(result);
     }
 
     private async void Edit(long id)

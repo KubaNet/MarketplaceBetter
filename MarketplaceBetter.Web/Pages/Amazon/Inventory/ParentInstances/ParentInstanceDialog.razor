@@ -15,26 +15,25 @@
 @inject IProductService ProductService
 @inject IInstanceService InstanceService
 @inject IUserService UserService
-@inject IUserService UserService
 
 <EditForm Model="ParentInstance" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect Disabled="true" Label="Brand" T="BrandModel" Value="Brand">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Product" T="ProductModel" Value="ParentInstance.Product" For="() => ParentInstance.Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+        <MudSelect Disabled="true" Label="Product" T="ProductModel" Value="ParentInstance.Product">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Code</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Instance" T="InstanceModel" Value="ParentInstance.Instance" For="() => ParentInstance.Instance" ValueChanged="HandleInstanceChanged">
+        <MudSelect Disabled="true" Label="Instance" T="InstanceModel" Value="ParentInstance.Instance">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>

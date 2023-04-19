@@ -15,32 +15,31 @@
 @inject IVariantService VariantService
 @inject IInstanceService InstanceService
 @inject IUserService UserService
-@inject IUserService UserService
 
 <EditForm Model="ChildInstance" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+        <MudSelect Disabled="true" Label="Brand" T="BrandModel" Value="Brand">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Product" T="ProductModel" Value="Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+        <MudSelect Disabled="true" Label="Product" T="ProductModel" Value="Product">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Code</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Variant" T="VariantModel" Value="ChildInstance.Variant" For="() => ChildInstance.Variant" ValueChanged="HandleVariantChanged" Disabled="VariantSelectDisabled">
+        <MudSelect Disabled="true" Label="Variant" T="VariantModel" Value="ChildInstance.Variant">
             @foreach (var variant in Variants)
             {
                 <MudSelectItem Value="variant">@variant.Sku</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Instance" T="InstanceModel" Value="ChildInstance.Instance" For="() => ChildInstance.Instance" ValueChanged="HandleInstanceChanged">
+        <MudSelect Disabled="true" Label="Instance" T="InstanceModel" Value="ChildInstance.Instance">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
