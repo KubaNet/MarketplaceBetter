@@ -7,6 +7,7 @@
 
 @page "/parent-instances"
 @inject IJSRuntime JS
+@inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IParentInstanceService ParentInstanceService
 @inject ITemplateCreator TemplateCreator
@@ -165,6 +166,16 @@
 
     private async void UploadTemplate(ParentInstanceModel parent)
     {
+        string fileWithoutExtension = File.Name.Remove(File.Name.LastIndexOf('.'));
+
+        if (fileWithoutExtension != parent.Sku)
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter; ;
+            Snackbar.Add("File name has to be same as SKU of the parent instance. Correct the name of file and upload it again.", Severity.Error);
+
+            return;
+        }
+
         MemoryStream memoryStream = new MemoryStream();
         await File.OpenReadStream(Standard.UploadTemplateSizeLimit).CopyToAsync(memoryStream);
         memoryStream.Seek(0, SeekOrigin.Begin);
