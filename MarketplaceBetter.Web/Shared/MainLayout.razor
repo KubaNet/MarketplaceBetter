@@ -22,6 +22,12 @@
             <MudAppBar Dense="true" Elevation="1">
                 <div class="d-flex flex-grow-1">
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
+                    <div id="GlobalSearch" style="width: 400px;" class="ml-8">
+                        <MudTextField T="string" Placeholder="Search" ValueChanged="SearchGlobally" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        <MudPopover Open="GlobalSearchResultsOpen" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" Class="pa-6" Style="margin-top: -12px; width: 400px;">
+                            @GlobalSearchResults
+                        </MudPopover>
+                    </div>
                     <div class="flex-grow-1"></div>
                     <div>
                         <MudCheckBox T="bool" Checked="ShowDrafts" Label="Show Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnShowDraftsChange"></MudCheckBox>
@@ -70,6 +76,8 @@
     private IList<InstanceModel> Instances;
     private bool ShowDrafts = false;
     private bool ShowWithdrawn = false;
+    private bool GlobalSearchResultsOpen = false;
+    private RenderFragment GlobalSearchResults;
 
     MudTheme BetterTheme = new MudTheme()
         {
@@ -88,8 +96,6 @@
         InitializeCurrentInstance();
         InitializeDraftsSetting();
         InitializeWithdrawnSetting();
-
-        UserService.GetCurrentBrand();
     }
 
     private void InitializeCurrentBrand()
@@ -161,5 +167,20 @@
         UserService.SetShowWithdrawn(showWithdrawn);
 
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private void SearchGlobally(string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+        {
+            GlobalSearchResultsOpen = false;
+            return;
+        }
+
+        GlobalSearchResults = __builder =>
+        {
+            <div>@searchString</div>
+        };
+        GlobalSearchResultsOpen = true;
     }
 }

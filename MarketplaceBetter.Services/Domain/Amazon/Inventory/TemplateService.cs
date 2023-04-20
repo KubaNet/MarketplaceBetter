@@ -95,7 +95,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         {
             string fullFilePath = Path.Combine(_templatesFolderPath, template.Path, template.FileName);
 
-            File.Delete(fullFilePath);
+            if (File.Exists(fullFilePath))
+            {
+                File.Delete(fullFilePath);
+            }
         }
     }
 }

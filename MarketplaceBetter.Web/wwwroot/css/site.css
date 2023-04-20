@@ -1,3 +1,7 @@
 ul.validation-errors li.validation-message {
     color: var(--mud-palette-error)
 }
+
+#GlobalSearch .mud-input-text {
+    margin-top: 10px;
+}
