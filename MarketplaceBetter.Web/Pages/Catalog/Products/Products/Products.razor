@@ -12,7 +12,7 @@
 <MainBody>
 	<MudTable T="ProductModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(ReloadProducts))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterProducts" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterProducts" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
 			<MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
 			<MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Product</MudButton>
@@ -48,12 +48,29 @@
 </MainBody>
 
 @code {
+	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
 	private MudTable<ProductModel> Table;
 	private ListRequest ListRequest = new();
 
 	private HashSet<ProductModel> SelectedProducts = new HashSet<ProductModel>();
 	private bool NoneSelected = true;
 	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		ProcessQueryParameters();		
+	}
+
+	private void ProcessQueryParameters()
+	{
+		if (!String.IsNullOrWhiteSpace(SearchString))
+		{
+			ListRequest.SearchString = SearchString;
+		}
+	}
 
 	private Task<TableData<ProductModel>> ReloadProducts(TableState state)
 	{

@@ -5,3 +5,7 @@ ul.validation-errors li.validation-message {
 #GlobalSearch .mud-input-text {
     margin-top: 10px;
 }
+
+.mud-avatar-filled {
+    background-color: #e8e8e8
+}

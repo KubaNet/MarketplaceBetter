@@ -3,14 +3,24 @@
 @using MarketplaceBetter.Domain.Entities.Base;
 @using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
+@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+@using MarketplaceBetter.Services.Model;
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 
 @inject IBrandService BrandService
 @inject IInstanceService InstanceService
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
+@inject IProductService ProductService
+@inject IVariantService VariantService
+@inject ICopywritingService CopywritingService
+@inject IPhotoService PhotoService
+@inject IVariantPhotosService VariantPhotosService
+@inject IParentInstanceService ParentService
+@inject IChildInstanceService ChildService
 
 <AuthorizeView>
     <Authorized>
@@ -24,7 +34,7 @@
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
                     <div id="GlobalSearch" style="width: 400px;" class="ml-8">
                         <MudTextField T="string" Placeholder="Search" ValueChanged="SearchGlobally" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                        <MudPopover Open="GlobalSearchResultsOpen" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" Class="pa-6" Style="margin-top: -12px; width: 400px;">
+                        <MudPopover Open="GlobalSearchResultsOpen" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" Class="pa-3" Style="margin-top: -12px; width: 400px;">
                             @GlobalSearchResults
                         </MudPopover>
                     </div>
@@ -177,10 +187,55 @@
             return;
         }
 
+        ListRequest searchRequest = new ListRequest { SearchString = searchString };
+
+        IList<SearchResult> searchResults = new List<SearchResult>();
+        searchResults.Add(new SearchResult { EntityName = "Products", BaseUrl = "products", ResultsCount = ProductService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.ShoppingBasket });
+        searchResults.Add(new SearchResult { EntityName = "Variants", BaseUrl = "variants", ResultsCount = VariantService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.ShoppingBasket });
+        searchResults.Add(new SearchResult { EntityName = "Copywriting", BaseUrl = "copywriting", ResultsCount = CopywritingService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
+        searchResults.Add(new SearchResult { EntityName = "Photos", BaseUrl = "photos", ResultsCount = PhotoService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
+        searchResults.Add(new SearchResult { EntityName = "Variant Photos", BaseUrl = "variant-photos", ResultsCount = VariantPhotosService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
+        searchResults.Add(new SearchResult { EntityName = "Parent Instances", BaseUrl = "parent-instances", ResultsCount = ParentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
+        searchResults.Add(new SearchResult { EntityName = "Child Instances", BaseUrl = "child-instances", ResultsCount = ChildService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
+
         GlobalSearchResults = __builder =>
         {
-            <div>@searchString</div>
+            <MudList Clickable="true">
+                @foreach (var searchResult in searchResults)
+                {
+                    <MudListItem Avatar="@searchResult.Icon" IconColor="(searchResult.ResultsCount > 0 ? Color.Dark : Color.Inherit)" OnClick="(() => GoToResults(searchResult.BaseUrl, searchString))">
+                        @if (searchResult.ResultsCount > 0)
+                        {
+                            <text>
+                                @searchResult.EntityName - <b>@searchResult.ResultsCount results</b>
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                @searchResult.EntityName - @searchResult.ResultsCount results
+                            </text>
+                        }
+                    </MudListItem>
+                }
+            </MudList>
         };
         GlobalSearchResultsOpen = true;
+    }
+
+    private void GoToResults(string baseUrl, string searchString)
+    {
+        NavigationManager.NavigateTo($"{baseUrl}?SearchString={searchString}", true);
+    }
+
+    private class SearchResult
+    {
+        public string EntityName { get; set; }
+
+        public string BaseUrl { get; set; }
+
+        public int ResultsCount { get; set; }
+
+        public string Icon { get; set; }
     }
 }

@@ -65,6 +65,7 @@
 </MainBody>
 
 @code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
     [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
     [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
 
@@ -86,6 +87,10 @@
 
     private void ProcessQueryParameters()
     {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
         if (ProductId.HasValue)
         {
             ListRequest.SearchString = $"product_id: {ProductId.Value}";
