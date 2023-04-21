@@ -9,11 +9,11 @@
 <MudText Typo="Typo.h4" Class="mt-2">Colors</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorModel>>>(ReloadColors))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterColors" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString"  Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-            <MudButton OnClick="AddColor" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Color</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Color</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="ColorModel">Id</MudTableSortLabel></MudTh>
@@ -29,7 +29,7 @@
             <MudTd DataLabel="Code">@context.Code</MudTd>
             <MudTd DataLabel="Brand">@context.Group.Brand.Name</MudTd>
             <MudTd DataLabel="Group">@context.Group.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditColor(context.Id))">Edit</MudButton></MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
@@ -38,10 +38,27 @@
 </MainBody>
 
 @code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
     private MudTable<ColorModel> Table;
 	private ListRequest ListRequest = new();
 
-	private Task<TableData<ColorModel>> ReloadColors(TableState state)
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+    }
+
+	private Task<TableData<ColorModel>> Reload(TableState state)
 	{
 		state.PopulateListRequest(ListRequest);
 
@@ -50,7 +67,7 @@
 		return Task.FromResult(new TableData<ColorModel>() { TotalItems = ColorService.CountForListRequest(ListRequest), Items = colors });
 	}
 
-	private void FilterColors(string searchString)
+	private void Filter(string searchString)
 	{
 		ListRequest.SearchString = searchString;
 
@@ -59,21 +76,21 @@
 		StateHasChanged();
 	}
 
-    private async void AddColor()
+    private async void Add()
     {
         var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Add Color" }).Result;
 
-        ProcessColorDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditColor(long id)
+    private async void Edit(long id)
     {
         var result = await DialogService.Show<ColorDialog>(null, new DialogParameters { ["Title"] = "Edit Color", ["IsEdit"] = true, ["ColorId"] = id }).Result;
 
-        ProcessColorDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private void ProcessColorDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {

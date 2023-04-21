@@ -22,6 +22,8 @@ namespace MarketplaceBetter.Services.Model
 
         ColorsAndSizes = 12,
 
+        Attributes = 13,
+
         InputData = 20,
 
         Inventory = 30,

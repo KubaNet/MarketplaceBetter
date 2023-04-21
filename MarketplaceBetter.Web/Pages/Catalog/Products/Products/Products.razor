@@ -10,12 +10,12 @@
 <MudText Typo="Typo.h4" Class="mt-2">Products</MudText>
 
 <MainBody>
-	<MudTable T="ProductModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(ReloadProducts))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+	<MudTable T="ProductModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
-			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterProducts" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
 			<MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
-			<MudButton OnClick="AddProduct" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Product</MudButton>
+			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Product</MudButton>
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="ProductModel">Id</MudTableSortLabel></MudTh>
@@ -39,7 +39,7 @@
 			<MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>
 			<MudTd DataLabel="Size group">@context.SizeGroup.Name</MudTd>
 			<MudTd DataLabel="Order">@context.Order</MudTd>
-			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditProduct(context.Id))">Edit</MudButton></MudTd>
+			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
 		</RowTemplate>
 		<PagerContent>
 			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
@@ -72,7 +72,7 @@
 		}
 	}
 
-	private Task<TableData<ProductModel>> ReloadProducts(TableState state)
+	private Task<TableData<ProductModel>> Reload(TableState state)
 	{
 		state.PopulateListRequest(ListRequest);
 
@@ -86,7 +86,7 @@
 		CurrentRowsPerPageValue = rowsPerPage;
 	}
 
-	private void FilterProducts(string searchString)
+	private void Filter(string searchString)
 	{
 		ListRequest.SearchString = searchString;
 
@@ -95,21 +95,21 @@
 		StateHasChanged();
 	}
 
-	private async void AddProduct()
+	private async void Add()
 	{
 		var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add Product" }).Result;
 
-		ProcessProductDialogResult(result);
+		ProcessDialogResult(result);
 	}
 
-	private async void EditProduct(long id)
+	private async void Edit(long id)
 	{
 		var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit Product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
 
-		ProcessProductDialogResult(result);
+		ProcessDialogResult(result);
 	}
 
-	private void ProcessProductDialogResult(DialogResult result)
+	private void ProcessDialogResult(DialogResult result)
 	{
 		if (!result.Canceled)
 		{
@@ -121,7 +121,7 @@
 	{
 		var result = await DialogService.Show<ProductsSetStatusDialog>(null, new DialogParameters { ["Products"] = SelectedProducts.ToList() }).Result;
 
-		ProcessProductDialogResult(result);
+		ProcessDialogResult(result);
 	}
 
 	private void OnSelectedItemsChanged(HashSet<ProductModel> selectedProducts)

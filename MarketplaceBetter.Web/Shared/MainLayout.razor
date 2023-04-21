@@ -5,6 +5,7 @@
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Model;
@@ -19,6 +20,9 @@
 @inject ICopywritingService CopywritingService
 @inject IPhotoService PhotoService
 @inject IVariantPhotosService VariantPhotosService
+@inject IColorService ColorService
+@inject IProductColorService ProductColorService
+@inject IColorTranslationService ColorTranslationService
 @inject IParentInstanceService ParentService
 @inject IChildInstanceService ChildService
 
@@ -195,6 +199,9 @@
         searchResults.Add(new SearchResult { EntityName = "Copywriting", BaseUrl = "copywriting", ResultsCount = CopywritingService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "Photos", BaseUrl = "photos", ResultsCount = PhotoService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "Variant Photos", BaseUrl = "variant-photos", ResultsCount = VariantPhotosService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
+        searchResults.Add(new SearchResult { EntityName = "Colors", BaseUrl = "colors", ResultsCount = ColorService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
+        searchResults.Add(new SearchResult { EntityName = "Product Colors", BaseUrl = "product-colors", ResultsCount = ProductColorService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
+        searchResults.Add(new SearchResult { EntityName = "Color Translations", BaseUrl = "color-translations", ResultsCount = ColorTranslationService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
         searchResults.Add(new SearchResult { EntityName = "Parent Instances", BaseUrl = "parent-instances", ResultsCount = ParentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
         searchResults.Add(new SearchResult { EntityName = "Child Instances", BaseUrl = "child-instances", ResultsCount = ChildService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
 

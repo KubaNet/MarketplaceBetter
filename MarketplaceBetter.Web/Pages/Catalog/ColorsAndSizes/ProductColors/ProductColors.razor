@@ -9,9 +9,9 @@
 <MudText Typo="Typo.h4" Class="mt-2">Product Colors</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductColorModel>>>(ReloadProductColors))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductColorModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterProductColors" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="product" T="ProductColorModel">Product</MudTableSortLabel></MudTh>
@@ -43,6 +43,7 @@
 </MainBody>
 
 @code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
     [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
     [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
 
@@ -58,6 +59,10 @@
 
     private void ProcessQueryParameters()
     {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
         if (ProductId.HasValue)
         {
             ListRequest.SearchString = $"product_id: {ProductId.Value}";
@@ -68,7 +73,7 @@
         }
     }
 
-    private Task<TableData<ProductColorModel>> ReloadProductColors(TableState state)
+    private Task<TableData<ProductColorModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -77,7 +82,7 @@
         return Task.FromResult(new TableData<ProductColorModel>() { TotalItems = ProductColorService.CountForListRequest(ListRequest), Items = productColors });
     }
 
-    private void FilterProductColors(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 

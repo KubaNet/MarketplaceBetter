@@ -27,6 +27,10 @@
             <MudNavLink Href="/sizes">Sizes</MudNavLink>
             <MudNavLink Href="/size-groups">Size Groups</MudNavLink>
         </MudNavGroup>
+
+        <MudNavGroup Title="Attributes" Icon="@Icons.Material.Filled.BorderColor" Expanded="UserService.IsExpanded(MenuItemEnum.Attributes)" HideExpandIcon="true" ExpandedChanged="AttributesExpandedChanged">
+            <MudNavLink Href="/product-dimensions">Product Dimensions</MudNavLink>
+        </MudNavGroup>
     </MudNavGroup>
     <MudNavGroup Title="Amazon" Icon="@Icons.Material.Filled.BrightnessAuto" Expanded="UserService.IsExpanded(MenuItemEnum.Amazon)" HideExpandIcon="true" ExpandedChanged="AmazonExpandedChanged">
         <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="UserService.IsExpanded(MenuItemEnum.Inventory)" HideExpandIcon="true" ExpandedChanged="InventoryExpandedChanged">
@@ -91,6 +95,11 @@
     private void ColorsAndSizesExpandedChanged(bool expaned)
     {
         UserService.SetExpanded(MenuItemEnum.ColorsAndSizes, expaned);
+    }
+
+    private void AttributesExpandedChanged(bool expaned)
+    {
+        UserService.SetExpanded(MenuItemEnum.Attributes, expaned);
     }
 
     private void AmazonExpandedChanged(bool expaned)

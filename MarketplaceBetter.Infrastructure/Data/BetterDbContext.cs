@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 
 namespace MarketplaceBetter.Infrastructure.Data
 {
@@ -50,6 +51,8 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<PhotoKindBeginning> PhotoKindBeginning { get; set; }
         public DbSet<PhotoUpload> PhotoUpload { get; set; }
         public DbSet<PhotoUploadVariant> PhotoUploadVariant { get; set; }
+        // => Attributes
+        public DbSet<ProductDimensions> ProductDimensions { get; set; }
 
         // Amazon
         // => Inventory

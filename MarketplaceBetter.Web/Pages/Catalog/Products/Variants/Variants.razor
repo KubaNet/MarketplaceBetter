@@ -10,12 +10,12 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variants</MudText>
 
 <MainBody>
-    <MudTable T="VariantModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(ReloadVariants))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="VariantModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterVariants" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
-            <MudButton OnClick="AddVariant" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Variant</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Variant</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="VariantModel">Id</MudTableSortLabel></MudTh>
@@ -42,9 +42,9 @@
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilarVariant(context.Id))">Add</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => EditVariant(context.Id))">Edit</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => DeleteVariant(context.Id, context.Sku))">Delete</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context.Id, context.Sku))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -91,7 +91,7 @@
         }
     }
 
-    private Task<TableData<VariantModel>> ReloadVariants(TableState state)
+    private Task<TableData<VariantModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -105,7 +105,7 @@
         CurrentRowsPerPageValue = rowsPerPage;
     }
 
-    private void FilterVariants(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -114,28 +114,28 @@
         StateHasChanged();
     }
 
-    private async void AddVariant()
+    private async void Add()
     {
         var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant" }).Result;
 
-        ProcessVariantDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void AddSimilarVariant(long id)
+    private async void AddSimilar(long id)
     {
         var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant", ["AddingSimilar"] = true, ["VariantId"] = id }).Result;
 
-        ProcessVariantDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditVariant(long id)
+    private async void Edit(long id)
     {
         var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Edit Variant", ["IsEdit"] = true, ["VariantId"] = id }).Result;
 
-        ProcessVariantDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void DeleteVariant(long id, string sku)
+    private async void Delete(long id, string sku)
     {
         DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete variant <b>{sku}</b> ? <br><br>All entities (child instances, photos etc.) associated with this variant will be also deleted." }).Result;
 
@@ -149,7 +149,7 @@
         }
     }
 
-    private void ProcessVariantDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {
@@ -161,7 +161,7 @@
     {
         var result = await DialogService.Show<VariantsSetStatusDialog>(null, new DialogParameters { ["Variants"] = SelectedVariants.ToList() }).Result;
 
-        ProcessVariantDialogResult(result);
+        ProcessDialogResult(result);
     }
 
     private void OnSelectedItemsChanged(HashSet<VariantModel> selectedVariants)

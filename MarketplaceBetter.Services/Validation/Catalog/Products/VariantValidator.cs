@@ -1,6 +1,4 @@
-﻿using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
-using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+﻿using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;

@@ -1,0 +1,130 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Attributes;
+@using MarketplaceBetter.Services.Domain.Catalog.Attributes.Interfaces;
+@using MarketplaceBetter.Services.Model;
+
+@page "/product-dimensions"
+
+@inject ISnackbar Snackbar
+@inject IProductDimensionsService DimensionsService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h4" Class="mt-2">Product Dimensions</MudText>
+
+<MainBody>
+    <MudTable T="ProductDimensionsModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductDimensionsModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add ProductDimensions</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ProductDimensionsModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="ProductDimensionsModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="size" T="ProductDimensionsModel">Size</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ProductDimensionsModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 250px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Product">@context.Product.Code</MudTd>
+            <MudTd DataLabel="Size">@context.Size.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @if (!ShowAll.HasValue || ShowAll == false)
+            {
+                <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+            }
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
+
+    private MudTable<ProductDimensionsModel> Table;
+    private ListRequest ListRequest = new();
+
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+        if (ShowAll.HasValue)
+        {
+            ListRequest.ShowAll = ShowAll.Value;
+        }
+    }
+
+    private Task<TableData<ProductDimensionsModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<ProductDimensionsModel> dimensions = DimensionsService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<ProductDimensionsModel>() { TotalItems = DimensionsService.CountForListRequest(ListRequest), Items = dimensions });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private async void Add()
+    {
+        var result = await DialogService.Show<ProductDimensionsDialog>(null, new DialogParameters { ["Title"] = "Add Product Dimensions" }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void AddSimilar(long id)
+    {
+        var result = await DialogService.Show<ProductDimensionsDialog>(null, new DialogParameters { ["Title"] = "Add Product Dimensions", ["AddingSimilar"] = true, ["DimensionsId"] = id }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void Edit(long id)
+    {
+        var result = await DialogService.Show<ProductDimensionsDialog>(null, new DialogParameters { ["Title"] = "Edit Product Dimensions", ["IsEdit"] = true, ["DimensionsId"] = id }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

@@ -13,12 +13,12 @@
 <MudText Typo="Typo.h4" Class="mt-2">Photos</MudText>
 
 <MainBody>
-    <MudTable T="PhotoModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoModel>>>(ReloadPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="PhotoModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="DeleteSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Delete</MudButton>
-            <MudButton OnClick="AddMultiplePhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info" Class="ml-2">Add multiple</MudButton>
+            <MudButton OnClick="AddMultiple" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info" Class="ml-2">Add multiple</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="PhotoModel">Id</MudTableSortLabel></MudTh>
@@ -43,7 +43,7 @@
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
             <MudTd>
-                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => DeletePhoto(context.Id, context.Type.Name, context.Variant.Sku))" Color="Color.Secondary">Delete</MudButton>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Delete(context.Id, context.Type.Name, context.Variant.Sku))" Color="Color.Secondary">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -77,7 +77,7 @@
         }
     }
 
-    private Task<TableData<PhotoModel>> ReloadPhotos(TableState state)
+    private Task<TableData<PhotoModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -91,7 +91,7 @@
         CurrentRowsPerPageValue = rowsPerPage;
     }
 
-    private void FilterPhotos(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -100,33 +100,33 @@
         StateHasChanged();
     }
 
-    private async void AddPhoto()
+    private async void Add()
     {
         var result = await DialogService.Show<PhotoDialog>(null, new DialogParameters { ["Title"] = "Add Photo" }).Result;
 
-        ProcessPhotoDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private void AddMultiplePhotos()
+    private void AddMultiple()
     {
         NavigationManager.NavigateTo($"add-photos");
     }
 
-    private async void AddSimilarPhoto(long id)
+    private async void AddSimilar(long id)
     {
         var result = await DialogService.Show<PhotoDialog>(null, new DialogParameters { ["Title"] = "Add Photo", ["AddingSimilar"] = true, ["PhotoId"] = id }).Result;
 
-        ProcessPhotoDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditPhoto(long id)
+    private async void Edit(long id)
     {
         var result = await DialogService.Show<PhotoDialog>(null, new DialogParameters { ["Title"] = "Edit Photo", ["IsEdit"] = true, ["PhotoId"] = id }).Result;
 
-        ProcessPhotoDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void DeletePhoto(long id, string type, string variant)
+    private async void Delete(long id, string type, string variant)
     {
         DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete <b>{type}</b> photo for variant <b>{variant}</b> ?" }).Result;
 
@@ -140,7 +140,7 @@
         }
     }
 
-    private void ProcessPhotoDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {

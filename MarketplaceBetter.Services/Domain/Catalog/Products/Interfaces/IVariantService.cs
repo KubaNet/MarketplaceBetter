@@ -17,9 +17,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 
         IList<VariantModel> GetForListRequest(ListRequest request);
 
-        void Add(VariantModel Variant);
+        void Add(VariantModel variant);
 
-        void Update(VariantModel Variant);
+        void Update(VariantModel variant);
 
         void Delete(long id);
     }
