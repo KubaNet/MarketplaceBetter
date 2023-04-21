@@ -19,18 +19,18 @@
             <MudTh><MudTableSortLabel SortLabel="id" T="SizeModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="name" T="SizeModel">Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="code" T="SizeModel">Code</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="isonesize" T="SizeModel">Is One Size</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="brand" T="ColorModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="is_one_size" T="SizeModel">Is One Size</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="group" T="SizeModel">Group</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ColorModel">Brand</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="IsOneSize"><MudCheckBox T="bool" Checked="@context.IsOneSize" Disabled="true"></MudCheckBox></MudTd>
-            <MudTd DataLabel="Brand">@context.Group.Brand.Name</MudTd>
+            <MudTd DataLabel="Is One Size"><MudCheckBox T="bool" Checked="@context.IsOneSize" Disabled="true"></MudCheckBox></MudTd>
             <MudTd DataLabel="Group">@context.Group.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Group.Brand.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditSize(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>

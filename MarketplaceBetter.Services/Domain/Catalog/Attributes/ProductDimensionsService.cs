@@ -126,7 +126,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "brand", "size", "product_id" };
+                string[] searchFieldNames = new[] { "id", "product", "brand", "size", "product_id", "weight_g" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -135,9 +135,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
                     {
                         "id" => dimensions.Where(d => d.Id == searchField.Value.ParseToIntOrDefault()),
                         "product" => dimensions.Where(d => d.Product.Code.Contains(searchField.Value)),
-                        "brand" => dimensions.Where(d => d.Product.Brand.Name.Contains(searchField.Value)),
                         "size" => dimensions.Where(d => d.Size.Name.Contains(searchField.Value)),
+                        "brand" => dimensions.Where(d => d.Product.Brand.Name.Contains(searchField.Value)),
                         "product_id" => dimensions.Where(d => d.Product.Id == searchField.Value.ParseToIntOrDefault()),
+                        "weight_g" => dimensions.Where(d => d.WeightInGrams == searchField.Value.ParseToDoubleOrDefault()),
+                        "weight_lb" => dimensions.Where(d => d.WeightInPounds == searchField.Value.ParseToDoubleOrDefault()),
+                        "depth_cm" => dimensions.Where(d => d.DepthInCentimeters == searchField.Value.ParseToDoubleOrDefault()),
+                        "depth_in" => dimensions.Where(d => d.DepthInInches == searchField.Value.ParseToDoubleOrDefault()),
+                        "length_cm" => dimensions.Where(d => d.LengthInCentimeters == searchField.Value.ParseToDoubleOrDefault()),
+                        "length_in" => dimensions.Where(d => d.LengthInInches == searchField.Value.ParseToDoubleOrDefault()),
+                        "width_cm" => dimensions.Where(d => d.WidthInCentimeters == searchField.Value.ParseToDoubleOrDefault()),
+                        "width_in" => dimensions.Where(d => d.WidthInInches == searchField.Value.ParseToDoubleOrDefault()),
+                        "height_cm" => dimensions.Where(d => d.HeightInCentimeters == searchField.Value.ParseToDoubleOrDefault()),
+                        "height_in" => dimensions.Where(d => d.HeightInInches == searchField.Value.ParseToDoubleOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -146,8 +156,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
                     dimensions = dimensions.Where(d => d.Id == searchString.ParseToIntOrDefault()
                       || d.Product.Name.Contains(searchString)
                       || d.Product.Code.Contains(searchString)
+                      || d.Size.Name.Contains(searchString)
                       || d.Product.Brand.Name.Contains(searchString)
-                      || d.Size.Name.Contains(searchString));
+                      || d.WeightInGrams == searchString.ParseToDoubleOrDefault()
+                      || d.WeightInPounds == searchString.ParseToDoubleOrDefault()
+                      || d.DepthInCentimeters == searchString.ParseToDoubleOrDefault()
+                      || d.DepthInInches == searchString.ParseToDoubleOrDefault()
+                      || d.LengthInCentimeters == searchString.ParseToDoubleOrDefault()
+                      || d.LengthInInches == searchString.ParseToDoubleOrDefault()
+                      || d.WidthInCentimeters == searchString.ParseToDoubleOrDefault()
+                      || d.WidthInInches == searchString.ParseToDoubleOrDefault()
+                      || d.HeightInCentimeters == searchString.ParseToDoubleOrDefault()
+                      || d.HeightInInches == searchString.ParseToDoubleOrDefault()
+                      );
                 }
             }
 
@@ -162,14 +183,23 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.Id) : dimensions.OrderByDescending(d => d.Id),
                     "product" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.Product.Code) : dimensions.OrderByDescending(d => d.Product.Code),
-                    "brand" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.Product.Brand.Name) : dimensions.OrderByDescending(d => d.Product.Brand.Name),
                     "size" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.Size.Name) : dimensions.OrderByDescending(d => d.Size.Name),
+                    "weight_g" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.WeightInGrams) : dimensions.OrderByDescending(d => d.WeightInGrams),
+                    "weight_lb" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.WeightInPounds) : dimensions.OrderByDescending(d => d.WeightInPounds),
+                    "depth_cm" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.DepthInCentimeters) : dimensions.OrderByDescending(d => d.DepthInCentimeters),
+                    "depth_in" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.DepthInInches) : dimensions.OrderByDescending(d => d.DepthInInches),
+                    "length_cm" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.LengthInCentimeters) : dimensions.OrderByDescending(d => d.LengthInCentimeters),
+                    "length_in" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.LengthInInches) : dimensions.OrderByDescending(d => d.LengthInInches),
+                    "width_cm" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.WidthInCentimeters) : dimensions.OrderByDescending(d => d.WidthInCentimeters),
+                    "width_in" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.WidthInInches) : dimensions.OrderByDescending(d => d.WidthInInches),
+                    "height_cm" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.HeightInCentimeters) : dimensions.OrderByDescending(d => d.HeightInCentimeters),
+                    "height_in" => request.SortDirection == SortDirection.Ascending ? dimensions.OrderBy(d => d.HeightInInches) : dimensions.OrderByDescending(d => d.HeightInInches),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
             else
             {
-                dimensions = dimensions.OrderBy(d => d.Id);
+                dimensions = dimensions.OrderBy(d => d.Product.Code).ThenBy(d => d.SizeId);
             }
 
             return dimensions;

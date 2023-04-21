@@ -39,16 +39,19 @@
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudNumericField Label="Weight [grams]" T="double?" Value="Dimensions.WeightInGrams" ValueChanged="HandleWeightInGramsChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Weight [pounds]" T="double?" Value="Dimensions.WeightInPounds" ValueChanged="HandleWeightInPoundsChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Depth [centimeters]" T="double?" Value="Dimensions.DepthInCentimeters" ValueChanged="HandleDepthInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Depth [inches]" T="double?" Value="Dimensions.DepthInInches" ValueChanged="HandleDepthInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Length [centimeters]" T="double?" Value="Dimensions.LengthInCentimeters" ValueChanged="HandleLengthInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Length [inches]" T="double?" Value="Dimensions.LengthInInches" ValueChanged="HandleLengthInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Width [centimeters]" T="double?" Value="Dimensions.WidthInCentimeters" ValueChanged="HandleWidthInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Width [inches]" T="double?" Value="Dimensions.WidthInInches" ValueChanged="HandleWidthInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Height [centimeters]" T="double?" Value="Dimensions.HeightInCentimeters" ValueChanged="HandleHeightInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Height [inches]" T="double?" Value="Dimensions.HeightInInches" ValueChanged="HandleHeightInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <div class="d-flex">
+            <MudNumericField Label="Weight [grams]" T="double?" Value="Dimensions.WeightInGrams" ValueChanged="HandleWeightInGramsChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <div class="flex-none d-flex" style="width: 30px;"></div>
+            <MudNumericField Label="Weight [pounds]" T="double?" Value="Dimensions.WeightInPounds" ValueChanged="HandleWeightInPoundsChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        </div>
+        <MudNumericField Label="Depth [centimeters]" T="double?" Value="Dimensions.DepthInCentimeters" ValueChanged="HandleDepthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Depth [inches]" T="double?" Value="Dimensions.DepthInInches" ValueChanged="HandleDepthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Length [centimeters]" T="double?" Value="Dimensions.LengthInCentimeters" ValueChanged="HandleLengthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Length [inches]" T="double?" Value="Dimensions.LengthInInches" ValueChanged="HandleLengthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Width [centimeters]" T="double?" Value="Dimensions.WidthInCentimeters" ValueChanged="HandleWidthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Width [inches]" T="double?" Value="Dimensions.WidthInInches" ValueChanged="HandleWidthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Height [centimeters]" T="double?" Value="Dimensions.HeightInCentimeters" ValueChanged="HandleHeightInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Height [inches]" T="double?" Value="Dimensions.HeightInInches" ValueChanged="HandleHeightInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
     </FormDialog>
 </EditForm>
 

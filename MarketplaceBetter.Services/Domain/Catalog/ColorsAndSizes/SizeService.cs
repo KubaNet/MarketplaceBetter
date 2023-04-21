@@ -108,7 +108,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "code", "isonesize", "brand", "group" };
+                string[] searchFieldNames = new[] { "id", "name", "code", "is_one_size", "brand", "group" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -118,7 +118,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
                         "id" => sizes.Where(s => s.Id == searchField.Value.ParseToIntOrDefault()),
                         "name" => sizes.Where(s => s.Name.Contains(searchField.Value)),
                         "code" => sizes.Where(s => s.Code.Contains(searchField.Value)),
-                        "isonesize" => searchField.Value == "true" ? sizes.Where(s => s.IsOneSize == true) : searchField.Value == "false" ? sizes.Where(s => s.IsOneSize == false) : sizes.Where(s => false),
+                        "is_one_size" => searchField.Value == "true" ? sizes.Where(s => s.IsOneSize == true) : searchField.Value == "false" ? sizes.Where(s => s.IsOneSize == false) : sizes.Where(s => false),
                         "brand" => sizes.Where(s => s.Group.Brand.Name.Contains(searchField.Value)),
                         "group" => sizes.Where(s => s.Group.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -146,7 +146,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
                     "id" => request.SortDirection == SortDirection.Ascending ? sizes.OrderBy(s => s.Id) : sizes.OrderByDescending(s => s.Id),
                     "name" => request.SortDirection == SortDirection.Ascending ? sizes.OrderBy(s => s.Name) : sizes.OrderByDescending(s => s.Name),
                     "code" => request.SortDirection == SortDirection.Ascending ? sizes.OrderBy(s => s.Code) : sizes.OrderByDescending(s => s.Code),
-                    "isonesize" => request.SortDirection == SortDirection.Ascending ? sizes.OrderBy(s => s.IsOneSize) : sizes.OrderByDescending(s => s.IsOneSize),
+                    "is_one_size" => request.SortDirection == SortDirection.Ascending ? sizes.OrderBy(s => s.IsOneSize) : sizes.OrderByDescending(s => s.IsOneSize),
                     "brand" => request.SortDirection == SortDirection.Ascending ? sizes.OrderBy(s => s.Group.Brand.Name) : sizes.OrderByDescending(s => s.Group.Brand.Name),
                     "group" => request.SortDirection == SortDirection.Ascending ? sizes.OrderBy(s => s.Group.Name) : sizes.OrderByDescending(s => s.Group.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)

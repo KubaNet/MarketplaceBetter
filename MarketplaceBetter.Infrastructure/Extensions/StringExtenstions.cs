@@ -16,6 +16,13 @@ namespace MarketplaceBetter.Infrastructure.Extensions
             return number;
         }
 
+        public static double ParseToDoubleOrDefault(this string numberString)
+        {
+            double.TryParse(numberString, out double number);
+
+            return number;
+        }
+
         public static IList<string> SplitForFiltering(this string searchString)
         {
             IList<string> searchStrings = new List<string>();
