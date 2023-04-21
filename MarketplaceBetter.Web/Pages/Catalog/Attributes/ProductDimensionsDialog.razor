@@ -6,6 +6,7 @@
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.Attributes.Interfaces;
+@using System.Globalization;
 
 @inject ISnackbar Snackbar
 @inject IProductDimensionsService DimensionsService
@@ -38,6 +39,16 @@
                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudNumericField Label="Weight [grams]" T="double?" Value="Dimensions.WeightInGrams" ValueChanged="HandleWeightInGramsChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Weight [pounds]" T="double?" Value="Dimensions.WeightInPounds" ValueChanged="HandleWeightInPoundsChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Depth [centimeters]" T="double?" Value="Dimensions.DepthInCentimeters" ValueChanged="HandleDepthInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Depth [inches]" T="double?" Value="Dimensions.DepthInInches" ValueChanged="HandleDepthInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Length [centimeters]" T="double?" Value="Dimensions.LengthInCentimeters" ValueChanged="HandleLengthInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Length [inches]" T="double?" Value="Dimensions.LengthInInches" ValueChanged="HandleLengthInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Width [centimeters]" T="double?" Value="Dimensions.WidthInCentimeters" ValueChanged="HandleWidthInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Width [inches]" T="double?" Value="Dimensions.WidthInInches" ValueChanged="HandleWidthInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Height [centimeters]" T="double?" Value="Dimensions.HeightInCentimeters" ValueChanged="HandleHeightInCentimetersChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <MudNumericField Label="Height [inches]" T="double?" Value="Dimensions.HeightInInches" ValueChanged="HandleHeightInInchesChanged" Culture="Culture" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
     </FormDialog>
 </EditForm>
 
@@ -50,6 +61,7 @@
 
     private CustomValidation CustomValidation = new();
     private ProductDimensionsModel Dimensions = new();
+    private CultureInfo Culture = CultureInfo.GetCultureInfo("pl-PL");
     private BrandModel Brand;
 
     private IList<BrandModel> Brands;
@@ -175,5 +187,115 @@
         {
             CustomValidation.DisplayErrors(result.Errors);
         }
+    }
+
+    private void HandleWeightInGramsChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.WeightInGrams = value;
+            return;
+        }
+
+        Dimensions.WeightInGrams = Math.Round(value.Value, 2);
+    }
+
+    private void HandleWeightInPoundsChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.WeightInPounds = value;
+            return;
+        }
+
+        Dimensions.WeightInPounds = Math.Round(value.Value, 2);
+    }
+
+    private void HandleDepthInCentimetersChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.DepthInCentimeters = value;
+            return;
+        }
+
+        Dimensions.DepthInCentimeters = Math.Round(value.Value, 2);
+    }
+
+    private void HandleDepthInInchesChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.DepthInInches = value;
+            return;
+        }
+
+        Dimensions.DepthInInches = Math.Round(value.Value, 2);
+    }
+
+    private void HandleLengthInCentimetersChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.LengthInCentimeters = value;
+            return;
+        }
+
+        Dimensions.LengthInCentimeters = Math.Round(value.Value, 2);
+    }
+
+    private void HandleLengthInInchesChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.LengthInInches = value;
+            return;
+        }
+
+        Dimensions.LengthInInches = Math.Round(value.Value, 2);
+    }
+
+    private void HandleWidthInCentimetersChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.WidthInCentimeters = value;
+            return;
+        }
+
+        Dimensions.WidthInCentimeters = Math.Round(value.Value, 2);
+    }
+
+    private void HandleWidthInInchesChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.WidthInInches = value;
+            return;
+        }
+
+        Dimensions.WidthInInches = Math.Round(value.Value, 2);
+    }
+
+    private void HandleHeightInCentimetersChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.HeightInCentimeters = value;
+            return;
+        }
+
+        Dimensions.HeightInCentimeters = Math.Round(value.Value, 2);
+    }
+
+    private void HandleHeightInInchesChanged(double? value)
+    {
+        if (!value.HasValue)
+        {
+            Dimensions.HeightInInches = value;
+            return;
+        }
+
+        Dimensions.HeightInInches = Math.Round(value.Value, 2);
     }
 }
