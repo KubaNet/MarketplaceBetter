@@ -14,9 +14,9 @@
 <MudText Typo="Typo.h4" Class="mt-2">Add multiple Photos</MudText>
 
 <MainBody>
-    <MudTable T="PhotoUploadModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoUploadModel>>>(ReloadPhotos))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
+    <MudTable T="PhotoUploadModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoUploadModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
         <ToolBarContent>
-            <MudTextField Placeholder="Search" T="string" ValueChanged="FilterPhotos" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
             <MudSpacer />
             <MudButton OnClick="SetTypeForSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Workspaces" Color="Color.Dark" Disabled="NoneSelected" Class="ml-2">Set type</MudButton>
@@ -97,11 +97,11 @@
 
             var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
 
-            ProcessPhotoUploadDialogResult(result);
+            ProcessDialogResult(result);
         }
     }
 
-    private Task<TableData<PhotoUploadModel>> ReloadPhotos(TableState state)
+    private Task<TableData<PhotoUploadModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -112,7 +112,7 @@
         return Task.FromResult(new TableData<PhotoUploadModel>() { TotalItems = PhotoUploads.Count, Items = PhotoUploads });
     }
 
-    private void FilterPhotos(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -127,7 +127,7 @@
 
         var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
 
-        ProcessPhotoUploadDialogResult(result);
+        ProcessDialogResult(result);
     }
 
     private async void Remove(PhotoUploadModel photoUpload)
@@ -180,7 +180,7 @@
 
         var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters { ["PhotoUploadsToUpdate"] = SelectedPhotos.ToList(), ["AllPhotoUploads"] = PhotoUploads }).Result;
 
-        ProcessPhotoUploadDialogResult(result);
+        ProcessDialogResult(result);
     }
 
     private async void SaveSelected()
@@ -208,7 +208,7 @@
         }
     }
 
-    private void ProcessPhotoUploadDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {

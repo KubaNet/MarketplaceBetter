@@ -146,6 +146,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             Delete(photos);
         }
 
+        public void UpdateType(IList<PhotoModel> photos, PhotoTypeModel type)
+        {
+            foreach (var photo in photos)
+            {
+                Photo photoToUpdate = _repository.Get(photo.Id);
+
+                photoToUpdate.TypeId = type.Id;
+
+                _repository.Update(photoToUpdate);
+                _unitOfWork.Save();
+            }
+        }
+
         private void TransferValues(Photo toPhoto, PhotoModel fromPhoto)
         {
             toPhoto.VariantId = fromPhoto.Variant.Id;

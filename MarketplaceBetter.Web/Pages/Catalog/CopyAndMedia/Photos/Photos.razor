@@ -17,6 +17,7 @@
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
+            <MudButton OnClick="ChangeTypeOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SubdirectoryArrowRight" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Change Type</MudButton>
             <MudButton OnClick="DeleteSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Delete</MudButton>
             <MudButton OnClick="AddMultiple" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info" Class="ml-2">Add multiple</MudButton>
         </ToolBarContent>
@@ -140,14 +141,6 @@
         }
     }
 
-    private void ProcessDialogResult(DialogResult result)
-    {
-        if (!result.Canceled)
-        {
-            Table.ReloadServerData();
-        }
-    }
-
     private async void DeleteSelected()
     {
         DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete selected photos?" }).Result;
@@ -159,6 +152,21 @@
             await Table.ReloadServerData();
 
             Snackbar.AddSuccess("Photos were successfully deleted.");
+        }
+    }
+
+    private async void ChangeTypeOfSelected()
+    {
+        var result = await DialogService.Show<PhotosChangeTypeDialog>(null, new DialogParameters { ["PhotosToUpdate"] = SelectedPhotos.ToList() }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
         }
     }
 

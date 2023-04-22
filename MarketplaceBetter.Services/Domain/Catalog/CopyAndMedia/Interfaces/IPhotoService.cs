@@ -31,5 +31,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
         void Delete(IList<PhotoModel> photos);
 
         void DeleteAllForVariant(long variantId);
+
+        void UpdateType(IList<PhotoModel> photos, PhotoTypeModel type);
     }
 }
