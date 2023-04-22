@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
-using MarketplaceBetter.Domain.Model.Amazon.Campaigns;
+using MarketplaceBetter.Domain.Entities.Amazon.APlusContent;
+using MarketplaceBetter.Domain.Model.Amazon.APlusContent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Campaigns
+namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.APlusContent
 {
     public class APlusElementTypeProfile : Profile
     {
         public APlusElementTypeProfile()
         {
-            CreateMap<AdGroup, AdGroupModel>();
+            CreateMap<APlusElementType, APlusElementTypeModel>();
         }
     }
 }

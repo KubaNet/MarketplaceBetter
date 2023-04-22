@@ -8,7 +8,7 @@
 	[ColorGroupId]	BIGINT				NOT NULL,
 	[SizeGroupId]	BIGINT				NOT NULL,
 	[Order]			INT					NOT NULL,
-	[StatusId]		BIGINT				NOT NULL DEFAULT(3),
+	[StatusId]		BIGINT				NOT NULL,
 	CONSTRAINT	[PK_Product]			PRIMARY KEY ([Id]),
 	CONSTRAINT  [FK_Product_Brand]		FOREIGN KEY ([BrandId])			REFERENCES [dbo].[Brand] ([Id]),
 	CONSTRAINT  [FK_Product_Collection]	FOREIGN KEY ([CollectionId])	REFERENCES [dbo].[Collection] ([Id]),

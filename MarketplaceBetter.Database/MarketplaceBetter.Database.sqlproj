@@ -72,6 +72,7 @@
     <Folder Include="dbo\Tables\Catalog\CopyAndMedia" />
     <Folder Include="Scripts\CustomScripts" />
     <Folder Include="dbo\Tables\Catalog\Attributes" />
+    <Folder Include="dbo\Tables\Amazon\APlusContent" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Inserts\02_Instances.sql" />
@@ -97,23 +98,23 @@
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\Photo.sql" />
     <None Include="Scripts\Inserts\05_PhotoTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetSource.sql" />
-    <None Include="Scripts\Inserts\13_ResearchTargetSources.sql" />
+    <None Include="Scripts\Inserts\ResearchTargetSources.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetStatus.sql" />
-    <None Include="Scripts\Inserts\14_ResearchTargetStatuses.sql" />
+    <None Include="Scripts\Inserts\ResearchTargetStatuses.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchResult.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\CampaignType.sql" />
-    <None Include="Scripts\Inserts\15_CampaignTypes.sql" />
+    <None Include="Scripts\Inserts\CampaignTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\CampaignStrategy.sql" />
-    <None Include="Scripts\Inserts\16_CampaignStrategies.sql" />
+    <None Include="Scripts\Inserts\CampaignStrategies.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\AdEntityStatus.sql" />
-    <None Include="Scripts\Inserts\10_AdEntityStatuses.sql" />
+    <None Include="Scripts\Inserts\AdEntityStatuses.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\AdGroup.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\ProductAd.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\Portfolio.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\BiddingStrategy.sql" />
-    <None Include="Scripts\Inserts\11_BiddingStrategies.sql" />
+    <None Include="Scripts\Inserts\BiddingStrategies.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\MatchType.sql" />
-    <None Include="Scripts\Inserts\12_MatchTypes.sql" />
+    <None Include="Scripts\Inserts\MatchTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\NegativeKeyword.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\NegativeProduct.sql" />
     <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoUpload.sql" />
@@ -144,5 +145,11 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContent\APlusElementType.sql" />
+    <None Include="Scripts\Inserts\08_APlusElementTypes.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContent\APlusSectionType.sql" />
+    <None Include="Scripts\Inserts\09_APlusSectionTypes.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContent\APlusSection.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContent\APlusElement.sql" />
   </ItemGroup>
 </Project>

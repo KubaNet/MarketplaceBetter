@@ -40,18 +40,30 @@
             }
         </MudSelect>
         <div class="d-flex">
-            <MudNumericField Label="Weight [grams]" T="double?" Value="Dimensions.WeightInGrams" ValueChanged="HandleWeightInGramsChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-            <div class="flex-none d-flex" style="width: 30px;"></div>
-            <MudNumericField Label="Weight [pounds]" T="double?" Value="Dimensions.WeightInPounds" ValueChanged="HandleWeightInPoundsChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <MudNumericField Label="Weight [g]" T="double?" Value="Dimensions.WeightInGrams" ValueChanged="HandleWeightInGramsChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <div class="flex-none d-flex" style="width: 50px;"></div>
+            <MudNumericField Label="Weight [lb]" T="double?" Value="Dimensions.WeightInPounds" ValueChanged="HandleWeightInPoundsChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
         </div>
-        <MudNumericField Label="Depth [centimeters]" T="double?" Value="Dimensions.DepthInCentimeters" ValueChanged="HandleDepthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Depth [inches]" T="double?" Value="Dimensions.DepthInInches" ValueChanged="HandleDepthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Length [centimeters]" T="double?" Value="Dimensions.LengthInCentimeters" ValueChanged="HandleLengthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Length [inches]" T="double?" Value="Dimensions.LengthInInches" ValueChanged="HandleLengthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Width [centimeters]" T="double?" Value="Dimensions.WidthInCentimeters" ValueChanged="HandleWidthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Width [inches]" T="double?" Value="Dimensions.WidthInInches" ValueChanged="HandleWidthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Height [centimeters]" T="double?" Value="Dimensions.HeightInCentimeters" ValueChanged="HandleHeightInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        <MudNumericField Label="Height [inches]" T="double?" Value="Dimensions.HeightInInches" ValueChanged="HandleHeightInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        <div class="d-flex">
+            <MudNumericField Label="Depth [cm]" T="double?" Value="Dimensions.DepthInCentimeters" ValueChanged="HandleDepthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <div class="flex-none d-flex" style="width: 50px;"></div>
+            <MudNumericField Label="Depth [in]" T="double?" Value="Dimensions.DepthInInches" ValueChanged="HandleDepthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        </div>
+        <div class="d-flex">
+            <MudNumericField Label="Length [cm]" T="double?" Value="Dimensions.LengthInCentimeters" ValueChanged="HandleLengthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <div class="flex-none d-flex" style="width: 50px;"></div>
+            <MudNumericField Label="Length [in]" T="double?" Value="Dimensions.LengthInInches" ValueChanged="HandleLengthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        </div>
+        <div class="d-flex">
+            <MudNumericField Label="Width [cm]" T="double?" Value="Dimensions.WidthInCentimeters" ValueChanged="HandleWidthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <div class="flex-none d-flex" style="width: 50px;"></div>
+            <MudNumericField Label="Width [in]" T="double?" Value="Dimensions.WidthInInches" ValueChanged="HandleWidthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        </div>
+        <div class="d-flex">
+            <MudNumericField Label="Height [cm]" T="double?" Value="Dimensions.HeightInCentimeters" ValueChanged="HandleHeightInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <div class="flex-none d-flex" style="width: 50px;"></div>
+            <MudNumericField Label="Height [in]" T="double?" Value="Dimensions.HeightInInches" ValueChanged="HandleHeightInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        </div>
     </FormDialog>
 </EditForm>
 
@@ -73,6 +85,9 @@
 
     private bool ProductSelectDisabled = true;
     private bool SizeSelectDisabled = true;
+
+    private double GramToPoundRatio = 0.0022046226;
+    private double CentimeterToInchRatio = 0.393700787;
 
     protected override void OnInitialized()
     {
@@ -201,6 +216,7 @@
         }
 
         Dimensions.WeightInGrams = Math.Round(value.Value, 2);
+        HandleWeightInPoundsChanged(GramToPoundRatio * Dimensions.WeightInGrams);
     }
 
     private void HandleWeightInPoundsChanged(double? value)
@@ -223,6 +239,7 @@
         }
 
         Dimensions.DepthInCentimeters = Math.Round(value.Value, 2);
+        HandleDepthInInchesChanged(CentimeterToInchRatio * Dimensions.DepthInCentimeters);
     }
 
     private void HandleDepthInInchesChanged(double? value)
@@ -245,6 +262,7 @@
         }
 
         Dimensions.LengthInCentimeters = Math.Round(value.Value, 2);
+        HandleLengthInInchesChanged(CentimeterToInchRatio * Dimensions.LengthInCentimeters);
     }
 
     private void HandleLengthInInchesChanged(double? value)
@@ -267,6 +285,7 @@
         }
 
         Dimensions.WidthInCentimeters = Math.Round(value.Value, 2);
+        HandleWidthInInchesChanged(CentimeterToInchRatio * Dimensions.WidthInCentimeters);
     }
 
     private void HandleWidthInInchesChanged(double? value)
@@ -289,6 +308,7 @@
         }
 
         Dimensions.HeightInCentimeters = Math.Round(value.Value, 2);
+        HandleHeightInInchesChanged(CentimeterToInchRatio * Dimensions.HeightInCentimeters);
     }
 
     private void HandleHeightInInchesChanged(double? value)
