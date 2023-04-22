@@ -24,20 +24,23 @@ namespace MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia
         {
             ValidationResult result = new();
 
-            if (photo.Instance != null)
+            if (_repository.Any(c => c.Id != photo.Id && c.VariantId == photo.Variant.Id && c.InstanceId == photo.Instance.Id && c.TypeId == photo.Type.Id))
             {
-                if (_repository.Any(c => c.Id != photo.Id && c.VariantId == photo.Variant.Id &&
-                    c.InstanceId == photo.Instance.Id && c.TypeId == photo.Type.Id))
-                {
-                    result.AddError("A photo already exists for selected Variant, Instance and Type.");
-                }
+                result.AddError("A photo already exists for selected Variant, Instance and Type.");
             }
-            else
+
+            return result;
+        }
+
+        public ValidationResult ValidateTypeChange(IList<PhotoModel> photos, PhotoTypeModel type)
+        {
+            ValidationResult result = new();
+
+            foreach (PhotoModel photo in photos)
             {
-                if (_repository.Any(c => c.Id != photo.Id && c.VariantId == photo.Variant.Id &&
-                    c.InstanceId == null && c.TypeId == photo.Type.Id))
+                if (_repository.Any(p => p.Id != photo.Id && p.VariantId == photo.Variant.Id && p.InstanceId == photo.Instance.Id && p.TypeId == type.Id))
                 {
-                    result.AddError("A photo already exists for selected Variant and Type.");
+                    result.AddError($"There already exists photo of type {type.Name} for variant {photo.Variant.Sku}.");
                 }
             }
 

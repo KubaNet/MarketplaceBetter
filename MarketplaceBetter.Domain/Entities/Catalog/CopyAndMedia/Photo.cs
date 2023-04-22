@@ -14,7 +14,7 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia
 
         public virtual Variant Variant { get; set; }
 
-        public long? InstanceId { get; set; }
+        public long InstanceId { get; set; }
 
         public virtual Instance Instance { get; set; }
 

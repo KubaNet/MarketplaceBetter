@@ -11,5 +11,7 @@ namespace MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces
     public interface IPhotoValidator
     {
         ValidationResult Validate(PhotoModel photo);
+
+        ValidationResult ValidateTypeChange(IList<PhotoModel> photos, PhotoTypeModel type);
     }
 }

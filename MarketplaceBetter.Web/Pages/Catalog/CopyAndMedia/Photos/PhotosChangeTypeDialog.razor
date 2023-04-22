@@ -1,9 +1,11 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 @using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
+@using MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces;
 
+@inject ISnackbar Snackbar
 @inject IPhotoService PhotoService
 @inject IPhotoTypeService PhotoTypeService
-@inject ISnackbar Snackbar
+@inject IPhotoValidator PhotoValidator
 
 <EditForm Model="Type" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -37,20 +39,19 @@
 
     private void HandleValidSubmit()
     {
-        //foreach (var photoUploadToUpdate in PhotoUploadsToUpdate)
-        //{
-        //    if (AllPhotoUploads.Any(p => p.Id != photoUploadToUpdate.Id && p.Instance.Id == photoUploadToUpdate.Instance.Id && p.Variants.Any(v1 => photoUploadToUpdate.Variants.Any(v2 => v2.Variant.Id == v1.Variant.Id)) && p.Type != null && p.Type.Id == Type.Id))
-        //    {
-        //        CustomValidation.DisplayError("Can't set this type to selected photos because another photo that is on list has same type (and instance) and is for same variant. Each photo of a variant has to have different type (for same instance).");
+        ValidationResult validationResult = PhotoValidator.ValidateTypeChange(PhotosToUpdate, Type);
 
-        //        return;
-        //    }
-        //}
+        if (validationResult.IsValid)
+        {
+            PhotoService.UpdateType(PhotosToUpdate, Type);
 
-        PhotoService.UpdateType(PhotosToUpdate, Type);
+            Snackbar.AddSuccess("Type of photos was successfully changed.");
 
-        Snackbar.AddSuccess("Type of photos was successfully changed.");
-
-        MudDialog.Close();
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(validationResult.Errors);
+        }
     }
 }

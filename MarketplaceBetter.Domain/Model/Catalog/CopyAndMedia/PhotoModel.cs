@@ -16,6 +16,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
         [Required]
         public VariantModel Variant { get; set; }
 
+        [Required]
         public InstanceModel Instance { get; set; }
 
         [Required]
