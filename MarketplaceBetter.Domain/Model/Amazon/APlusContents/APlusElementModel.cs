@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Model.Amazon.APlusContent
+namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 {
     public class APlusElementModel
     {

@@ -72,7 +72,7 @@
     <Folder Include="dbo\Tables\Catalog\CopyAndMedia" />
     <Folder Include="Scripts\CustomScripts" />
     <Folder Include="dbo\Tables\Catalog\Attributes" />
-    <Folder Include="dbo\Tables\Amazon\APlusContent" />
+    <Folder Include="dbo\Tables\Amazon\APlusContents" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Inserts\02_Instances.sql" />
@@ -145,11 +145,15 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />
-    <Build Include="dbo\Tables\Amazon\APlusContent\APlusElementType.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusElementType.sql" />
     <None Include="Scripts\Inserts\08_APlusElementTypes.sql" />
-    <Build Include="dbo\Tables\Amazon\APlusContent\APlusSectionType.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusSectionType.sql" />
     <None Include="Scripts\Inserts\09_APlusSectionTypes.sql" />
-    <Build Include="dbo\Tables\Amazon\APlusContent\APlusSection.sql" />
-    <Build Include="dbo\Tables\Amazon\APlusContent\APlusElement.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusSection.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusElement.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusImage.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusElementValue.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusSectionValue.sql" />
+    <Build Include="dbo\Tables\Amazon\APlusContents\APlusContent.sql" />
   </ItemGroup>
 </Project>

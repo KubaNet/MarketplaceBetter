@@ -6,3 +6,6 @@
 	CONSTRAINT  [FK_APlusSection_Type]	FOREIGN KEY ([TypeId])	REFERENCES [dbo].[APlusSectionType] ([Id]),
 );
 GO
+
+CREATE UNIQUE INDEX UIX_APlusSection_Type  ON [dbo].[APlusSection] ([TypeId] ASC);
+GO

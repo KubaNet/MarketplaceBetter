@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContent
+namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 {
     public enum APlusSectionTypeEnum
     {

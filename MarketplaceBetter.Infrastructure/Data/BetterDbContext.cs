@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
-using MarketplaceBetter.Domain.Entities.Amazon.APlusContent;
+using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 
 namespace MarketplaceBetter.Infrastructure.Data
 {
@@ -65,6 +65,10 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<APlusSectionType> APlusSectionType { get; set; }
         public DbSet<APlusElement> APlusElement { get; set; }
         public DbSet<APlusSection> APlusSection { get; set; }
+        public DbSet<APlusImage> APlusImage { get; set; }
+        public DbSet<APlusElementValue> APlusElementValue { get; set; }
+        public DbSet<APlusSectionValue> APlusSectionValue { get; set; }
+        public DbSet<APlusContent> APlusContent { get; set; }
         // => Campaigns
         public DbSet<Campaign> Campaign { get; set; }
         public DbSet<CampaignType> CampaignType { get; set; }

@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[APlusImage]
+(
+	[Id]		BIGINT			NOT NULL	IDENTITY,
+	[FileName]	NVARCHAR (255)	NOT NULL,
+	[Path]		NVARCHAR (255)	NOT NULL,
+	[Keywords]	NVARCHAR (255)	NOT NULL,
+	CONSTRAINT	[PK_APlusImage]	PRIMARY KEY ([Id]),
+);
+GO
