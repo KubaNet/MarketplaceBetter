@@ -4,37 +4,40 @@
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
-@using MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces;
 
 @inject ISnackbar Snackbar
-@inject IAPlusContentService APlusContentService
-@inject IAPlusContentValidator APlusContentValidator
+@inject IAPlusContentService ContentService
 @inject IInstanceService InstanceService
 @inject IBrandService BrandService
 @inject IProductService ProductService
 @inject IUserService UserService
 
-<EditForm Model="Content" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Section" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Content.Instance" For="() => Content.Instance"
-            >
-            @foreach (var instance in Instances)
-            {
-                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-            }
-        </MudSelect>
         <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Product" T="ProductModel" @bind-Value="Content.Product" For="() => Content.Product" Disabled="ProductDisabled">
+        <MudSelect Label="Product" T="ProductModel" Value="Product" For="() => Product" ValueChanged="HandleProductChanged" Disabled="ProductDisabled">
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Content" T="APlusContentModel" Value="Content" For="() => Content">
+            @foreach (var content in Contents)
+            {
+                <MudSelectItem Value="content">@content.Name</MudSelectItem>
             }
         </MudSelect>
     </FormDialog>
@@ -48,14 +51,17 @@
 
     private CustomValidation CustomValidation = new();
     private BrandModel Brand;
-    private APlusContentModel Content = new();
+    private ProductModel Product;
+    private InstanceModel Instance;
+    private APlusContentModel Content;
+    private APlusSectionValueModel Section = new();
 
     private IList<BrandModel> Brands;
     private IList<InstanceModel> Instances;
+    private IList<APlusContentModel> Contents;
     private IList<ProductModel> Products = new List<ProductModel>();
 
     private bool ProductDisabled = true;
-    private bool SizeGroupDisabled = true;
 
     protected override void OnInitialized()
     {
@@ -63,6 +69,7 @@
 
         Brands = BrandService.GetAll(true);
         Instances = InstanceService.GetAllNormal(true);
+        Contents = ContentService.GetAll(true);
 
         if (IsEdit)
         {
@@ -79,13 +86,13 @@
 
     private void SetInitialValues()
     {
-        Content = APlusContentService.Get(APlusContentId);
-        Brand = Brands.Single(b => b.Id == Content.Product.Brand.Id);
+        //Section = APlusContentService.Get(APlusContentId);
+        //Brand = Brands.Single(b => b.Id == Section.Product.Brand.Id);
 
-        ActivateProduct(Brand.Id);
+        //ActivateProduct(Brand.Id);
 
-        Content.Instance = Instances.Single(c => c.Id == Content.Instance.Id);
-        Content.Product = Products.Single(g => g.Id == Content.Product.Id);
+        //Section.Instance = Instances.Single(c => c.Id == Section.Instance.Id);
+        //Section.Product = Products.Single(g => g.Id == Section.Product.Id);
     }
 
     private void SetValuesForCurrentBrand()
@@ -102,11 +109,26 @@
         ResetProduct();
 
         ActivateProduct(brand.Id);
+        GetContents();
+    }
+
+    private void HandleProductChanged(ProductModel product)
+    {
+        Product = product;
+
+        GetContents();
+    }
+
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        Instance = instance;
+
+        GetContents();
     }
 
     private void ResetProduct()
     {
-        Content.Product = null;
+        Product = null;
         ProductDisabled = true;
         Products = new List<ProductModel>();
     }
@@ -117,28 +139,33 @@
         Products = ProductService.GetAllForBrand(brandId);
     }
 
+    private void GetContents()
+    {
+        Contents = ContentService.GetAllFor(Brand, Product, Instance);
+    }
+
     private void HandleValidSubmit()
     {
-        ValidationResult result = APlusContentValidator.Validate(Content);
+        //ValidationResult result = APlusContentValidator.Validate(Section);
 
-        if (result.IsValid)
-        {
-            if (IsEdit)
-            {
-                APlusContentService.Update(Content);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("A+ Content"));
-            }
-            else
-            {
-                APlusContentService.Add(Content);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ Content"));
-            }
+        //if (result.IsValid)
+        //{
+        //    if (IsEdit)
+        //    {
+        //        APlusContentService.Update(Section);
+        //        Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("A+ Content"));
+        //    }
+        //    else
+        //    {
+        //        APlusContentService.Add(Section);
+        //        Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ Content"));
+        //    }
 
-            MudDialog.Close();
-        }
-        else
-        {
-            CustomValidation.DisplayErrors(result.Errors);
-        }
+        //    MudDialog.Close();
+        //}
+        //else
+        //{
+        //    CustomValidation.DisplayErrors(result.Errors);
+        //}
     }
 }

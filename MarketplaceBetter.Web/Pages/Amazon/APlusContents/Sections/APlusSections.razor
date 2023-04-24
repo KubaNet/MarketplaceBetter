@@ -14,13 +14,13 @@
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add A+ Section</MudButton>
+			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Sections</MudButton>
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="APlusSectionValueModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="content" T="APlusSectionValueModel">Content</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="type" T="APlusSectionValueModel">type</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">order</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="type" T="APlusSectionValueModel">Type</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">Order</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 100px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
@@ -86,14 +86,14 @@
 
 	private async void Add()
 	{
-		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Section" }).Result;
+		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Sections" }).Result;
 
 		ProcessDialogResult(result);
 	}
 
 	private async void Edit(long id)
 	{
-		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["APlusSectionId"] = id }).Result;
+		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Sections", ["IsEdit"] = true, ["APlusSectionId"] = id }).Result;
 
 		ProcessDialogResult(result);
 	}
@@ -106,9 +106,9 @@
 		}
 	}
 
-	private void OnSelectedItemsChanged(HashSet<APlusSectionValueModel> selectedAPlusSectionValues)
+	private void OnSelectedItemsChanged(HashSet<APlusSectionValueModel> selectedAPlusSections)
 	{
-		SelectedAPlusSections = selectedAPlusSectionValues;
+		SelectedAPlusSections = selectedAPlusSections;
 
 		if (SelectedAPlusSections.Any())
 		{

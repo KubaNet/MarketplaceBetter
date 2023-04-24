@@ -5,6 +5,7 @@ using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
+using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -17,8 +18,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 {
-	public class APlusSectionValueService
-	{
+	public class APlusSectionValueService : IAPlusSectionValueService
+    {
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IRepository<APlusSectionValue> _repository;

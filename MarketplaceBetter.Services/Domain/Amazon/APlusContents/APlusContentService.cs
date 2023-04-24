@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -38,17 +39,45 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
         public APlusContentModel Get(long id) => _mapper.Map<APlusContentModel>(_repository.Get(id));
 
-        public IList<APlusContentModel> GetAll()
+        public IList<APlusContentModel> GetAll(bool onlyCurrent)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (onlyCurrent && _userService.IsSpecificBrand() && currentBrand != null)
             {
-                return _mapper.Map<IList<APlusContentModel>>(_repository.Where(c => c.Product.BrandId == currentBrand.Id).OrderBy(c => c.Name));
+                return _mapper.Map<IList<APlusContentModel>>(_repository.Where(c => c.Product.Brand.Id == currentBrand.Id).OrderBy(c => c.Name));
             }
             else
             {
                 return _mapper.Map<IList<APlusContentModel>>(_repository.GetQuery().OrderBy(c => c.Name));
             }
+        }
+
+        public IList<APlusContentModel> GetAllFor(BrandModel brand, ProductModel product, InstanceModel instance)
+        {
+            IQueryable<APlusContent> contents = _repository.GetQuery();
+
+            BrandModel currentBrand = _userService.GetCurrentBrand();
+            if (currentBrand != null && _userService.IsSpecificBrand())
+            {
+                contents = contents.Where(c => c.Product.BrandId == currentBrand.Id);
+            }
+
+            if (brand != null)
+            {
+                contents = contents.Where(c => c.Product.BrandId == brand.Id);
+            }
+
+            if (product  != null)
+            {
+                contents = contents.Where(c => c.ProductId == product.Id);
+            }
+
+            if (instance != null)
+            {
+                contents = contents.Where(c => c.InstanceId == instance.Id);
+            }
+
+            return _mapper.Map<IList<APlusContentModel>>(contents.OrderBy(c => c.Name));
         }
 
         public int CountForListRequest(ListRequest request)
