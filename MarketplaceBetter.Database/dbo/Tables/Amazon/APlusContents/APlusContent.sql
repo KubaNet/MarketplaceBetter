@@ -2,8 +2,10 @@
 (
 	[Id]			BIGINT						NOT NULL	IDENTITY,
 	[Name]			NVARCHAR(255)				NOT NULL,
+	[ProductId]		BIGINT						NOT NULL,
 	[InstanceId]	BIGINT						NOT NULL,
 	CONSTRAINT		[PK_APlusContent]			PRIMARY KEY ([Id]),
+	CONSTRAINT		[PK_APlusContent_Product]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
 	CONSTRAINT		[PK_APlusContent_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
 );
 GO

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using System.Reflection.Metadata;
 
 namespace MarketplaceBetter.Infrastructure.Data
 {
@@ -26,8 +27,17 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseLazyLoadingProxies();
 
-        // Base
-        public DbSet<User> User { get; set; }
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+            modelBuilder.Entity<APlusContent>()
+                .HasMany(c => c.Sections)
+                .WithOne()
+                .HasForeignKey("ContentId")
+                .IsRequired();
+		}
+
+		// Base
+		public DbSet<User> User { get; set; }
         public DbSet<Instance> Instance { get; set; }
         public DbSet<EntityStatus> EntityStatus { get; set; }
 

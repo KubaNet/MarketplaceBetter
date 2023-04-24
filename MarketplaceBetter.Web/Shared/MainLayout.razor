@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Domain.Entities.Base;
 @using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Attributes.Interfaces;
@@ -27,6 +28,7 @@
 @inject IProductDimensionsService ProductDimensionsService
 @inject IParentInstanceService ParentService
 @inject IChildInstanceService ChildService
+@inject IAPlusContentService APlusContentService
 
 <AuthorizeView>
     <Authorized>
@@ -207,6 +209,7 @@
         searchResults.Add(new SearchResult { EntityName = "Product Dimensions", BaseUrl = "product-dimensions", ResultsCount = ProductDimensionsService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.BorderColor });
         searchResults.Add(new SearchResult { EntityName = "Parent Instances", BaseUrl = "parent-instances", ResultsCount = ParentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
         searchResults.Add(new SearchResult { EntityName = "Child Instances", BaseUrl = "child-instances", ResultsCount = ChildService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
+        searchResults.Add(new SearchResult { EntityName = "A+ Content", BaseUrl = "a-plus-content", ResultsCount = APlusContentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.AddPhotoAlternate });
 
         GlobalSearchResults = __builder =>
         {

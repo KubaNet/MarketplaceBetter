@@ -49,11 +49,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             BrandModel currentBrand = _userService.GetCurrentBrand();
             if (currentBrand != null && _userService.IsSpecificBrand())
             {
-                return _mapper.Map<IList<ProductModel>>(_repository.Where(p => p.BrandId == currentBrand.Id).OrderBy(g => g.Name));
+                return _mapper.Map<IList<ProductModel>>(_repository.Where(p => p.BrandId == currentBrand.Id).OrderBy(p => p.Name));
             }
             else
             {
-                return _mapper.Map<IList<ProductModel>>(_repository.GetQuery().OrderBy(g => g.Name));
+                return _mapper.Map<IList<ProductModel>>(_repository.GetQuery().OrderBy(p => p.Name));
             }
         }
 

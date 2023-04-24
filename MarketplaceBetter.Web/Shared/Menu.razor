@@ -38,6 +38,10 @@
             <MudNavLink Href="/child-instances">Child Instances</MudNavLink>
         </MudNavGroup>
 
+        <MudNavGroup Title="A+ Content" Icon="@Icons.Material.Filled.AddPhotoAlternate" Expanded="UserService.IsExpanded(MenuItemEnum.APlusContent)" HideExpandIcon="true" ExpandedChanged="APlusContentExpandedChanged">
+            <MudNavLink Href="/a-plus-content">Content</MudNavLink>
+        </MudNavGroup>
+
         <MudNavGroup Title="Campaigns" Icon="@Icons.Material.Filled.SwitchAccessShortcutAdd" Expanded="UserService.IsExpanded(MenuItemEnum.Campaigns)" HideExpandIcon="true" ExpandedChanged="CampaignsExpandedChanged">
             <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
             <MudNavLink Href="/portfolios">Portfolios</MudNavLink>
@@ -120,6 +124,11 @@
     private void KeywordsExpandedChanged(bool expaned)
     {
         UserService.SetExpanded(MenuItemEnum.Keywords, expaned);
+    }
+
+    private void APlusContentExpandedChanged(bool expanded)
+    {
+        UserService.SetExpanded(MenuItemEnum.APlusContent, expanded);
     }
 
     private void SalesExpandedChanged(bool expaned)
