@@ -12,6 +12,12 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 
         public virtual APlusSection Section { get; set; }
 
-        public virtual IList<APlusElementValue> Elements { get; set; }
+        public int Order { get; set; }
+
+		public long ContentId { get; set; }
+
+		public virtual APlusContent Content { get; set; }
+
+		public virtual IList<APlusElementValue> Elements { get; set; }
     }
 }

@@ -7,7 +7,7 @@
 @inject IAPlusContentService APlusContentService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h4" Class="mt-2">A+ Contents</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">A+ Content</MudText>
 
 <MainBody>
 	<MudTable T="APlusContentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusContentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">

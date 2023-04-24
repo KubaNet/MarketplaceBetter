@@ -1,0 +1,122 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
+@using MarketplaceBetter.Services.Model;
+
+@page "/a-plus-sections"
+
+@inject IAPlusSectionValueService APlusSectionValueService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h4" Class="mt-2">A+ Sections</MudText>
+
+<MainBody>
+	<MudTable T="APlusSectionValueModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusSectionValueModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+		<ToolBarContent>
+			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add A+ Section</MudButton>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="APlusSectionValueModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="content" T="APlusSectionValueModel">Content</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="type" T="APlusSectionValueModel">type</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">order</MudTableSortLabel></MudTh>
+			<MudTh Style="width: 100px;">Actions</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Content">@context.Content.Name</MudTd>
+			<MudTd DataLabel="Type">@context.Section.Type.Name</MudTd>
+			<MudTd DataLabel="Order">@context.Order</MudTd>
+			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+		</PagerContent>
+	</MudTable>
+</MainBody>
+
+@code {
+	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+	private MudTable<APlusSectionValueModel> Table;
+	private ListRequest ListRequest = new();
+
+	private HashSet<APlusSectionValueModel> SelectedAPlusSections = new HashSet<APlusSectionValueModel>();
+	private bool NoneSelected = true;
+	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		ProcessQueryParameters();		
+	}
+
+	private void ProcessQueryParameters()
+	{
+		if (!String.IsNullOrWhiteSpace(SearchString))
+		{
+			ListRequest.SearchString = SearchString;
+		}
+	}
+
+	private Task<TableData<APlusSectionValueModel>> Reload(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<APlusSectionValueModel> sections = APlusSectionValueService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<APlusSectionValueModel>() { TotalItems = APlusSectionValueService.CountForListRequest(ListRequest), Items = sections });
+	}
+
+	private void OnRowsPerPageChanged(int rowsPerPage)
+	{
+		CurrentRowsPerPageValue = rowsPerPage;
+	}
+
+	private void Filter(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+	private async void Add()
+	{
+		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Section" }).Result;
+
+		ProcessDialogResult(result);
+	}
+
+	private async void Edit(long id)
+	{
+		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["APlusSectionId"] = id }).Result;
+
+		ProcessDialogResult(result);
+	}
+
+	private void ProcessDialogResult(DialogResult result)
+	{
+		if (!result.Canceled)
+		{
+			Table.ReloadServerData();
+		}
+	}
+
+	private void OnSelectedItemsChanged(HashSet<APlusSectionValueModel> selectedAPlusSectionValues)
+	{
+		SelectedAPlusSections = selectedAPlusSectionValues;
+
+		if (SelectedAPlusSections.Any())
+		{
+			NoneSelected = false;
+		}
+		else
+		{
+			NoneSelected = true;
+		}
+	}
+}

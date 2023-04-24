@@ -1,6 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
-using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces;
@@ -27,7 +26,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon.APlusContents
 
             if (_repository.Any(c => c.Id != content.Id && c.Name == content.Name))
             {
-                result.AddErrorFor<BrandModel>(c => c.Name, ValidationMessages.NameNotUnique, "A+ Content");
+                result.AddErrorFor<APlusContentModel>(c => c.Name, ValidationMessages.NameNotUnique, "A+ Content");
             }
 
             return result;

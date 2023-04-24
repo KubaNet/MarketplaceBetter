@@ -31,7 +31,7 @@ namespace MarketplaceBetter.Infrastructure.Data
 		{
             modelBuilder.Entity<APlusContent>()
                 .HasMany(c => c.Sections)
-                .WithOne()
+                .WithOne(s => s.Content)
                 .HasForeignKey("ContentId")
                 .IsRequired();
 		}
