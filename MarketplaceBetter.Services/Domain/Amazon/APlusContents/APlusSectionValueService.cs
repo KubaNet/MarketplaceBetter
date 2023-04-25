@@ -71,7 +71,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			return _mapper.Map<IList<APlusSectionValueModel>>(contents);
 		}
 
-		public void Add(APlusSectionValueModel content)
+		public int GetNextOrder(long contentId)
+		{
+			int nextOrder = 1;
+
+			if (_repository.Any(s => s.ContentId == contentId))
+			{
+				nextOrder = _repository.Where(s => s.ContentId != contentId).Max(s => s.Order) + 1;
+			}
+
+			return nextOrder;
+		}
+
+        public void Add(APlusSectionValueModel content)
 		{
 			APlusSectionValue contentToAdd = new();
 
@@ -115,7 +127,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
 			foreach (string searchString in searchStrings)
 			{
-				string[] searchFieldNames = new[] { "id", "content", "type", "order" };
+				string[] searchFieldNames = new[] { "id", "content", "name", "order" };
 				SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
 				if (searchField != null)
@@ -124,7 +136,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 					{
 						"id" => contents.Where(s => s.Id == searchField.Value.ParseToIntOrDefault()),
 						"content" => contents.Where(s => s.Content.Name.Contains(searchField.Value)),
-						"type" => contents.Where(s => s.Section.Type.Name.Contains(searchField.Value)),
+						"name" => contents.Where(s => s.Section.Name.Contains(searchField.Value)),
 						"order" => contents.Where(s => s.Order == searchField.Value.ParseToIntOrDefault()),
 						_ => throw new UnrecognizedSearchFieldException(searchField.Name)
 					};
@@ -133,7 +145,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 				{
 					contents = contents.Where(s => s.Id == searchString.ParseToIntOrDefault()
 						|| s.Content.Name.Contains(searchString)
-						|| s.Section.Type.Name.Contains(searchString)
+						|| s.Section.Name.Contains(searchString)
 						|| s.Order == searchString.ParseToIntOrDefault());
 				}
 			}
@@ -149,7 +161,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 				{
 					"id" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Id) : contents.OrderByDescending(s => s.Id),
 					"content" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Content.Name) : contents.OrderByDescending(s => s.Content.Name),
-					"type" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Section.Type.Name) : contents.OrderByDescending(s => s.Section.Type.Name),
+					"name" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Section.Name) : contents.OrderByDescending(s => s.Section.Name),
 					"order" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Order) : contents.OrderByDescending(s => s.Order),
 					_ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
 				};

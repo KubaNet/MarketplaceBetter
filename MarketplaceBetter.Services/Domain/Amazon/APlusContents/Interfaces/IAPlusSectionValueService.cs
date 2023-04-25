@@ -16,6 +16,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
 
 		IList<APlusSectionValueModel> GetForListRequest(ListRequest request);
 
+		int GetNextOrder(long contentId);
+
 		void Add(APlusSectionValueModel section);
 
 		void Update(APlusSectionValueModel section);

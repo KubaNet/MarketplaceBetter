@@ -27,5 +27,7 @@ namespace MarketplaceBetter.Domain.Constants
         public const long UploadPhotoSizeLimit = 20971520; //20MB
 
         public const long UploadTemplateSizeLimit = 20971520; //20MB
+
+        public const int APlusSectionsMaxNumber = 7;
     }
 }

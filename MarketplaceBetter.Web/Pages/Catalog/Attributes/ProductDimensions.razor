@@ -25,12 +25,12 @@
             <MudTh><MudTableSortLabel SortLabel="weight_lb" T="ProductDimensionsModel">Weight [lb]</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="depth_cm" T="ProductDimensionsModel">Depth [cm]</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="depth_in" T="ProductDimensionsModel">Depth [in]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="length_cm" T="ProductDimensionsModel">Length [cm]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="length_in" T="ProductDimensionsModel">Length [in]</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="width_cm" T="ProductDimensionsModel">Width [cm]</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="width_in" T="ProductDimensionsModel">Width [in]</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="height_cm" T="ProductDimensionsModel">Height [cm]</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="height_in" T="ProductDimensionsModel">Height [in]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="length_cm" T="ProductDimensionsModel">Length [cm]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="length_in" T="ProductDimensionsModel">Length [in]</MudTableSortLabel></MudTh>
             <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -41,12 +41,12 @@
             <MudTd DataLabel="Weight [lb]">@context.WeightInPounds.ToTwoDecimalDigits()</MudTd>
             <MudTd DataLabel="Depth [cm]">@context.DepthInCentimeters.ToTwoDecimalDigits()</MudTd>
             <MudTd DataLabel="Depth [in]">@context.DepthInInches.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Length [cm]">@context.LengthInCentimeters.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Length [in]">@context.LengthInInches.ToTwoDecimalDigits()</MudTd>
             <MudTd DataLabel="Width [cm]">@context.WidthInCentimeters.ToTwoDecimalDigits()</MudTd>
             <MudTd DataLabel="Width [in]">@context.WidthInInches.ToTwoDecimalDigits()</MudTd>
             <MudTd DataLabel="Height [cm]">@context.HeightInCentimeters.ToTwoDecimalDigits()</MudTd>
             <MudTd DataLabel="Height [in]">@context.HeightInInches.ToTwoDecimalDigits()</MudTd>
+            <MudTd DataLabel="Length [cm]">@context.LengthInCentimeters.ToTwoDecimalDigits()</MudTd>
+            <MudTd DataLabel="Length [in]">@context.LengthInInches.ToTwoDecimalDigits()</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>

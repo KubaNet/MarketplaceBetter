@@ -6,13 +6,15 @@
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 
 @inject ISnackbar Snackbar
+@inject IAPlusSectionValueService SectionValueService
 @inject IAPlusContentService ContentService
+@inject IAPlusSectionService SectionService
 @inject IInstanceService InstanceService
 @inject IBrandService BrandService
 @inject IProductService ProductService
 @inject IUserService UserService
 
-<EditForm Model="Section" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="SectionValue" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
@@ -34,12 +36,28 @@
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Content" T="APlusContentModel" Value="Content" For="() => Content">
+        <MudSelect Label="Content" T="APlusContentModel" Value="SectionValue.Content" For="() => SectionValue.Content" ValueChanged="HandleContentChanged">
             @foreach (var content in Contents)
             {
                 <MudSelectItem Value="content">@content.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" HideSpinButtons="true" Disabled="OrderDisabled" />
+        <MudSelect Label="Type" T="APlusSectionModel" Value="SectionValue.Section" For="() => SectionValue.Section" ValueChanged="HandleSectionChanged">
+            @foreach (var sectionItem in Sections)
+            {
+                <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
+            }
+        </MudSelect>
+@*        @foreach (var element in Section.Elements)
+        {
+            <MudSelect Label="Section" T="APlusSectionTypeModel" Value="element" For="() => element" ValueChanged="HandleSectionChanged">
+                @foreach (var type in SectionTypes)
+                {
+                    <MudSelectItem Value="type">@type.Name</MudSelectItem>
+                }
+            </MudSelect>
+        }*@
     </FormDialog>
 </EditForm>
 
@@ -47,21 +65,22 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long APlusContentId { get; set; }
+    [Parameter] public long APlusSectionValueId { get; set; }
 
     private CustomValidation CustomValidation = new();
     private BrandModel Brand;
     private ProductModel Product;
     private InstanceModel Instance;
-    private APlusContentModel Content;
-    private APlusSectionValueModel Section = new();
+    private APlusSectionValueModel SectionValue = new APlusSectionValueModel();
 
     private IList<BrandModel> Brands;
     private IList<InstanceModel> Instances;
     private IList<APlusContentModel> Contents;
     private IList<ProductModel> Products = new List<ProductModel>();
+    private IList<APlusSectionModel> Sections;
 
     private bool ProductDisabled = true;
+    private bool OrderDisabled = true;
 
     protected override void OnInitialized()
     {
@@ -70,6 +89,7 @@
         Brands = BrandService.GetAll(true);
         Instances = InstanceService.GetAllNormal(true);
         Contents = ContentService.GetAll(true);
+        Sections = SectionService.GetAll();
 
         if (IsEdit)
         {
@@ -102,6 +122,11 @@
         HandleBrandChanged(currentBrand);
     }
 
+    private void GetContents()
+    {
+        Contents = ContentService.GetAllFor(Brand, Product, Instance);
+    }
+
     private void HandleBrandChanged(BrandModel brand)
     {
         Brand = brand;
@@ -109,20 +134,6 @@
         ResetProduct();
 
         ActivateProduct(brand.Id);
-        GetContents();
-    }
-
-    private void HandleProductChanged(ProductModel product)
-    {
-        Product = product;
-
-        GetContents();
-    }
-
-    private void HandleInstanceChanged(InstanceModel instance)
-    {
-        Instance = instance;
-
         GetContents();
     }
 
@@ -139,9 +150,31 @@
         Products = ProductService.GetAllForBrand(brandId);
     }
 
-    private void GetContents()
+    private void HandleProductChanged(ProductModel product)
     {
-        Contents = ContentService.GetAllFor(Brand, Product, Instance);
+        Product = product;
+
+        GetContents();
+    }
+
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        Instance = instance;
+
+        GetContents();
+    }
+
+    private void HandleContentChanged(APlusContentModel content)
+    {
+        SectionValue.Content = content;
+
+        OrderDisabled = false;
+        SectionValue.Order = SectionValueService.GetNextOrder(content.Id);
+    }
+
+    private void HandleSectionChanged(APlusSectionModel section)
+    {
+        SectionValue.Section = section;
     }
 
     private void HandleValidSubmit()

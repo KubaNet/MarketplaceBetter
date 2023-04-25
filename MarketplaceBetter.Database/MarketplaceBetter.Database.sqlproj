@@ -147,8 +147,7 @@
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />
     <Build Include="dbo\Tables\Amazon\APlusContents\APlusElementType.sql" />
     <None Include="Scripts\Inserts\08_APlusElementTypes.sql" />
-    <Build Include="dbo\Tables\Amazon\APlusContents\APlusSectionType.sql" />
-    <None Include="Scripts\Inserts\09_APlusSectionTypes.sql" />
+    <None Include="Scripts\Inserts\09_APlusSections.sql" />
     <Build Include="dbo\Tables\Amazon\APlusContents\APlusSection.sql" />
     <Build Include="dbo\Tables\Amazon\APlusContents\APlusElement.sql" />
     <Build Include="dbo\Tables\Amazon\APlusContents\APlusImage.sql" />

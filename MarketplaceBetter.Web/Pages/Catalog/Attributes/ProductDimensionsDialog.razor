@@ -50,11 +50,6 @@
             <MudNumericField Label="Depth [in]" T="double?" Value="Dimensions.DepthInInches" ValueChanged="HandleDepthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
         </div>
         <div class="d-flex">
-            <MudNumericField Label="Length [cm]" T="double?" Value="Dimensions.LengthInCentimeters" ValueChanged="HandleLengthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-            <div class="flex-none d-flex" style="width: 50px;"></div>
-            <MudNumericField Label="Length [in]" T="double?" Value="Dimensions.LengthInInches" ValueChanged="HandleLengthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
-        </div>
-        <div class="d-flex">
             <MudNumericField Label="Width [cm]" T="double?" Value="Dimensions.WidthInCentimeters" ValueChanged="HandleWidthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
             <div class="flex-none d-flex" style="width: 50px;"></div>
             <MudNumericField Label="Width [in]" T="double?" Value="Dimensions.WidthInInches" ValueChanged="HandleWidthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
@@ -63,6 +58,11 @@
             <MudNumericField Label="Height [cm]" T="double?" Value="Dimensions.HeightInCentimeters" ValueChanged="HandleHeightInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
             <div class="flex-none d-flex" style="width: 50px;"></div>
             <MudNumericField Label="Height [in]" T="double?" Value="Dimensions.HeightInInches" ValueChanged="HandleHeightInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+        </div>
+        <div class="d-flex">
+            <MudNumericField Label="Length [cm]" T="double?" Value="Dimensions.LengthInCentimeters" ValueChanged="HandleLengthInCentimetersChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
+            <div class="flex-none d-flex" style="width: 50px;"></div>
+            <MudNumericField Label="Length [in]" T="double?" Value="Dimensions.LengthInInches" ValueChanged="HandleLengthInInchesChanged" Culture="Culture" Format="N2" Variant="Variant.Text" Min="0.01" HideSpinButtons="true" />
         </div>
     </FormDialog>
 </EditForm>

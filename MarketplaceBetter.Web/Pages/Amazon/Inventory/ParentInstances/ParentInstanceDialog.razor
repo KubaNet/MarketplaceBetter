@@ -58,8 +58,6 @@
     private IList<InstanceModel> Instances;
     private IList<ProductModel> Products = new List<ProductModel>();
 
-    private bool ProductSelectDisabled = true;
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -134,13 +132,11 @@
     private void ResetProduct()
     {
         ParentInstance.Product = null;
-        ProductSelectDisabled = true;
         Products = new List<ProductModel>();
     }
 
     private void ActivateProduct(long brandId)
     {
-        ProductSelectDisabled = false;
         Products = ProductService.GetAllForBrand(brandId);
     }
 

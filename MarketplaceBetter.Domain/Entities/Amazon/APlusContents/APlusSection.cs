@@ -8,9 +8,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 {
     public class APlusSection : Entity
     {
-        public long TypeId { get; set; }
+        public string Name { get; set; }
 
-        public virtual APlusSectionType Type { get; set; }
+        public APlusSectionEnum SystemName { get; set; }
 
         public virtual IList<APlusElement> Elements { get; set; }
     }

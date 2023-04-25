@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 {
-    public class APlusSectionTypeService : IAPlusSectionTypeService
+    public class APlusSectionService : IAPlusSectionService
     {
-        private readonly IRepository<APlusSectionType> _repository;
+        private readonly IRepository<APlusSection> _repository;
         private readonly IMapper _mapper;
 
-        public APlusSectionTypeService(
+        public APlusSectionService(
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _repository = unitOfWork.GetRepository<APlusSectionType>();
+            _repository = unitOfWork.GetRepository<APlusSection>();
             _mapper = mapper;
         }
 
-        public IList<APlusSectionTypeModel> GetAll() => _mapper.Map<IList<APlusSectionTypeModel>>(_repository.GetQuery().OrderBy(e => e.SystemName));
+        public IList<APlusSectionModel> GetAll() => _mapper.Map<IList<APlusSectionModel>>(_repository.GetQuery().OrderBy(s => s.SystemName));
     }
 }

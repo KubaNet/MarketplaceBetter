@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
     {
         public long Id { get; set; }
 
-        public APlusSectionTypeModel Type { get; set; }
+        public string Name { get; set; }
+
+        public APlusSectionEnum SystemName { get; set; }
 
         public IList<APlusElementModel> Elements { get; set; }
     }
