@@ -1,12 +1,15 @@
-﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents
+@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Domain.Model.Catalog.Products;
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+@using MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces;
 
 @inject ISnackbar Snackbar
 @inject IAPlusSectionValueService SectionValueService
+@inject IAPlusSectionValueValidator SectionValueValidator
 @inject IAPlusContentService ContentService
 @inject IAPlusSectionService SectionService
 @inject IInstanceService InstanceService
@@ -49,9 +52,22 @@
                 <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
             }
         </MudSelect>
-        @foreach (var element in SectionValue.Elements)
+        @foreach (var elementValue in SectionValue.Elements)
         {
-            
+            @switch (elementValue.Element.Type.SystemName)
+            {
+                case APlusElementTypeEnum.SingleLineText:
+                    <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", elementValue.Element.CharactersLimit } })" />
+                        break;
+                case APlusElementTypeEnum.MultiLineText:
+                    <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", elementValue.Element.CharactersLimit } })" />
+                    break;
+                case APlusElementTypeEnum.Image:
+                    <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", elementValue.Element.CharactersLimit } })" />
+                    break;
+                default:
+                    throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+            }
         }
     </FormDialog>
 </EditForm>
@@ -60,7 +76,7 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long APlusSectionValueId { get; set; }
+    [Parameter] public long SectionValueId { get; set; }
 
     private CustomValidation CustomValidation = new();
     private BrandModel Brand;
@@ -101,13 +117,13 @@
 
     private void SetInitialValues()
     {
-        //Section = APlusContentService.Get(APlusContentId);
-        //Brand = Brands.Single(b => b.Id == Section.Product.Brand.Id);
+        SectionValue = SectionValueService.Get(SectionValueId);
+        Brand = Brands.Single(b => b.Id == SectionValue.Content.Product.Brand.Id);
 
-        //ActivateProduct(Brand.Id);
+        ActivateProduct(Brand.Id);
 
-        //Section.Instance = Instances.Single(c => c.Id == Section.Instance.Id);
-        //Section.Product = Products.Single(g => g.Id == Section.Product.Id);
+        Product = Products.Single(p => p.Id == SectionValue.Content.Product.Id);
+        Instance = Instances.Single(i => i.Id == SectionValue.Content.Instance.Id);
     }
 
     private void SetValuesForCurrentBrand()
@@ -170,30 +186,43 @@
     private void HandleSectionChanged(APlusSectionModel section)
     {
         SectionValue.Section = section;
+
+        UpdateElements();
+    }
+
+    private void UpdateElements()
+    {
+        IList<APlusElementModel> elements = SectionValue.Section.Elements;
+        SectionValue.Elements.Clear();
+
+        foreach (var element in elements)
+        {
+            SectionValue.Elements.Add(new APlusElementValueModel { Element = element });
+        }
     }
 
     private void HandleValidSubmit()
     {
-        //ValidationResult result = APlusContentValidator.Validate(Section);
+        ValidationResult result = SectionValueValidator.Validate(SectionValue);
 
-        //if (result.IsValid)
-        //{
-        //    if (IsEdit)
-        //    {
-        //        APlusContentService.Update(Section);
-        //        Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("A+ Content"));
-        //    }
-        //    else
-        //    {
-        //        APlusContentService.Add(Section);
-        //        Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ Content"));
-        //    }
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                SectionValueService.Update(SectionValue);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("A+ Section"));
+            }
+            else
+            {
+                SectionValueService.Add(SectionValue);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ Section"));
+            }
 
-        //    MudDialog.Close();
-        //}
-        //else
-        //{
-        //    CustomValidation.DisplayErrors(result.Errors);
-        //}
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
     }
 }

@@ -84,8 +84,8 @@
 
         ActivateProduct(Brand.Id);
 
-        Content.Instance = Instances.Single(c => c.Id == Content.Instance.Id);
-        Content.Product = Products.Single(g => g.Id == Content.Product.Id);
+        Content.Instance = Instances.Single(i => i.Id == Content.Instance.Id);
+        Content.Product = Products.Single(p => p.Id == Content.Product.Id);
     }
 
     private void SetValuesForCurrentBrand()

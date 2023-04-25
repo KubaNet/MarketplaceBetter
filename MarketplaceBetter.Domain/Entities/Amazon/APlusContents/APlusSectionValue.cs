@@ -8,6 +8,11 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 {
     public class APlusSectionValue : Entity
     {
+        public APlusSectionValue()
+        {
+            Elements = new List<APlusElementValue>();
+        }
+
         public long SectionId { get; set; }
 
         public virtual APlusSection Section { get; set; }

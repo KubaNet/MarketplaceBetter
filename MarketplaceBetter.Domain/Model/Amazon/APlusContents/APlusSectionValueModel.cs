@@ -9,6 +9,11 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 {
     public class APlusSectionValueModel
     {
+        public APlusSectionValueModel()
+        {
+            Elements = new List<APlusElementValueModel>();
+        }
+
         public long Id { get; set; }
 
         [Required]

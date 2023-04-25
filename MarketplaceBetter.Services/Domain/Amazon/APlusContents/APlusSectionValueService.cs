@@ -53,74 +53,85 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
 		public int CountForListRequest(ListRequest request)
 		{
-			IQueryable<APlusSectionValue> contents = _repository.GetQuery();
+			IQueryable<APlusSectionValue> sections = _repository.GetQuery();
 
-			contents = ApplyFilter(contents, request);
+			sections = ApplyFilter(sections, request);
 
-			return contents.Count();
+			return sections.Count();
 		}
 
 		public IList<APlusSectionValueModel> GetForListRequest(ListRequest request)
 		{
-			IQueryable<APlusSectionValue> contents = _repository.GetQuery();
+			IQueryable<APlusSectionValue> sections = _repository.GetQuery();
 
-			contents = ApplyFilter(contents, request);
-			contents = ApplySorting(contents, request);
-			contents = ApplyPaging(contents, request);
+			sections = ApplyFilter(sections, request);
+			sections = ApplySorting(sections, request);
+			sections = ApplyPaging(sections, request);
 
-			return _mapper.Map<IList<APlusSectionValueModel>>(contents);
+			return _mapper.Map<IList<APlusSectionValueModel>>(sections);
 		}
 
-		public int GetNextOrder(long contentId)
+		public int GetNextOrder(long sectionId)
 		{
 			int nextOrder = 1;
 
-			if (_repository.Any(s => s.ContentId == contentId))
+			if (_repository.Any(s => s.ContentId == sectionId))
 			{
-				nextOrder = _repository.Where(s => s.ContentId != contentId).Max(s => s.Order) + 1;
+				nextOrder = _repository.Where(s => s.ContentId != sectionId).Max(s => s.Order) + 1;
 			}
 
 			return nextOrder;
 		}
 
-        public void Add(APlusSectionValueModel content)
+        public void Add(APlusSectionValueModel section)
 		{
-			APlusSectionValue contentToAdd = new();
+			APlusSectionValue sectionToAdd = new();
 
-			TransferValues(contentToAdd, content);
+			TransferValues(sectionToAdd, section);
 
-			_repository.Add(contentToAdd);
+			_repository.Add(sectionToAdd);
 			_unitOfWork.Save();
 		}
 
-		public void Update(APlusSectionValueModel content)
+		public void Update(APlusSectionValueModel section)
 		{
-			APlusSectionValue contentToUpdate = _repository.Get(content.Id);
+			APlusSectionValue sectionToUpdate = _repository.Get(section.Id);
 
-			TransferValues(contentToUpdate, content);
+			TransferValues(sectionToUpdate, section);
 
-			_repository.Update(contentToUpdate);
+			_repository.Update(sectionToUpdate);
 			_unitOfWork.Save();
 		}
 
-		private void TransferValues(APlusSectionValue toAPlusContent, APlusSectionValueModel fromAPlusContent)
+		private void TransferValues(APlusSectionValue toSectionValue, APlusSectionValueModel fromSectionValue)
 		{
-			toAPlusContent.ContentId = fromAPlusContent.Content.Id;
-			toAPlusContent.SectionId = fromAPlusContent.Section.Id;
-			toAPlusContent.Order = fromAPlusContent.Order;
+			toSectionValue.ContentId = fromSectionValue.Content.Id;
+            toSectionValue.Order = fromSectionValue.Order;
+            toSectionValue.SectionId = fromSectionValue.Section.Id;
+
+			foreach (var fromElement in fromSectionValue.Elements)
+			{
+				toSectionValue.Elements.Add(new APlusElementValue
+				{
+					ElementId = fromElement.Element.Id,
+					SingleLineText = fromElement.SingleLineText,
+					MultiLineText = fromElement.MultiLineText,
+					Image = null,
+				});
+			}
 		}
 
-		private IQueryable<APlusSectionValue> ApplyFilter(IQueryable<APlusSectionValue> contents, ListRequest request)
+		private IQueryable<APlusSectionValue> ApplyFilter(IQueryable<APlusSectionValue> sections, ListRequest request)
 		{
 			BrandModel currentBrand = _userService.GetCurrentBrand();
 			if (currentBrand != null && _userService.IsSpecificBrand())
 			{
-				contents = contents.Where(s => s.Content.Product.BrandId == currentBrand.Id);
+				sections = sections.Where(s => s.Content.Product.BrandId == currentBrand.Id);
 			}
 
 			if (string.IsNullOrWhiteSpace(request.SearchString))
 			{
-				return contents;
+				return sections;
 			}
 
 			IList<string> searchStrings = request.SearchString.SplitForFiltering();
@@ -132,51 +143,51 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
 				if (searchField != null)
 				{
-					contents = searchField.Name switch
+					sections = searchField.Name switch
 					{
-						"id" => contents.Where(s => s.Id == searchField.Value.ParseToIntOrDefault()),
-						"content" => contents.Where(s => s.Content.Name.Contains(searchField.Value)),
-						"name" => contents.Where(s => s.Section.Name.Contains(searchField.Value)),
-						"order" => contents.Where(s => s.Order == searchField.Value.ParseToIntOrDefault()),
+						"id" => sections.Where(s => s.Id == searchField.Value.ParseToIntOrDefault()),
+						"content" => sections.Where(s => s.Content.Name.Contains(searchField.Value)),
+						"name" => sections.Where(s => s.Section.Name.Contains(searchField.Value)),
+						"order" => sections.Where(s => s.Order == searchField.Value.ParseToIntOrDefault()),
 						_ => throw new UnrecognizedSearchFieldException(searchField.Name)
 					};
 				}
 				else
 				{
-					contents = contents.Where(s => s.Id == searchString.ParseToIntOrDefault()
+					sections = sections.Where(s => s.Id == searchString.ParseToIntOrDefault()
 						|| s.Content.Name.Contains(searchString)
 						|| s.Section.Name.Contains(searchString)
 						|| s.Order == searchString.ParseToIntOrDefault());
 				}
 			}
 
-			return contents;
+			return sections;
 		}
 
-		private IQueryable<APlusSectionValue> ApplySorting(IQueryable<APlusSectionValue> contents, ListRequest request)
+		private IQueryable<APlusSectionValue> ApplySorting(IQueryable<APlusSectionValue> sections, ListRequest request)
 		{
 			if (!string.IsNullOrWhiteSpace(request.SortBy))
 			{
-				contents = request.SortBy switch
+				sections = request.SortBy switch
 				{
-					"id" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Id) : contents.OrderByDescending(s => s.Id),
-					"content" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Content.Name) : contents.OrderByDescending(s => s.Content.Name),
-					"name" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Section.Name) : contents.OrderByDescending(s => s.Section.Name),
-					"order" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(s => s.Order) : contents.OrderByDescending(s => s.Order),
+					"id" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Id) : sections.OrderByDescending(s => s.Id),
+                    "content" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Content.Name) : sections.OrderByDescending(s => s.Content.Name),
+					"name" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Section.Name) : sections.OrderByDescending(s => s.Section.Name),
+					"order" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Order) : sections.OrderByDescending(s => s.Order),
 					_ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
 				};
 			}
 			else
 			{
-				contents = contents.OrderBy(s => s.Content.Name).ThenBy(s => s.Order);
+				sections = sections.OrderBy(s => s.Content.Name).ThenBy(s => s.Order);
 			}
 
-			return contents;
+			return sections;
 		}
 
-		private IQueryable<APlusSectionValue> ApplyPaging(IQueryable<APlusSectionValue> contents, ListRequest request)
+		private IQueryable<APlusSectionValue> ApplyPaging(IQueryable<APlusSectionValue> sections, ListRequest request)
 		{
-			return contents.Skip(request.Page * request.PageSize).Take(request.PageSize);
+			return sections.Skip(request.Page * request.PageSize).Take(request.PageSize);
 		}
 	}
 }

@@ -65,8 +65,6 @@
     private IList<InstanceModel> Instances;
     private IList<VariantModel> Variants = new List<VariantModel>();
 
-    private bool ProductSelectDisabled = true;
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -152,7 +150,6 @@
     private void ResetProduct()
     {
         Product = null;
-        ProductSelectDisabled = true;
         Products = new List<ProductModel>();
     }
 
@@ -164,7 +161,6 @@
 
     private void ActivateProduct(long brandId)
     {
-        ProductSelectDisabled = false;
         Products = ProductService.GetAllForBrand(brandId);
     }
 

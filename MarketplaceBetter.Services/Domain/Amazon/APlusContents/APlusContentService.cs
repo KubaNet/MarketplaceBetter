@@ -120,11 +120,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             _unitOfWork.Save();
         }
 
-        private void TransferValues(APlusContent toAPlusContent, APlusContentModel fromAPlusContent)
+        private void TransferValues(APlusContent toContent, APlusContentModel fromContent)
         {
-            toAPlusContent.Name = fromAPlusContent.Name;
-            toAPlusContent.ProductId = fromAPlusContent.Product.Id;
-            toAPlusContent.InstanceId = fromAPlusContent.Instance.Id;
+            toContent.Name = fromContent.Name;
+            toContent.ProductId = fromContent.Product.Id;
+            toContent.InstanceId = fromContent.Instance.Id;
         }
 
         private IQueryable<APlusContent> ApplyFilter(IQueryable<APlusContent> contents, ListRequest request)

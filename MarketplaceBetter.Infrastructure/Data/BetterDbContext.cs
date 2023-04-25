@@ -27,8 +27,8 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseLazyLoadingProxies();
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<APlusContent>()
                 .HasMany(c => c.Sections)
                 .WithOne(s => s.Content)
@@ -40,10 +40,16 @@ namespace MarketplaceBetter.Infrastructure.Data
                 .WithOne()
                 .HasForeignKey("SectionId")
                 .IsRequired();
-		}
 
-		// Base
-		public DbSet<User> User { get; set; }
+            modelBuilder.Entity<APlusSectionValue>()
+                .HasMany(s => s.Elements)
+                .WithOne()
+                .HasForeignKey("SectionValueId")
+                .IsRequired();
+        }
+
+        // Base
+        public DbSet<User> User { get; set; }
         public DbSet<Instance> Instance { get; set; }
         public DbSet<EntityStatus> EntityStatus { get; set; }
 

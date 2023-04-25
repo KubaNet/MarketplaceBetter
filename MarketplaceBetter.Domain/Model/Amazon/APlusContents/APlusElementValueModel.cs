@@ -12,9 +12,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 
         public APlusElementModel Element { get; set; }
 
-        public string SingleLineTextValue { get; set; }
+        public string SingleLineText { get; set; }
 
-        public string MultipleLineTextValue { get; set; }
+        public string MultiLineText { get; set; }
 
         public APlusImageModel Image { get; set; }
     }
