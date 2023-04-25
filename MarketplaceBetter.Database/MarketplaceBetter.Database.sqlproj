@@ -154,5 +154,6 @@
     <Build Include="dbo\Tables\Amazon\APlusContents\APlusElementValue.sql" />
     <Build Include="dbo\Tables\Amazon\APlusContents\APlusSectionValue.sql" />
     <Build Include="dbo\Tables\Amazon\APlusContents\APlusContent.sql" />
+    <None Include="Scripts\Inserts\10_APlusElements.sql" />
   </ItemGroup>
 </Project>

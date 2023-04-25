@@ -13,5 +13,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
         public string Name { get; set; }
 
         public APlusElementTypeModel Type { get; set; }
+
+        public int? CharactersLimit { get; set; }
+
+        public int Order { get; set; }
     }
 }

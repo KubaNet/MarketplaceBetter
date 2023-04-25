@@ -14,6 +14,8 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
         
         public virtual APlusElementType Type { get; set; }
 
+        public int? CharactersLimit { get; set; }
+
         public int Order { get; set; }
     }
 }

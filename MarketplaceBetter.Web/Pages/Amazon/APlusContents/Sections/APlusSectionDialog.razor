@@ -42,22 +42,17 @@
                 <MudSelectItem Value="content">@content.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" HideSpinButtons="true" Disabled="OrderDisabled" />
+        <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" Max="Standard.APlusSectionsMaxNumber" HideSpinButtons="true" Disabled="OrderDisabled" />
         <MudSelect Label="Type" T="APlusSectionModel" Value="SectionValue.Section" For="() => SectionValue.Section" ValueChanged="HandleSectionChanged">
             @foreach (var sectionItem in Sections)
             {
                 <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
             }
         </MudSelect>
-@*        @foreach (var element in Section.Elements)
+        @foreach (var element in SectionValue.Elements)
         {
-            <MudSelect Label="Section" T="APlusSectionTypeModel" Value="element" For="() => element" ValueChanged="HandleSectionChanged">
-                @foreach (var type in SectionTypes)
-                {
-                    <MudSelectItem Value="type">@type.Name</MudSelectItem>
-                }
-            </MudSelect>
-        }*@
+            
+        }
     </FormDialog>
 </EditForm>
 
