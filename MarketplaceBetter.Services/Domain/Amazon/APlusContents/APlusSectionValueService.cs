@@ -71,13 +71,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			return _mapper.Map<IList<APlusSectionValueModel>>(sections);
 		}
 
-		public int GetNextOrder(long sectionId)
+		public int GetNextOrder(long contentId)
 		{
 			int nextOrder = 1;
 
-			if (_repository.Any(s => s.ContentId == sectionId))
+			if (_repository.Any(s => s.ContentId == contentId))
 			{
-				nextOrder = _repository.Where(s => s.ContentId != sectionId).Max(s => s.Order) + 1;
+				nextOrder = _repository.Where(s => s.ContentId == contentId).Max(s => s.Order) + 1;
 			}
 
 			return nextOrder;
@@ -115,7 +115,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 				{
 					ElementId = fromElement.Element.Id,
 					SingleLineText = fromElement.SingleLineText,
-					MultiLineText = fromElement.MultiLineText,
+					BodyText = string.IsNullOrWhiteSpace(fromElement.BodyText) ? null : fromElement.BodyText,
 					Image = null,
 				});
 			}

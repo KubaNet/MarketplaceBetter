@@ -14,7 +14,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 
         public string SingleLineText { get; set; }
 
-        public string MultiLineText { get; set; }
+        public string BodyText { get; set; }
 
         public long? ImageId { get; set; }
 

@@ -6,8 +6,8 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElementType] WHERE [SystemName] = 2)
     INSERT INTO [dbo].[APlusElementType] ([Name], [SystemName])
-    VALUES ('Multi Line Text', 2)
-ELSE UPDATE [dbo].[APlusElementType] SET [Name] = 'Multi Line Text' WHERE [SystemName] = 2
+    VALUES ('Body Text', 2)
+ELSE UPDATE [dbo].[APlusElementType] SET [Name] = 'Body Text' WHERE [SystemName] = 2
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElementType] WHERE [SystemName] = 3)

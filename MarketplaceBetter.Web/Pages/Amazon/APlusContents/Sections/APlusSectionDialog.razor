@@ -6,6 +6,7 @@
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces;
+@using TinyMCE.Blazor
 
 @inject ISnackbar Snackbar
 @inject IAPlusSectionValueService SectionValueService
@@ -58,9 +59,9 @@
             {
                 case APlusElementTypeEnum.SingleLineText:
                     <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", elementValue.Element.CharactersLimit } })" />
-                        break;
-                case APlusElementTypeEnum.MultiLineText:
-                    <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", elementValue.Element.CharactersLimit } })" />
+                    break;
+                case APlusElementTypeEnum.BodyText:
+                    <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-2 mb-1" />
                     break;
                 case APlusElementTypeEnum.Image:
                     <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" UserAttributes="@(new Dictionary<string, object>() { { "maxlength", elementValue.Element.CharactersLimit } })" />
@@ -92,6 +93,12 @@
 
     private bool ProductDisabled = true;
     private bool OrderDisabled = true;
+
+    private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
+        { "toolbar", "undo redo | bold italic underline | numlist bullist" },
+        { "plugins", "lists" },
+        { "menubar", false }
+    };
 
     protected override void OnInitialized()
     {
@@ -197,7 +204,13 @@
 
         foreach (var element in elements)
         {
-            SectionValue.Elements.Add(new APlusElementValueModel { Element = element });
+            APlusElementValueModel elementValue = new() { Element = element };
+            if (element.Type.SystemName == APlusElementTypeEnum.BodyText)
+            {
+                elementValue.BodyText = element.Name;
+            }
+
+            SectionValue.Elements.Add(elementValue);
         }
     }
 

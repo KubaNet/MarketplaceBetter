@@ -3,7 +3,7 @@
 	[Id]				BIGINT							NOT NULL	IDENTITY,
 	[ElementId]			BIGINT							NOT NULL,
 	[SingleLineText]	NVARCHAR (255)					NULL,
-	[MultiLineText]		NVARCHAR (max)					NULL,
+	[BodyText]			NVARCHAR (max)					NULL,
 	[ImageId]			BIGINT							NULL,
 	[SectionValueId]	BIGINT							NOT NULL,
 	CONSTRAINT			[PK_APlusElementValue]			PRIMARY KEY ([Id]),

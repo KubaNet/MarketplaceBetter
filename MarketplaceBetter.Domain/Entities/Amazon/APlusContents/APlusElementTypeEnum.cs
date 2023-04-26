@@ -12,7 +12,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 
         SingleLineText = 1,
 
-        MultiLineText = 2,
+        BodyText = 2,
 
         Image = 3,
     }
