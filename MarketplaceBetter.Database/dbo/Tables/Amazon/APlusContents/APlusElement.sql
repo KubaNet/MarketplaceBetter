@@ -14,3 +14,6 @@ GO
 
 CREATE UNIQUE INDEX UIX_APlusElement_Section_Order  ON [dbo].[APlusElement] ([SectionId] ASC, [Order] ASC);
 GO
+
+CREATE UNIQUE INDEX UIX_APlusElement_Section_Name  ON [dbo].[APlusElement] ([SectionId] ASC, [Name] ASC);
+GO

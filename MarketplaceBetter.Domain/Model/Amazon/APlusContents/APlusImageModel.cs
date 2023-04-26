@@ -10,9 +10,13 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
     {
         public long Id { get; set; }
 
-        public string FileName { get; set; }
+        public string CloudId { get; set; }
 
-        public string Path { get; set; }
+        public string Version { get; set; }
+
+        public string Url { get; set; }
+
+        public string FileName { get; set; }
 
         public string Keywords { get; set; }
     }
