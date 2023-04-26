@@ -93,7 +93,7 @@
 
 	private async void Edit(long id)
 	{
-		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["APlusSectionValueId"] = id }).Result;
+		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["SectionValueId"] = id }).Result;
 
 		ProcessDialogResult(result);
 	}

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MudBlazor.CategoryTypes;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 {
@@ -103,23 +104,38 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			_unitOfWork.Save();
 		}
 
-		private void TransferValues(APlusSectionValue toSectionValue, APlusSectionValueModel fromSectionValue)
+		private void TransferValues(APlusSectionValue toSection, APlusSectionValueModel fromSection)
 		{
-			toSectionValue.ContentId = fromSectionValue.Content.Id;
-            toSectionValue.Order = fromSectionValue.Order;
-            toSectionValue.SectionId = fromSectionValue.Section.Id;
+			toSection.ContentId = fromSection.Content.Id;
+            toSection.Order = fromSection.Order;
+            toSection.SectionId = fromSection.Section.Id;
 
-			foreach (var fromElement in fromSectionValue.Elements)
+			foreach (var fromElement in fromSection.Elements)
 			{
-				toSectionValue.Elements.Add(new APlusElementValue
+				if (toSection.Id == 0)
 				{
-					ElementId = fromElement.Element.Id,
-					SingleLineText = fromElement.SingleLineText,
-					BodyText = string.IsNullOrWhiteSpace(fromElement.BodyText) ? null : fromElement.BodyText,
-					Image = null,
-				});
+                    APlusElementValue toElement = new APlusElementValue();
+
+					TransferValues(toElement, fromElement);
+
+					toSection.Elements.Add(toElement);
+				}
+				else
+				{
+                    APlusElementValue toElement = toSection.Elements.Single(e => e.Id == fromElement.Id);
+
+					TransferValues(toElement, fromElement);
+				}
 			}
 		}
+
+		private void TransferValues(APlusElementValue toElement, APlusElementValueModel fromElement)
+		{
+			toElement.ElementId = fromElement.Element.Id;
+            toElement.SingleLineText = fromElement.SingleLineText;
+            toElement.BodyText = fromElement.BodyText;
+            toElement.Image = null;
+        }
 
 		private IQueryable<APlusSectionValue> ApplyFilter(IQueryable<APlusSectionValue> sections, ListRequest request)
 		{
