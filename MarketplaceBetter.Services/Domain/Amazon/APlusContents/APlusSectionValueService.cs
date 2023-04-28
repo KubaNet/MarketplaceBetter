@@ -134,8 +134,31 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			toElement.ElementId = fromElement.Element.Id;
             toElement.SingleLineText = fromElement.SingleLineText;
             toElement.BodyText = fromElement.BodyText;
-            toElement.Image = null;
+
+			if (fromElement.Image != null)
+			{
+				if (fromElement.Image.Id == 0)
+				{
+					APlusImage toImage = new APlusImage();
+
+					TransferValues(toImage, fromElement.Image);
+
+					toElement.Image = toImage;
+				}
+				else
+				{
+					TransferValues(toElement.Image, fromElement.Image);
+				}
+			}
         }
+
+		private void TransferValues(APlusImage toImage, APlusImageModel fromImage)
+		{
+			toImage.CloudId = fromImage.CloudId;
+			toImage.Version = fromImage.Version;
+			toImage.Url = fromImage.Url;
+			toImage.Keywords = fromImage.Keywords;
+		}
 
 		private IQueryable<APlusSectionValue> ApplyFilter(IQueryable<APlusSectionValue> sections, ListRequest request)
 		{

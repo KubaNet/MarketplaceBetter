@@ -1,0 +1,33 @@
+﻿
+@if (Category != null)
+{
+    <MudTooltip>
+        <ChildContent>@ShortForm</ChildContent>
+        <TooltipContent>@Category</TooltipContent>
+    </MudTooltip>
+}
+
+@code {
+    [Parameter] public string Category { get; set; }
+
+    private string ShortForm { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (Category == null)
+        {
+            return;
+        }
+
+        if (Category.Contains('>'))
+        {
+            ShortForm = Category.Substring(Category.LastIndexOf('>') + 1);
+        }
+        else
+        {
+            ShortForm = Category;
+        }
+    }
+}

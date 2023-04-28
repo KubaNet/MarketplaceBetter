@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.Base
+namespace MarketplaceBetter.Infrastructure.Mappings.Base
 {
-    public class InstanceProfile : Profile
+    public class UserProfile : Profile
     {
-        public InstanceProfile()
+        public UserProfile()
         {
-            CreateMap<Instance, InstanceModel>();
+            CreateMap<User, UserModel>();
         }
     }
 }

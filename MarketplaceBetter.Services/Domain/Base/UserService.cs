@@ -62,6 +62,8 @@ namespace MarketplaceBetter.Services.Domain.Base
             ExpandedMenuCache = user.ExpandedMenu;
         }
 
+        public IList<UserModel> GetAll() => _mapper.Map<IList<UserModel>>(_repository.GetAll());
+
         public bool IsCorrectPassword(string login, string password)
         {
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))

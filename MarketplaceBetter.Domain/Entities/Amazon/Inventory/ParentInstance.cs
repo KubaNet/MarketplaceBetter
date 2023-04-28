@@ -30,6 +30,8 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
 
         public virtual Template Template { get; set; }
 
+        public string Category { get; set; }
+
         public override string ToString()
         {
             return Sku;

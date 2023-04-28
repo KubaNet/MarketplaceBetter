@@ -1,0 +1,50 @@
+﻿@using MarketplaceBetter.Domain.Model.Base;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
+
+@page "/users"
+@inject IUserService UserService
+
+<MudText Typo="Typo.h4" Class="mt-2">Users</MudText>
+
+<MainBody>
+    <MudTable T="UserModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<UserModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="UserModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="login" T="UserModel">Login</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="ip_address" T="UserModel">Ip Address</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="ip_last_ping" T="UserModel">Ip Last Ping</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Login">@context.Login</MudTd>
+            <MudTd DataLabel="IpAddress">@context.IpAddress</MudTd>
+            <MudTd DataLabel="IpLastPing">@context.IpLastPing</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<UserModel> Table;
+
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private Task<TableData<UserModel>> Reload(TableState state)
+    {
+        IList<UserModel> users = UserService.GetAll();
+
+        return Task.FromResult(new TableData<UserModel>() { TotalItems = users.Count, Items = users });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+}

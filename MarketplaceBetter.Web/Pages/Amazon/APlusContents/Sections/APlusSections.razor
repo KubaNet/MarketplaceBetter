@@ -86,14 +86,18 @@
 
 	private async void Add()
 	{
-		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Section" }).Result;
+		DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+
+		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Section" }, options).Result;
 
 		ProcessDialogResult(result);
 	}
 
 	private async void Edit(long id)
 	{
-		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["SectionValueId"] = id }).Result;
+		DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+
+		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["SectionValueId"] = id }, options).Result;
 
 		ProcessDialogResult(result);
 	}

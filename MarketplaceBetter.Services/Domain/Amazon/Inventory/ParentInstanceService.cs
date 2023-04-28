@@ -150,6 +150,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             toParent.InstanceId = fromParent.Instance.Id;
             toParent.Sku = fromParent.Sku;
             toParent.Asin = fromParent.Asin;
+            toParent.Category = fromParent.Category;
         }
 
         private IQueryable<ParentInstance> ApplyFilter(IQueryable<ParentInstance> parents, ListRequest request)
@@ -187,7 +188,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "product", "brand", "template", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "product", "brand", "template", "category", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -202,6 +203,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "product" => parents.Where(p => p.Product.Name.Contains(searchField.Value)),
                         "brand" => parents.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
                         "template" => parents.Where(p => p.Template.FileName.Contains(searchField.Value)),
+                        "category" => parents.Where(p => p.Category.Contains(searchField.Value)),
                         "product_id" => parents.Where(p => p.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -215,7 +217,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || p.Status.Name.Contains(searchString)
                         || p.Product.Name.Contains(searchString)
                         || p.Product.Brand.Name.Contains(searchString)
-                        || p.Template.FileName.Contains(searchString));
+                        || p.Template.FileName.Contains(searchString)
+                        || p.Category.Contains(searchString));
                 }
             }
 
@@ -236,6 +239,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Name) : parents.OrderByDescending(p => p.Product.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Brand.Name) : parents.OrderByDescending(p => p.Product.Brand.Name),
                     "template" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Template.FileName) : parents.OrderByDescending(p => p.Template.FileName),
+                    "category" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Category) : parents.OrderByDescending(p => p.Category),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

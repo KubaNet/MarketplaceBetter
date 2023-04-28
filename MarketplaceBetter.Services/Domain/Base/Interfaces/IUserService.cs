@@ -11,6 +11,8 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 {
     public interface IUserService
     {
+        IList<UserModel> GetAll();
+
         bool IsCorrectPassword(string login, string password);
 
         void Login(string login);
