@@ -27,10 +27,6 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Attributes
 
         public double? DepthInInches { get; set; }
 
-        public double? LengthInCentimeters { get; set; }
-
-        public double? LengthInInches { get; set; }
-
         public double? WidthInCentimeters { get; set; }
 
         public double? WidthInInches { get; set; }
@@ -38,5 +34,9 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Attributes
         public double? HeightInCentimeters { get; set; }
 
         public double? HeightInInches { get; set; }
+
+        public double? LengthInCentimeters { get; set; }
+
+        public double? LengthInInches { get; set; }
     }
 }

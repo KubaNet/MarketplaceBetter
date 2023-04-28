@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
+using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 
 namespace MarketplaceBetter.Services.Specialized
 {
@@ -25,6 +26,7 @@ namespace MarketplaceBetter.Services.Specialized
         private readonly IRepository<ParentInstance> _parentRepository;
         private readonly IRepository<ChildInstance> _childRepository;
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
+        private readonly IRepository<ProductDimensions> _productDimensionsRepository;
         private readonly IPhotoService _photoService;
         private readonly ICopywritingService _copywritingService;
 
@@ -36,6 +38,7 @@ namespace MarketplaceBetter.Services.Specialized
             _parentRepository = unitOfWork.GetRepository<ParentInstance>();
             _childRepository = unitOfWork.GetRepository<ChildInstance>();
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
+            _productDimensionsRepository = unitOfWork.GetRepository<ProductDimensions>();
             _photoService = photoService;
             _copywritingService = copywritingService;
         }
@@ -52,9 +55,9 @@ namespace MarketplaceBetter.Services.Specialized
             };
 
             CsvWriter csv = new CsvWriter(writer, config);
-            WriteHeader(csv);
-
             ParentInstance parent = _parentRepository.Get(parentId);
+
+            WriteHeader(parent, csv);
             WriteParent(parent, csv);
 
             IList<ChildInstance> childs = _childRepository.Where(c =>
@@ -70,7 +73,7 @@ namespace MarketplaceBetter.Services.Specialized
             return stream;
         }
 
-        private void WriteHeader(CsvWriter csv)
+        private void WriteHeader(ParentInstance parent, CsvWriter csv)
         {
             csv.WriteField("Seller SKU");
             csv.WriteField("Brand Name");
@@ -86,6 +89,15 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField("Bullet Point 3");
             csv.WriteField("Bullet Point 4");
             csv.WriteField("Bullet Point 5");
+            // dimensions
+            if (_productDimensionsRepository.Any(d => d.ProductId == parent.ProductId))
+            {
+                string unit = parent.Instance.SystemName == InstanceEnum.US ? "[in]" : "[cm]";
+                csv.WriteField($"Depth {unit}");
+                csv.WriteField($"Width {unit}");
+                csv.WriteField($"Height {unit}");
+                csv.WriteField($"Length {unit}");
+            }
             // images
             csv.WriteField("Main Image");
             csv.WriteField("Other Image 1");
@@ -126,6 +138,7 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(colorTranslation?.Mapping);
             csv.WriteField(child.Variant.Size.Name);
             WriteCopywriting(csv, child.Variant.ProductId, child.InstanceId);
+            WriteProductDimensions(csv, child);
             WritePhotos(csv, child);
             csv.NextRecord();
         }
@@ -144,6 +157,38 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(bulletPoint4?.Value);
             CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BulletPoint5);
             csv.WriteField(bulletPoint5?.Value);
+        }
+
+        private void WriteProductDimensions(CsvWriter csv, ChildInstance child)
+        {
+            if (_productDimensionsRepository.Any(d => d.ProductId == child.Variant.ProductId))
+            {
+                ProductDimensions dimensions = _productDimensionsRepository.SingleOrDefault(d => d.ProductId == child.Variant.ProductId && d.SizeId == child.Variant.SizeId);
+                if (dimensions == null)
+                {
+                    csv.WriteField(null);
+                    csv.WriteField(null);
+                    csv.WriteField(null);
+                    csv.WriteField(null);
+
+                    return;
+                }
+
+                if (child.Instance.SystemName == InstanceEnum.US)
+                {
+                    csv.WriteField(dimensions.DepthInInches);
+                    csv.WriteField(dimensions.WidthInInches);
+                    csv.WriteField(dimensions.HeightInInches);
+                    csv.WriteField(dimensions.LengthInInches);
+                }
+                else
+                {
+                    csv.WriteField(dimensions.DepthInCentimeters);
+                    csv.WriteField(dimensions.WidthInCentimeters);
+                    csv.WriteField(dimensions.HeightInCentimeters);
+                    csv.WriteField(dimensions.LengthInCentimeters);
+                }
+            }
         }
 
         private void WritePhotos(CsvWriter csv, ChildInstance child)

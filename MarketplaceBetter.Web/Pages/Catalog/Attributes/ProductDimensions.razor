@@ -1,4 +1,7 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.Attributes;
+﻿@using MarketplaceBetter.Domain.Entities.Base;
+@using MarketplaceBetter.Domain.Model.Base;
+@using MarketplaceBetter.Domain.Model.Catalog.Attributes;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Attributes.Interfaces;
 @using MarketplaceBetter.Services.Model;
 
@@ -6,6 +9,7 @@
 
 @inject ISnackbar Snackbar
 @inject IProductDimensionsService DimensionsService
+@inject IUserService UserService
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">Product Dimensions</MudText>
@@ -21,32 +25,92 @@
             <MudTh><MudTableSortLabel SortLabel="id" T="ProductDimensionsModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="product" T="ProductDimensionsModel">Product</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="size" T="ProductDimensionsModel">Size</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="weight_g" T="ProductDimensionsModel">Weight [g]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="weight_lb" T="ProductDimensionsModel">Weight [lb]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="depth_cm" T="ProductDimensionsModel">Depth [cm]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="depth_in" T="ProductDimensionsModel">Depth [in]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="width_cm" T="ProductDimensionsModel">Width [cm]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="width_in" T="ProductDimensionsModel">Width [in]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="height_cm" T="ProductDimensionsModel">Height [cm]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="height_in" T="ProductDimensionsModel">Height [in]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="length_cm" T="ProductDimensionsModel">Length [cm]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="length_in" T="ProductDimensionsModel">Length [in]</MudTableSortLabel></MudTh>
+            @if (ShowEUMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="weight_g" T="ProductDimensionsModel">Weight [g]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="weight_lb" T="ProductDimensionsModel">Weight [lb]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="depth_cm" T="ProductDimensionsModel">Depth [cm]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="depth_in" T="ProductDimensionsModel">Depth [in]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="width_cm" T="ProductDimensionsModel">Width [cm]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="width_in" T="ProductDimensionsModel">Width [in]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="height_cm" T="ProductDimensionsModel">Height [cm]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="height_in" T="ProductDimensionsModel">Height [in]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="length_cm" T="ProductDimensionsModel">Length [cm]</MudTableSortLabel></MudTh>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTh><MudTableSortLabel SortLabel="length_in" T="ProductDimensionsModel">Length [in]</MudTableSortLabel></MudTh>
+            }
             <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd>@context.Id</MudTd>
             <MudTd DataLabel="Product">@context.Product.Code</MudTd>
             <MudTd DataLabel="Size">@context.Size.Name</MudTd>
-            <MudTd DataLabel="Weight [g]">@context.WeightInGrams.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Weight [lb]">@context.WeightInPounds.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Depth [cm]">@context.DepthInCentimeters.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Depth [in]">@context.DepthInInches.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Width [cm]">@context.WidthInCentimeters.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Width [in]">@context.WidthInInches.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Height [cm]">@context.HeightInCentimeters.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Height [in]">@context.HeightInInches.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Length [cm]">@context.LengthInCentimeters.ToTwoDecimalDigits()</MudTd>
-            <MudTd DataLabel="Length [in]">@context.LengthInInches.ToTwoDecimalDigits()</MudTd>
+            @if (ShowEUMetrics)
+            {
+                <MudTd DataLabel="Weight [g]">@context.WeightInGrams.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTd DataLabel="Weight [lb]">@context.WeightInPounds.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTd DataLabel="Depth [cm]">@context.DepthInCentimeters.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTd DataLabel="Depth [in]">@context.DepthInInches.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTd DataLabel="Width [cm]">@context.WidthInCentimeters.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTd DataLabel="Width [in]">@context.WidthInInches.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTd DataLabel="Height [cm]">@context.HeightInCentimeters.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTd DataLabel="Height [in]">@context.HeightInInches.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowEUMetrics)
+            {
+                <MudTd DataLabel="Length [cm]">@context.LengthInCentimeters.ToTwoDecimalDigits()</MudTd>
+            }
+            @if (ShowUSMetrics)
+            {
+                <MudTd DataLabel="Length [in]">@context.LengthInInches.ToTwoDecimalDigits()</MudTd>
+            }
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
@@ -70,12 +134,23 @@
     private ListRequest ListRequest = new();
 
     private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+    private bool ShowUSMetrics;
+    private bool ShowEUMetrics;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         ProcessQueryParameters();
+        DecideMetrics();
+    }
+
+    private void DecideMetrics()
+    {
+        InstanceModel currentInstance = UserService.GetCurrentInstance();
+
+        ShowUSMetrics = currentInstance.SystemName == InstanceEnum.US || currentInstance.SystemName == InstanceEnum.All;
+        ShowEUMetrics = currentInstance.SystemName != InstanceEnum.US;
     }
 
     private void ProcessQueryParameters()
