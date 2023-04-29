@@ -5,12 +5,16 @@
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+@using MarketplaceBetter.Services.Model;
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces;
+@using System.IO;
 @using TinyMCE.Blazor
 
 @inject ISnackbar Snackbar
 @inject IAPlusSectionValueService SectionValueService
 @inject IAPlusSectionValueValidator SectionValueValidator
+@inject IAPlusImageCloudService ImageCloudService
 @inject IAPlusContentService ContentService
 @inject IAPlusSectionService SectionService
 @inject IInstanceService InstanceService
@@ -20,69 +24,71 @@
 
 <EditForm Model="SectionValue" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <FormDialog Title=@Title>
-        <DataAnnotationsValidator />
-        <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
-            @foreach (var brand in Brands)
+    <CascadingValue Value="FormButtonsDisabled">
+        <FormDialog Title=@Title>
+            <DataAnnotationsValidator />
+            <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
+                @foreach (var brand in Brands)
+                {
+                    <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect Label="Product" T="ProductModel" Value="Product" For="() => Product" ValueChanged="HandleProductChanged" Disabled="ProductDisabled">
+                @foreach (var product in Products)
+                {
+                    <MudSelectItem Value="product">@product.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
+                @foreach (var instance in Instances)
+                {
+                    <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect Label="Content" T="APlusContentModel" Value="SectionValue.Content" For="() => SectionValue.Content" ValueChanged="HandleContentChanged">
+                @foreach (var content in Contents)
+                {
+                    <MudSelectItem Value="content">@content.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" Max="Standard.APlusSectionsMaxNumber" HideSpinButtons="true" Disabled="OrderDisabled" />
+            <MudSelect Label="Type" T="APlusSectionModel" Value="SectionValue.Section" For="() => SectionValue.Section" ValueChanged="HandleSectionChanged">
+                @foreach (var sectionItem in Sections)
+                {
+                    <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
+                }
+            </MudSelect>
+            @foreach (var elementValue in SectionValue.Elements)
             {
-                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+                @switch (elementValue.Element.Type.SystemName)
+                {
+                    case APlusElementTypeEnum.SingleLineText:
+                        <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
+                        break;
+                    case APlusElementTypeEnum.BodyText:
+                        <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-2 mb-1" />
+                        break;
+                    case APlusElementTypeEnum.Image:
+                        string inputName = $"FileInput_{elementValue.Element.Name.Replace(' ', '_')}";
+                        <InputFile id="@inputName" OnChange="AssignImage" hidden />
+                        <MudButton HtmlTag="label" OnClick="(() => SetCurrentElement(elementValue))" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@inputName" Class="mt-4">
+                            Upload @elementValue.Element.Name
+                        </MudButton>
+                        @if (Images.ContainsKey(elementValue.Element.Name))
+                        {
+                            <MudList>
+                                <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                                    @Images[elementValue.Element.Name].Name <code>@Images[elementValue.Element.Name].Size bytes</code>
+                                </MudListItem>
+                            </MudList>
+                        }
+                        break;
+                    default:
+                        throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+                }
             }
-        </MudSelect>
-        <MudSelect Label="Product" T="ProductModel" Value="Product" For="() => Product" ValueChanged="HandleProductChanged" Disabled="ProductDisabled">
-            @foreach (var product in Products)
-            {
-                <MudSelectItem Value="product">@product.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
-            @foreach (var instance in Instances)
-            {
-                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudSelect Label="Content" T="APlusContentModel" Value="SectionValue.Content" For="() => SectionValue.Content" ValueChanged="HandleContentChanged">
-            @foreach (var content in Contents)
-            {
-                <MudSelectItem Value="content">@content.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" Max="Standard.APlusSectionsMaxNumber" HideSpinButtons="true" Disabled="OrderDisabled" />
-        <MudSelect Label="Type" T="APlusSectionModel" Value="SectionValue.Section" For="() => SectionValue.Section" ValueChanged="HandleSectionChanged">
-            @foreach (var sectionItem in Sections)
-            {
-                <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
-            }
-        </MudSelect>
-        @foreach (var elementValue in SectionValue.Elements)
-        {
-            @switch (elementValue.Element.Type.SystemName)
-            {
-                case APlusElementTypeEnum.SingleLineText:
-                    <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
-                    break;
-                case APlusElementTypeEnum.BodyText:
-                    <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-2 mb-1" />
-                    break;
-                case APlusElementTypeEnum.Image:
-                    string inputName = $"FileInput_{elementValue.Element.Name.Replace(' ', '_')}";
-                    <InputFile id="@inputName" OnChange="AssignImage" hidden />
-                    <MudButton HtmlTag="label" OnClick="(() => SetCurrentElement(elementValue))" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@inputName" Class="mt-4">
-                        Upload @elementValue.Element.Name
-                    </MudButton>
-                    @if (Images.ContainsKey(elementValue.Element.Name))
-                    {
-                        <MudList>
-                            <MudListItem Icon="@Icons.Material.Filled.AttachFile">
-                                @Images[elementValue.Element.Name].Name <code>@Images[elementValue.Element.Name].Size bytes</code>
-                            </MudListItem>
-                        </MudList>
-                    }
-                    break;
-                default:
-                    throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
-            }
-        }
-    </FormDialog>
+        </FormDialog>
+    </CascadingValue>
 </EditForm>
 
 @code {
@@ -106,6 +112,7 @@
 
     private bool ProductDisabled = true;
     private bool OrderDisabled = true;
+    private bool FormButtonsDisabled = false;
     private APlusElementValueModel CurrentElement;
 
     private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
@@ -241,12 +248,31 @@
         Images.Add(CurrentElement.Element.Name, changeEvent.File);
     }
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
         ValidationResult result = SectionValueValidator.Validate(SectionValue);
 
         if (result.IsValid)
         {
+            FormButtonsDisabled = true;
+
+            foreach (var image in Images)
+            {
+                MemoryStream imageStream = new MemoryStream();
+                await image.Value.OpenReadStream(Standard.UploadPhotoSizeLimit).CopyToAsync(imageStream);
+                imageStream.Seek(0, SeekOrigin.Begin);
+
+                APlusImageUploadResult uploadResult = ImageCloudService.Upload(imageStream, image.Value.Name);
+
+                SectionValue.Elements.Single(e => e.Element.Name == image.Key).Image = new APlusImageModel
+                    {
+                        CloudId = uploadResult.CloudId,
+                        Version = uploadResult.Version,
+                        Url = uploadResult.Url,
+                        FileName = image.Value.Name
+                    };
+            }
+
             if (IsEdit)
             {
                 SectionValueService.Update(SectionValue);

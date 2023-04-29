@@ -1,0 +1,33 @@
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+
+@foreach (var elementValue in Elements)
+{
+    switch (elementValue.Element.Type.SystemName)
+    {
+        case APlusElementTypeEnum.SingleLineText:
+            bool hasValue = !string.IsNullOrWhiteSpace(elementValue.SingleLineText);
+            if (hasValue)
+            {
+                <MudTooltip>
+                    <ChildContent><span style="color: @BetterTheme.Palette.Primary; font-weight: bold;">@elementValue.Element.Name</span></ChildContent>
+                    <TooltipContent>@elementValue.SingleLineText</TooltipContent>
+                </MudTooltip>
+            }
+            else
+            {
+                <p>@elementValue.Element.Name</p>
+            }
+            break;
+        default:
+            <p>@elementValue.Element.Name</p>
+            break;
+    }
+}
+
+@code {
+    [CascadingParameter]
+    private MudTheme BetterTheme { get; set; }
+
+    [Parameter] public IList<APlusElementValueModel> Elements { get; set; }
+}

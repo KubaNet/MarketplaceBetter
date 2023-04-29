@@ -20,6 +20,7 @@
 			<MudTh><MudTableSortLabel SortLabel="id" T="APlusSectionValueModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="content" T="APlusSectionValueModel">Content</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="name" T="APlusSectionValueModel">Name</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="elements" T="APlusSectionValueModel">Elements</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">Order</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 100px;">Actions</MudTh>
 		</HeaderContent>
@@ -27,6 +28,7 @@
 			<MudTd DataLabel="Id">@context.Id</MudTd>
 			<MudTd DataLabel="Content">@context.Content.Name</MudTd>
 			<MudTd DataLabel="Name">@context.Section.Name</MudTd>
+			<MudTd DataLabel="Elements"><APlusElementsDisplay Elements="context.Elements" /></MudTd>
 			<MudTd DataLabel="Order">@context.Order</MudTd>
 			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
 		</RowTemplate>

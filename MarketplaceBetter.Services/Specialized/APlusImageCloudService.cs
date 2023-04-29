@@ -37,7 +37,7 @@ namespace MarketplaceBetter.Services.Specialized
 		public APlusImageUploadResult Upload(MemoryStream imageStream, string fileName)
 		{
 			fileName = ClearFileName(fileName);
-			string fullFileName = $"a_plus_images/{_instanceFolder}/{fileName}";
+			string fullFileName = $"APlusImages/{_instanceFolder}/{fileName}";
 
 			ImageUploadParams parameters = new ImageUploadParams
 			{

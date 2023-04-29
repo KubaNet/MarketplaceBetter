@@ -75,9 +75,11 @@
                 <Menu />
             </MudDrawer>
             <MudMainContent>
-                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-                    @Body
-                </MudContainer>
+                <CascadingValue Value="@BetterTheme">
+                    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+                        @Body
+                    </MudContainer>
+                </CascadingValue>
             </MudMainContent>
         </MudLayout>
     </Authorized>

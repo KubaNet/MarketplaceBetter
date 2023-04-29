@@ -17,7 +17,5 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
         public string Url { get; set; }
 
         public string FileName { get; set; }
-
-        public string Keywords { get; set; }
     }
 }

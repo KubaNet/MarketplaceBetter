@@ -133,7 +133,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 		{
 			toElement.ElementId = fromElement.Element.Id;
             toElement.SingleLineText = fromElement.SingleLineText;
-            toElement.BodyText = fromElement.BodyText;
+			if (fromElement.Element.Type.SystemName == APlusElementTypeEnum.BodyText && !fromElement.BodyText.Equals("<p>Body text</p>"))
+			{
+                toElement.BodyText = fromElement.BodyText;
+            }
 
 			if (fromElement.Image != null)
 			{
@@ -157,7 +160,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			toImage.CloudId = fromImage.CloudId;
 			toImage.Version = fromImage.Version;
 			toImage.Url = fromImage.Url;
-			toImage.Keywords = fromImage.Keywords;
+			toImage.FileName = fromImage.FileName;
 		}
 
 		private IQueryable<APlusSectionValue> ApplyFilter(IQueryable<APlusSectionValue> sections, ListRequest request)
