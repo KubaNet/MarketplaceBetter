@@ -12,6 +12,8 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
 	{
 		APlusImageUploadResult Upload(MemoryStream imageStream, string fileName);
 
+        string GetOriginalUrl(string cloudId, string version);
+
         string GetBiggerUrlForLists(string cloudId, string version);
     }
 }

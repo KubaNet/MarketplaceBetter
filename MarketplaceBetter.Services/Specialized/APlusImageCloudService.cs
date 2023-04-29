@@ -52,6 +52,11 @@ namespace MarketplaceBetter.Services.Specialized
 			return uploadResult;
 		}
 
+        public string GetOriginalUrl(string cloudId, string version)
+        {
+            return _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
+        }
+
         public string GetBiggerUrlForLists(string cloudId, string version)
         {
             return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Height(700).Width(1000).Crop("limit")).BuildUrl(cloudId);

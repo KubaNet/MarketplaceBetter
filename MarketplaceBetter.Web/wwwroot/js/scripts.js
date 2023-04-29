@@ -20,3 +20,33 @@ function TriggerFileDownload(fileName, url) {
     anchorElement.click();
     anchorElement.remove();
 }
+
+function CopyTextToClipboard(text) {
+    navigator.clipboard.writeText(text);
+}
+
+async function CopyRichTextToClipboard(elementId) {
+    const content = document.getElementById(elementId);
+
+    const clipboardItem = new ClipboardItem({
+        "text/plain": new Blob(
+            [content.innerText],
+            { type: "text/plain" }
+        ),
+        "text/html": new Blob(
+            [content.outerHTML],
+            { type: "text/html" }
+        ),
+    });
+
+    await navigator.clipboard.write([clipboardItem]);
+}
+
+async function CopyImageToClipboard(url) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob }),
+    ]);
+}

@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Specialized.Interfaces
 
 @inject IAPlusImageCloudService ImageCloudService
+@inject IJSRuntime JS
 
 @foreach (var elementValue in Elements)
 {
@@ -22,7 +23,7 @@
         case APlusElementTypeEnum.SingleLineText:
             <div>
                 <MudTooltip Placement="Placement.Right">
-                    <ChildContent><span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @($"{BetterTheme.Palette.Primary}"); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <ChildContent><span @onclick="() => CopyElement(elementName)" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
                     <TooltipContent>Click to copy</TooltipContent>
                 </MudTooltip>
                 <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
@@ -33,11 +34,11 @@
         case APlusElementTypeEnum.BodyText:
             <div>
                 <MudTooltip Placement="Placement.Right">
-                    <ChildContent><span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @($"{BetterTheme.Palette.Primary}"); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <ChildContent><span @onclick="() => CopyElement(elementName)" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
                     <TooltipContent>Click to copy</TooltipContent>
                 </MudTooltip>
                 <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
-                    <div class="body-text-display">
+                    <div id="BodyText_@(elementName.Replace(' ', '_'))" class="body-text-display">
                         @((MarkupString)elementValue.BodyText)
                     </div>
                 </MudPopover>
@@ -46,7 +47,11 @@
         case APlusElementTypeEnum.Image:
             <div>
                 <MudTooltip Placement="Placement.Right">
-                    <ChildContent><span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @($"{BetterTheme.Palette.Primary}"); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <ChildContent>
+                        <MudLink Typo="Typo.body2" Href="@ImageCloudService.GetOriginalUrl(elementValue.Image.CloudId, elementValue.Image.Version)" Target="_blank" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" Class="ml-3" Style="font-weight: bold; text-decoration: none;">
+                            @elementValue.Element.Name                        
+                        </MudLink>
+                    </ChildContent>
                     <TooltipContent>Click to open in new window</TooltipContent>
                 </MudTooltip>
                 <MudPopover Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
@@ -85,5 +90,21 @@
     private void HideElement(string elementName)
     {
         OpenInfo[elementName] = false;
+    }
+
+    private async void CopyElement(string elementName)
+    {
+        APlusElementValueModel elementValue = Elements.Single(e => e.Element.Name == elementName);
+        switch (elementValue.Element.Type.SystemName)
+        {
+            case APlusElementTypeEnum.SingleLineText:
+                await JS.InvokeVoidAsync("CopyTextToClipboard", elementValue.SingleLineText);
+                break;
+            case APlusElementTypeEnum.BodyText:
+                await JS.InvokeVoidAsync("CopyRichTextToClipboard", $"BodyText_{elementValue.Element.Name.Replace(' ', '_')}");
+                break;
+            default:
+                throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+        }
     }
 }
