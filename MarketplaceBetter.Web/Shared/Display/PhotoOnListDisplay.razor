@@ -5,11 +5,11 @@
 @inject NavigationManager NavigationManager
 
 <div>
-    <MudLink Href="@PhotoCloudService.GetOriginalPhotoUrl(CloudId, Version)" Target="_blank">
-        <MudImage Src="@PhotoCloudService.GetPhotoUrlForLists(CloudId, Version, Size)" @onmouseenter="ShowBiggerImage" @onmouseleave="HideBiggerImage" />
+    <MudLink Href="@PhotoCloudService.GetOriginalUrl(CloudId, Version)" Target="_blank">
+        <MudImage Src="@PhotoCloudService.GetUrlForLists(CloudId, Version, Size)" @onmouseenter="ShowBiggerImage" @onmouseleave="HideBiggerImage" />
     </MudLink>
     <MudPopover Open="Open" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
-        <MudImage Src="@PhotoCloudService.GetBiggerPhotoUrlForLists(CloudId, Version)" />
+        <MudImage Src="@PhotoCloudService.GetBiggerUrlForLists(CloudId, Version)" />
     </MudPopover>
 </div>
 

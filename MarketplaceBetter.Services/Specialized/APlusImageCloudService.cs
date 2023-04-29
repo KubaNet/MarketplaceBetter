@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Specialized
 {
-	internal class APlusImageCloudService : IAPlusImageCloudService
+	public class APlusImageCloudService : IAPlusImageCloudService
 	{
 		private readonly IConfiguration _configuration;
 		private readonly Cloudinary _cloudinary;
@@ -52,7 +52,12 @@ namespace MarketplaceBetter.Services.Specialized
 			return uploadResult;
 		}
 
-		private string ClearFileName(string fileName)
+        public string GetBiggerUrlForLists(string cloudId, string version)
+        {
+            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Height(700).Width(1000).Crop("limit")).BuildUrl(cloudId);
+        }
+
+        private string ClearFileName(string fileName)
 		{
 			foreach (var format in _allowedFormats)
 			{

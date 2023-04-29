@@ -90,17 +90,17 @@ namespace MarketplaceBetter.Specialized
             return uploadResult;
         }
 
-        public string GetOriginalPhotoUrl(string cloudId, string version)
+        public string GetOriginalUrl(string cloudId, string version)
         {
             return _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
         }
 
-        public string GetPhotoFormat(string cloudId)
+        public string GetFormat(string cloudId)
         {
             return _cloudinary.GetResource(cloudId).Format;
         }
 
-        public string GetPhotoUrlForLists(string cloudId, string version, PhotoOnListSizeEnum size)
+        public string GetUrlForLists(string cloudId, string version, PhotoOnListSizeEnum size)
         {
             int width;
             switch (size)
@@ -121,9 +121,9 @@ namespace MarketplaceBetter.Specialized
             return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(width)).BuildUrl(cloudId);
         }
 
-        public string GetBiggerPhotoUrlForLists(string cloudId, string version)
+        public string GetBiggerUrlForLists(string cloudId, string version)
         {
-            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Height(700)).BuildUrl(cloudId);
+            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Height(700).Width(1000).Crop("limit")).BuildUrl(cloudId);
         }
 
         public void Delete(string cloudId)

@@ -11,5 +11,7 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
 	public interface IAPlusImageCloudService
 	{
 		APlusImageUploadResult Upload(MemoryStream imageStream, string fileName);
-	}
+
+        string GetBiggerUrlForLists(string cloudId, string version);
+    }
 }

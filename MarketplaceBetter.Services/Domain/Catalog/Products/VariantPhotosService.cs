@@ -90,8 +90,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 return;
             }
 
-            string url = _photoCloudService.GetOriginalPhotoUrl(photo.CloudId, photo.Version);
-            string format = _photoCloudService.GetPhotoFormat(photo.CloudId);
+            string url = _photoCloudService.GetOriginalUrl(photo.CloudId, photo.Version);
+            string format = _photoCloudService.GetFormat(photo.CloudId);
 
             string fileName = $"{variant.Asin}.{photo.Type.AmazonUploadCode}.{format}";
 

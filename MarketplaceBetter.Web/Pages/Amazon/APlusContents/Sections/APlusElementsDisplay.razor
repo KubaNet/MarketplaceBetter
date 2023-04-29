@@ -1,27 +1,61 @@
 ﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Services.Specialized.Interfaces
+
+@inject IAPlusImageCloudService ImageCloudService
 
 @foreach (var elementValue in Elements)
 {
+    string elementName = elementValue.Element.Name;
+    bool hasValue = !string.IsNullOrWhiteSpace(elementValue.SingleLineText) || !string.IsNullOrWhiteSpace(elementValue.BodyText)
+        || elementValue.Image != null;
+
+    if (!hasValue)
+    {
+        <p class="ml-3">@elementValue.Element.Name</p>
+
+        continue;
+    }
+
     switch (elementValue.Element.Type.SystemName)
     {
         case APlusElementTypeEnum.SingleLineText:
-            bool hasValue = !string.IsNullOrWhiteSpace(elementValue.SingleLineText);
-            if (hasValue)
-            {
-                <MudTooltip>
-                    <ChildContent><span style="color: @BetterTheme.Palette.Primary; font-weight: bold;">@elementValue.Element.Name</span></ChildContent>
-                    <TooltipContent>@elementValue.SingleLineText</TooltipContent>
+            <div>
+                <MudTooltip Placement="Placement.Right">
+                    <ChildContent><span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @($"{BetterTheme.Palette.Primary}"); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <TooltipContent>Click to copy</TooltipContent>
                 </MudTooltip>
-            }
-            else
-            {
-                <p>@elementValue.Element.Name</p>
-            }
+                <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
+                    <span>@elementValue.SingleLineText</span>
+                </MudPopover>
+            </div>
+            break;
+        case APlusElementTypeEnum.BodyText:
+            <div>
+                <MudTooltip Placement="Placement.Right">
+                    <ChildContent><span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @($"{BetterTheme.Palette.Primary}"); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <TooltipContent>Click to copy</TooltipContent>
+                </MudTooltip>
+                <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
+                    <div class="body-text-display">
+                        @((MarkupString)elementValue.BodyText)
+                    </div>
+                </MudPopover>
+            </div>
+            break;
+        case APlusElementTypeEnum.Image:
+            <div>
+                <MudTooltip Placement="Placement.Right">
+                    <ChildContent><span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @($"{BetterTheme.Palette.Primary}"); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <TooltipContent>Click to open in new window</TooltipContent>
+                </MudTooltip>
+                <MudPopover Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
+                    <MudImage Src="@ImageCloudService.GetBiggerUrlForLists(elementValue.Image.CloudId, elementValue.Image.Version)" />
+                </MudPopover>
+            </div>
             break;
         default:
-            <p>@elementValue.Element.Name</p>
-            break;
+            throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
     }
 }
 
@@ -30,4 +64,26 @@
     private MudTheme BetterTheme { get; set; }
 
     [Parameter] public IList<APlusElementValueModel> Elements { get; set; }
+
+    private IDictionary<string, bool> OpenInfo = new Dictionary<string, bool>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        foreach (var elementValue in Elements)
+        {
+            OpenInfo.Add(elementValue.Element.Name, false);
+        }
+    }
+
+    private void ShowElement(string elementName)
+    {
+        OpenInfo[elementName] = true;
+    }
+
+    private void HideElement(string elementName)
+    {
+        OpenInfo[elementName] = false;
+    }
 }
