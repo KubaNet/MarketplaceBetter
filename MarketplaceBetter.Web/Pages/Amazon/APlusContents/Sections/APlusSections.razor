@@ -4,125 +4,146 @@
 
 @page "/a-plus-sections"
 
+@inject ISnackbar Snackbar
 @inject IAPlusSectionValueService APlusSectionValueService
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">A+ Sections</MudText>
 
 <MainBody>
-	<MudTable T="APlusSectionValueModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusSectionValueModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
-		<ToolBarContent>
-			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
-			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Section</MudButton>
-		</ToolBarContent>
-		<HeaderContent>
-			<MudTh><MudTableSortLabel SortLabel="id" T="APlusSectionValueModel">Id</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="content" T="APlusSectionValueModel">Content</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="name" T="APlusSectionValueModel">Name</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="elements" T="APlusSectionValueModel">Elements</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">Order</MudTableSortLabel></MudTh>
-			<MudTh Style="width: 100px;">Actions</MudTh>
-		</HeaderContent>
-		<RowTemplate>
-			<MudTd DataLabel="Id">@context.Id</MudTd>
-			<MudTd DataLabel="Content">@context.Content.Name</MudTd>
-			<MudTd DataLabel="Name">@context.Section.Name</MudTd>
-			<MudTd DataLabel="Elements"><APlusElementsDisplay Elements="context.Elements" /></MudTd>
-			<MudTd DataLabel="Order">@context.Order</MudTd>
-			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
-		</RowTemplate>
-		<PagerContent>
-			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
-		</PagerContent>
-	</MudTable>
+    <MudTable T="APlusSectionValueModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusSectionValueModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Section</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="APlusSectionValueModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="content" T="APlusSectionValueModel">Content</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="APlusSectionValueModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="elements" T="APlusSectionValueModel">Elements</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">Order</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 170px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Content">@context.Content.Name</MudTd>
+            <MudTd DataLabel="Name">@context.Section.Name</MudTd>
+            <MudTd DataLabel="Elements"><APlusElementsDisplay Elements="context.Elements" /></MudTd>
+            <MudTd DataLabel="Order">@context.Order</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context))">Delete</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
 </MainBody>
 
 @code {
-	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public string ContentName { get; set; }
 
-	private MudTable<APlusSectionValueModel> Table;
-	private ListRequest ListRequest = new();
+    private MudTable<APlusSectionValueModel> Table;
+    private ListRequest ListRequest = new();
 
-	private HashSet<APlusSectionValueModel> SelectedAPlusSections = new HashSet<APlusSectionValueModel>();
-	private bool NoneSelected = true;
-	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+    private HashSet<APlusSectionValueModel> SelectedAPlusSections = new HashSet<APlusSectionValueModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		ProcessQueryParameters();		
-	}
+        ProcessQueryParameters();
+    }
 
-	private void ProcessQueryParameters()
-	{
-		if (!String.IsNullOrWhiteSpace(SearchString))
-		{
-			ListRequest.SearchString = SearchString;
-		}
-	}
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+        if (!String.IsNullOrWhiteSpace(ContentName))
+        {
+            ListRequest.SearchString = $"content: {ContentName}";
+        }
+    }
 
-	private Task<TableData<APlusSectionValueModel>> Reload(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    private Task<TableData<APlusSectionValueModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<APlusSectionValueModel> sections = APlusSectionValueService.GetForListRequest(ListRequest);
+        IList<APlusSectionValueModel> sections = APlusSectionValueService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<APlusSectionValueModel>() { TotalItems = APlusSectionValueService.CountForListRequest(ListRequest), Items = sections });
-	}
+        return Task.FromResult(new TableData<APlusSectionValueModel>() { TotalItems = APlusSectionValueService.CountForListRequest(ListRequest), Items = sections });
+    }
 
-	private void OnRowsPerPageChanged(int rowsPerPage)
-	{
-		CurrentRowsPerPageValue = rowsPerPage;
-	}
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
 
-	private void Filter(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
-	private async void Add()
-	{
-		DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+    private async void Add()
+    {
+        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Section" }, options).Result;
+        var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Section" }, options).Result;
 
-		ProcessDialogResult(result);
-	}
+        ProcessDialogResult(result);
+    }
 
-	private async void Edit(long id)
-	{
-		DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+    private async void Edit(long id)
+    {
+        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-		var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["SectionValueId"] = id }, options).Result;
+        var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["SectionValueId"] = id }, options).Result;
 
-		ProcessDialogResult(result);
-	}
+        ProcessDialogResult(result);
+    }
 
-	private void ProcessDialogResult(DialogResult result)
-	{
-		if (!result.Canceled)
-		{
-			Table.ReloadServerData();
-		}
-	}
+    private async void Delete(APlusSectionValueModel sectionValue)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete section <b>{ sectionValue.Section.Name }</b> for content <b>{ sectionValue.Content.Name }</b> ?" }).Result;
 
-	private void OnSelectedItemsChanged(HashSet<APlusSectionValueModel> selectedAPlusSections)
-	{
-		SelectedAPlusSections = selectedAPlusSections;
+        if (!result.Canceled)
+        {
+            await Table.ReloadServerData();
 
-		if (SelectedAPlusSections.Any())
-		{
-			NoneSelected = false;
-		}
-		else
-		{
-			NoneSelected = true;
-		}
-	}
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Section"));
+        }
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<APlusSectionValueModel> selectedAPlusSections)
+    {
+        SelectedAPlusSections = selectedAPlusSections;
+
+        if (SelectedAPlusSections.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
 }

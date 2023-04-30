@@ -19,6 +19,7 @@
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="APlusContentModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="name" T="APlusContentModel">Name</MudTableSortLabel></MudTh>
+			<MudTh>Sections</MudTh>
 			<MudTh><MudTableSortLabel SortLabel="product" T="APlusContentModel">Product</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="brand" T="APlusContentModel">Brand</MudTableSortLabel></MudTh>
@@ -27,6 +28,7 @@
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
 			<MudTd DataLabel="Name">@context.Name</MudTd>
+			<MudTd DataLabel="Sections"><APlusSectionsDisplay Content="@context" /></MudTd>
 			<MudTd DataLabel="Product">@context.Product.Code</MudTd>
 			<MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
 			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>

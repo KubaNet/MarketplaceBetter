@@ -44,7 +44,7 @@
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
             <MudTd>
-                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Delete(context.Id, context.Type.Name, context.Variant.Sku))" Color="Color.Secondary">Delete</MudButton>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context.Id, context.Type.Name, context.Variant.Sku))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>

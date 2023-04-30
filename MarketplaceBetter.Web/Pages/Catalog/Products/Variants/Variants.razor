@@ -42,9 +42,9 @@
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context.Id, context.Sku))">Delete</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context.Id, context.Sku))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>

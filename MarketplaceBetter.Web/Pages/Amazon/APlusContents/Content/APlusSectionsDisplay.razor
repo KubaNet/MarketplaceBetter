@@ -1,0 +1,22 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+
+@if (Content.Sections.Any())
+{
+    <MudLink Href="@Link" title="Click to see" Style="text-decoration: none;">@Content.Sections.Count sections</MudLink>
+}
+
+@code {
+    [Parameter] public APlusContentModel Content { get; set; }
+
+    private string Link;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (Content.Sections.Any())
+        {
+            Link = $"a-plus-sections?ContentName={ Content.Name }";
+        }
+    }
+}
