@@ -78,7 +78,7 @@
                         {
                             <MudList>
                                 <MudListItem Icon="@Icons.Material.Filled.AttachFile">
-                                    @Images[elementValue.Element.Name].Name <code>@Images[elementValue.Element.Name].Size bytes</code>
+                                    @Images[elementValue.Element.Name].Name <code>(@Images[elementValue.Element.Name].Size.BytesToKilobytes() KB)</code>
                                 </MudListItem>
                             </MudList>
                         }

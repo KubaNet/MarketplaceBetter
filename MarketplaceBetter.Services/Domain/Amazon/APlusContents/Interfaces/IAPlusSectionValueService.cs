@@ -21,5 +21,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
 		void Add(APlusSectionValueModel section);
 
 		void Update(APlusSectionValueModel section);
+
+		void Delete(long sectionId);
 	}
 }

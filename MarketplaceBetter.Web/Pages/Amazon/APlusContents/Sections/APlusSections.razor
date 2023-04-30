@@ -5,7 +5,7 @@
 @page "/a-plus-sections"
 
 @inject ISnackbar Snackbar
-@inject IAPlusSectionValueService APlusSectionValueService
+@inject IAPlusSectionValueService SectionValueService
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">A+ Sections</MudText>
@@ -76,9 +76,9 @@
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<APlusSectionValueModel> sections = APlusSectionValueService.GetForListRequest(ListRequest);
+        IList<APlusSectionValueModel> sections = SectionValueService.GetForListRequest(ListRequest);
 
-        return Task.FromResult(new TableData<APlusSectionValueModel>() { TotalItems = APlusSectionValueService.CountForListRequest(ListRequest), Items = sections });
+        return Task.FromResult(new TableData<APlusSectionValueModel>() { TotalItems = SectionValueService.CountForListRequest(ListRequest), Items = sections });
     }
 
     private void OnRowsPerPageChanged(int rowsPerPage)
@@ -119,6 +119,8 @@
 
         if (!result.Canceled)
         {
+            SectionValueService.Delete(sectionValue.Id);
+
             await Table.ReloadServerData();
 
             Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Section"));

@@ -9,6 +9,7 @@ using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -24,18 +25,24 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IRepository<APlusSectionValue> _repository;
-		private readonly IUserService _userService;
+        private readonly IRepository<APlusImage> _imageRepository;
+        private readonly IUserService _userService;
+		private readonly IAPlusImageCloudService _imageCloudService;
 
 		public APlusSectionValueService(
 			IMapper mapper,
 			IUnitOfWork unitOfWork,
-			IUserService userService)
+			IUserService userService,
+            IAPlusImageCloudService imageCloudService)
 		{
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
 			_repository = unitOfWork.GetRepository<APlusSectionValue>();
+			_imageRepository = unitOfWork.GetRepository<APlusImage>();
 			_userService = userService;
-		}
+			_imageCloudService = imageCloudService;
+
+        }
 
 		public APlusSectionValueModel Get(long id) => _mapper.Map<APlusSectionValueModel>(_repository.Get(id));
 
@@ -104,7 +111,33 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			_unitOfWork.Save();
 		}
 
-		private void TransferValues(APlusSectionValue toSection, APlusSectionValueModel fromSection)
+		public void Delete(long sectionId)
+		{
+			APlusSectionValue section = _repository.Get(sectionId);
+
+			DeleteImages(section);
+
+			_repository.Delete(section);
+			_unitOfWork.Save();
+		}
+
+		private void DeleteImages(APlusSectionValue section)
+		{
+            IList<APlusImage> images = section.Elements.Where(e => e.Element.Type.SystemName == APlusElementTypeEnum.Image && e.Image != null)
+				.Select(e => e.Image).ToList();
+            IList<string> cloudIds = images.Select(i => i.CloudId).ToList();
+
+			_imageCloudService.Delete(cloudIds);
+
+			foreach (var image in images)
+			{
+				_imageRepository.Delete(image);
+			}
+
+			_unitOfWork.Save();
+        }
+
+        private void TransferValues(APlusSectionValue toSection, APlusSectionValueModel fromSection)
 		{
 			toSection.ContentId = fromSection.Content.Id;
             toSection.Order = fromSection.Order;
@@ -133,7 +166,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 		{
 			toElement.ElementId = fromElement.Element.Id;
             toElement.SingleLineText = fromElement.SingleLineText;
-			if (fromElement.Element.Type.SystemName == APlusElementTypeEnum.BodyText && !fromElement.BodyText.Equals("<p>Body text</p>"))
+			if (fromElement.Element.Type.SystemName == APlusElementTypeEnum.BodyText && !fromElement.BodyText.Equals("<p>Body Text</p>", StringComparison.OrdinalIgnoreCase))
 			{
                 toElement.BodyText = fromElement.BodyText;
             }

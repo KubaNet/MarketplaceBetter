@@ -62,6 +62,14 @@ namespace MarketplaceBetter.Services.Specialized
             return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Height(700).Width(1000).Crop("limit")).BuildUrl(cloudId);
         }
 
+		public void Delete(IList<string> cloudIds)
+		{
+            foreach (var cloudIdsChunk in cloudIds.Chunk(50))
+            {
+                _cloudinary.DeleteResources(ResourceType.Image, cloudIdsChunk);
+            }
+        }
+
         private string ClearFileName(string fileName)
 		{
 			foreach (var format in _allowedFormats)
