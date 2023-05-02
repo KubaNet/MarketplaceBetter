@@ -1,4 +1,4 @@
-﻿<MudDialog Style="min-width: 500px;">
+﻿<MudDialog Style="@Style">
     <TitleContent>
         <MudText Typo="Typo.h6">@Title</MudText>
     </TitleContent>
@@ -18,8 +18,18 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [CascadingParameter] bool FormButtonsDisabled { get; set; }
     [Parameter] public string Title { get; set; }
+    [Parameter] public int? MinWidth { get; set; }
 
     [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private string Style;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Style = MinWidth.HasValue ? $"min-width: {MinWidth.Value}px;" : "min-width: 500px;";
+    }
 
     void Cancel() => MudDialog.Cancel();
 }

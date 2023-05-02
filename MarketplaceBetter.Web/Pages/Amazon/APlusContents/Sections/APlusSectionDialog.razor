@@ -25,7 +25,7 @@
 <EditForm Model="SectionValue" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <CascadingValue Value="FormButtonsDisabled">
-        <FormDialog Title=@Title>
+        <FormDialog Title=@Title MinWidth="700">
             <DataAnnotationsValidator />
             <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
                 @foreach (var brand in Brands)
@@ -58,7 +58,7 @@
                     <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
                 }
             </MudSelect>
-            @foreach (var elementValue in SectionValue.Elements)
+            @foreach (var elementValue in SectionValue.Elements.OrderBy(e => e.Element.Order))
             {
                 @switch (elementValue.Element.Type.SystemName)
                 {
