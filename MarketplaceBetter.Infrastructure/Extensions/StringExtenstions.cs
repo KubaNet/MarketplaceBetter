@@ -55,6 +55,11 @@ namespace MarketplaceBetter.Infrastructure.Extensions
             return new string(normalizedArray);
         }
 
+        public static string WithoutSpaces(this string text)
+        {
+            return text.Replace(' ', '_');
+        }
+
         private static char NormalizeChar(char c)
         {
             switch (c)

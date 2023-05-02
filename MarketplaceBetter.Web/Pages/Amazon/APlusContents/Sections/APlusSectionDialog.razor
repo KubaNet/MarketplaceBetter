@@ -1,4 +1,4 @@
-﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -9,7 +9,7 @@
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 @using MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces;
 @using System.IO;
-@using TinyMCE.Blazor
+@using TinyMCE.Blazor;
 
 @inject ISnackbar Snackbar
 @inject IAPlusSectionValueService SectionValueService
@@ -262,14 +262,20 @@
                 await image.Value.OpenReadStream(Standard.UploadPhotoSizeLimit).CopyToAsync(imageStream);
                 imageStream.Seek(0, SeekOrigin.Begin);
 
-                APlusImageUploadResult uploadResult = ImageCloudService.Upload(imageStream, image.Value.Name);
+                APlusElementValueModel elementValue = SectionValue.Elements.Single(e => e.Element.Name == image.Key);
 
-                SectionValue.Elements.Single(e => e.Element.Name == image.Key).Image = new APlusImageModel
+                string extension = image.Value.Name.Substring(image.Value.Name.LastIndexOf('.') + 1);
+                string shortName = $"{SectionValue.Order}_{SectionValue.Section.Name.Replace("&", string.Empty).WithoutSpaces()}_{elementValue.Element.Name.WithoutSpaces()}.{extension}";
+                string fullName = $"{SectionValue.Content.Name.WithoutSpaces()}/{shortName}";
+
+                APlusImageUploadResult uploadResult = ImageCloudService.Upload(imageStream, fullName);
+
+                elementValue.Image = new APlusImageModel
                     {
                         CloudId = uploadResult.CloudId,
                         Version = uploadResult.Version,
                         Url = uploadResult.Url,
-                        FileName = image.Value.Name
+                        FileName = shortName
                     };
             }
 
