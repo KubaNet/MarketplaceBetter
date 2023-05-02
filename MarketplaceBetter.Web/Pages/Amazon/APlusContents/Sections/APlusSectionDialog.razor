@@ -69,7 +69,7 @@
                         <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-2 mb-1" />
                         break;
                     case APlusElementTypeEnum.Image:
-                        string inputName = $"FileInput_{elementValue.Element.Name.Replace(' ', '_')}";
+                        string inputName = $"FileInput_{elementValue.Element.Name.WithoutSpaces()}";
                         <InputFile id="@inputName" OnChange="AssignImage" hidden />
                         <MudButton HtmlTag="label" OnClick="(() => SetCurrentElement(elementValue))" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@inputName" Class="mt-4">
                             Upload @elementValue.Element.Name
