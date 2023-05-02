@@ -166,8 +166,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 		{
 			toElement.ElementId = fromElement.Element.Id;
             toElement.SingleLineText = fromElement.SingleLineText;
-			if (fromElement.Element.Type.SystemName == APlusElementTypeEnum.BodyText && !fromElement.BodyText.Equals(fromElement.Element.Name, StringComparison.OrdinalIgnoreCase)
-                && !fromElement.BodyText.Equals($"<p>{fromElement.Element.Name}</p>", StringComparison.OrdinalIgnoreCase))
+			if (fromElement.Element.Type.SystemName == APlusElementTypeEnum.BodyText && (fromElement.BodyText == null || (!fromElement.BodyText.Equals(fromElement.Element.Name, StringComparison.OrdinalIgnoreCase)
+                && !fromElement.BodyText.Equals($"<p>{fromElement.Element.Name}</p>", StringComparison.OrdinalIgnoreCase))))
 			{
                 toElement.BodyText = fromElement.BodyText;
             }
