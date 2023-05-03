@@ -11,6 +11,11 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 {
     public class APlusContentModel
     {
+        public APlusContentModel()
+        {
+            Variants = new List<APlusContentVariantModel>();
+        }
+
         public long Id { get; set; }
 
         [Required]
@@ -23,5 +28,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 		public InstanceModel Instance { get; set; }
 
         public IList<APlusSectionValueModel> Sections { get; set; }
+
+        public IList<APlusContentVariantModel> Variants { get; set; }
     }
 }

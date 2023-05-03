@@ -46,6 +46,12 @@ namespace MarketplaceBetter.Infrastructure.Data
                 .WithOne()
                 .HasForeignKey("SectionValueId")
                 .IsRequired();
+
+            modelBuilder.Entity<APlusContent>()
+                .HasMany(c => c.Variants)
+                .WithOne()
+                .HasForeignKey("ContentId")
+                .IsRequired();
         }
 
         // Base
@@ -90,6 +96,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<APlusElementValue> APlusElementValue { get; set; }
         public DbSet<APlusSectionValue> APlusSectionValue { get; set; }
         public DbSet<APlusContent> APlusContent { get; set; }
+        public DbSet<APlusContentVariant> APlusContentVariant { get; set; }
         // => Campaigns
         public DbSet<Campaign> Campaign { get; set; }
         public DbSet<CampaignType> CampaignType { get; set; }

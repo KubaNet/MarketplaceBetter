@@ -5,11 +5,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 {
     public class APlusContent : Entity
     {
+        public APlusContent()
+        {
+            Sections = new List<APlusSectionValue>();
+            Variants = new List<APlusContentVariant>();
+        }
+
         public string Name { get; set; }
 
         public long ProductId { get; set; }
@@ -21,5 +28,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
         public virtual Instance Instance { get; set; }
 
         public virtual IList<APlusSectionValue> Sections { get; set; }
+
+        public virtual IList<APlusContentVariant> Variants { get; set; }
     }
 }

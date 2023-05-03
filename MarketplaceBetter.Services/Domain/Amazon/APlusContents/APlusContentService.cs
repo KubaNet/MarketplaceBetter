@@ -10,12 +10,14 @@ using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using Microsoft.AspNetCore.Http.HttpResults;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 {
@@ -24,6 +26,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<APlusContent> _repository;
+        private readonly IRepository<Variant> _variantRepository;
         private readonly IUserService _userService;
 
         public APlusContentService(
@@ -34,6 +37,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<APlusContent>();
+            _variantRepository = unitOfWork.GetRepository<Variant>();
             _userService = userService;
         }
 
@@ -100,31 +104,62 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             return _mapper.Map<IList<APlusContentModel>>(contents);
         }
 
-        public void Add(APlusContentModel content)
+        public void Add(APlusContentModel content, IList<string> variantsSkus)
         {
             APlusContent contentToAdd = new();
 
-            TransferValues(contentToAdd, content);
+            TransferValues(contentToAdd, content, variantsSkus);
 
             _repository.Add(contentToAdd);
             _unitOfWork.Save();
         }
 
-        public void Update(APlusContentModel content)
+        public void Update(APlusContentModel content, IList<string> variantsSkus)
         {
             APlusContent contentToUpdate = _repository.Get(content.Id);
 
-            TransferValues(contentToUpdate, content);
+            TransferValues(contentToUpdate, content, variantsSkus);
 
             _repository.Update(contentToUpdate);
             _unitOfWork.Save();
         }
 
-        private void TransferValues(APlusContent toContent, APlusContentModel fromContent)
+        private void TransferValues(APlusContent toContent, APlusContentModel fromContent, IList<string> variantsSkus)
         {
             toContent.Name = fromContent.Name;
             toContent.ProductId = fromContent.Product.Id;
             toContent.InstanceId = fromContent.Instance.Id;
+
+            TransferVariants(toContent.Variants, variantsSkus);
+        }
+
+        private void TransferVariants(IList<APlusContentVariant> variants, IList<string> variantsSkus)
+        {
+            IList<APlusContentVariant> variantsToRemove = new List<APlusContentVariant>();
+            foreach (var contentVariant in variants)
+            {
+                if (!variantsSkus.Contains(contentVariant.Variant.Sku))
+                {
+                    variantsToRemove.Add(contentVariant);
+                }
+            }
+
+            foreach (var variantToRemove in variantsToRemove)
+            {
+                variants.Remove(variantToRemove);
+            }
+
+            foreach (var variantSku in variantsSkus)
+            {
+                Variant variant = _variantRepository.Single(v => v.Sku == variantSku);
+
+                if (!variants.Any(v => v.Variant.Id == variant.Id))
+                {
+                    APlusContentVariant contentVariant = new APlusContentVariant { Variant = variant };
+
+                    variants.Add(contentVariant);
+                }
+            }
         }
 
         private IQueryable<APlusContent> ApplyFilter(IQueryable<APlusContent> contents, ListRequest request)

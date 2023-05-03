@@ -64,7 +64,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             }
         }
 
-        public IList<VariantModel> GetAllForProduct(long productId) => _mapper.Map<IList<VariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId));
+        public IList<VariantModel> GetAllForProduct(long productId) => _mapper.Map<IList<VariantModel>>(_repository.GetQuery().Where(v => v.ProductId == productId).OrderBy(v => v.Sku));
 
         public int CountForListRequest(ListRequest request)
         {

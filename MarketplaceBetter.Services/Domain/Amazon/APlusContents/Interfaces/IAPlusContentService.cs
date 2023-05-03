@@ -22,8 +22,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
 
         IList<APlusContentModel> GetForListRequest(ListRequest request);
 
-        void Add(APlusContentModel content);
+        void Add(APlusContentModel content, IList<string> variantsSkus);
 
-        void Update(APlusContentModel content);
+        void Update(APlusContentModel content, IList<string> variantsSkus);
     }
 }
