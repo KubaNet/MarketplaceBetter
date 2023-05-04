@@ -22,5 +22,27 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
         StandardImageAndLightTextOverlay = 5,
 
         StandardImageHeaderWithText = 6,
-    }
+
+		StandardSingleImageAndHighlights = 7,
+
+		StandardSingleImageAndSidebar = 8,
+
+		StandardSingleImageAndSpecsDetail = 9,
+
+		StandardSingleLeftImage = 10,
+
+		StandardSingleRightImage = 11,
+
+		StandardText = 12,
+
+		StandardThreeImagesAndText = 13,
+
+		StandardCompanyLogo = 14,
+
+		StandardMultipleImageModuleA = 15,
+
+		StandardProductDescriptionText = 16,
+
+		StandardTechnicalSpecifications = 17
+	}
 }
