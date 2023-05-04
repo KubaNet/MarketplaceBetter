@@ -21,6 +21,7 @@
 			<MudTh><MudTableSortLabel SortLabel="name" T="APlusContentModel">Name</MudTableSortLabel></MudTh>
 			<MudTh>Sections</MudTh>
 			<MudTh><MudTableSortLabel SortLabel="product" T="APlusContentModel">Product</MudTableSortLabel></MudTh>
+			<MudTh>Variants</MudTh>
 			<MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="brand" T="APlusContentModel">Brand</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 100px;">Actions</MudTh>
@@ -30,6 +31,7 @@
 			<MudTd DataLabel="Name">@context.Name</MudTd>
 			<MudTd DataLabel="Sections"><APlusSectionsDisplay Content="@context" /></MudTd>
 			<MudTd DataLabel="Product">@context.Product.Code</MudTd>
+			<MudTd DataLabel="Variants"><APlusContentVariantsDisplay Variants="context.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" /></MudTd>
 			<MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
 			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
 			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>

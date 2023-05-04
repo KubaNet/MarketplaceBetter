@@ -1,4 +1,4 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products;
 
 @if (Variants.Any())
 {
@@ -6,7 +6,7 @@
     {
         for (int i = 0; i < Variants.Count; i++)
         {
-            <div>@Variants[i].Variant.Sku</div>
+            <div>@Variants[i].Sku</div>
         }
     }
     else
@@ -19,7 +19,7 @@
                 <TooltipContent>
                     @foreach (var variant in Variants)
                     {
-                        <span>@variant.Variant.Sku; </span>
+                        <span>@variant.Sku; </span>
                     }
                 </TooltipContent>
             </MudTooltip>
@@ -29,7 +29,7 @@
                     <MudIconButton OnClick="ClosePopover" Icon="@Icons.Material.Filled.Close" style="position: absolute; top: 4px; right: 2px;"></MudIconButton>
                     @foreach (var variant in Variants)
                     {
-                        <div>@variant.Variant.Sku;</div>
+                        <div>@variant.Sku;</div>
                     }
                     <MudButton OnClick="ClosePopover" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
                 </div>
@@ -37,13 +37,9 @@
         </div>
     }
 }
-else
-{
-    <span class="red-text"><b>unrecognized</b></span>
-}
 
 @code {
-    [Parameter] public IList<PhotoUploadVariantModel> Variants { get; set; }
+    [Parameter] public IList<VariantModel> Variants { get; set; }
 
     private bool TooltipVisible = false;
     private bool PopoverOpened = false;

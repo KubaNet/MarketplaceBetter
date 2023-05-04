@@ -27,7 +27,7 @@
         <HeaderContent>
             <MudTh>Photo</MudTh>
             <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoUploadModel">File name</MudTableSortLabel></MudTh>
-            <MudTh>Variant</MudTh>
+            <MudTh>Variants</MudTh>
             <MudTh><MudTableSortLabel SortLabel="type" T="PhotoUploadModel">Type</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="kind" T="PhotoUploadModel">Kind</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoUploadModel">Instance</MudTableSortLabel></MudTh>
@@ -38,7 +38,7 @@
         <RowTemplate>
             <MudTd DataLabel="Photo"><PhotoOnListDisplay CloudId="@context.CloudId" Version="@context.Version" Size="PhotoOnListSizeEnum.S100" /></MudTd>
             <MudTd DataLabel="FileName">@context.FileName</MudTd>
-            <MudTd DataLabel="Variant"><PhotoUploadVariantsDisplay Variants="@context.Variants" /></MudTd>
+            <MudTd DataLabel="Variants"><PhotoUploadVariantsDisplay Variants="@context.Variants" /></MudTd>
             <MudTd DataLabel="Type">
                 @if (context.Type != null)
                 {
