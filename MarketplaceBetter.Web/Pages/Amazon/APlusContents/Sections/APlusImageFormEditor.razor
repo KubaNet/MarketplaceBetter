@@ -1,0 +1,71 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Services.Specialized.Interfaces;
+
+@inject IAPlusImageCloudService ImageCloudService
+
+@if (UploadState)
+{
+    <InputFile id="@InputName" OnChange="AssignImage" hidden />
+    <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@InputName" Class="mt-3 mb-3">
+        Upload @ElementName
+    </MudButton>
+    @if (ImagesToAdd.ContainsKey(ElementName))
+    {
+        <MudList>
+            <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                @ImagesToAdd[ElementName].Name <code>(@ImagesToAdd[ElementName].Size.BytesToKilobytes() KB)</code>
+            </MudListItem>
+        </MudList>
+    }
+}
+else
+{
+    <div class="my-4">
+        <MudTooltip Placement="Placement.Right">
+            <ChildContent>
+                <MudLink Typo="Typo.body1" Href="@ElementValue.Image.Url" Target="_blank" @onmouseenter="() => ShowImage()" @onmouseleave="() => HideImage()" Style="font-weight: bold; text-decoration: none;">
+                    @ElementName
+                </MudLink>
+            </ChildContent>
+            <TooltipContent>Click to open in new window</TooltipContent>
+        </MudTooltip>
+        <MudPopover Open="ImageOpen" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
+            <MudImage Src="@ImageCloudService.GetBiggerUrlForLists(ElementValue.Image.CloudId, ElementValue.Image.Version)" />
+        </MudPopover>
+    </div>
+}
+
+@code {
+    [Parameter] public APlusElementValueModel ElementValue { get; set; }
+    [Parameter] public IDictionary<string, IBrowserFile> ImagesToAdd { get; set; }
+
+    private string ElementName;
+    private string InputName;
+    private bool UploadState = true;
+    private bool ImageOpen = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ElementName = ElementValue.Element.Name;
+        InputName = $"FileInput_{ElementName.WithoutSpaces()}";
+        UploadState = ElementValue.Image == null;
+    }
+
+    private void AssignImage(InputFileChangeEventArgs changeEvent)
+    {
+        ImagesToAdd.Remove(ElementName);
+        ImagesToAdd.Add(ElementName, changeEvent.File);
+    }
+
+    private void ShowImage()
+    {
+        ImageOpen = true;
+    }
+
+    private void HideImage()
+    {
+        ImageOpen = false;
+    }
+}

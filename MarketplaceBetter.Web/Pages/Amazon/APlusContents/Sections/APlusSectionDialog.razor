@@ -25,7 +25,7 @@
 <EditForm Model="SectionValue" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <CascadingValue Value="FormButtonsDisabled">
-        <FormDialog Title=@Title MinWidth="700">
+        <FormDialog Title=@Title MinWidth="700" ShowProgressIcon="true">
             <DataAnnotationsValidator />
             <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
                 @foreach (var brand in Brands)
@@ -66,22 +66,10 @@
                         <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
                         break;
                     case APlusElementTypeEnum.BodyText:
-                        <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-2 mb-1" />
+                        <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4 mb-4" />
                         break;
                     case APlusElementTypeEnum.Image:
-                        string inputName = $"FileInput_{elementValue.Element.Name.WithoutSpaces()}";
-                        <InputFile id="@inputName" OnChange="AssignImage" hidden />
-                        <MudButton HtmlTag="label" OnClick="(() => SetCurrentElement(elementValue))" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@inputName" Class="mt-4">
-                            Upload @elementValue.Element.Name
-                        </MudButton>
-                        @if (Images.ContainsKey(elementValue.Element.Name))
-                        {
-                            <MudList>
-                                <MudListItem Icon="@Icons.Material.Filled.AttachFile">
-                                    @Images[elementValue.Element.Name].Name <code>(@Images[elementValue.Element.Name].Size.BytesToKilobytes() KB)</code>
-                                </MudListItem>
-                            </MudList>
-                        }
+                        <APlusImageFormEditor ElementValue="elementValue" ImagesToAdd="ImagesToAdd" />
                         break;
                     default:
                         throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
@@ -102,7 +90,7 @@
     private ProductModel Product;
     private InstanceModel Instance;
     private APlusSectionValueModel SectionValue = new APlusSectionValueModel();
-    private IDictionary<string, IBrowserFile> Images = new Dictionary<string, IBrowserFile>();
+    private IDictionary<string, IBrowserFile> ImagesToAdd = new Dictionary<string, IBrowserFile>();
 
     private IList<BrandModel> Brands;
     private IList<InstanceModel> Instances;
@@ -113,7 +101,6 @@
     private bool ProductDisabled = true;
     private bool OrderDisabled = true;
     private bool FormButtonsDisabled = false;
-    private APlusElementValueModel CurrentElement;
 
     private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
         { "toolbar", "undo redo | bold italic underline | numlist bullist" },
@@ -238,16 +225,6 @@
         }
     }
 
-    private void SetCurrentElement(APlusElementValueModel element)
-    {
-        CurrentElement = element;
-    }
-
-    private void AssignImage(InputFileChangeEventArgs changeEvent)
-    {
-        Images.Add(CurrentElement.Element.Name, changeEvent.File);
-    }
-
     private async void HandleValidSubmit()
     {
         ValidationResult result = SectionValueValidator.Validate(SectionValue);
@@ -256,7 +233,7 @@
         {
             FormButtonsDisabled = true;
 
-            foreach (var image in Images)
+            foreach (var image in ImagesToAdd)
             {
                 MemoryStream imageStream = new MemoryStream();
                 await image.Value.OpenReadStream(Standard.UploadPhotoSizeLimit).CopyToAsync(imageStream);
