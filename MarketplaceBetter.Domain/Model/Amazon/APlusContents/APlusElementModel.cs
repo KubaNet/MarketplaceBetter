@@ -17,5 +17,10 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
         public int? CharactersLimit { get; set; }
 
         public int Order { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
