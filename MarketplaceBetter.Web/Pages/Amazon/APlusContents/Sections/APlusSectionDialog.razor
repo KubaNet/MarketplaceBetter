@@ -69,7 +69,7 @@
                         <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4 mb-4" />
                         break;
                     case APlusElementTypeEnum.Image:
-                        <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" />
+                        <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
                         break;
                     default:
                         throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
@@ -91,6 +91,7 @@
     private InstanceModel Instance;
     private APlusSectionValueModel SectionValue = new APlusSectionValueModel();
     private IDictionary<string, IBrowserFile> ImagesToAdd = new Dictionary<string, IBrowserFile>();
+    private IList<string> ImagesToDelete = new List<string>();
 
     private IList<BrandModel> Brands;
     private IList<InstanceModel> Instances;
@@ -258,7 +259,7 @@
 
             if (IsEdit)
             {
-                SectionValueService.Update(SectionValue);
+                SectionValueService.Update(SectionValue, ImagesToDelete);
                 Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("A+ Section"));
             }
             else

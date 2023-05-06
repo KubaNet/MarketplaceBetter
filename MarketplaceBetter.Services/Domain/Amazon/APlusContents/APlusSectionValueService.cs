@@ -101,10 +101,16 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			_unitOfWork.Save();
 		}
 
-		public void Update(APlusSectionValueModel section)
+		public void Update(APlusSectionValueModel section, IList<string> imagesToDelete)
 		{
 			APlusSectionValue sectionToUpdate = _repository.Get(section.Id);
 
+			foreach (var element in section.Elements.Where(e => e.Element.Type.SystemName == APlusElementTypeEnum.Image && e.Image != null))
+			{
+				imagesToDelete.Remove(element.Element.Name);
+			}
+
+			DeleteImages(sectionToUpdate, imagesToDelete);
 			TransferValues(sectionToUpdate, section);
 
 			_repository.Update(sectionToUpdate);
@@ -121,20 +127,34 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			_unitOfWork.Save();
 		}
 
-		private void DeleteImages(APlusSectionValue section)
+		private void DeleteImages(APlusSectionValue section, IList<string> imagesToDelete)
 		{
+            IList<APlusImage> images = section.Elements.Where(e => e.Element.Type.SystemName == APlusElementTypeEnum.Image && 
+				e.Image != null && imagesToDelete.Contains(e.Element.Name)).Select(e => e.Image).ToList();
+
+            DeleteImages(images);
+        }
+
+        private void DeleteImages(APlusSectionValue section)
+        {
             IList<APlusImage> images = section.Elements.Where(e => e.Element.Type.SystemName == APlusElementTypeEnum.Image && e.Image != null)
-				.Select(e => e.Image).ToList();
+                .Select(e => e.Image).ToList();
+
+            DeleteImages(images);
+        }
+
+        private void DeleteImages(IList<APlusImage> images)
+		{
             IList<string> cloudIds = images.Select(i => i.CloudId).ToList();
 
-			_imageCloudService.Delete(cloudIds);
+            _imageCloudService.Delete(cloudIds);
 
-			foreach (var image in images)
-			{
-				_imageRepository.Delete(image);
-			}
+            foreach (var image in images)
+            {
+                _imageRepository.Delete(image);
+            }
 
-			_unitOfWork.Save();
+            _unitOfWork.Save();
         }
 
         private void TransferValues(APlusSectionValue toSection, APlusSectionValueModel fromSection)
@@ -174,7 +194,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
 			if (fromElement.Image != null)
 			{
-				if (fromElement.Image.Id == 0)
+				if (fromElement.Image.Id == 0 && toElement.Image == null)
 				{
 					APlusImage toImage = new APlusImage();
 

@@ -29,6 +29,7 @@ else
             </ChildContent>
             <TooltipContent>Click to open in new window</TooltipContent>
         </MudTooltip>
+        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Title="Click to delete" OnClick="DeleteImage"></MudIconButton>
         <MudPopover Open="ImageOpen" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
             <MudImage Src="@ImageCloudService.GetBiggerUrlForLists(ElementValue.Image.CloudId, ElementValue.Image.Version)" />
         </MudPopover>
@@ -38,6 +39,7 @@ else
 @code {
     [Parameter] public APlusElementValueModel ElementValue { get; set; }
     [Parameter] public IDictionary<string, IBrowserFile> ImagesToAdd { get; set; }
+    [Parameter] public IList<string> ImagesToDelete { get; set; }
 
     private string ElementName;
     private string InputName;
@@ -57,6 +59,13 @@ else
     {
         ImagesToAdd.Remove(ElementName);
         ImagesToAdd.Add(ElementName, changeEvent.File);
+    }
+
+    private void DeleteImage()
+    {
+        ImagesToDelete.Add(ElementName);
+        UploadState = true;
+        ElementValue.Image = null;
     }
 
     private void ShowImage()
