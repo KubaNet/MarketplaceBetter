@@ -6,7 +6,7 @@
 @if (UploadState)
 {
     <InputFile id="@InputName" OnChange="AssignImage" hidden />
-    <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@InputName" Class="mt-3 mb-3">
+    <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@InputName" Class="mt-4">
         Upload @ElementName
     </MudButton>
     @if (ImagesToAdd.ContainsKey(ElementName))

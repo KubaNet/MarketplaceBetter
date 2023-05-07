@@ -66,7 +66,7 @@
                         <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
                         break;
                     case APlusElementTypeEnum.BodyText:
-                        <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4 mb-4" />
+                        <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
                         break;
                     case APlusElementTypeEnum.Image:
                         <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
