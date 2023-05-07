@@ -20,17 +20,23 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="APlusSectionValueModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="content" T="APlusSectionValueModel">Content</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="APlusSectionValueModel">Product</MudTableSortLabel></MudTh>
+            <MudTh>Variant</MudTh>
             <MudTh><MudTableSortLabel SortLabel="name" T="APlusSectionValueModel">Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="elements" T="APlusSectionValueModel">Elements</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">Order</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
             <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Content">@context.Content.Name</MudTd>
+            <MudTd DataLabel="Product">@context.Content.Product.Code</MudTd>
+            <MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Content.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" /></MudTd>
             <MudTd DataLabel="Name">@context.Section.Name</MudTd>
             <MudTd DataLabel="Elements"><APlusElementsDisplay Elements="context.Elements" /></MudTd>
             <MudTd DataLabel="Order">@context.Order</MudTd>
+            <MudTd DataLabel="Instance">@context.Content.Instance.Name</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context))">Delete</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>

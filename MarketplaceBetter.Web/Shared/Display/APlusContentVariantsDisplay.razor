@@ -6,7 +6,7 @@
     {
         for (int i = 0; i < Variants.Count; i++)
         {
-            <div>@Variants[i].Sku</div>
+            <div>@Variants[i].Sku (@Variants[i].Asin)</div>
         }
     }
     else
@@ -19,7 +19,7 @@
                 <TooltipContent>
                     @foreach (var variant in Variants)
                     {
-                        <span>@variant.Sku; </span>
+                        <span>@variant.Sku (@variant.Asin); </span>
                     }
                 </TooltipContent>
             </MudTooltip>
@@ -29,7 +29,7 @@
                     <MudIconButton OnClick="ClosePopover" Icon="@Icons.Material.Filled.Close" style="position: absolute; top: 4px; right: 2px;"></MudIconButton>
                     @foreach (var variant in Variants)
                     {
-                        <div>@variant.Sku;</div>
+                        <div>@variant.Sku (@variant.Asin);</div>
                     }
                     <MudButton OnClick="ClosePopover" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
                 </div>

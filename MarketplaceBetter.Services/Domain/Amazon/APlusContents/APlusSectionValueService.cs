@@ -234,7 +234,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
 			foreach (string searchString in searchStrings)
 			{
-				string[] searchFieldNames = new[] { "id", "content", "name", "order" };
+				string[] searchFieldNames = new[] { "id", "content", "product", "variant", "name", "order", "instance" };
 				SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
 				if (searchField != null)
@@ -243,17 +243,23 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 					{
 						"id" => sections.Where(s => s.Id == searchField.Value.ParseToIntOrDefault()),
 						"content" => sections.Where(s => s.Content.Name.Contains(searchField.Value)),
-						"name" => sections.Where(s => s.Section.Name.Contains(searchField.Value)),
+                        "product" => sections.Where(s => s.Content.Product.Code.Contains(searchField.Value)),
+                        "variant" => sections.Where(s => s.Content.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || v.Variant.Asin.Contains(searchField.Value))),
+                        "name" => sections.Where(s => s.Section.Name.Contains(searchField.Value)),
 						"order" => sections.Where(s => s.Order == searchField.Value.ParseToIntOrDefault()),
-						_ => throw new UnrecognizedSearchFieldException(searchField.Name)
+                        "instance" => sections.Where(s => s.Content.Instance.Name.Contains(searchField.Value)),
+                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
 					};
 				}
 				else
 				{
 					sections = sections.Where(s => s.Id == searchString.ParseToIntOrDefault()
 						|| s.Content.Name.Contains(searchString)
-						|| s.Section.Name.Contains(searchString)
-						|| s.Order == searchString.ParseToIntOrDefault());
+                        || s.Content.Product.Code.Contains(searchString)
+                        || s.Content.Variants.Any(v => v.Variant.Sku.Contains(searchString) || v.Variant.Asin.Contains(searchString))
+                        || s.Section.Name.Contains(searchString)
+						|| s.Order == searchString.ParseToIntOrDefault()
+                        || s.Content.Instance.Name.Contains(searchString));
 				}
 			}
 
@@ -268,9 +274,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 				{
 					"id" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Id) : sections.OrderByDescending(s => s.Id),
                     "content" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Content.Name) : sections.OrderByDescending(s => s.Content.Name),
-					"name" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Section.Name) : sections.OrderByDescending(s => s.Section.Name),
+                    "product" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Content.Product.Code) : sections.OrderByDescending(s => s.Content.Product.Code),
+                    "name" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Section.Name) : sections.OrderByDescending(s => s.Section.Name),
 					"order" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Order) : sections.OrderByDescending(s => s.Order),
-					_ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
+                    "instance" => request.SortDirection == SortDirection.Ascending ? sections.OrderBy(s => s.Content.Instance.Name) : sections.OrderByDescending(s => s.Content.Instance.Name),
+                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
 				};
 			}
 			else

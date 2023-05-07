@@ -13,6 +13,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
     {
         public APlusContentModel()
         {
+            Sections = new List<APlusSectionValueModel>();
             Variants = new List<APlusContentVariantModel>();
         }
 
