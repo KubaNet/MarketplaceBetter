@@ -1,4 +1,186 @@
-﻿-- Standard Four Images & Text
+﻿-- Standard Comparison Chart
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 1 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image (product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), null, 1, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image (product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), [CharactersLimit] = null WHERE [Order] = 1 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 2 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image Keywords (product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 2, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image Keywords (product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 2 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 3 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Title (product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 80, 3, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Title (product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 80 WHERE [Order] = 3 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 4 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('ASIN (product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 10, 4, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'ASIN (product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 10 WHERE [Order] = 4 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 5 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Highlight Column [yes/no] (product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 5, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 5 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 6 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image (product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), null, 6, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image (product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), [CharactersLimit] = null WHERE [Order] = 6 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 7 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image Keywords (product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 7, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image Keywords (product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 7 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 8 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Title (product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 80, 8, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Title (product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 80 WHERE [Order] = 8 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 9 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('ASIN (product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 10, 9, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'ASIN (product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 10 WHERE [Order] = 9 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 10 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Highlight Column [yes/no] (product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 10, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 10 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 11 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image (product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), null, 11, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image (product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), [CharactersLimit] = null WHERE [Order] = 11 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 12 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image Keywords (product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 12, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image Keywords (product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 12 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 13 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Title (product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 80, 13, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Title (product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 80 WHERE [Order] = 13 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 14 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('ASIN (product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 10, 14, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'ASIN (product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 10 WHERE [Order] = 14 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 15 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Highlight Column [yes/no] (product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 15, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 15 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 16 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image (product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), null, 16, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image (product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), [CharactersLimit] = null WHERE [Order] = 16 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 17 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image Keywords (product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 17, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image Keywords (product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 17 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 18 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Title (product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 80, 18, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Title (product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 80 WHERE [Order] = 18 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 19 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('ASIN (product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 10, 19, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'ASIN (product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 10 WHERE [Order] = 19 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 20 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Highlight Column [yes/no] (product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 20, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 20 WHERE [Order] = 5 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 21 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image (product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), null, 21, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image (product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), [CharactersLimit] = null WHERE [Order] = 21 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 22 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image Keywords (product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 22, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image Keywords (product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 22 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 23 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Title (product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 80, 23, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Title (product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 80 WHERE [Order] = 23 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 24 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('ASIN (product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 10, 24, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'ASIN (product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 10 WHERE [Order] = 24 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 25 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Highlight Column [yes/no] (product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 25, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 25 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 26 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image (product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), null, 26, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 3), [CharactersLimit] = null WHERE [Order] = 26 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 27 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Image Keywords (product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 27, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Image Keywords (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 27 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 28 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Title (product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 80, 28, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Title (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 80 WHERE [Order] = 28 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 29 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('ASIN (product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 10, 29, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'ASIN (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 10 WHERE [Order] = 29 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 30 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Highlight Column [yes/no] (product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 30, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 30 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+-- Standard Four Images & Text
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 1 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 2))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
@@ -1161,4 +1343,10 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 33 AND [Sec
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
     VALUES ('Definition 16', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 500, 33, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 17))
 ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Definition 16', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 500 WHERE [Order] = 33 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 17)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 34 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 17))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Number of columns [one/two]', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 34, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 17))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Number of columns [one/two]', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 34 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 17)
 GO
