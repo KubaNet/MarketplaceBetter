@@ -58,6 +58,10 @@
                     <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
                 }
             </MudSelect>
+            @if (SectionValue.Elements.Any())
+            {
+                <MudText Typo="Typo.h6" Class="mt-3">Elements:</MudText>
+            }
             @foreach (var elementValue in SectionValue.Elements.OrderBy(e => e.Element.Order))
             {
                 @switch (elementValue.Element.Type.SystemName)
