@@ -22,65 +22,63 @@
 @inject IProductService ProductService
 @inject IUserService UserService
 
-<EditForm Model="SectionValue" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="SectionValue" OnValidSubmit="HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <CascadingValue Value="FormButtonsDisabled">
-        <FormDialog Title=@Title MinWidth="700" ShowProgressIcon="true">
-            <DataAnnotationsValidator />
-            <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
-                @foreach (var brand in Brands)
-                {
-                    <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect Label="Product" T="ProductModel" Value="Product" For="() => Product" ValueChanged="HandleProductChanged" Disabled="ProductDisabled">
-                @foreach (var product in Products)
-                {
-                    <MudSelectItem Value="product">@product.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
-                @foreach (var instance in Instances)
-                {
-                    <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect Label="Content" T="APlusContentModel" Value="SectionValue.Content" For="() => SectionValue.Content" ValueChanged="HandleContentChanged">
-                @foreach (var content in Contents)
-                {
-                    <MudSelectItem Value="content">@content.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" Max="Standard.APlusSectionsMaxNumber" HideSpinButtons="true" Disabled="OrderDisabled" />
-            <MudSelect Label="Type" T="APlusSectionModel" Value="SectionValue.Section" For="() => SectionValue.Section" ValueChanged="HandleSectionChanged">
-                @foreach (var sectionItem in Sections)
-                {
-                    <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
-                }
-            </MudSelect>
-            @if (SectionValue.Elements.Any())
+    <FormDialog Title=@Title MinWidth="700" FormButtonsDisabled="FormButtonsDisabled" ShowProgressIcon="ShowProgressIcon">
+        <DataAnnotationsValidator />
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
             {
-                <MudText Typo="Typo.h6" Class="mt-3">Elements:</MudText>
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
-            @foreach (var elementValue in SectionValue.Elements.OrderBy(e => e.Element.Order))
+        </MudSelect>
+        <MudSelect Label="Product" T="ProductModel" Value="Product" For="() => Product" ValueChanged="HandleProductChanged" Disabled="ProductDisabled">
+            @foreach (var product in Products)
             {
-                @switch (elementValue.Element.Type.SystemName)
-                {
-                    case APlusElementTypeEnum.SingleLineText:
-                        <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
-                        break;
-                    case APlusElementTypeEnum.BodyText:
-                        <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
-                        break;
-                    case APlusElementTypeEnum.Image:
-                        <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
-                        break;
-                    default:
-                        throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
-                }
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
-        </FormDialog>
-    </CascadingValue>
+        </MudSelect>
+        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Content" T="APlusContentModel" Value="SectionValue.Content" For="() => SectionValue.Content" ValueChanged="HandleContentChanged">
+            @foreach (var content in Contents)
+            {
+                <MudSelectItem Value="content">@content.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" Max="Standard.APlusSectionsMaxNumber" HideSpinButtons="true" Disabled="OrderDisabled" />
+        <MudSelect Label="Type" T="APlusSectionModel" Value="SectionValue.Section" For="() => SectionValue.Section" ValueChanged="HandleSectionChanged">
+            @foreach (var sectionItem in Sections)
+            {
+                <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
+            }
+        </MudSelect>
+        @if (SectionValue.Elements.Any())
+        {
+            <MudText Typo="Typo.h6" Class="mt-3">Elements:</MudText>
+        }
+        @foreach (var elementValue in SectionValue.Elements.OrderBy(e => e.Element.Order))
+        {
+            @switch (elementValue.Element.Type.SystemName)
+            {
+                case APlusElementTypeEnum.SingleLineText:
+                    <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
+                    break;
+                case APlusElementTypeEnum.BodyText:
+                    <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
+                    break;
+                case APlusElementTypeEnum.Image:
+                    <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
+                    break;
+                default:
+                    throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+            }
+        }
+    </FormDialog>
 </EditForm>
 
 @code {
@@ -106,6 +104,7 @@
     private bool ProductDisabled = true;
     private bool OrderDisabled = true;
     private bool FormButtonsDisabled = false;
+    private bool ShowProgressIcon = false;
 
     private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
         { "toolbar", "undo redo | bold italic underline | numlist bullist" },
@@ -158,6 +157,9 @@
 
     private void GetContents()
     {
+        SectionValue.Content = null;
+        SectionValue.Order = 0;
+        OrderDisabled = true;
         Contents = ContentService.GetAllFor(Brand, Product, Instance);
     }
 
@@ -166,8 +168,8 @@
         Brand = brand;
 
         ResetProduct();
-
         ActivateProduct(brand.Id);
+
         GetContents();
     }
 
@@ -237,6 +239,7 @@
         if (result.IsValid)
         {
             FormButtonsDisabled = true;
+            ShowProgressIcon = true;
 
             foreach (var image in ImagesToAdd)
             {

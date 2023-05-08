@@ -22,54 +22,52 @@
 
 <EditForm Model="Photo" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <CascadingValue Value="FormButtonsDisabled">
-        <FormDialog Title=@Title>
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
-                @foreach (var brand in Brands)
-                {
-                    <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect Label="Product" T="ProductModel" Value="Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
-                @foreach (var product in Products)
-                {
-                    <MudSelectItem Value="product">@product.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect Label="Variant" T="VariantModel" @bind-Value="Photo.Variant" For="() => Photo.Variant" Disabled="VariantSelectDisabled">
-                @foreach (var variant in Variants)
-                {
-                    <MudSelectItem Value="variant">@variant.Sku</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Photo.Instance" For="() => Photo.Instance">
-                @foreach (var instance in Instances)
-                {
-                    <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Photo.Type" For="() => Photo.Type">
-                @foreach (var type in Types)
-                {
-                    <MudSelectItem Value="type">@type.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <InputFile id="FileInput" OnChange="SetPhoto" hidden />
-            <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="FileInput" Class="mt-4">
-                Upload Photo
-            </MudButton>
-            @if (PhotoFile != null)
+    <FormDialog Title=@Title FormButtonsDisabled="FormButtonsDisabled">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
+            @foreach (var brand in Brands)
             {
-                <MudList>
-                    <MudListItem Icon="@Icons.Material.Filled.AttachFile">
-                        @PhotoFile.Name <code>@PhotoFile.Size bytes</code>
-                    </MudListItem>
-                </MudList>
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
             }
-        </FormDialog>
-    </CascadingValue>
+        </MudSelect>
+        <MudSelect Label="Product" T="ProductModel" Value="Product" ValueChanged="HandleProductChanged" Disabled="ProductSelectDisabled">
+            @foreach (var product in Products)
+            {
+                <MudSelectItem Value="product">@product.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Variant" T="VariantModel" @bind-Value="Photo.Variant" For="() => Photo.Variant" Disabled="VariantSelectDisabled">
+            @foreach (var variant in Variants)
+            {
+                <MudSelectItem Value="variant">@variant.Sku</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Photo.Instance" For="() => Photo.Instance">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Photo.Type" For="() => Photo.Type">
+            @foreach (var type in Types)
+            {
+                <MudSelectItem Value="type">@type.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <InputFile id="FileInput" OnChange="SetPhoto" hidden />
+        <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="FileInput" Class="mt-4">
+            Upload Photo
+        </MudButton>
+        @if (PhotoFile != null)
+        {
+            <MudList>
+                <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                    @PhotoFile.Name <code>@PhotoFile.Size bytes</code>
+                </MudListItem>
+            </MudList>
+        }
+    </FormDialog>
 </EditForm>
 
 @code {

@@ -7,8 +7,8 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel" Disabled="FormButtonsDisabled">Cancel</MudButton>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Disabled="FormButtonsDisabled">
-            @if (ShowProgressIcon && Processing)
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="FormButtonsDisabled">
+            @if (ShowProgressIcon)
             {
                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
             }
@@ -19,16 +19,14 @@
 
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [CascadingParameter] bool FormButtonsDisabled { get; set; }
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public bool FormButtonsDisabled { get; set; }
+    [Parameter] public bool ShowProgressIcon { get; set; } = false;
+    [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public int? MinWidth { get; set; }
-    [Parameter] public bool ShowProgressIcon { get; set; } = false;
-
-    [Parameter] public RenderFragment ChildContent { get; set; }
 
     private string Style;
-    private bool Processing = false;
 
     protected override void OnInitialized()
     {
@@ -38,11 +36,4 @@
     }
 
     void Cancel() => MudDialog.Cancel();
-
-    private async void Submit()
-    {
-        Processing = true;
-
-        await Task.Delay(100);
-    }
 }
