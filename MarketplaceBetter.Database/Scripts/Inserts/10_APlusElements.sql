@@ -180,6 +180,240 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 30 AND [Sec
 ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 30 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
 GO
 
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 31 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Metric 1', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 31, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Metric 1', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 31 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 32 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 32, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 32 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 33 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 1, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 33, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 33 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 34 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 34, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 34 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 35 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 1, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 35, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 35 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 36 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 36, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 36 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 37 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 1, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 37, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 37 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 38 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 38, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 38 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 39 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 1, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 39, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 39 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 40 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 40, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 40 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 41 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 1, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 41, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 41 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 42 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 42, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 42 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 43 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 1, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 43, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 43 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 44 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Metric 2', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 44, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Metric 2', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 44 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 45 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 45, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 45 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 46 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 2, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 46, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 46 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 47 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 47, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 47 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 48 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 2, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 48, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 48 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 49 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 49, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 49 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 50 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 2, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 50, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 50 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 51 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 51, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 51 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 52 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 2, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 52, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 52 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 53 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 53, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 53 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 54 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 2, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 54, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 54 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 55 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 55, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 55 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 56 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 2, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 56, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 56 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 57 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Metric 3', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 100, 57, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Metric 3', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 100 WHERE [Order] = 57 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 58 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 58, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 58 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 59 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 3, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 59, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 59 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 60 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 60, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 60 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 61 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 3, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 61, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 61 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 62 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 62, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 62 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 63 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 3, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 263, 63, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 263 WHERE [Order] = 63 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 64 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 64, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 64 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 65 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 3, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 65, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 65 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 66 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 66, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 66 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 67 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 3, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 67, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 67 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 68 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 68, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 68 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 69 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+    INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [SectionId])
+    VALUES ('Text [empty if using "Checked?"] (metric 3, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 69, (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 69 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 1)
+GO
+
 -- Standard Four Images & Text
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 1 AND [SectionId] = (SELECT [Id] FROM [APlusSection] WHERE [SystemName] = 2))
