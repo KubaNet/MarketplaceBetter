@@ -19,8 +19,7 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudTextField Label="Name" @bind-Value="Content.Name" For="() => Content.Name" />
-        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Content.Instance" For="() => Content.Instance">
+        <MudSelect Label="Instance" T="InstanceModel" Value="Content.Instance" For="() => Content.Instance" ValueChanged="HandleInstanceChanged">
             @foreach (var instance in Instances)
             {
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
@@ -38,12 +37,13 @@
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Variants" T="string" MultiSelection="true" @bind-Value="VariantsValue" @bind-SelectedValues="SelectedVariants" Disabled="VariantsDisabled">
+        <MudSelect Label="Variants" T="string" MultiSelection="true" @bind-Value="VariantsValue" SelectedValues="SelectedVariants" SelectedValuesChanged="HandleVariantsChanged" Disabled="VariantsDisabled">
             @foreach (var variant in Variants)
             {
                 <MudSelectItem Value="variant.Sku">@variant.Sku</MudSelectItem>
             }
         </MudSelect>
+        <MudTextField Label="Name" @bind-Value="Content.Name" For="() => Content.Name" Disabled="NameDisabled" />
     </FormDialog>
 </EditForm>
 
@@ -66,6 +66,7 @@
 
     private bool ProductDisabled = true;
     private bool VariantsDisabled = true;
+    private bool NameDisabled = true;
 
     protected override void OnInitialized()
     {
@@ -100,6 +101,8 @@
         ActivateVariants(Content.Product.Id);
 
         SelectedVariants = Content.Variants.Select(v => v.Variant.Sku);
+
+        ActivateName();
     }
 
     private void SetValuesForCurrentBrand()
@@ -109,12 +112,21 @@
         HandleBrandChanged(currentBrand);
     }
 
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        Content.Instance = instance;
+
+        UpdateName();
+    }
+
     private void HandleBrandChanged(BrandModel brand)
     {
         Brand = brand;
 
         ResetProduct();
         ActivateProduct(brand.Id);
+
+        ResetName();
     }
 
     private void HandleProductChanged(ProductModel product)
@@ -123,6 +135,15 @@
 
         ResetVariants();
         ActivateVariants(product.Id);
+        ActivateName();
+        UpdateName();
+    }
+
+    private void HandleVariantsChanged(IEnumerable<string> variants)
+    {
+        SelectedVariants = variants;
+
+        UpdateName();
     }
 
     private void ResetProduct()
@@ -150,6 +171,54 @@
     {
         VariantsDisabled = false;
         Variants = VariantService.GetAllForProduct(productId);
+    }
+
+    private void ResetName()
+    {
+        Content.Name = null;
+        NameDisabled = true;
+    }
+
+    private void ActivateName()
+    {
+        NameDisabled = false;
+    }
+
+    private void UpdateName()
+    {
+        if (Content.Instance != null && Content.Product != null)
+        {
+            Content.Name = $"{InstanceHelper.GetCodeFor(Content.Instance.SystemName)}_{Content.Product.Brand.Code.ToLower()}_{Content.Product.Code}";
+
+            if (SelectedVariants.Any())
+            {
+                if (SelectedVariants.Count() == 1)
+                {
+                    VariantModel variant = Variants.Single(v => v.Sku == SelectedVariants.First());
+
+                    Content.Name += $"_{variant.Color.Code}_{variant.Size.Code}";
+                }
+                else
+                {
+                    IList<VariantModel> variants = Variants.Where(v => SelectedVariants.Contains(v.Sku)).ToList();
+
+                    IList<IGrouping<string, VariantModel>> variantsByColor = variants.GroupBy(v => v.Color.Code).ToList();
+
+                    foreach (var variantByColor in variantsByColor)
+                    {
+                        string color = variantByColor.Key;
+                        IList<VariantModel> variantsBySizes = variantByColor.ToList();
+
+                        Content.Name += $"_{color}";
+
+                        foreach (var variantBySize in variantsBySizes.OrderBy(v => v.Size.Id))
+                        {
+                            Content.Name += $"_{variantBySize.Size.Code}";
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void HandleValidSubmit()
