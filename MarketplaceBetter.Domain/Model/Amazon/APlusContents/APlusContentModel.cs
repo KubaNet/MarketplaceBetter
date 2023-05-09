@@ -28,6 +28,8 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 		[Required]
 		public InstanceModel Instance { get; set; }
 
+        public EntityStatusModel Status { get; set; }
+
         public IList<APlusSectionValueModel> Sections { get; set; }
 
         public IList<APlusContentVariantModel> Variants { get; set; }

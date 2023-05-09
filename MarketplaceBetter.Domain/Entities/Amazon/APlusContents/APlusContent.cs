@@ -27,6 +27,10 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 
         public virtual Instance Instance { get; set; }
 
+        public long StatusId { get; set; }
+
+        public virtual EntityStatus Status { get; set; }
+
         public virtual IList<APlusSectionValue> Sections { get; set; }
 
         public virtual IList<APlusContentVariant> Variants { get; set; }

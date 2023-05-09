@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -27,6 +28,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<APlusContent> _repository;
         private readonly IRepository<Variant> _variantRepository;
+        private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IUserService _userService;
 
         public APlusContentService(
@@ -38,6 +40,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<APlusContent>();
             _variantRepository = unitOfWork.GetRepository<Variant>();
+            _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _userService = userService;
         }
 
@@ -109,8 +112,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             APlusContent contentToAdd = new();
 
             TransferValues(contentToAdd, content, variantsSkus);
+			contentToAdd.Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft);
 
-            _repository.Add(contentToAdd);
+			_repository.Add(contentToAdd);
             _unitOfWork.Save();
         }
 
@@ -179,7 +183,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "product", "variant", "brand", "instance" };
+                string[] searchFieldNames = new[] { "id", "name", "status", "product", "variant", "brand", "instance" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -188,7 +192,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                     {
                         "id" => contents.Where(c => c.Id == searchField.Value.ParseToIntOrDefault()),
                         "name" => contents.Where(c => c.Name.Contains(searchField.Value)),
-                        "product" => contents.Where(c => c.Product.Code.Contains(searchField.Value)),
+						"status" => contents.Where(c => c.Status.Name.Contains(searchField.Value)),
+						"product" => contents.Where(c => c.Product.Code.Contains(searchField.Value)),
                         "variant" => contents.Where(c => c.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || (v.Variant.Asin != null && v.Variant.Asin.Contains(searchField.Value)))),
                         "brand" => contents.Where(c => c.Product.Brand.Name.Contains(searchField.Value)),
                         "instance" => contents.Where(c => c.Instance.Name.Contains(searchField.Value)),
@@ -199,7 +204,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                 {
                     contents = contents.Where(c => c.Id == searchString.ParseToIntOrDefault()
                         || c.Name.Contains(searchString)
-                        || c.Product.Code.Contains(searchString)
+                        || c.Status.Name.Contains(searchString)
+						|| c.Product.Code.Contains(searchString)
                         || c.Variants.Any(v => v.Variant.Sku.Contains(searchString) || v.Variant.Asin.Contains(searchString))
                         || c.Product.Brand.Name.Contains(searchString)
                         || c.Instance.Name.Contains(searchString));
@@ -217,7 +223,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(c => c.Id) : contents.OrderByDescending(c => c.Id),
                     "name" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(c => c.Name) : contents.OrderByDescending(c => c.Name),
-                    "product" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(c => c.Product.Code) : contents.OrderByDescending(c => c.Product.Code),
+					"status" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(c => c.Status.Name) : contents.OrderByDescending(c => c.Status.Name),
+					"product" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(c => c.Product.Code) : contents.OrderByDescending(c => c.Product.Code),
                     "brand" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(c => c.Product.Brand.Name) : contents.OrderByDescending(c => c.Product.Brand.Name),
                     "instance" => request.SortDirection == SortDirection.Ascending ? contents.OrderBy(c => c.Instance.Name) : contents.OrderByDescending(c => c.Instance.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)

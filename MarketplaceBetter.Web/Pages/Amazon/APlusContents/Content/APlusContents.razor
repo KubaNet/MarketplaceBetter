@@ -19,6 +19,7 @@
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="APlusContentModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="name" T="APlusContentModel">Name</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="status" T="APlusContentModel">Status</MudTableSortLabel></MudTh>
 			<MudTh>Sections</MudTh>
 			<MudTh><MudTableSortLabel SortLabel="product" T="APlusContentModel">Product</MudTableSortLabel></MudTh>
 			<MudTh>Variant</MudTh>
@@ -29,6 +30,7 @@
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
 			<MudTd DataLabel="Name">@context.Name</MudTd>
+			<MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
 			<MudTd DataLabel="Sections"><APlusSectionsDisplay Content="@context" /></MudTd>
 			<MudTd DataLabel="Product">@context.Product.Code</MudTd>
 			<MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" /></MudTd>
