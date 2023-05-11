@@ -22,6 +22,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
 
 		void Update(APlusSectionValueModel section, IList<string> imagesToDelete);
 
-		void Delete(long sectionId);
+		void Delete(long id);
 	}
 }

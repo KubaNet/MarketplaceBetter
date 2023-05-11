@@ -31,11 +31,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         private readonly IRepository<Variant> _variantRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IUserService _userService;
+        private readonly IAPlusSectionValueService _sectionService;
 
         public APlusContentService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IUserService userService)
+            IUserService userService,
+			IAPlusSectionValueService sectionService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -43,6 +45,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             _variantRepository = unitOfWork.GetRepository<Variant>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _userService = userService;
+            _sectionService = sectionService;
         }
 
         public APlusContentModel Get(long id) => _mapper.Map<APlusContentModel>(_repository.Get(id));
@@ -129,7 +132,22 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             _unitOfWork.Save();
         }
 
-        private void TransferValues(APlusContent toContent, APlusContentModel fromContent, IList<string> variantsSkus)
+        public void Delete(long id)
+        {
+            APlusContent content = _repository.Get(id);
+
+            IList<long> sectionIds = content.Sections.Select(s => s.Id).ToList();
+            foreach (var sectionId in sectionIds)
+            {
+                _sectionService.Delete(sectionId);
+            }
+
+            _repository.Delete(content);
+            _unitOfWork.Save();
+        }
+
+
+		private void TransferValues(APlusContent toContent, APlusContentModel fromContent, IList<string> variantsSkus)
         {
             toContent.Name = fromContent.Name;
             toContent.ProductId = fromContent.Product.Id;

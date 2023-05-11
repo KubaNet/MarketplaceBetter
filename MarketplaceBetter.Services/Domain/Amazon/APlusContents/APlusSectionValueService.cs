@@ -120,9 +120,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			_unitOfWork.Save();
 		}
 
-		public void Delete(long sectionId)
+		public void Delete(long id)
 		{
-			APlusSectionValue section = _repository.Get(sectionId);
+			APlusSectionValue section = _repository.Get(id);
 
 			DeleteImages(section);
 

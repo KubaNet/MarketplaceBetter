@@ -4,7 +4,8 @@
 
 @page "/a-plus-content"
 
-@inject IAPlusContentService APlusContentService
+@inject ISnackbar Snackbar
+@inject IAPlusContentService ContentService
 @inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">A+ Content</MudText>
@@ -26,7 +27,7 @@
 			<MudTh>Variant</MudTh>
 			<MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="brand" T="APlusContentModel">Brand</MudTableSortLabel></MudTh>
-			<MudTh Style="width: 100px;">Actions</MudTh>
+			<MudTh Style="width: 170px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
@@ -37,7 +38,10 @@
 			<MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" /></MudTd>
 			<MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
 			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
-			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
+			<MudTd>
+				<MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context))">Delete</MudButton>
+				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+			</MudTd>
 		</RowTemplate>
 		<PagerContent>
 			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
@@ -74,9 +78,9 @@
 	{
 		state.PopulateListRequest(ListRequest);
 
-		IList<APlusContentModel> contents = APlusContentService.GetForListRequest(ListRequest);
+		IList<APlusContentModel> contents = ContentService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<APlusContentModel>() { TotalItems = APlusContentService.CountForListRequest(ListRequest), Items = contents });
+		return Task.FromResult(new TableData<APlusContentModel>() { TotalItems = ContentService.CountForListRequest(ListRequest), Items = contents });
 	}
 
 	private void OnRowsPerPageChanged(int rowsPerPage)
@@ -105,6 +109,20 @@
 		var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Content", ["IsEdit"] = true, ["APlusContentId"] = id }).Result;
 
 		ProcessDialogResult(result);
+	}
+
+	private async void Delete(APlusContentModel content)
+	{
+		DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete content <b>{content.Name}</b> ?" }).Result;
+
+		if (!result.Canceled)
+		{
+			ContentService.Delete(content.Id);
+
+			await Table.ReloadServerData();
+
+			Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Content"));
+		}
 	}
 
 	private void ProcessDialogResult(DialogResult result)

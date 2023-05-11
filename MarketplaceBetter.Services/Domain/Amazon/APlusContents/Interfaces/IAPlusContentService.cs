@@ -25,5 +25,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
         void Add(APlusContentModel content, IList<string> variantsSkus);
 
         void Update(APlusContentModel content, IList<string> variantsSkus);
-    }
+
+        void Delete(long id);
+
+	}
 }
