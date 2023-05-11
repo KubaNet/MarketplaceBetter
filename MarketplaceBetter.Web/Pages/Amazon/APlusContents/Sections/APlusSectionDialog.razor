@@ -26,6 +26,12 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title MinWidth="700" FormButtonsDisabled="FormButtonsDisabled" ShowProgressIcon="ShowProgressIcon">
         <DataAnnotationsValidator />
+        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
         <MudSelect Label="Brand" T="BrandModel" Value="Brand" For="() => Brand" ValueChanged="HandleBrandChanged">
             @foreach (var brand in Brands)
             {
@@ -36,12 +42,6 @@
             @foreach (var product in Products)
             {
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
-            @foreach (var instance in Instances)
-            {
-                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
         <MudSelect Label="Content" T="APlusContentModel" Value="SectionValue.Content" For="() => SectionValue.Content" ValueChanged="HandleContentChanged">
@@ -131,6 +131,10 @@
             {
                 SetValuesForCurrentBrand();
             }
+            if (UserService.IsSpecificInstance())
+            {
+                SetValuesForCurrentInstance();
+            }
         }
     }
 
@@ -153,6 +157,13 @@
         BrandModel currentBrand = Brands.Single(b => b.Id == UserService.GetCurrentBrand().Id);
 
         HandleBrandChanged(currentBrand);
+    }
+
+    private void SetValuesForCurrentInstance()
+    {
+        InstanceModel currentInstance = Instances.Single(i => i.Id == UserService.GetCurrentInstance().Id);
+
+        HandleInstanceChanged(currentInstance);
     }
 
     private void GetContents()

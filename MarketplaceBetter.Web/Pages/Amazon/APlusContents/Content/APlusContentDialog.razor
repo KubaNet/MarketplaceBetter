@@ -85,6 +85,11 @@
             {
                 SetValuesForCurrentBrand();
             }
+
+            if (UserService.IsSpecificInstance())
+            {
+                SetValuesForCurrentInstance();
+            }
         }
     }
 
@@ -110,6 +115,13 @@
         BrandModel currentBrand = Brands.Single(b => b.Id == UserService.GetCurrentBrand().Id);
 
         HandleBrandChanged(currentBrand);
+    }
+
+    private void SetValuesForCurrentInstance()
+    {
+        InstanceModel currentInstance = Instances.Single(i => i.Id == UserService.GetCurrentInstance().Id);
+
+        HandleInstanceChanged(currentInstance);
     }
 
     private void HandleInstanceChanged(InstanceModel instance)
