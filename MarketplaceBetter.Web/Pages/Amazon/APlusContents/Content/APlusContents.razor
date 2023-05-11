@@ -14,6 +14,7 @@
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
+			<MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
 			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Content</MudButton>
 		</ToolBarContent>
 		<HeaderContent>
@@ -50,7 +51,7 @@
 	private MudTable<APlusContentModel> Table;
 	private ListRequest ListRequest = new();
 
-	private HashSet<APlusContentModel> SelectedAPlusContents = new HashSet<APlusContentModel>();
+	private HashSet<APlusContentModel> SelectedContents = new HashSet<APlusContentModel>();
 	private bool NoneSelected = true;
 	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
@@ -114,11 +115,18 @@
 		}
 	}
 
-	private void OnSelectedItemsChanged(HashSet<APlusContentModel> selectedAPlusContents)
+	private async void ChangeStatusOfSelected()
 	{
-		SelectedAPlusContents = selectedAPlusContents;
+		var result = await DialogService.Show<APlusContentsSetStatusDialog>(null, new DialogParameters { ["Contents"] = SelectedContents.ToList() }).Result;
 
-		if (SelectedAPlusContents.Any())
+		ProcessDialogResult(result);
+	}
+
+	private void OnSelectedItemsChanged(HashSet<APlusContentModel> selectedContents)
+	{
+		SelectedContents = selectedContents;
+
+		if (SelectedContents.Any())
 		{
 			NoneSelected = false;
 		}

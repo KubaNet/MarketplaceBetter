@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -174,7 +175,25 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                 contents = contents.Where(c => c.Product.BrandId == currentBrand.Id);
             }
 
-            if (string.IsNullOrWhiteSpace(request.SearchString))
+			InstanceModel currentInstance = _userService.GetCurrentInstance();
+			if (currentInstance != null && _userService.IsSpecificInstance())
+			{
+				contents = contents.Where(c => c.InstanceId == currentInstance.Id);
+			}
+
+			bool showDrafts = _userService.ShowDrafts();
+			if (!showDrafts)
+			{
+				contents = contents.Where(c => c.Status.SystemName != EntityStatusEnum.Draft);
+			}
+
+			bool showWithdrawn = _userService.ShowWithdrawn();
+			if (!showWithdrawn)
+			{
+				contents = contents.Where(c => c.Status.SystemName != EntityStatusEnum.Withdrawn);
+			}
+
+			if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return contents;
             }

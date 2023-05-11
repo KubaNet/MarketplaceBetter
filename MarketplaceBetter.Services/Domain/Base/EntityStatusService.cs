@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -22,8 +24,9 @@ namespace MarketplaceBetter.Services.Domain.Base
         private readonly IRepository<EntityStatus> _repository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Variant> _variantRepository;
-        private readonly IRepository<ParentInstance> _parentInstanceRepository;
-        private readonly IRepository<ChildInstance> _childInstanceRepository;
+        private readonly IRepository<ParentInstance> _parentRepository;
+        private readonly IRepository<ChildInstance> _childRepository;
+        private readonly IRepository<APlusContent> _contentRepository;
 
         public EntityStatusService(
             IMapper mapper,
@@ -34,8 +37,9 @@ namespace MarketplaceBetter.Services.Domain.Base
             _repository = unitOfWork.GetRepository<EntityStatus>();
             _productRepository = unitOfWork.GetRepository<Product>();
             _variantRepository = unitOfWork.GetRepository<Variant>();
-            _parentInstanceRepository = unitOfWork.GetRepository<ParentInstance>();
-            _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
+            _parentRepository = unitOfWork.GetRepository<ParentInstance>();
+            _childRepository = unitOfWork.GetRepository<ChildInstance>();
+            _contentRepository = unitOfWork.GetRepository<APlusContent>();
         }
 
         public IList<EntityStatusModel> GetAll() => _mapper.Map<IList<EntityStatusModel>>(_repository.GetQuery().OrderBy(s => s.SystemName));
@@ -71,37 +75,49 @@ namespace MarketplaceBetter.Services.Domain.Base
             }
         }
 
-        public void ChangeStatus(IList<ParentInstanceModel> parentInstances, EntityStatusModel status)
+        public void ChangeStatus(IList<ParentInstanceModel> parents, EntityStatusModel status)
         {
-            foreach (var parentInstance in parentInstances)
+            foreach (var parent in parents)
             {
-                ParentInstance parentInstanceToUpdate = _parentInstanceRepository.Get(parentInstance.Id);
+                ParentInstance parentToUpdate = _parentRepository.Get(parent.Id);
 
-                parentInstanceToUpdate.StatusId = status.Id;
-                _parentInstanceRepository.Update(parentInstanceToUpdate);
+                parentToUpdate.StatusId = status.Id;
+                _parentRepository.Update(parentToUpdate);
 
                 _unitOfWork.Save();
 
-                OnParentInstanceStatusChangeUp(parentInstanceToUpdate, status.Id);
-                OnParentInstanceStatusChangeOfChilds(parentInstanceToUpdate, status.Id);
+                OnParentInstanceStatusChangeUp(parentToUpdate, status.Id);
+                OnParentInstanceStatusChangeOfChilds(parentToUpdate, status.Id);
             }
         }
 
-        public void ChangeStatus(IList<ChildInstanceModel> childInstances, EntityStatusModel status)
+        public void ChangeStatus(IList<ChildInstanceModel> childs, EntityStatusModel status)
         {
-            foreach (var childInstance in childInstances)
+            foreach (var child in childs)
             {
-                ChildInstance childInstanceToUpdate = _childInstanceRepository.Get(childInstance.Id);
-                childInstanceToUpdate.StatusId = status.Id;
+                ChildInstance childToUpdate = _childRepository.Get(child.Id);
+                childToUpdate.StatusId = status.Id;
 
-                _childInstanceRepository.Update(childInstanceToUpdate);
+                _childRepository.Update(childToUpdate);
                 _unitOfWork.Save();
 
-                OnChildInstanceStatusChangeUp(childInstanceToUpdate, status.Id, true);
+                OnChildInstanceStatusChangeUp(childToUpdate, status.Id, true);
             }
         }
 
-        private void OnProductStatusChangeDown(long productId, long statusId, bool updateVariants, bool updateParentInstances)
+		public void ChangeStatus(IList<APlusContentModel> contents, EntityStatusModel status)
+		{
+			foreach (var content in contents)
+			{
+				APlusContent contentToUpdate = _contentRepository.Get(content.Id);
+				contentToUpdate.StatusId = status.Id;
+
+				_contentRepository.Update(contentToUpdate);
+                _unitOfWork.Save();
+			}
+		}
+
+		private void OnProductStatusChangeDown(long productId, long statusId, bool updateVariants, bool updateParentInstances)
         {
             if (updateVariants)
             {
@@ -120,12 +136,12 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             if (updateParentInstances)
             {
-                IList<ParentInstance> parentInstances = _parentInstanceRepository.Where(p => p.ProductId == productId).ToList();
+                IList<ParentInstance> parentInstances = _parentRepository.Where(p => p.ProductId == productId).ToList();
 
                 foreach (var parentInstance in parentInstances)
                 {
                     parentInstance.StatusId = statusId;
-                    _parentInstanceRepository.Update(parentInstance);
+                    _parentRepository.Update(parentInstance);
 
                     _unitOfWork.Save();
                 }
@@ -134,7 +150,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private void OnParentInstanceStatusChangeUp(ParentInstance parentInstance, long statusId)
         {
-            if (!_parentInstanceRepository.Any(p => p.ProductId == parentInstance.ProductId && p.StatusId != statusId))
+            if (!_parentRepository.Any(p => p.ProductId == parentInstance.ProductId && p.StatusId != statusId))
             {
                 Product product = _productRepository.Get(parentInstance.ProductId);
                 product.StatusId = statusId;
@@ -148,13 +164,13 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private void OnParentInstanceStatusChangeOfChilds(ParentInstance parentInstance, long statusId)
         {
-            IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => c.Variant.ProductId == parentInstance.ProductId && c.InstanceId == parentInstance.InstanceId).ToList();
+            IList<ChildInstance> childInstances = _childRepository.Where(c => c.Variant.ProductId == parentInstance.ProductId && c.InstanceId == parentInstance.InstanceId).ToList();
             foreach (var childInstance in childInstances)
             {
-                ChildInstance childInstanceToUpdate = _childInstanceRepository.Get(childInstance.Id);
+                ChildInstance childInstanceToUpdate = _childRepository.Get(childInstance.Id);
                 childInstanceToUpdate.StatusId = statusId;
 
-                _childInstanceRepository.Update(childInstanceToUpdate);
+                _childRepository.Update(childInstanceToUpdate);
                 _unitOfWork.Save();
 
                 OnChildInstanceStatusChangeUp(childInstanceToUpdate, statusId, false);
@@ -163,12 +179,12 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private void OnVariantStatusChangeDown(long variantId, long statusId)
         {
-            IList<ChildInstance> childInstances = _childInstanceRepository.Where(c => c.VariantId == variantId).ToList();
+            IList<ChildInstance> childInstances = _childRepository.Where(c => c.VariantId == variantId).ToList();
 
             foreach (var childInstance in childInstances)
             {
                 childInstance.StatusId = statusId;
-                _childInstanceRepository.Update(childInstance);
+                _childRepository.Update(childInstance);
             }
 
             _unitOfWork.Save();
@@ -190,7 +206,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private void OnChildInstanceStatusChangeUp(ChildInstance childInstance, long statusId, bool updateParentInstances)
         {
-            if (!_childInstanceRepository.Any(c => c.VariantId == childInstance.VariantId && c.StatusId != statusId))
+            if (!_childRepository.Any(c => c.VariantId == childInstance.VariantId && c.StatusId != statusId))
             {
                 Variant variant = _variantRepository.Get(childInstance.VariantId);
                 variant.StatusId = statusId;

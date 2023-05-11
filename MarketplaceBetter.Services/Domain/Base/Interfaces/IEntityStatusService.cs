@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+﻿using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using System;
@@ -17,8 +18,10 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 
         void ChangeStatus(IList<VariantModel> variants, EntityStatusModel status);
 
-        void ChangeStatus(IList<ParentInstanceModel> parentInstances, EntityStatusModel status);
+        void ChangeStatus(IList<ParentInstanceModel> parents, EntityStatusModel status);
 
-        void ChangeStatus(IList<ChildInstanceModel> childInstances, EntityStatusModel status);
-    }
+        void ChangeStatus(IList<ChildInstanceModel> childs, EntityStatusModel status);
+
+		void ChangeStatus(IList<APlusContentModel> contents, EntityStatusModel status);
+	}
 }

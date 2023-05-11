@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -10,6 +12,7 @@ using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Specialized.Interfaces;
+using Microsoft.VisualBasic;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -223,6 +226,24 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			if (currentBrand != null && _userService.IsSpecificBrand())
 			{
 				sections = sections.Where(s => s.Content.Product.BrandId == currentBrand.Id);
+			}
+
+			InstanceModel currentInstance = _userService.GetCurrentInstance();
+			if (currentInstance != null && _userService.IsSpecificInstance())
+			{
+				sections = sections.Where(s => s.Content.InstanceId == currentInstance.Id);
+			}
+
+			bool showDrafts = _userService.ShowDrafts();
+			if (!showDrafts)
+			{
+				sections = sections.Where(s => s.Content.Status.SystemName != EntityStatusEnum.Draft);
+			}
+
+			bool showWithdrawn = _userService.ShowWithdrawn();
+			if (!showWithdrawn)
+			{
+				sections = sections.Where(s => s.Content.Status.SystemName != EntityStatusEnum.Withdrawn);
 			}
 
 			if (string.IsNullOrWhiteSpace(request.SearchString))

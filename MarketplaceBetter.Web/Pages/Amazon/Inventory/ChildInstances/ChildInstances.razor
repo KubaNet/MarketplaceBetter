@@ -10,9 +10,9 @@
 <MudText Typo="Typo.h4" Class="mt-2">Child Instances</MudText>
 
 <MainBody>
-    <MudTable T="ChildInstanceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildInstanceModel>>>(ReloadChildInstances))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="ChildInstanceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildInstanceModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterChildInstances" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
         </ToolBarContent>
@@ -38,7 +38,7 @@
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Variant.Product.Brand.Name</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditChildInstance(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -85,7 +85,7 @@
         }
     }
 
-    private Task<TableData<ChildInstanceModel>> ReloadChildInstances(TableState state)
+    private Task<TableData<ChildInstanceModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -99,7 +99,7 @@
         CurrentRowsPerPageValue = rowsPerPage;
     }
 
-    private void FilterChildInstances(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -108,21 +108,21 @@
         StateHasChanged();
     }
 
-    private async void AddChildInstance()
+    private async void Add()
     {
         var result = await DialogService.Show<ChildInstanceDialog>(null, new DialogParameters { ["Title"] = "Add Child Instance" }).Result;
 
-        ProcessChildInstanceDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditChildInstance(long id)
+    private async void Edit(long id)
     {
         var result = await DialogService.Show<ChildInstanceDialog>(null, new DialogParameters { ["Title"] = "Edit Child Instance", ["IsEdit"] = true, ["ChildInstanceId"] = id }).Result;
 
-        ProcessChildInstanceDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void DeleteChildInstance(long id, string sku)
+    private async void Delete(long id, string sku)
     {
         DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child instance <b>{sku}</b> ?" }).Result;
 
@@ -136,7 +136,7 @@
         }
     }
 
-    private void ProcessChildInstanceDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {
@@ -148,7 +148,7 @@
     {
         var result = await DialogService.Show<ChildInstancesSetStatusDialog>(null, new DialogParameters { ["ChildInstances"] = SelectedChilds.ToList() }).Result;
 
-        ProcessChildInstanceDialogResult(result);
+        ProcessDialogResult(result);
     }
 
     private void OnSelectedItemsChanged(HashSet<ChildInstanceModel> selectedChilds)

@@ -1,13 +1,12 @@
-﻿@using MarketplaceBetter.Domain.Model.Base;
-@using MarketplaceBetter.Domain.Model.Catalog.Products;
+﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
-@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 
 @inject ISnackbar Snackbar
 @inject IEntityStatusService EntityStatusService
 
 <EditForm Model="Status" OnValidSubmit="@HandleValidSubmit">
-    <FormDialog Title="Change status of Variants">
+    <FormDialog Title="Change status of A+ Contents">
         <MudSelect Label="Status" T="EntityStatusModel" @bind-Value="Status">
             @foreach (var status in Statuses)
             {
@@ -19,7 +18,7 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public IList<VariantModel> Variants { get; set; }
+    [Parameter] public IList<APlusContentModel> Contents { get; set; }
 
     private EntityStatusModel Status = new EntityStatusModel();
     private IList<EntityStatusModel> Statuses;
@@ -35,9 +34,9 @@
 
     private void HandleValidSubmit()
     {
-        EntityStatusService.ChangeStatus(Variants, Status);
+        EntityStatusService.ChangeStatus(Contents, Status);
 
-        Snackbar.AddSuccess("Status of Variants was successfully changed.");
+        Snackbar.AddSuccess("Status of A+ Contents was successfully changed.");
 
         MudDialog.Close();
     }
