@@ -13,7 +13,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
     {
         public APlusContent()
         {
-            Sections = new List<APlusSectionValue>();
+            Modules = new List<APlusModuleValue>();
             Variants = new List<APlusContentVariant>();
         }
 
@@ -31,7 +31,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 
         public virtual EntityStatus Status { get; set; }
 
-        public virtual IList<APlusSectionValue> Sections { get; set; }
+        public virtual IList<APlusModuleValue> Modules { get; set; }
 
         public virtual IList<APlusContentVariant> Variants { get; set; }
     }

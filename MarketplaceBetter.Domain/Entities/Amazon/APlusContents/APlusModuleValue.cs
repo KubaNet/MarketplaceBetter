@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 {
-    public class APlusSectionValue : Entity
+    public class APlusModuleValue : Entity
     {
-        public APlusSectionValue()
+        public APlusModuleValue()
         {
             Elements = new List<APlusElementValue>();
         }
 
-        public long SectionId { get; set; }
+        public long ModuleId { get; set; }
 
-        public virtual APlusSection Section { get; set; }
+        public virtual APlusModule Module { get; set; }
 
         public int Order { get; set; }
 

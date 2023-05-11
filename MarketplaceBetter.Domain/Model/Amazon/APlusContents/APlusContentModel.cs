@@ -13,7 +13,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
     {
         public APlusContentModel()
         {
-            Sections = new List<APlusSectionValueModel>();
+            Modules = new List<APlusModuleValueModel>();
             Variants = new List<APlusContentVariantModel>();
         }
 
@@ -30,7 +30,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 
         public EntityStatusModel Status { get; set; }
 
-        public IList<APlusSectionValueModel> Sections { get; set; }
+        public IList<APlusModuleValueModel> Modules { get; set; }
 
         public IList<APlusContentVariantModel> Variants { get; set; }
     }

@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
 {
-	public interface IAPlusSectionValueService
+	public interface IAPlusModuleValueService
 	{
-		APlusSectionValueModel Get(long id);
+		APlusModuleValueModel Get(long id);
 
 		int CountForListRequest(ListRequest request);
 
-		IList<APlusSectionValueModel> GetForListRequest(ListRequest request);
+		IList<APlusModuleValueModel> GetForListRequest(ListRequest request);
 
 		int GetNextOrder(long contentId);
 
-		void Add(APlusSectionValueModel section);
+		void Add(APlusModuleValueModel module);
 
-		void Update(APlusSectionValueModel section, IList<string> imagesToDelete);
+		void Update(APlusModuleValueModel module, IList<string> imagesToDelete);
 
 		void Delete(long id);
 	}

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 {
-    public class APlusSectionModel
+    public class APlusModuleModel
     {
         public long Id { get; set; }
 
         public string Name { get; set; }
 
-        public APlusSectionEnum SystemName { get; set; }
+        public APlusModuleEnum SystemName { get; set; }
 
         public IList<APlusElementModel> Elements { get; set; }
     }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 {
-    public class APlusSection : Entity
+    public class APlusModule : Entity
     {
         public string Name { get; set; }
 
-        public APlusSectionEnum SystemName { get; set; }
+        public APlusModuleEnum SystemName { get; set; }
 
         public virtual IList<APlusElement> Elements { get; set; }
     }

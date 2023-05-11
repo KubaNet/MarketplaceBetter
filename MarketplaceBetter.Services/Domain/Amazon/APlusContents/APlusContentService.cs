@@ -31,13 +31,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         private readonly IRepository<Variant> _variantRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IUserService _userService;
-        private readonly IAPlusSectionValueService _sectionService;
+        private readonly IAPlusModuleValueService _moduleService;
 
         public APlusContentService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IUserService userService,
-			IAPlusSectionValueService sectionService)
+			IAPlusModuleValueService moduleService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -45,7 +45,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             _variantRepository = unitOfWork.GetRepository<Variant>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _userService = userService;
-            _sectionService = sectionService;
+            _moduleService = moduleService;
         }
 
         public APlusContentModel Get(long id) => _mapper.Map<APlusContentModel>(_repository.Get(id));
@@ -136,10 +136,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         {
             APlusContent content = _repository.Get(id);
 
-            IList<long> sectionIds = content.Sections.Select(s => s.Id).ToList();
-            foreach (var sectionId in sectionIds)
+            IList<long> modulesIds = content.Modules.Select(s => s.Id).ToList();
+            foreach (var moduleId in modulesIds)
             {
-                _sectionService.Delete(sectionId);
+                _moduleService.Delete(moduleId);
             }
 
             _repository.Delete(content);

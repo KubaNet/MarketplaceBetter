@@ -2,29 +2,29 @@
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Model;
 
-@page "/a-plus-sections"
+@page "/a-plus-modules"
 
 @inject ISnackbar Snackbar
-@inject IAPlusSectionValueService SectionValueService
+@inject IAPlusModuleValueService ModuleValueService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h4" Class="mt-2">A+ Sections</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">A+ Modules</MudText>
 
 <MainBody>
-    <MudTable T="APlusSectionValueModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusSectionValueModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="APlusModuleValueModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusModuleValueModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Section</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Module</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortLabel="id" T="APlusSectionValueModel">Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="content" T="APlusSectionValueModel">Content</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="product" T="APlusSectionValueModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="APlusModuleValueModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="content" T="APlusModuleValueModel">Content</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="APlusModuleValueModel">Product</MudTableSortLabel></MudTh>
             <MudTh>Variant</MudTh>
-            <MudTh><MudTableSortLabel SortLabel="name" T="APlusSectionValueModel">Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="elements" T="APlusSectionValueModel">Elements</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="order" T="APlusSectionValueModel">Order</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="APlusModuleValueModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="elements" T="APlusModuleValueModel">Elements</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="order" T="APlusModuleValueModel">Order</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
             <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
@@ -33,7 +33,7 @@
             <MudTd DataLabel="Content">@context.Content.Name</MudTd>
             <MudTd DataLabel="Product">@context.Content.Product.Code</MudTd>
             <MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Content.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" /></MudTd>
-            <MudTd DataLabel="Name">@context.Section.Name</MudTd>
+            <MudTd DataLabel="Name">@context.Module.Name</MudTd>
             <MudTd DataLabel="Elements"><APlusElementsDisplay Elements="context.Elements" /></MudTd>
             <MudTd DataLabel="Order">@context.Order</MudTd>
             <MudTd DataLabel="Instance">@context.Content.Instance.Name</MudTd>
@@ -52,10 +52,10 @@
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
     [Parameter][SupplyParameterFromQuery] public string ContentName { get; set; }
 
-    private MudTable<APlusSectionValueModel> Table;
+    private MudTable<APlusModuleValueModel> Table;
     private ListRequest ListRequest = new();
 
-    private HashSet<APlusSectionValueModel> SelectedAPlusSections = new HashSet<APlusSectionValueModel>();
+    private HashSet<APlusModuleValueModel> SelectedModules = new HashSet<APlusModuleValueModel>();
     private bool NoneSelected = true;
     private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
@@ -78,13 +78,13 @@
         }
     }
 
-    private Task<TableData<APlusSectionValueModel>> Reload(TableState state)
+    private Task<TableData<APlusModuleValueModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<APlusSectionValueModel> sections = SectionValueService.GetForListRequest(ListRequest);
+        IList<APlusModuleValueModel> module = ModuleValueService.GetForListRequest(ListRequest);
 
-        return Task.FromResult(new TableData<APlusSectionValueModel>() { TotalItems = SectionValueService.CountForListRequest(ListRequest), Items = sections });
+        return Task.FromResult(new TableData<APlusModuleValueModel>() { TotalItems = ModuleValueService.CountForListRequest(ListRequest), Items = module });
     }
 
     private void OnRowsPerPageChanged(int rowsPerPage)
@@ -105,7 +105,7 @@
     {
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-        var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Add A+ Section" }, options).Result;
+        var result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module" }, options).Result;
 
         ProcessDialogResult(result);
     }
@@ -114,22 +114,22 @@
     {
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-        var result = await DialogService.Show<APlusSectionDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Section", ["IsEdit"] = true, ["SectionValueId"] = id }, options).Result;
+        var result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Module", ["IsEdit"] = true, ["ModuleValueId"] = id }, options).Result;
 
         ProcessDialogResult(result);
     }
 
-    private async void Delete(APlusSectionValueModel sectionValue)
+    private async void Delete(APlusModuleValueModel moduleValue)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete section <b>{ sectionValue.Section.Name }</b> for content <b>{ sectionValue.Content.Name }</b> ?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete module <b>{ moduleValue.Module.Name }</b> for content <b>{ moduleValue.Content.Name }</b> ?" }).Result;
 
         if (!result.Canceled)
         {
-            SectionValueService.Delete(sectionValue.Id);
+            ModuleValueService.Delete(moduleValue.Id);
 
             await Table.ReloadServerData();
 
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Section"));
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Module"));
         }
     }
 
@@ -141,11 +141,11 @@
         }
     }
 
-    private void OnSelectedItemsChanged(HashSet<APlusSectionValueModel> selectedAPlusSections)
+    private void OnSelectedItemsChanged(HashSet<APlusModuleValueModel> selectedAPlusModules)
     {
-        SelectedAPlusSections = selectedAPlusSections;
+        SelectedModules = selectedAPlusModules;
 
-        if (SelectedAPlusSections.Any())
+        if (SelectedModules.Any())
         {
             NoneSelected = false;
         }

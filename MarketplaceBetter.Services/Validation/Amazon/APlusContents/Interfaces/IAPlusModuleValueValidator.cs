@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces
 {
-	public interface IAPlusSectionValueValidator
+	public interface IAPlusModuleValueValidator
 	{
-		ValidationResult Validate(APlusSectionValueModel section);
+		ValidationResult Validate(APlusModuleValueModel module);
 	}
 }

@@ -12,17 +12,17 @@
 @using TinyMCE.Blazor;
 
 @inject ISnackbar Snackbar
-@inject IAPlusSectionValueService SectionValueService
-@inject IAPlusSectionValueValidator SectionValueValidator
+@inject IAPlusModuleValueService ModuleValueService
+@inject IAPlusModuleValueValidator ModuleValueValidator
 @inject IAPlusImageCloudService ImageCloudService
 @inject IAPlusContentService ContentService
-@inject IAPlusSectionService SectionService
+@inject IAPlusModuleService ModuleService
 @inject IInstanceService InstanceService
 @inject IBrandService BrandService
 @inject IProductService ProductService
 @inject IUserService UserService
 
-<EditForm Model="SectionValue" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="ModuleValue" OnValidSubmit="HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title MinWidth="700" FormButtonsDisabled="FormButtonsDisabled" ShowProgressIcon="ShowProgressIcon">
         <DataAnnotationsValidator />
@@ -44,24 +44,24 @@
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Content" T="APlusContentModel" Value="SectionValue.Content" For="() => SectionValue.Content" ValueChanged="HandleContentChanged">
+        <MudSelect Label="Content" T="APlusContentModel" Value="ModuleValue.Content" For="() => ModuleValue.Content" ValueChanged="HandleContentChanged">
             @foreach (var content in Contents)
             {
                 <MudSelectItem Value="content">@content.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudNumericField Label="Order" T="int" @bind-Value="SectionValue.Order" Variant="Variant.Text" Min="1" Max="Standard.APlusSectionsMaxNumber" HideSpinButtons="true" Disabled="OrderDisabled" />
-        <MudSelect Label="Type" T="APlusSectionModel" Value="SectionValue.Section" For="() => SectionValue.Section" ValueChanged="HandleSectionChanged">
-            @foreach (var sectionItem in Sections)
+        <MudNumericField Label="Order" T="int" @bind-Value="ModuleValue.Order" Variant="Variant.Text" Min="1" Max="Standard.APlusModulesMaxNumber" HideSpinButtons="true" Disabled="OrderDisabled" />
+        <MudSelect Label="Type" T="APlusModuleModel" Value="ModuleValue.Module" For="() => ModuleValue.Module" ValueChanged="HandleModuleChanged">
+            @foreach (var moduleItem in Modules)
             {
-                <MudSelectItem Value="sectionItem">@sectionItem.Name</MudSelectItem>
+                <MudSelectItem Value="moduleItem">@moduleItem.Name</MudSelectItem>
             }
         </MudSelect>
-        @if (SectionValue.Elements.Any())
+        @if (ModuleValue.Elements.Any())
         {
             <MudText Typo="Typo.h6" Class="mt-3">Elements:</MudText>
         }
-        @foreach (var elementValue in SectionValue.Elements.OrderBy(e => e.Element.Order))
+        @foreach (var elementValue in ModuleValue.Elements.OrderBy(e => e.Element.Order))
         {
             @switch (elementValue.Element.Type.SystemName)
             {
@@ -85,13 +85,13 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long SectionValueId { get; set; }
+    [Parameter] public long ModuleValueId { get; set; }
 
     private CustomValidation CustomValidation = new();
     private BrandModel Brand;
     private ProductModel Product;
     private InstanceModel Instance;
-    private APlusSectionValueModel SectionValue = new APlusSectionValueModel();
+    private APlusModuleValueModel ModuleValue = new APlusModuleValueModel();
     private IDictionary<string, IBrowserFile> ImagesToAdd = new Dictionary<string, IBrowserFile>();
     private IList<string> ImagesToDelete = new List<string>();
 
@@ -99,7 +99,7 @@
     private IList<InstanceModel> Instances;
     private IList<APlusContentModel> Contents;
     private IList<ProductModel> Products = new List<ProductModel>();
-    private IList<APlusSectionModel> Sections;
+    private IList<APlusModuleModel> Modules;
 
     private bool ProductDisabled = true;
     private bool OrderDisabled = true;
@@ -119,7 +119,7 @@
         Brands = BrandService.GetAll(true);
         Instances = InstanceService.GetAllNormal(true);
         Contents = ContentService.GetAll(true);
-        Sections = SectionService.GetAll();
+        Modules = ModuleService.GetAll();
 
         if (IsEdit)
         {
@@ -142,14 +142,14 @@
     {
         OrderDisabled = false;
 
-        SectionValue = SectionValueService.Get(SectionValueId);
-        Brand = Brands.Single(b => b.Id == SectionValue.Content.Product.Brand.Id);
+        ModuleValue = ModuleValueService.Get(ModuleValueId);
+        Brand = Brands.Single(b => b.Id == ModuleValue.Content.Product.Brand.Id);
         ActivateProduct(Brand.Id);
-        Product = Products.Single(p => p.Id == SectionValue.Content.Product.Id);
-        Instance = Instances.Single(i => i.Id == SectionValue.Content.Instance.Id);
+        Product = Products.Single(p => p.Id == ModuleValue.Content.Product.Id);
+        Instance = Instances.Single(i => i.Id == ModuleValue.Content.Instance.Id);
 
-        SectionValue.Content = Contents.Single(c => c.Id == SectionValue.Content.Id);
-        SectionValue.Section = Sections.Single(s => s.Id == SectionValue.Section.Id);
+        ModuleValue.Content = Contents.Single(c => c.Id == ModuleValue.Content.Id);
+        ModuleValue.Module = Modules.Single(s => s.Id == ModuleValue.Module.Id);
     }
 
     private void SetValuesForCurrentBrand()
@@ -168,8 +168,8 @@
 
     private void GetContents()
     {
-        SectionValue.Content = null;
-        SectionValue.Order = 0;
+        ModuleValue.Content = null;
+        ModuleValue.Order = 0;
         OrderDisabled = true;
         Contents = ContentService.GetAllFor(Brand, Product, Instance);
     }
@@ -213,25 +213,25 @@
 
     private void HandleContentChanged(APlusContentModel content)
     {
-        SectionValue.Content = content;
+        ModuleValue.Content = content;
 
         OrderDisabled = false;
-        SectionValue.Order = SectionValueService.GetNextOrder(content.Id);
+        ModuleValue.Order = ModuleValueService.GetNextOrder(content.Id);
     }
 
-    private void HandleSectionChanged(APlusSectionModel section)
+    private void HandleModuleChanged(APlusModuleModel module)
     {
-        SectionValue.Section = section;
+        ModuleValue.Module = module;
 
-        UpdateElements(section);
+        UpdateElements(module);
     }
 
-    private void UpdateElements(APlusSectionModel section)
+    private void UpdateElements(APlusModuleModel module)
     {
-        SectionValue.Elements.Clear();
+        ModuleValue.Elements.Clear();
         ImagesToAdd.Clear();
 
-        foreach (var element in section.Elements)
+        foreach (var element in module.Elements)
         {
             APlusElementValueModel elementValue = new() { Element = element };
             if (element.Type.SystemName == APlusElementTypeEnum.BodyText)
@@ -239,13 +239,13 @@
                 elementValue.BodyText = element.Name;
             }
 
-            SectionValue.Elements.Add(elementValue);
+            ModuleValue.Elements.Add(elementValue);
         }
     }
 
     private async void HandleValidSubmit()
     {
-        ValidationResult result = SectionValueValidator.Validate(SectionValue);
+        ValidationResult result = ModuleValueValidator.Validate(ModuleValue);
 
         if (result.IsValid)
         {
@@ -258,11 +258,11 @@
                 await image.Value.OpenReadStream(Standard.UploadPhotoSizeLimit).CopyToAsync(imageStream);
                 imageStream.Seek(0, SeekOrigin.Begin);
 
-                APlusElementValueModel elementValue = SectionValue.Elements.Single(e => e.Element.Name == image.Key);
+                APlusElementValueModel elementValue = ModuleValue.Elements.Single(e => e.Element.Name == image.Key);
 
                 string extension = image.Value.Name.Substring(image.Value.Name.LastIndexOf('.') + 1);
-                string shortName = $"{SectionValue.Order}_{SectionValue.Section.Name.Replace("&", string.Empty).WithoutSpaces()}_{elementValue.Element.Name.WithoutSpaces()}.{extension}";
-                string fullName = $"{SectionValue.Content.Name.WithoutSpaces()}/{shortName}";
+                string shortName = $"{ModuleValue.Order}_{ModuleValue.Module.Name.Replace("&", string.Empty).WithoutSpaces()}_{elementValue.Element.Name.WithoutSpaces()}.{extension}";
+                string fullName = $"{ModuleValue.Content.Name.WithoutSpaces()}/{shortName}";
 
                 APlusImageUploadResult uploadResult = ImageCloudService.Upload(imageStream, fullName);
 
@@ -277,13 +277,13 @@
 
             if (IsEdit)
             {
-                SectionValueService.Update(SectionValue, ImagesToDelete);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("A+ Section"));
+                ModuleValueService.Update(ModuleValue, ImagesToDelete);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("A+ Module"));
             }
             else
             {
-                SectionValueService.Add(SectionValue);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ Section"));
+                ModuleValueService.Add(ModuleValue);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ Module"));
             }
 
             MudDialog.Close();

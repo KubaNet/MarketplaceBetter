@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Amazon.APlusContents
 {
-    public class APlusSectionValueProfile : Profile
+    public class APlusModuleValueProfile : Profile
     {
-        public APlusSectionValueProfile()
+        public APlusModuleValueProfile()
         {
-            CreateMap<APlusSectionValue, APlusSectionValueModel>();
+            CreateMap<APlusModuleValue, APlusModuleValueModel>();
         }
     }
 }

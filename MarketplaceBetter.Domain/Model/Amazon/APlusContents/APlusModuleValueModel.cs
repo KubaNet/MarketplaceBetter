@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 {
-    public class APlusSectionValueModel
+    public class APlusModuleValueModel
     {
-        public APlusSectionValueModel()
+        public APlusModuleValueModel()
         {
             Elements = new List<APlusElementValueModel>();
         }
@@ -17,7 +17,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
         public long Id { get; set; }
 
         [Required]
-        public APlusSectionModel Section { get; set; }
+        public APlusModuleModel Module { get; set; }
 
         [Required]
         public int Order { get; set; }

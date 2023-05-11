@@ -30,21 +30,21 @@ namespace MarketplaceBetter.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<APlusContent>()
-                .HasMany(c => c.Sections)
+                .HasMany(c => c.Modules)
                 .WithOne(s => s.Content)
                 .HasForeignKey("ContentId")
                 .IsRequired();
 
-            modelBuilder.Entity<APlusSection>()
+            modelBuilder.Entity<APlusModule>()
                 .HasMany(s => s.Elements)
                 .WithOne()
-                .HasForeignKey("SectionId")
+                .HasForeignKey("ModuleId")
                 .IsRequired();
 
-            modelBuilder.Entity<APlusSectionValue>()
+            modelBuilder.Entity<APlusModuleValue>()
                 .HasMany(s => s.Elements)
                 .WithOne()
-                .HasForeignKey("SectionValueId")
+                .HasForeignKey("ModuleValueId")
                 .IsRequired();
 
             modelBuilder.Entity<APlusContent>()
@@ -91,10 +91,10 @@ namespace MarketplaceBetter.Infrastructure.Data
         // => APlusContent
         public DbSet<APlusElementType> APlusElementType { get; set; }
         public DbSet<APlusElement> APlusElement { get; set; }
-        public DbSet<APlusSection> APlusSection { get; set; }
+        public DbSet<APlusModule> APlusModule { get; set; }
         public DbSet<APlusImage> APlusImage { get; set; }
         public DbSet<APlusElementValue> APlusElementValue { get; set; }
-        public DbSet<APlusSectionValue> APlusSectionValue { get; set; }
+        public DbSet<APlusModuleValue> APlusModuleValue { get; set; }
         public DbSet<APlusContent> APlusContent { get; set; }
         public DbSet<APlusContentVariant> APlusContentVariant { get; set; }
         // => Campaigns

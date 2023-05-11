@@ -1,8 +1,8 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 
-@if (Content.Sections.Any())
+@if (Content.Modules.Any())
 {
-    <MudLink Href="@Link" title="Click to see" Style="text-decoration: none;">@Content.Sections.Count sections</MudLink>
+    <MudLink Href="@Link" title="Click to see" Style="text-decoration: none;">@Content.Modules.Count modules</MudLink>
 }
 
 @code {
@@ -14,9 +14,9 @@
     {
         base.OnInitialized();
 
-        if (Content.Sections.Any())
+        if (Content.Modules.Any())
         {
-            Link = $"a-plus-sections?ContentName={ Content.Name }";
+            Link = $"a-plus-modules?ContentName={ Content.Name }";
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 {
-    public enum APlusSectionEnum
+    public enum APlusModuleEnum
     {
         None = 0,
 

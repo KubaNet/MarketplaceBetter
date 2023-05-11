@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
 {
-    public interface IAPlusSectionService
+    public interface IAPlusModuleService
     {
-        IList<APlusSectionModel> GetAll();
+        IList<APlusModuleModel> GetAll();
     }
 }
