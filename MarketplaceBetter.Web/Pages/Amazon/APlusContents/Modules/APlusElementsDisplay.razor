@@ -7,6 +7,30 @@
 
 @foreach (var elementValue in Elements)
 {
+    switch (elementValue.Element.Type.SystemName)
+    {
+        case APlusElementTypeEnum.SingleLineText:
+            if (string.IsNullOrWhiteSpace(elementValue.SingleLineText))
+            {
+                continue;
+            }
+            break;
+        case APlusElementTypeEnum.BodyText:
+            if (string.IsNullOrWhiteSpace(elementValue.BodyText))
+            {
+                continue;
+            }
+            break;
+        case APlusElementTypeEnum.Image:
+            if (elementValue.Image == null)
+            {
+                continue;
+            }
+            break;
+        default:
+            throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+    }
+
     string elementName = elementValue.Element.Name;
     bool hasValue = !string.IsNullOrWhiteSpace(elementValue.SingleLineText) || !string.IsNullOrWhiteSpace(elementValue.BodyText)
         || elementValue.Image != null;
@@ -49,7 +73,7 @@
                 <MudTooltip Placement="Placement.Right">
                     <ChildContent>
                         <MudLink Typo="Typo.body2" Href="@ImageCloudService.GetOriginalUrl(elementValue.Image.CloudId, elementValue.Image.Version)" Target="_blank" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" Class="ml-3" Style="font-weight: bold; text-decoration: none;">
-                            @elementValue.Element.Name                        
+                            @elementValue.Element.Name
                         </MudLink>
                     </ChildContent>
                     <TooltipContent>Click to open in new window</TooltipContent>
