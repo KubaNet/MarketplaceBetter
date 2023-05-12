@@ -18,6 +18,8 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
 
         public long? ImageId { get; set; }
 
+        public bool TrueOrFalse { get; set; }
+
         public virtual APlusImage Image { get; set; }
     }
 }

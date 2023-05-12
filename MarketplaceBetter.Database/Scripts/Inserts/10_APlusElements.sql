@@ -26,8 +26,8 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 5 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Highlight Column [yes/no] (product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 5, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 5 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Highlight Column (product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 5, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column (product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 5 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 6 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -56,8 +56,8 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 10 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Highlight Column [yes/no] (product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 10, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 10 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Highlight Column (product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 10, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column (product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 10 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 11 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -86,8 +86,8 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 15 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Highlight Column [yes/no] (product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 15, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 15 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Highlight Column (product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 15, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column (product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 15 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 16 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -116,8 +116,8 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 20 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Highlight Column [yes/no] (product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 20, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 20 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Highlight Column (product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 20, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column (product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 20 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 21 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -146,8 +146,8 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 25 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Highlight Column [yes/no] (product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 25, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 25 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Highlight Column (product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 25, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column (product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 25 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 26 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -176,8 +176,8 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 30 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Highlight Column [yes/no] (product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 30, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column [yes/no] (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 30 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Highlight Column (product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 30, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Highlight Column (product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 30 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 31 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))

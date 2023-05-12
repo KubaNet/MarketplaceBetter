@@ -15,5 +15,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.APlusContents
         BodyText = 2,
 
         Image = 3,
+
+        TrueOrFalse = 4,
     }
 }

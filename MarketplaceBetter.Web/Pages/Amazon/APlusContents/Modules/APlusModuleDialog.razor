@@ -74,6 +74,9 @@
                 case APlusElementTypeEnum.Image:
                     <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
                     break;
+                case APlusElementTypeEnum.TrueOrFalse:
+                    <MudCheckBox Label="@elementValue.Element.Name" @bind-Value="elementValue.TrueOrFalse" For="() => elementValue.TrueOrFalse" />
+                    break;
                 default:
                     throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
             }

@@ -7,11 +7,6 @@
       <Name>MarketplaceBetter.Database</Name>
     </ProjectBasedModelProvider>
   </SourceModelProvider>
-  <TargetModelProvider>
-    <ConnectionBasedModelProvider>
-      <ConnectionString>Data Source=192.168.168.32;Initial Catalog=MarketplaceBetter_Test;Persist Security Info=True;User ID=MarketplaceBetter_Test;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=False;Trust Server Certificate=False</ConnectionString>
-    </ConnectionBasedModelProvider>
-  </TargetModelProvider>
   <SchemaCompareSettingsService>
     <SchemaCompareSettingsService>
       <PropertyElementName>

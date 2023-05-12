@@ -7,40 +7,15 @@
 
 @foreach (var elementValue in Elements)
 {
-    switch (elementValue.Element.Type.SystemName)
-    {
-        case APlusElementTypeEnum.SingleLineText:
-            if (string.IsNullOrWhiteSpace(elementValue.SingleLineText))
-            {
-                continue;
-            }
-            break;
-        case APlusElementTypeEnum.BodyText:
-            if (string.IsNullOrWhiteSpace(elementValue.BodyText))
-            {
-                continue;
-            }
-            break;
-        case APlusElementTypeEnum.Image:
-            if (elementValue.Image == null)
-            {
-                continue;
-            }
-            break;
-        default:
-            throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
-    }
-
-    string elementName = elementValue.Element.Name;
-    bool hasValue = !string.IsNullOrWhiteSpace(elementValue.SingleLineText) || !string.IsNullOrWhiteSpace(elementValue.BodyText)
+    bool hasValue = elementValue.Element.Type.SystemName == APlusElementTypeEnum.TrueOrFalse || !string.IsNullOrWhiteSpace(elementValue.SingleLineText) || !string.IsNullOrWhiteSpace(elementValue.BodyText)
         || elementValue.Image != null;
 
     if (!hasValue)
     {
-        <p class="ml-3">@elementValue.Element.Name</p>
-
         continue;
     }
+
+    string elementName = elementValue.Element.Name;
 
     switch (elementValue.Element.Type.SystemName)
     {
@@ -80,6 +55,21 @@
                 </MudTooltip>
                 <MudPopover Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
                     <MudImage Src="@ImageCloudService.GetBiggerUrlForLists(elementValue.Image.CloudId, elementValue.Image.Version)" />
+                </MudPopover>
+            </div>
+            break;
+        case APlusElementTypeEnum.TrueOrFalse:
+            <div>
+                <span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span>
+                <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
+                    @if (elementValue.TrueOrFalse)
+                    {
+                        <span>Yes (checked)</span>
+                    }
+                    else
+                    {
+                        <span>No (unchecked)</span>
+                    }
                 </MudPopover>
             </div>
             break;

@@ -15,3 +15,9 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElementType] WHERE [SystemName] = 3)
     VALUES ('Image', 3)
 ELSE UPDATE [dbo].[APlusElementType] SET [Name] = 'Image' WHERE [SystemName] = 3
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElementType] WHERE [SystemName] = 4)
+    INSERT INTO [dbo].[APlusElementType] ([Name], [SystemName])
+    VALUES ('True or False', 4)
+ELSE UPDATE [dbo].[APlusElementType] SET [Name] = 'True or False' WHERE [SystemName] = 4
+GO
