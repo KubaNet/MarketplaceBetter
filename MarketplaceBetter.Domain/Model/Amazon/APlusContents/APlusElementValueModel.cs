@@ -18,6 +18,6 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 
         public APlusImageModel Image { get; set; }
 
-        public bool TrueOrFalse { get; set; }
+        public bool? TrueOrFalse { get; set; }
     }
 }

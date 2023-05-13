@@ -114,6 +114,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			}
 
 			DeleteImages(moduleToUpdate, imagesToDelete);
+
 			TransferValues(moduleToUpdate, module);
 
 			_repository.Update(moduleToUpdate);
@@ -194,6 +195,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			{
                 toElement.BodyText = fromElement.BodyText;
             }
+			toElement.TrueOrFalse = fromElement.TrueOrFalse;
 
 			if (fromElement.Image != null)
 			{

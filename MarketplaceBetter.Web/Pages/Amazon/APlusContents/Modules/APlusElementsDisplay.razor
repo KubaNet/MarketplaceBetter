@@ -7,8 +7,8 @@
 
 @foreach (var elementValue in Elements)
 {
-    bool hasValue = elementValue.Element.Type.SystemName == APlusElementTypeEnum.TrueOrFalse || !string.IsNullOrWhiteSpace(elementValue.SingleLineText) || !string.IsNullOrWhiteSpace(elementValue.BodyText)
-        || elementValue.Image != null;
+    bool hasValue = !string.IsNullOrWhiteSpace(elementValue.SingleLineText) || !string.IsNullOrWhiteSpace(elementValue.BodyText)
+        || elementValue.Image != null || elementValue.TrueOrFalse.HasValue;
 
     if (!hasValue)
     {
@@ -62,7 +62,7 @@
             <div>
                 <span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span>
                 <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
-                    @if (elementValue.TrueOrFalse)
+                    @if (elementValue.TrueOrFalse.Value)
                     {
                         <span>Yes (checked)</span>
                     }
