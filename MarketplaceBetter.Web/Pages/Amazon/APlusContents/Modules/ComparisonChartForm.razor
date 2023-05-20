@@ -6,17 +6,25 @@
 
 @foreach (var metric in Metrics)
 {
-    <MudTextField Label="@metric.ElementValue.Element.Name" @bind-Value="metric.ElementValue.SingleLineText" For="() => metric.ElementValue.SingleLineText" MaxLength="metric.ElementValue.Element.CharactersLimit.Value" />
-    <MudSelect Label="@string.Concat(metric.ElementValue.Element.Name, " Type")" T="MetricType" @bind-Value="metric.Type">
-        @foreach (var type in Enum.GetValues<MetricType>())
-        {
-            <MudSelectItem Value="type">@type.ToString()</MudSelectItem>
-        }
-    </MudSelect>
+    <div class="d-flex">
+        <MudTextField Label="@metric.ElementValue.Element.Name" @bind-Value="metric.ElementValue.SingleLineText" For="() => metric.ElementValue.SingleLineText" MaxLength="metric.ElementValue.Element.CharactersLimit.Value" />
+        <div class="flex-none d-flex" style="width: 30px;"></div>
+        <MudSelect Label="@string.Concat(metric.ElementValue.Element.Name, " Type")" T="MetricType" @bind-Value="metric.Type">
+            @foreach (var type in Enum.GetValues<MetricType>())
+            {
+                <MudSelectItem Value="type">@type.ToString()</MudSelectItem>
+            }
+        </MudSelect>
+    </div>
 }
+<MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Success" OnClick="@(() => AddMetric())" Disabled="Metrics.Count == 10" Class="mt-2">Add Metric</MudButton>
+<MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => RemoveLastMetric())" Disabled="Metrics.Count == 1" Class="mt-2">Remove last</MudButton>
 
 <MudText Typo="Typo.h6" Class="mt-3">Products</MudText>
-
+@code{
+    int productElementIndex = 0;
+    int productIndex = 0;
+}
 @foreach (var elementValue in ProductsElements)
 {
     @switch (elementValue.Element.Type.SystemName)
@@ -36,6 +44,28 @@
         default:
             throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
     }
+    @if ((productElementIndex + 1) % 5 == 0)
+    {
+        for (int i = 0; i < Metrics.Count; i++)
+        {
+            if (Metrics[i].Type == MetricType.Checkbox)
+            {
+                int index = i * 12 + ((productIndex % 6) * 2);
+                APlusElementValueModel productMetricElement = ProductsMetricsElements[index];
+                <MudCheckBox Label="@Metrics[i].ElementValue.SingleLineText" @bind-Checked="productMetricElement.TrueOrFalse" For="() => productMetricElement.TrueOrFalse" />
+            }
+            else
+            {
+                int index = i * 12 + ((productIndex % 6) * 2) + 1;
+                APlusElementValueModel productMetricElement = ProductsMetricsElements[index];
+                <MudTextField Label="@Metrics[i].ElementValue.SingleLineText" @bind-Value="productMetricElement.SingleLineText" For="() => productMetricElement.SingleLineText" MaxLength="productMetricElement.Element.CharactersLimit.Value" />
+            }
+        }
+
+        productIndex++;
+    }
+
+    productElementIndex++;
 }
 
 @code {
@@ -46,6 +76,7 @@
     private IList<Metric> Metrics = new List<Metric>();
     private IList<APlusElementValueModel> MetricsElements;
     private IList<APlusElementValueModel> ProductsElements;
+    private IList<APlusElementValueModel> ProductsMetricsElements;
 
     private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
         { "toolbar", "undo redo | bold italic underline | numlist bullist" },
@@ -59,6 +90,7 @@
 
         MetricsElements = ModuleValue.Elements.Where(e => e.Element.Name.StartsWith("Metric")).OrderBy(e => e.Element.Order).ToList();
         ProductsElements = ModuleValue.Elements.Where(e => !e.Element.Name.StartsWith("Metric") && !e.Element.Name.StartsWith("Checked?") && !e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
+        ProductsMetricsElements = ModuleValue.Elements.Where(e => e.Element.Name.StartsWith("Checked?") || e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
 
         for (int i = 0; i < 5; i++)
         {
@@ -68,6 +100,21 @@
                     Type = MetricType.Checkbox
                 });
         }
+    }
+
+    private void RemoveLastMetric()
+    {
+        Metrics.Last().ElementValue.SingleLineText = null;
+        Metrics.Remove(Metrics.Last());
+    }
+
+    private void AddMetric()
+    {
+        Metrics.Add(new Metric
+            {
+                ElementValue = MetricsElements[Metrics.Count],
+                Type = MetricType.Checkbox
+            });
     }
 
     private class Metric
