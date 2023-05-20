@@ -188,74 +188,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 32 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 32, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 32 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 1, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 32, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 1, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 32 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 33 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 1, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 33, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 33 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 1, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 33, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 1, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 33 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 34, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 1, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 34, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 1, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 35 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 1, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 35, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 35 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 1, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 35, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 1, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 35 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 36 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 36, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 36 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 1, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 36, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 1, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 36 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 37 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 1, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 37, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 37 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 1, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 37, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 1, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 37 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 38 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 38, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 38 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 1, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 38, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 1, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 38 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 39 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 1, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 39, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 39 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 1, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 39, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 1, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 39 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 40 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 40, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 40 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 1, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 40, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 1, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 40 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 41 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 1, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 41, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 41 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 1, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 41, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 1, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 41 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 42 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 1, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 42, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 1, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 42 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 1, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 42, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 1, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 42 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 43 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 1, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 43, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 1, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 43 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 1, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 43, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 1, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 43 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 44 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -266,74 +266,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 45 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 45, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 45 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 2, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 45, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 2, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 45 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 46 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 2, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 46, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 46 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 2, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 46, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 2, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 46 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 47 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 47, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 47 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 2, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 47, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 2, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 47 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 48 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 2, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 48, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 48 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 2, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 48, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 2, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 48 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 49 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 49, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 49 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 2, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 49, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 2, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 49 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 50 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 2, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 50, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 50 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 2, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 50, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 2, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 50 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 51 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 51, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 51 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 2, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 51, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 2, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 51 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 52 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 2, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 52, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 52 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 2, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 52, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 2, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 52 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 53 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 53, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 53 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 2, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 53, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 2, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 53 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 54 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 2, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 54, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 54 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 2, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 54, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 2, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 54 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 55 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 2, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 55, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 2, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 55 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 2, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 55, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 2, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 55 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 56 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 2, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 56, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 2, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 56 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 2, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 56, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 2, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 56 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 57 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -344,74 +344,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 58 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 58, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 58 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 3, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 58, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 3, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 58 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 59 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 3, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 59, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 59 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 3, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 59, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 3, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 59 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 60 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 60, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 60 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 3, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 60, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 3, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 60 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 61 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 3, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 61, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 61 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 3, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 61, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 3, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 61 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 62 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 62, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 62 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 3, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 62, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 3, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 62 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 63 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 3, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 263, 63, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 263 WHERE [Order] = 63 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 3, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 263, 63, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 3, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 263 WHERE [Order] = 63 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 64 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 64, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 64 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 3, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 64, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 3, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 64 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 65 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 3, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 65, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 65 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 3, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 65, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 3, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 65 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 66 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 66, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 66 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 3, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 66, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 3, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 66 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 67 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 3, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 67, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 67 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 3, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 67, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 3, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 67 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 68 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 3, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 68, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 3, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 68 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 3, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 68, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 3, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 68 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 69 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 3, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 69, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 3, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 69 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 3, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 69, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 3, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 69 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 70 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -422,74 +422,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 71 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 4, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 71, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 4, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 71 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 4, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 71, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 4, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 71 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 72 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 4, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 72, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 4, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 72 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 4, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 72, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 4, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 72 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 73 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 4, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 73, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 4, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 73 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 4, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 73, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 4, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 73 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 74 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 4, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 74, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 4, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 74 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 4, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 74, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 4, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 74 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 75 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 4, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 75, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 4, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 75 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 4, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 75, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 4, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 75 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 76 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 4, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 276, 76, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 4, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 276 WHERE [Order] = 76 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 4, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 276, 76, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 4, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 276 WHERE [Order] = 76 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 77 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 4, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 77, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 4, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 77 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 4, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 77, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 4, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 77 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 78 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 4, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 78, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 4, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 78 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 4, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 78, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 4, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 78 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 79 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 4, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 79, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 4, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 79 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 4, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 79, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 4, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 79 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 80 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 4, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 80, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 4, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 80 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 4, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 80, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 4, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 80 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 81 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 4, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 81, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 4, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 81 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 4, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 81, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 4, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 81 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 82 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 4, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 82, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 4, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 82 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 4, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 82, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 4, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 82 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 83 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -500,74 +500,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 84 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 5, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 84, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 5, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 84 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 5, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 84, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 5, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 84 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 85 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 5, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 85, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 5, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 85 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 5, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 85, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 5, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 85 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 86 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 5, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 86, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 5, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 86 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 5, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 86, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 5, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 86 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 87 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 5, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 87, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 5, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 87 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 5, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 87, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 5, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 87 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 88 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 5, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 88, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 5, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 88 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 5, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 88, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 5, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 88 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 89 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 5, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 289, 89, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 5, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 289 WHERE [Order] = 89 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 5, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 289, 89, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 5, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 289 WHERE [Order] = 89 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 90 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 5, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 90, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 5, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 90 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 5, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 90, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 5, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 90 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 91 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 5, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 91, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 5, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 91 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 5, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 91, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 5, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 91 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 92 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 5, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 92, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 5, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 92 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 5, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 92, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 5, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 92 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 93 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 5, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 93, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 5, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 93 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 5, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 93, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 5, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 93 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 94 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 5, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 94, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 5, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 94 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 5, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 94, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 5, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 94 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 95 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 5, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 95, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 5, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 95 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 5, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 95, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 5, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 95 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 96 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -578,74 +578,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 97 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 6, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 97, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 6, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 97 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 6, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 97, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 6, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 97 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 98 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 6, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 98, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 6, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 98 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 6, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 98, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 6, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 98 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 99 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 6, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 99, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 6, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 99 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 6, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 99, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 6, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 99 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 100 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 6, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 100, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 6, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 100 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 6, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 100, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 6, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 100 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 101 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 6, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 101, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 6, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 101 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 6, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 101, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 6, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 101 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 102 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 6, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2102, 102, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 6, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2102 WHERE [Order] = 102 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 6, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2102, 102, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 6, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2102 WHERE [Order] = 102 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 103 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 6, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 103, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 6, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 103 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 6, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 103, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 6, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 103 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 104 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 6, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 104, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 6, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 104 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 6, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 104, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 6, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 104 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 105 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 6, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 105, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 6, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 105 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 6, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 105, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 6, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 105 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 106 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 6, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 106, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 6, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 106 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 6, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 106, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 6, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 106 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 107 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 6, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 107, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 6, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 107 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 6, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 107, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 6, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 107 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 108 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 6, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 108, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 6, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 108 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 6, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 108, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 6, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 108 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 109 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -656,74 +656,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 110 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 7, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 110, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 7, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 110 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 7, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 110, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 7, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 110 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 111 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 7, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 111, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 7, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 111 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 7, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 111, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 7, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 111 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 112 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 7, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 112, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 7, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 112 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 7, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 112, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 7, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 112 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 113 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 7, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 113, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 7, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 113 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 7, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 113, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 7, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 113 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 114 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 7, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 114, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 7, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 114 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 7, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 114, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 7, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 114 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 115 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 7, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2115, 115, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 7, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2115 WHERE [Order] = 115 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 7, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2115, 115, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 7, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2115 WHERE [Order] = 115 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 116 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 7, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 116, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 7, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 116 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 7, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 116, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 7, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 116 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 117 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 7, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 117, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 7, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 117 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 7, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 117, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 7, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 117 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 118 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 7, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 118, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 7, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 118 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 7, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 118, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 7, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 118 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 119 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 7, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 119, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 7, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 119 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 7, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 119, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 7, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 119 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 120 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 7, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 120, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 7, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 120 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 7, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 120, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 7, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 120 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 121 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 7, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 121, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 7, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 121 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 7, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 121, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 7, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 121 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 122 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -734,74 +734,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 123 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 8, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 123, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 8, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 123 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 8, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 123, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 8, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 123 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 124 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 8, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 124, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 8, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 124 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 8, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 124, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 8, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 124 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 125 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 8, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 125, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 8, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 125 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 8, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 125, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 8, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 125 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 126 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 8, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 126, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 8, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 126 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 8, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 126, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 8, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 126 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 127 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 8, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 127, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 8, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 127 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 8, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 127, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 8, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 127 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 128 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 8, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2128, 128, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 8, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2128 WHERE [Order] = 128 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 8, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2128, 128, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 8, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2128 WHERE [Order] = 128 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 129 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 8, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 129, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 8, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 129 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 8, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 129, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 8, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 129 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 130 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 8, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 130, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 8, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 130 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 8, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 130, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 8, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 130 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 131 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 8, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 131, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 8, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 131 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 8, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 131, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 8, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 131 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 132 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 8, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 132, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 8, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 132 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 8, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 132, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 8, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 132 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 133 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 8, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 133, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 8, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 133 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 8, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 133, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 8, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 133 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 134 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 8, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 134, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 8, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 134 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 8, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 134, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 8, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 134 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 135 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -812,74 +812,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 136 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 9, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 136, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 9, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 136 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 9, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 136, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 9, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 136 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 137 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 9, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 137, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 9, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 137 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 9, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 137, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 9, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 137 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 138 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 9, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 138, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 9, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 138 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 9, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 138, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 9, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 138 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 139 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 9, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 139, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 9, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 139 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 9, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 139, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 9, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 139 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 140 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 9, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 140, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 9, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 140 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 9, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 140, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 9, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 140 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 141 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 9, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2141, 141, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 9, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2141 WHERE [Order] = 141 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 9, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2141, 141, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 9, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2141 WHERE [Order] = 141 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 142 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 9, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 142, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 9, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 142 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 9, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 142, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 9, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 142 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 143 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 9, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 143, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 9, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 143 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 9, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 143, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 9, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 143 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 144 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 9, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 144, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 9, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 144 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 9, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 144, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 9, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 144 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 145 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 9, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 145, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 9, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 145 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 9, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 145, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 9, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 145 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 146 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 9, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 146, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 9, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 146 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 9, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 146, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 9, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 146 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 147 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 9, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 147, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 9, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 147 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 9, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 147, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 9, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 147 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 148 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
@@ -890,74 +890,74 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 149 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 10, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 149, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 10, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 149 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 10, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 149, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 10, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 149 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 150 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 10, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 150, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 10, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 150 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 10, product 1)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 150, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 10, product 1)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 150 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 151 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 10, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 151, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 10, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 151 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 10, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 151, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 10, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 151 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 152 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 10, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 152, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 10, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 152 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 10, product 2)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 152, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 10, product 2)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 152 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 153 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 10, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 153, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 10, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 153 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 10, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 153, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 10, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 153 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 154 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 10, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2154, 154, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 10, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2154 WHERE [Order] = 154 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 10, product 3)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 2154, 154, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 10, product 3)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 2154 WHERE [Order] = 154 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 155 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 10, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 155, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 10, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 155 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 10, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 155, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 10, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 155 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 156 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 10, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 156, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 10, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 156 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 10, product 4)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 156, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 10, product 4)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 156 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 157 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 10, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 157, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 10, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 157 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 10, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 157, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 10, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 157 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 158 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 10, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 158, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 10, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 158 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 10, product 5)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 158, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 10, product 5)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 158 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 159 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Checked? [yes/no or empty if using "Text"] (metric 10, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 159, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? [yes/no or empty if using "Text"] (metric 10, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 159 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Checked? (metric 10, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), null, 159, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Checked? (metric 10, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 159 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 160 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Text [empty if using "Checked?"] (metric 10, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 160, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text [empty if using "Checked?"] (metric 10, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 160 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
+    VALUES ('Text (metric 10, product 6)', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 250, 160, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Text (metric 10, product 6)', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 250 WHERE [Order] = 160 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 1)
 GO
 
 -- Standard Four Images & Text
@@ -2128,5 +2128,5 @@ GO
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
     VALUES ('Number of columns [one/two]', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 34, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Number of columns [one/two]', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17)
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Number of columns [one/two]', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17)
 GO

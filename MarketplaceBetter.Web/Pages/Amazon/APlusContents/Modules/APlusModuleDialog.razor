@@ -57,28 +57,36 @@
                 <MudSelectItem Value="moduleItem">@moduleItem.Name</MudSelectItem>
             }
         </MudSelect>
-        @if (ModuleValue.Elements.Any())
+        @if (ModuleValue.Module != null)
         {
             <MudText Typo="Typo.h6" Class="mt-3">Elements:</MudText>
-        }
-        @foreach (var elementValue in ModuleValue.Elements.OrderBy(e => e.Element.Order))
-        {
-            @switch (elementValue.Element.Type.SystemName)
+
+            @if (ModuleValue.Module.SystemName == APlusModuleEnum.StandardComparisonChart)
             {
-                case APlusElementTypeEnum.SingleLineText:
-                    <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
-                    break;
-                case APlusElementTypeEnum.BodyText:
-                    <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
-                    break;
-                case APlusElementTypeEnum.Image:
-                    <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
-                    break;
-                case APlusElementTypeEnum.TrueOrFalse:
-                    <MudCheckBox Label="@elementValue.Element.Name" @bind-Checked="elementValue.TrueOrFalse" TriState="true" For="() => elementValue.TrueOrFalse" />
-                    break;
-                default:
-                    throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+                <ComparisonChartForm ModuleValue="ModuleValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
+            }
+            else
+            {
+                @foreach (var elementValue in ModuleValue.Elements.OrderBy(e => e.Element.Order))
+                {
+                    @switch (elementValue.Element.Type.SystemName)
+                    {
+                        case APlusElementTypeEnum.SingleLineText:
+                            <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
+                            break;
+                        case APlusElementTypeEnum.BodyText:
+                            <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
+                            break;
+                        case APlusElementTypeEnum.Image:
+                            <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
+                            break;
+                        case APlusElementTypeEnum.TrueOrFalse:
+                            <MudCheckBox Label="@elementValue.Element.Name" @bind-Checked="elementValue.TrueOrFalse" TriState="true" For="() => elementValue.TrueOrFalse" />
+                            break;
+                        default:
+                            throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+                    }
+                }
             }
         }
     </FormDialog>

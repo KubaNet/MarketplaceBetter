@@ -1,0 +1,86 @@
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using TinyMCE.Blazor;
+
+<MudText Typo="Typo.h6" Class="mt-3">Metrics</MudText>
+
+@foreach (var metric in Metrics)
+{
+    <MudTextField Label="@metric.ElementValue.Element.Name" @bind-Value="metric.ElementValue.SingleLineText" For="() => metric.ElementValue.SingleLineText" MaxLength="metric.ElementValue.Element.CharactersLimit.Value" />
+    <MudSelect Label="@string.Concat(metric.ElementValue.Element.Name, " Type")" T="MetricType" @bind-Value="metric.Type">
+        @foreach (var type in Enum.GetValues<MetricType>())
+        {
+            <MudSelectItem Value="type">@type.ToString()</MudSelectItem>
+        }
+    </MudSelect>
+}
+
+<MudText Typo="Typo.h6" Class="mt-3">Products</MudText>
+
+@foreach (var elementValue in ProductsElements)
+{
+    @switch (elementValue.Element.Type.SystemName)
+    {
+        case APlusElementTypeEnum.SingleLineText:
+            <MudTextField Label="@elementValue.Element.Name" @bind-Value="elementValue.SingleLineText" For="() => elementValue.SingleLineText" MaxLength="elementValue.Element.CharactersLimit.Value" />
+            break;
+        case APlusElementTypeEnum.BodyText:
+            <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
+            break;
+        case APlusElementTypeEnum.Image:
+            <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
+            break;
+        case APlusElementTypeEnum.TrueOrFalse:
+            <MudCheckBox Label="@elementValue.Element.Name" @bind-Checked="elementValue.TrueOrFalse" TriState="true" For="() => elementValue.TrueOrFalse" />
+            break;
+        default:
+            throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
+    }
+}
+
+@code {
+    [Parameter] public APlusModuleValueModel ModuleValue { get; set; }
+    [Parameter] public IDictionary<string, IBrowserFile> ImagesToAdd { get; set; }
+    [Parameter] public IList<string> ImagesToDelete { get; set; }
+
+    private IList<Metric> Metrics = new List<Metric>();
+    private IList<APlusElementValueModel> MetricsElements;
+    private IList<APlusElementValueModel> ProductsElements;
+
+    private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
+        { "toolbar", "undo redo | bold italic underline | numlist bullist" },
+        { "plugins", "lists" },
+        { "menubar", false }
+    };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        MetricsElements = ModuleValue.Elements.Where(e => e.Element.Name.StartsWith("Metric")).OrderBy(e => e.Element.Order).ToList();
+        ProductsElements = ModuleValue.Elements.Where(e => !e.Element.Name.StartsWith("Metric") && !e.Element.Name.StartsWith("Checked?") && !e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
+
+        for (int i = 0; i < 5; i++)
+        {
+            Metrics.Add(new Metric
+                {
+                    ElementValue = MetricsElements[i],
+                    Type = MetricType.Checkbox
+                });
+        }
+    }
+
+    private class Metric
+    {
+        public APlusElementValueModel ElementValue { get; set; }
+
+        public MetricType Type { get; set; }
+    }
+
+    private enum MetricType
+    {
+        Checkbox,
+
+        Text
+    }
+}
