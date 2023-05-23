@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Domain.Model.Other;
 @using TinyMCE.Blazor;
 
 <MudText Typo="Typo.h6" Class="mt-3">Metrics</MudText>
@@ -73,6 +74,7 @@
     [Parameter] public APlusModuleValueModel ModuleValue { get; set; }
     [Parameter] public IDictionary<string, IBrowserFile> ImagesToAdd { get; set; }
     [Parameter] public IList<string> ImagesToDelete { get; set; }
+    [Parameter] public MetricsInfoModel MetricsInfo { get; set; }
 
     private IList<Metric> Metrics = new List<Metric>();
     private IList<APlusElementValueModel> MetricsElements;
@@ -100,6 +102,7 @@
                     ElementValue = MetricsElements[i],
                     Type = MetricType.Checkbox
                 });
+            MetricsInfo.MetricsCount = i + 1;
         }
     }
 
@@ -111,6 +114,7 @@
         ClearElementsFor(metricToRemove);
 
         Metrics.Remove(metricToRemove);
+        MetricsInfo.MetricsCount--;
     }
 
     private void AddMetric()
@@ -120,6 +124,7 @@
                 ElementValue = MetricsElements[Metrics.Count],
                 Type = MetricType.Checkbox
             });
+        MetricsInfo.MetricsCount++;
     }
 
     private void OnMetricTypeChanged(Metric metric, MetricType type)

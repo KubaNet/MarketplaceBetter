@@ -20,7 +20,7 @@ namespace MarketplaceBetter.Services.Validation.Amazon.APlusContents
 			_repository = unitOfWork.GetRepository<APlusModuleValue>();
 		}
 
-		public ValidationResult Validate(APlusModuleValueModel moduleValue)
+		public ValidationResult Validate(APlusModuleValueModel moduleValue, int metricsCount)
 		{
 			ValidationResult result = new ValidationResult();
 
@@ -28,6 +28,21 @@ namespace MarketplaceBetter.Services.Validation.Amazon.APlusContents
 			{
 				result.AddErrorFor<APlusModuleValueModel>(s => s.Order, "There already exists module for this content with such an order.");
 			}
+
+			if (metricsCount > 0)
+			{
+				IList<APlusElementValueModel> metricsElements = moduleValue.Elements.Where(e => e.Element.Name.StartsWith("Metric")).OrderBy(e => e.Element.Order).ToList();
+
+                int metricCount = 1;
+				foreach (var metricsElement in metricsElements)
+				{
+					if (metricCount <= metricsCount && string.IsNullOrWhiteSpace(metricsElement.SingleLineText))
+					{
+						result.AddError($"Name of Metric {metricCount} is required.");
+					}
+					metricCount++;
+				}
+            }
 
 			return result;
 		}

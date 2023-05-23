@@ -10,6 +10,6 @@ namespace MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces
 {
 	public interface IAPlusModuleValueValidator
 	{
-		ValidationResult Validate(APlusModuleValueModel module);
+		ValidationResult Validate(APlusModuleValueModel module, int metricsCount);
 	}
 }

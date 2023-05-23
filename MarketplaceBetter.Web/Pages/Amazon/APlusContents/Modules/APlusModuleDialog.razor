@@ -2,6 +2,7 @@
 @using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Domain.Model.Catalog.Products;
+@using MarketplaceBetter.Domain.Model.Other;
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
@@ -26,6 +27,7 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title MinWidth="700" FormButtonsDisabled="FormButtonsDisabled" ShowProgressIcon="ShowProgressIcon">
         <DataAnnotationsValidator />
+        <ValidationSummary />
         <MudSelect Label="Instance" T="InstanceModel" Value="Instance" For="() => Instance" ValueChanged="HandleInstanceChanged">
             @foreach (var instance in Instances)
             {
@@ -63,7 +65,7 @@
 
             @if (ModuleValue.Module.SystemName == APlusModuleEnum.StandardComparisonChart)
             {
-                <ComparisonChartForm ModuleValue="ModuleValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
+                <ComparisonChartForm ModuleValue="ModuleValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" MetricsInfo="MetricsInfo" />
             }
             else
             {
@@ -105,6 +107,7 @@
     private APlusModuleValueModel ModuleValue = new APlusModuleValueModel();
     private IDictionary<string, IBrowserFile> ImagesToAdd = new Dictionary<string, IBrowserFile>();
     private IList<string> ImagesToDelete = new List<string>();
+    private MetricsInfoModel MetricsInfo = new MetricsInfoModel();
 
     private IList<BrandModel> Brands;
     private IList<InstanceModel> Instances;
@@ -256,7 +259,7 @@
 
     private async void HandleValidSubmit()
     {
-        ValidationResult result = ModuleValueValidator.Validate(ModuleValue);
+         ValidationResult result = ModuleValueValidator.Validate(ModuleValue, MetricsInfo.MetricsCount);
 
         if (result.IsValid)
         {
