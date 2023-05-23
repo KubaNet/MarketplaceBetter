@@ -9,7 +9,7 @@
     <div class="d-flex">
         <MudTextField Label="@metric.ElementValue.Element.Name" @bind-Value="metric.ElementValue.SingleLineText" For="() => metric.ElementValue.SingleLineText" MaxLength="metric.ElementValue.Element.CharactersLimit.Value" />
         <div class="flex-none d-flex" style="width: 30px;"></div>
-        <MudSelect Label="@string.Concat(metric.ElementValue.Element.Name, " Type")" T="MetricType" @bind-Value="metric.Type">
+        <MudSelect Label="@string.Concat(metric.ElementValue.Element.Name, " Type")" T="MetricType" Value="metric.Type" ValueChanged="type => OnMetricTypeChanged(metric, type)">
             @foreach (var type in Enum.GetValues<MetricType>())
             {
                 <MudSelectItem Value="type">@type.ToString()</MudSelectItem>
@@ -21,7 +21,7 @@
 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => RemoveLastMetric())" Disabled="Metrics.Count == 1" Class="mt-2">Remove last</MudButton>
 
 <MudText Typo="Typo.h6" Class="mt-3">Products</MudText>
-@code{
+@code {
     int productElementIndex = 0;
     int productIndex = 0;
 }
@@ -52,13 +52,14 @@
             {
                 int index = i * 12 + ((productIndex % 6) * 2);
                 APlusElementValueModel productMetricElement = ProductsMetricsElements[index];
-                <MudCheckBox Label="@Metrics[i].ElementValue.SingleLineText" @bind-Checked="productMetricElement.TrueOrFalse" For="() => productMetricElement.TrueOrFalse" />
+                productMetricElement.TrueOrFalse = productMetricElement.TrueOrFalse ?? false;
+                <MudCheckBox Label="@(Metrics[i].ElementValue.SingleLineText ?? Metrics[i].ElementValue.Element.Name)" @bind-Checked="productMetricElement.TrueOrFalse" For="() => productMetricElement.TrueOrFalse" />
             }
             else
             {
                 int index = i * 12 + ((productIndex % 6) * 2) + 1;
                 APlusElementValueModel productMetricElement = ProductsMetricsElements[index];
-                <MudTextField Label="@Metrics[i].ElementValue.SingleLineText" @bind-Value="productMetricElement.SingleLineText" For="() => productMetricElement.SingleLineText" MaxLength="productMetricElement.Element.CharactersLimit.Value" />
+                <MudTextField Label="@(Metrics[i].ElementValue.SingleLineText ?? Metrics[i].ElementValue.Element.Name)" @bind-Value="productMetricElement.SingleLineText" For="() => productMetricElement.SingleLineText" MaxLength="productMetricElement.Element.CharactersLimit.Value" />
             }
         }
 
@@ -104,8 +105,12 @@
 
     private void RemoveLastMetric()
     {
-        Metrics.Last().ElementValue.SingleLineText = null;
-        Metrics.Remove(Metrics.Last());
+        Metric metricToRemove = Metrics.Last();
+        metricToRemove.ElementValue.SingleLineText = null;
+
+        ClearElementsFor(metricToRemove);
+
+        Metrics.Remove(metricToRemove);
     }
 
     private void AddMetric()
@@ -115,6 +120,22 @@
                 ElementValue = MetricsElements[Metrics.Count],
                 Type = MetricType.Checkbox
             });
+    }
+
+    private void OnMetricTypeChanged(Metric metric, MetricType type)
+    {
+        metric.Type = type;
+
+        ClearElementsFor(metric);
+    }
+
+    private void ClearElementsFor(Metric metric)
+    {
+        foreach (var element in ProductsMetricsElements.Where(e => e.Element.Name.Contains(metric.ElementValue.Element.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            element.TrueOrFalse = null;
+            element.SingleLineText = null;
+        }
     }
 
     private class Metric
