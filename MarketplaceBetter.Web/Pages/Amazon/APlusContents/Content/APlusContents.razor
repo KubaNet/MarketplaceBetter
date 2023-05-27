@@ -27,7 +27,7 @@
 			<MudTh>Variant</MudTh>
 			<MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="brand" T="APlusContentModel">Brand</MudTableSortLabel></MudTh>
-			<MudTh Style="width: 170px;">Actions</MudTh>
+			<MudTh Style="width: 250px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
@@ -40,6 +40,7 @@
 			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
 			<MudTd>
 				<MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context))">Delete</MudButton>
+				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
 				<MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
 			</MudTd>
 		</RowTemplate>
@@ -104,9 +105,16 @@
 		ProcessDialogResult(result);
 	}
 
+	private async void AddSimilar(long id)
+	{
+		var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Add A+ Content", ["AddingSimilar"] = true, ["ContentId"] = id }).Result;
+
+		ProcessDialogResult(result);
+	}
+
 	private async void Edit(long id)
 	{
-		var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Content", ["IsEdit"] = true, ["APlusContentId"] = id }).Result;
+		var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Content", ["IsEdit"] = true, ["ContentId"] = id }).Result;
 
 		ProcessDialogResult(result);
 	}
