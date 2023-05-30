@@ -34,8 +34,8 @@
             <MudTd DataLabel="Color Group">@context.Color.Group.Name</MudTd>
             <MudTd DataLabel="Brand">@context.Color.Group.Brand.Name</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>

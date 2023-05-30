@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static MudBlazor.CategoryTypes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 {
@@ -173,7 +174,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 				{
                     APlusElementValue toElement = new APlusElementValue();
 
-					TransferValues(toElement, fromElement);
+					TransferValues(fromModule, toElement, fromElement);
 
 					toModule.Elements.Add(toElement);
 				}
@@ -181,12 +182,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 				{
                     APlusElementValue toElement = toModule.Elements.Single(e => e.Id == fromElement.Id);
 
-					TransferValues(toElement, fromElement);
+					TransferValues(fromModule, toElement, fromElement);
 				}
 			}
 		}
 
-		private void TransferValues(APlusElementValue toElement, APlusElementValueModel fromElement)
+		private void TransferValues(APlusModuleValueModel fromModule, APlusElementValue toElement, APlusElementValueModel fromElement)
 		{
 			toElement.ElementId = fromElement.Element.Id;
             toElement.SingleLineText = fromElement.SingleLineText;
@@ -197,19 +198,31 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             }
 			toElement.TrueOrFalse = fromElement.TrueOrFalse;
 
-			if (fromElement.Image != null)
+            APlusImageModel fromImage = fromElement.Image;
+            if (fromImage != null)
 			{
-				if (fromElement.Image.Id == 0 && toElement.Image == null)
+				if (fromImage.Id == 0 && toElement.Image == null)
 				{
 					APlusImage toImage = new APlusImage();
 
-					TransferValues(toImage, fromElement.Image);
+					TransferValues(toImage, fromImage);
 
 					toElement.Image = toImage;
 				}
+				else if (fromImage.Id != 0 && toElement.Image == null)
+				{
+                    string extension = fromImage.FileName.Substring(fromImage.FileName.LastIndexOf('.') + 1);
+                    string shortName = $"{fromModule.Order}_{fromModule.Module.Name.Replace("&", string.Empty).WithoutSpaces()}_{fromElement.Element.Name.WithoutSpaces()}.{extension}";
+                    string fullName = $"{fromModule.Content.Name.WithoutSpaces()}/{shortName}";
+
+                    APlusImage toImage = _imageCloudService.CopyImage(fromImage.CloudId, fromImage.Version, fullName);
+					toImage.FileName = shortName;
+
+                    toElement.Image = toImage;
+                }
 				else
 				{
-					TransferValues(toElement.Image, fromElement.Image);
+					TransferValues(toElement.Image, fromImage);
 				}
 			}
         }

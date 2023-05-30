@@ -26,7 +26,7 @@
             <MudTh><MudTableSortLabel SortLabel="elements" T="APlusModuleValueModel">Elements</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="order" T="APlusModuleValueModel">Order</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
-            <MudTh Style="width: 170px;">Actions</MudTh>
+            <MudTh Style="width: 250px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -39,6 +39,7 @@
             <MudTd DataLabel="Instance">@context.Content.Instance.Name</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context))">Delete</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
@@ -106,6 +107,15 @@
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
         var result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module" }, options).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void AddSimilar(long id)
+    {
+        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+
+        var result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module", ["AddingSimilar"] = true, ["ModuleValueId"] = id }, options).Result;
 
         ProcessDialogResult(result);
     }

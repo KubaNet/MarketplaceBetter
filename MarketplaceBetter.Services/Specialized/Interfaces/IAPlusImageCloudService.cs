@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Services.Model;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,8 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
 	public interface IAPlusImageCloudService
 	{
 		APlusImageUploadResult Upload(MemoryStream imageStream, string fileName);
+
+        APlusImage CopyImage(string cloudId, string version, string newFileName);
 
         string GetOriginalUrl(string cloudId, string version);
 

@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Services.Specialized.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -51,6 +52,31 @@ namespace MarketplaceBetter.Services.Specialized
 
 			return uploadResult;
 		}
+
+		public APlusImage CopyImage(string cloudId, string version, string newFileName)
+		{
+            newFileName = ClearFileName(newFileName);
+            string fullFileName = $"APlusImages/{_instanceFolder}/{newFileName}";
+            string originalFileUrl = _cloudinary.Api.UrlImgUp.Version(version).BuildUrl(cloudId);
+
+            ImageUploadParams parameters = new ImageUploadParams
+            {
+                AllowedFormats = _allowedFormats,
+                PublicId = fullFileName,
+                File = new FileDescription(fullFileName, originalFileUrl)
+            };
+
+            ImageUploadResult result = _cloudinary.Upload(parameters);
+
+			APlusImage image = new APlusImage()
+			{
+				CloudId = result.PublicId,
+				Version = result.Version,
+				Url = result.SecureUrl.ToString(),
+			};
+
+			return image;
+        }
 
         public string GetOriginalUrl(string cloudId, string version)
         {
