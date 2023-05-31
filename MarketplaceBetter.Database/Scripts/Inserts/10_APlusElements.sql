@@ -2127,6 +2127,6 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[APlusElement] WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17))
     INSERT INTO [dbo].[APlusElement] ([Name], [TypeId], [CharactersLimit], [Order], [ModuleId])
-    VALUES ('Number of columns [one/two]', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 34, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17))
-ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Number of columns [one/two]', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 4), [CharactersLimit] = null WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17)
+    VALUES ('Number of columns', (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), 3, 34, (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17))
+ELSE UPDATE [dbo].[APlusElement] SET [Name] = 'Number of columns', [TypeId] = (SELECT [Id] FROM [APlusElementType] WHERE [SystemName] = 1), [CharactersLimit] = 3 WHERE [Order] = 34 AND [ModuleId] = (SELECT [Id] FROM [APlusModule] WHERE [SystemName] = 17)
 GO

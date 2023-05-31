@@ -71,6 +71,16 @@
             {
                 @foreach (var elementValue in ModuleValue.Elements.OrderBy(e => e.Element.Order))
                 {
+                    if (ModuleValue.Module.SystemName == APlusModuleEnum.StandardTechnicalSpecifications && elementValue.Element.Name.Equals("Number of columns", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <MudSelect Label="@elementValue.Element.Name" T="string" @bind-Value="elementValue.SingleLineText">
+                            <MudSelectItem Value="One">1</MudSelectItem>
+                            <MudSelectItem Value="Two">2</MudSelectItem>
+                        </MudSelect>
+
+                        continue;
+                    }
+
                     @switch (elementValue.Element.Type.SystemName)
                     {
                         case APlusElementTypeEnum.SingleLineText:
@@ -120,6 +130,8 @@
     private bool OrderDisabled = true;
     private bool FormButtonsDisabled = false;
     private bool ShowProgressIcon = false;
+    private string One = "1";
+    private string Two = "2";
 
     private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
         { "toolbar", "undo redo | bold italic underline | numlist bullist" },
@@ -258,6 +270,11 @@
             if (element.Type.SystemName == APlusElementTypeEnum.BodyText)
             {
                 elementValue.BodyText = element.Name;
+            }
+
+            if (module.SystemName == APlusModuleEnum.StandardTechnicalSpecifications && element.Name.Equals("Number of columns", StringComparison.OrdinalIgnoreCase))
+            {
+                elementValue.SingleLineText = "1";
             }
 
             ModuleValue.Elements.Add(elementValue);
