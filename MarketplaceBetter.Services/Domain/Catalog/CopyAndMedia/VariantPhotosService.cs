@@ -7,7 +7,6 @@ using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
-using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
@@ -23,8 +22,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO.Compression;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
+using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 
-namespace MarketplaceBetter.Services.Domain.Catalog.Products
+namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
     public class VariantPhotosService : IVariantPhotosService
     {

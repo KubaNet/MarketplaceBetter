@@ -1,0 +1,87 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
+@using MarketplaceBetter.Services.Model;
+
+@page "/variant-modules"
+@inject ISnackbar Snackbar
+@inject IAPlusVariantModulesService VariantModulesService
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h4" Class="mt-2">Variant Modules</MudText>
+
+<MainBody>
+    <MudTable T="APlusVariantModulesModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusVariantModulesModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="APlusVariantModulesModel">Instance</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Instance">@context.Content.Instance.Name</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @if (!ShowAll.HasValue || ShowAll == false)
+            {
+                <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+            }
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
+
+    private MudTable<APlusVariantModulesModel> Table;
+    private ListRequest ListRequest = new();
+
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+        if (ShowAll.HasValue)
+        {
+            ListRequest.ShowAll = ShowAll.Value;
+        }
+    }
+
+    private Task<TableData<APlusVariantModulesModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<APlusVariantModulesModel> variantModules = VariantModulesService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<APlusVariantModulesModel>() { TotalItems = VariantModulesService.CountForListRequest(ListRequest), Items = variantModules });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+}

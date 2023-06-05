@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces
 {
     public interface IVariantPhotosService
     {

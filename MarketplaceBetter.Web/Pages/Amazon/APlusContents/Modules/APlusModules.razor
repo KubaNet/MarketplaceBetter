@@ -11,7 +11,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">A+ Modules</MudText>
 
 <MainBody>
-    <MudTable T="APlusModuleValueModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusModuleValueModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="APlusModuleValueModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusModuleValueModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -56,8 +56,6 @@
     private MudTable<APlusModuleValueModel> Table;
     private ListRequest ListRequest = new();
 
-    private HashSet<APlusModuleValueModel> SelectedModules = new HashSet<APlusModuleValueModel>();
-    private bool NoneSelected = true;
     private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
@@ -148,20 +146,6 @@
         if (!result.Canceled)
         {
             Table.ReloadServerData();
-        }
-    }
-
-    private void OnSelectedItemsChanged(HashSet<APlusModuleValueModel> selectedAPlusModules)
-    {
-        SelectedModules = selectedAPlusModules;
-
-        if (SelectedModules.Any())
-        {
-            NoneSelected = false;
-        }
-        else
-        {
-            NoneSelected = true;
         }
     }
 }

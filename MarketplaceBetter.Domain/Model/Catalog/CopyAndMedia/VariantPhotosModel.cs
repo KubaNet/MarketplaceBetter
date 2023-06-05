@@ -1,12 +1,12 @@
 ﻿using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Model.Catalog.Products
+namespace MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia
 {
     public class VariantPhotosModel
     {
