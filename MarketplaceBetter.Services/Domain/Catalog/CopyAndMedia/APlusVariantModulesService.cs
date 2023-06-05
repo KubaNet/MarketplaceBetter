@@ -65,6 +65,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             {
                 Content = _mapper.Map<APlusContentModel>(m.First().Content),
                 Instance = _mapper.Map<InstanceModel>(m.First().Content.Instance),
+                Variants = _mapper.Map<IList<VariantModel>>(m.First().Content.Variants.Select(v => v.Variant)),
                 Modules = _mapper.Map<IList<APlusModuleValueModel>>(m.ToList()),
             }).ToList();
         }
@@ -93,20 +94,26 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "instance" };
+                string[] searchFieldNames = new[] { "content", "status", "variant", "instance" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
                 {
                     modules = searchField.Name switch
                     {
+                        "content" => modules.Where(m => m.Content.Name.Contains(searchField.Value)),
+                        "status" => modules.Where(m => m.Content.Status.Name.Contains(searchField.Value)),
+                        "variant" => modules.Where(m => m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || v.Variant.Asin.Contains(searchField.Value))),
                         "instance" => modules.Where(m => m.Content.Instance.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
                 {
-                    modules = modules.Where(m => m.Content.Instance.Name.Contains(searchString));
+                    modules = modules.Where(m => m.Content.Name.Contains(searchString)
+                        || m.Content.Status.Name.Contains(searchString)
+                        || m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchString) || v.Variant.Asin.Contains(searchString))
+                        || m.Content.Instance.Name.Contains(searchString));
                 }
             }
 
@@ -119,13 +126,15 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             {
                 modules = request.SortBy switch
                 {
+                    "content" => request.SortDirection == SortDirection.Ascending ? modules.OrderBy(m => m.Content.Name) : modules.OrderByDescending(m => m.Content.Name),
+                    "status" => request.SortDirection == SortDirection.Ascending ? modules.OrderBy(m => m.Content.Status.Name) : modules.OrderByDescending(m => m.Content.Status.Name),
                     "instance" => request.SortDirection == SortDirection.Ascending ? modules.OrderBy(m => m.Content.Instance.Name) : modules.OrderByDescending(m => m.Content.Instance.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
             else
             {
-                modules = modules.OrderBy(m => m.Content.Name).ThenBy(m => m.Content.InstanceId);
+                modules = modules.OrderBy(m => m.Content.Name);
             }
 
             return modules;

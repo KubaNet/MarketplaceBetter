@@ -15,10 +15,33 @@
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="content" T="APlusVariantModulesModel">Content</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="APlusVariantModulesModel">Status</MudTableSortLabel></MudTh>
+            <MudTh>Variant</MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="APlusVariantModulesModel">Instance</MudTableSortLabel></MudTh>
+            @for (int i = 1; i <= 8; i++)
+            {
+                int index = i;
+                <MudTh>Module @index</MudTh>
+            }
         </HeaderContent>
         <RowTemplate>
+            <MudTd DataLabel="Content">@context.Content.Name</MudTd>
+            <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Content.Status" /></MudTd>
+            <MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Variants.OrderBy(v => v.Sku).ToList()" /></MudTd>
             <MudTd DataLabel="Instance">@context.Content.Instance.Name</MudTd>
+            @for (int i = 1; i <= 8; i++)
+            {
+                int index = i;
+                <MudTd>
+                    @if (context.Modules.Any(m => m.Order == index))
+                    {
+                        APlusModuleValueModel module = context.Modules.Single(m => m.Order == index);
+
+                        <span>@module.Module.Name</span>
+                    }
+                </MudTd>
+            }
         </RowTemplate>
         <PagerContent>
             @if (!ShowAll.HasValue || ShowAll == false)

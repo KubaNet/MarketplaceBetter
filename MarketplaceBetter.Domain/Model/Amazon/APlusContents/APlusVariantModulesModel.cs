@@ -14,6 +14,8 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
 
         public InstanceModel Instance { get; set; }
 
+        public IList<VariantModel> Variants { get; set; }
+
         public IList<APlusModuleValueModel> Modules { get; set; }
     }
 }
