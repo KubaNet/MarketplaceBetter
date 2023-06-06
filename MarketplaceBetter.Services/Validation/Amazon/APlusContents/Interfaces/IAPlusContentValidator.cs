@@ -10,6 +10,6 @@ namespace MarketplaceBetter.Services.Validation.Amazon.APlusContents.Interfaces
 {
 	public interface IAPlusContentValidator
 	{
-		ValidationResult Validate(APlusContentModel content);
+		ValidationResult Validate(APlusContentModel content, bool hasSelectedVariants);
 	}
 }

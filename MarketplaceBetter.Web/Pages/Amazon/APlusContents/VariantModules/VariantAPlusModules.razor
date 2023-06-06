@@ -2,17 +2,18 @@
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Model;
 
-@page "/variant-modules"
+@page "/variant-a-plus-modules"
 @inject ISnackbar Snackbar
 @inject IAPlusVariantModulesService VariantModulesService
 @inject IDialogService DialogService
 
-<MudText Typo="Typo.h4" Class="mt-2">Variant Modules</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Variant A+ Modules</MudText>
 
 <MainBody>
     <MudTable T="APlusVariantModulesModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusVariantModulesModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="content" T="APlusVariantModulesModel">Content</MudTableSortLabel></MudTh>
@@ -28,7 +29,16 @@
         <RowTemplate>
             <MudTd DataLabel="Content">@context.Content.Name</MudTd>
             <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Content.Status" /></MudTd>
-            <MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Variants.OrderBy(v => v.Sku).ToList()" /></MudTd>
+            <MudTd DataLabel="Variant">
+                @if (context.Content.AllVariants)
+                {
+                    <span>All variants</span>
+                }
+                else
+                {
+                    <APlusContentVariantsDisplay Variants="@context.Variants.OrderBy(v => v.Sku).ToList()" />
+                }
+            </MudTd>
             <MudTd DataLabel="Instance">@context.Content.Instance.Name</MudTd>
             @for (int i = 1; i <= 8; i++)
             {

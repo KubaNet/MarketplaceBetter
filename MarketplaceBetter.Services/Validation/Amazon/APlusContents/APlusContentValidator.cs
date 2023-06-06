@@ -20,13 +20,18 @@ namespace MarketplaceBetter.Services.Validation.Amazon.APlusContents
             _repository = unitOfWork.GetRepository<APlusContent>();
         }
 
-        public ValidationResult Validate(APlusContentModel content)
+        public ValidationResult Validate(APlusContentModel content, bool hasSelectedVariants)
         {
             ValidationResult result = new ValidationResult();
 
             if (_repository.Any(c => c.Id != content.Id && c.Name == content.Name))
             {
                 result.AddErrorFor<APlusContentModel>(c => c.Name, ValidationMessages.NameNotUnique, "A+ Content");
+            }
+
+            if (!content.AllVariants && !hasSelectedVariants)
+            {
+                result.AddError("Select variants or click \"All variants\" checkbox.");
             }
 
             return result;

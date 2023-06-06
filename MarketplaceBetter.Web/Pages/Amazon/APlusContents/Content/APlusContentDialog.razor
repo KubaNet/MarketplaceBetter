@@ -19,6 +19,7 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
+        <ValidationSummary />
         <MudSelect Label="Instance" T="InstanceModel" Value="Content.Instance" For="() => Content.Instance" ValueChanged="HandleInstanceChanged">
             @foreach (var instance in Instances)
             {
@@ -37,12 +38,16 @@
                 <MudSelectItem Value="product">@product.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Variants" T="string" MultiSelection="true" @bind-Value="VariantsValue" SelectedValues="SelectedVariants" SelectedValuesChanged="HandleVariantsChanged" Disabled="VariantsDisabled">
-            @foreach (var variant in Variants)
-            {
-                <MudSelectItem Value="variant.Sku">@variant.Sku</MudSelectItem>
-            }
-        </MudSelect>
+        <MudCheckBox Label="All variants" T="bool" Checked="Content.AllVariants" CheckedChanged="HandleAllVariantsChanged" Class="mt-2"></MudCheckBox>
+        @if (!Content.AllVariants)
+        {
+            <MudSelect Label="Variants" T="string" MultiSelection="true" @bind-Value="VariantsValue" SelectedValues="SelectedVariants" SelectedValuesChanged="HandleVariantsChanged" Disabled="VariantsDisabled">
+                @foreach (var variant in Variants)
+                {
+                    <MudSelectItem Value="variant.Sku">@variant.Sku</MudSelectItem>
+                }
+            </MudSelect>
+        }
         <MudTextField Label="Name" @bind-Value="Content.Name" For="() => Content.Name" Disabled="NameDisabled" />
     </FormDialog>
 </EditForm>
@@ -164,6 +169,16 @@
         UpdateName();
     }
 
+    private void HandleAllVariantsChanged(bool allVariants)
+    {
+        Content.AllVariants = allVariants;
+
+        VariantsValue = null;
+        SelectedVariants = new HashSet<string>();
+
+        UpdateName();
+    }
+
     private void ResetProduct()
     {
         Content.Product = null;
@@ -208,7 +223,11 @@
         {
             Content.Name = $"{InstanceHelper.GetCodeFor(Content.Instance.SystemName)}_{Content.Product.Brand.Code.ToLower()}_{Content.Product.Code}";
 
-            if (SelectedVariants.Any())
+            if (Content.AllVariants)
+            {
+                Content.Name += "_all_ALL";   
+            }
+            else if (SelectedVariants.Any())
             {
                 if (SelectedVariants.Count() == 1)
                 {
@@ -241,7 +260,7 @@
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = APlusContentValidator.Validate(Content);
+        ValidationResult result = APlusContentValidator.Validate(Content, SelectedVariants.Any());
 
         if (result.IsValid)
         {

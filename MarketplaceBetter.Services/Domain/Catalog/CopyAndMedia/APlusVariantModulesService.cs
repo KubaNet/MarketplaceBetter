@@ -85,6 +85,18 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 modules = modules.Where(m => m.Content.InstanceId == _userService.GetCurrentInstance().Id || m.Content.InstanceId == instanceAllId);
             }
 
+            bool showDrafts = _userService.ShowDrafts();
+            if (!showDrafts)
+            {
+                modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool showWithdrawn = _userService.ShowWithdrawn();
+            if (!showWithdrawn)
+            {
+                modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return modules;
@@ -103,7 +115,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     {
                         "content" => modules.Where(m => m.Content.Name.Contains(searchField.Value)),
                         "status" => modules.Where(m => m.Content.Status.Name.Contains(searchField.Value)),
-                        "variant" => modules.Where(m => m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || v.Variant.Asin.Contains(searchField.Value))),
+                        "variant" => modules.Where(m => m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || v.Variant.Asin.Contains(searchField.Value))
+                            || (m.Content.AllVariants && m.Content.Product.Variants.Any(v => v.Sku.Contains(searchField.Value) || v.Asin.Contains(searchField.Value)))),
                         "instance" => modules.Where(m => m.Content.Instance.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -113,6 +126,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                     modules = modules.Where(m => m.Content.Name.Contains(searchString)
                         || m.Content.Status.Name.Contains(searchString)
                         || m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchString) || v.Variant.Asin.Contains(searchString))
+                        || (m.Content.AllVariants && m.Content.Product.Variants.Any(v => v.Sku.Contains(searchString) || v.Asin.Contains(searchString)))
                         || m.Content.Instance.Name.Contains(searchString));
                 }
             }

@@ -11,154 +11,163 @@
 <MudText Typo="Typo.h4" Class="mt-2">A+ Content</MudText>
 
 <MainBody>
-	<MudTable T="APlusContentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusContentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
-		<ToolBarContent>
-			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
-			<MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
-			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Content</MudButton>
-		</ToolBarContent>
-		<HeaderContent>
-			<MudTh><MudTableSortLabel SortLabel="id" T="APlusContentModel">Id</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="name" T="APlusContentModel">Name</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="status" T="APlusContentModel">Status</MudTableSortLabel></MudTh>
-			<MudTh>Modules</MudTh>
-			<MudTh><MudTableSortLabel SortLabel="product" T="APlusContentModel">Product</MudTableSortLabel></MudTh>
-			<MudTh>Variant</MudTh>
-			<MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="brand" T="APlusContentModel">Brand</MudTableSortLabel></MudTh>
-			<MudTh Style="width: 250px;">Actions</MudTh>
-		</HeaderContent>
-		<RowTemplate>
-			<MudTd DataLabel="Id">@context.Id</MudTd>
-			<MudTd DataLabel="Name">@context.Name</MudTd>
-			<MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
-			<MudTd DataLabel="Modules"><APlusModulesDisplay Content="@context" /></MudTd>
-			<MudTd DataLabel="Product">@context.Product.Code</MudTd>
-			<MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" /></MudTd>
-			<MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
-			<MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
-			<MudTd>
-				<MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context))">Delete</MudButton>
-				<MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
-				<MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
-			</MudTd>
-		</RowTemplate>
-		<PagerContent>
-			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
-		</PagerContent>
-	</MudTable>
+    <MudTable T="APlusContentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusContentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Content</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="APlusContentModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="APlusContentModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="APlusContentModel">Status</MudTableSortLabel></MudTh>
+            <MudTh>Modules</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="APlusContentModel">Product</MudTableSortLabel></MudTh>
+            <MudTh>Variant</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="APlusContentModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="APlusContentModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 250px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
+            <MudTd DataLabel="Modules"><APlusModulesDisplay Content="@context" /></MudTd>
+            <MudTd DataLabel="Product">@context.Product.Code</MudTd>
+            <MudTd DataLabel="Variant">
+                @if (context.AllVariants)
+                {
+                    <span>All variants</span>
+                }
+                else
+                {
+                    <APlusContentVariantsDisplay Variants="@context.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" />
+                }
+            </MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context))">Delete</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
 </MainBody>
 
 @code {
-	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
 
-	private MudTable<APlusContentModel> Table;
-	private ListRequest ListRequest = new();
+    private MudTable<APlusContentModel> Table;
+    private ListRequest ListRequest = new();
 
-	private HashSet<APlusContentModel> SelectedContents = new HashSet<APlusContentModel>();
-	private bool NoneSelected = true;
-	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+    private HashSet<APlusContentModel> SelectedContents = new HashSet<APlusContentModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		ProcessQueryParameters();		
-	}
+        ProcessQueryParameters();
+    }
 
-	private void ProcessQueryParameters()
-	{
-		if (!String.IsNullOrWhiteSpace(SearchString))
-		{
-			ListRequest.SearchString = SearchString;
-		}
-	}
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+    }
 
-	private Task<TableData<APlusContentModel>> Reload(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    private Task<TableData<APlusContentModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<APlusContentModel> contents = ContentService.GetForListRequest(ListRequest);
+        IList<APlusContentModel> contents = ContentService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<APlusContentModel>() { TotalItems = ContentService.CountForListRequest(ListRequest), Items = contents });
-	}
+        return Task.FromResult(new TableData<APlusContentModel>() { TotalItems = ContentService.CountForListRequest(ListRequest), Items = contents });
+    }
 
-	private void OnRowsPerPageChanged(int rowsPerPage)
-	{
-		CurrentRowsPerPageValue = rowsPerPage;
-	}
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
 
-	private void Filter(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
-	private async void Add()
-	{
-		var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Add A+ Content" }).Result;
+    private async void Add()
+    {
+        var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Add A+ Content" }).Result;
 
-		ProcessDialogResult(result);
-	}
+        ProcessDialogResult(result);
+    }
 
-	private async void AddSimilar(long id)
-	{
-		var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Add A+ Content", ["AddingSimilar"] = true, ["ContentId"] = id }).Result;
+    private async void AddSimilar(long id)
+    {
+        var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Add A+ Content", ["AddingSimilar"] = true, ["ContentId"] = id }).Result;
 
-		ProcessDialogResult(result);
-	}
+        ProcessDialogResult(result);
+    }
 
-	private async void Edit(long id)
-	{
-		var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Content", ["IsEdit"] = true, ["ContentId"] = id }).Result;
+    private async void Edit(long id)
+    {
+        var result = await DialogService.Show<APlusContentDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Content", ["IsEdit"] = true, ["ContentId"] = id }).Result;
 
-		ProcessDialogResult(result);
-	}
+        ProcessDialogResult(result);
+    }
 
-	private async void Delete(APlusContentModel content)
-	{
-		DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete content <b>{content.Name}</b> ?" }).Result;
+    private async void Delete(APlusContentModel content)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete content <b>{content.Name}</b> ?" }).Result;
 
-		if (!result.Canceled)
-		{
-			ContentService.Delete(content.Id);
+        if (!result.Canceled)
+        {
+            ContentService.Delete(content.Id);
 
-			await Table.ReloadServerData();
+            await Table.ReloadServerData();
 
-			Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Content"));
-		}
-	}
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Content"));
+        }
+    }
 
-	private void ProcessDialogResult(DialogResult result)
-	{
-		if (!result.Canceled)
-		{
-			Table.ReloadServerData();
-		}
-	}
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
 
-	private async void ChangeStatusOfSelected()
-	{
-		var result = await DialogService.Show<APlusContentsSetStatusDialog>(null, new DialogParameters { ["Contents"] = SelectedContents.ToList() }).Result;
+    private async void ChangeStatusOfSelected()
+    {
+        var result = await DialogService.Show<APlusContentsSetStatusDialog>(null, new DialogParameters { ["Contents"] = SelectedContents.ToList() }).Result;
 
-		ProcessDialogResult(result);
-	}
+        ProcessDialogResult(result);
+    }
 
-	private void OnSelectedItemsChanged(HashSet<APlusContentModel> selectedContents)
-	{
-		SelectedContents = selectedContents;
+    private void OnSelectedItemsChanged(HashSet<APlusContentModel> selectedContents)
+    {
+        SelectedContents = selectedContents;
 
-		if (SelectedContents.Any())
-		{
-			NoneSelected = false;
-		}
-		else
-		{
-			NoneSelected = true;
-		}
-	}
+        if (SelectedContents.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
 }

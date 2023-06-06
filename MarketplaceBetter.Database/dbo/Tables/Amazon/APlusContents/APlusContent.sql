@@ -5,7 +5,7 @@
 	[ProductId]		BIGINT						NOT NULL,
 	[InstanceId]	BIGINT						NOT NULL,
 	[StatusId]		BIGINT						NOT NULL,
-	[AllVariants]	BIT							NOT NULL DEFAULT(0),
+	[AllVariants]	BIT							NOT NULL,
 	CONSTRAINT		[PK_APlusContent]			PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_APlusContent_Product]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
 	CONSTRAINT		[FK_APlusContent_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),

@@ -40,5 +40,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         public int Order { get; set; }
 
         public EntityStatusModel Status { get; set; }
+
+        public IList<VariantModel> Variants { get; set; }
     }
 }
