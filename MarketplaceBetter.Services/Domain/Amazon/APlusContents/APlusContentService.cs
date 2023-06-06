@@ -152,6 +152,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             toContent.Name = fromContent.Name;
             toContent.ProductId = fromContent.Product.Id;
             toContent.InstanceId = fromContent.Instance.Id;
+            toContent.AllVariants = fromContent.AllVariants;
 
             TransferVariants(toContent.Variants, variantsSkus);
         }
