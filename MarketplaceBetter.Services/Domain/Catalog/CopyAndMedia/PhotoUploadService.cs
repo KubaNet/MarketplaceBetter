@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
@@ -18,8 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
-using Color = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Color;
-using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 {
@@ -29,37 +26,24 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private readonly IMapper _mapper;
         private readonly IRepository<PhotoUpload> _repository;
         private readonly IRepository<PhotoUploadVariant> _photoUploadVariantRepository;
-        private readonly IRepository<Instance> _instanceRepository;
-        private readonly IRepository<PhotoKind> _photoKindRepository;
-        private readonly IRepository<PhotoKindBeginning> _photoKindBeginningRepository;
-        private readonly IRepository<Brand> _brandRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Variant> _variantRepository;
-        private readonly IRepository<Color> _colorRepository;
-        private readonly IRepository<Size> _sizeRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IPhotoService _photoService;
+        private readonly IVariantPhotoNamingHelper _variantPhotoNamingHelper;
 
         public PhotoUploadService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IPhotoCloudService photoCloudService,
-            IPhotoService photoService)
+            IPhotoService photoService,
+            IVariantPhotoNamingHelper variantPhotoNamingHelper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<PhotoUpload>();
             _photoUploadVariantRepository = unitOfWork.GetRepository<PhotoUploadVariant>();
-            _instanceRepository = unitOfWork.GetRepository<Instance>();
-            _photoKindRepository = unitOfWork.GetRepository<PhotoKind>();
-            _photoKindBeginningRepository = unitOfWork.GetRepository<PhotoKindBeginning>();
-            _brandRepository = unitOfWork.GetRepository<Brand>();
-            _productRepository = unitOfWork.GetRepository<Product>();
-            _variantRepository = unitOfWork.GetRepository<Variant>();
-            _colorRepository = unitOfWork.GetRepository<Color>();
-            _sizeRepository = unitOfWork.GetRepository<Size>();
             _photoCloudService = photoCloudService;
             _photoService = photoService;
+            _variantPhotoNamingHelper = variantPhotoNamingHelper;
         }
 
         public IList<PhotoUploadModel> GetForListRequest(ListRequest request)
@@ -198,134 +182,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         private void SetValues(PhotoUpload photoUpload)
         {
-            IList<string> fileNameParts = GetNameParts(photoUpload.FileName);
+            IList<Variant> variants = _variantPhotoNamingHelper.GetVariantsFrom(photoUpload.FileName);
 
-            photoUpload.Instance = GetIntance(fileNameParts);
-            photoUpload.Kind = GetKind(photoUpload.FileName);
-            photoUpload.Variants = GetVariants(photoUpload, fileNameParts);
-        }
-
-        private IList<string> GetNameParts(string fileName)
-        {
-            fileName = fileName.Remove(fileName.IndexOf('.'));
-            string[] parts = fileName.Split('_');
-
-            return parts.ToList();
-        }
-
-        private IList<PhotoUploadVariant> GetVariants(PhotoUpload photoUpload, IList<string> nameParts)
-        {
-            if (nameParts.Count < 5)
-            {
-                return null;
-            }
-
-            Brand brand = GetBrand(nameParts);
-
-            if (brand == null)
-            {
-                return null;
-            }
-            else if (nameParts[2].Equals("all", StringComparison.OrdinalIgnoreCase))
-            {
-                return GetVariantsForBrand(photoUpload, brand);
-            }
-            else
-            {
-                Product product = GetProduct(brand, nameParts);
-
-                if (product == null) 
-                {
-                    return null;
-                }
-                else if (nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase) 
-                    && nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
-                {
-                    return GetVariantsForProduct(photoUpload, product);
-                }
-                else if (!nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase)
-                    && nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
-                {
-                    Size size = GetSize(product, nameParts);
-
-                    if (size != null)
-                    {
-                        return GetVariantsForProductAndSize(photoUpload, product, size);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else if (nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase)
-                    && !nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
-                {
-                    Color color = GetColor(product, nameParts);
-
-                    if (color != null)
-                    {
-                        return GetVariantsForProductAndColor(photoUpload, product, color);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else if (!nameParts[3].Equals("all", StringComparison.OrdinalIgnoreCase)
-                    && !nameParts[4].Equals("all", StringComparison.OrdinalIgnoreCase))
-                {
-                    Size size = GetSize(product, nameParts);
-                    Color color = GetColor(product, nameParts);
-
-                    if (size != null && color != null)
-                    {
-                        return GetVariantsForProductAndSizeAndColor(photoUpload, product, size, color);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private IList<PhotoUploadVariant> GetVariantsForProductAndSizeAndColor(PhotoUpload photoUpload, Product product, Size size, Color color)
-        {
-            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id && v.SizeId == size.Id && v.ColorId == color.Id).ToList();
-
-            return CreatePhotoUploadVariants(photoUpload, variants);
-        }
-
-        private IList<PhotoUploadVariant> GetVariantsForProductAndColor(PhotoUpload photoUpload, Product product, Color color)
-        {
-            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id && v.ColorId == color.Id).ToList();
-
-            return CreatePhotoUploadVariants(photoUpload, variants);
-        }
-
-        private IList<PhotoUploadVariant> GetVariantsForProductAndSize(PhotoUpload photoUpload, Product product, Size size)
-        {
-            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id && v.SizeId == size.Id).ToList();
-
-            return CreatePhotoUploadVariants(photoUpload, variants);
-        }
-
-        private IList<PhotoUploadVariant> GetVariantsForProduct(PhotoUpload photoUpload, Product product)
-        {
-            IList<Variant> variants = _variantRepository.Where(v => v.ProductId == product.Id).ToList();
-
-            return CreatePhotoUploadVariants(photoUpload, variants);
-        }
-
-        private IList<PhotoUploadVariant> GetVariantsForBrand(PhotoUpload photoUpload, Brand brand)
-        {
-            IList<Variant> variants = _variantRepository.Where(v => v.Product.BrandId == brand.Id).ToList();
-
-            return CreatePhotoUploadVariants(photoUpload, variants);
+            photoUpload.Variants = CreatePhotoUploadVariants(photoUpload, variants);
+            photoUpload.Instance = _variantPhotoNamingHelper.GetInstanceFrom(photoUpload.FileName);
+            photoUpload.Kind = _variantPhotoNamingHelper.GetPhotoKindFrom(photoUpload.FileName);
         }
 
         private IList<PhotoUploadVariant> CreatePhotoUploadVariants(PhotoUpload photoUpload, IList<Variant> variants)
@@ -344,114 +205,6 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             }
 
             return photoUploadVariants;
-        }
-
-        private Color GetColor(Product product, IList<string> nameParts)
-        {
-            if (nameParts.Count < 5)
-            {
-                return null;
-            }
-
-            int colorPartsCount = nameParts.Count - 4;
-            string colorCode = nameParts[4];
-
-            for (int i = 1; i < colorPartsCount; i++)
-            {
-                colorCode += $"_{nameParts[4 + i]}";
-            }
-
-            return _colorRepository.SingleOrDefault(c => c.GroupId == product.ColorGroupId && c.Code == colorCode);
-        }
-
-        private Size GetSize(Product product, IList<string> nameParts)
-        {
-            if (nameParts.Count < 4)
-            {
-                return null;
-            }
-
-            return _sizeRepository.SingleOrDefault(s => s.GroupId == product.SizeGroupId && s.Code == nameParts[3]);
-        }
-
-        private Product GetProduct(Brand brand, IList<string> nameParts)
-        {
-            if (nameParts.Count < 3)
-            {
-                return null;
-            }
-
-            return _productRepository.SingleOrDefault(p => p.BrandId == brand.Id && p.Code == nameParts[2]);
-        }
-
-        private Brand GetBrand(IList<string> nameParts)
-        {
-            if (nameParts.Count < 2)
-            {
-                return null;
-            }
-
-            return _brandRepository.SingleOrDefault(b => b.Code == nameParts[1]);
-        }
-
-        private PhotoKind GetKind(string fileName)
-        {
-            if (fileName.Count(c => c == '.') < 2)
-            {
-                return null;
-            }
-
-            int lastIndexOfDot = fileName.LastIndexOf('.');
-            fileName = fileName.Substring(0, lastIndexOfDot);
-
-            lastIndexOfDot = fileName.LastIndexOf('.');
-            string kindString = fileName.Substring(lastIndexOfDot + 1);
-
-            foreach (var kindBeginning in _photoKindBeginningRepository.GetAll())
-            {
-                if (kindString.StartsWith(kindBeginning.Name, StringComparison.OrdinalIgnoreCase) 
-                    && kindString.Length == kindBeginning.Name.Length + 2)
-                {
-                    string numberString = kindString.Replace(kindBeginning.Name, string.Empty, StringComparison.OrdinalIgnoreCase);
-
-                    if (numberString.Contains("0"))
-                    {
-                        numberString = numberString.Replace("0", string.Empty);
-                    }
-
-                    int number;
-                    bool isNumber = int.TryParse(numberString, out number);
-
-                    if (isNumber)
-                    {
-                        if (_photoKindRepository.Any(k => k.Name == kindString))
-                        {
-                            return _photoKindRepository.Single(k => k.Name == kindString);
-                        }
-                        else
-                        {
-                            PhotoKind photoKindToAdd = new PhotoKind { Name = kindString.ToUpper() };
-                            _photoKindRepository.Add(photoKindToAdd);
-                            _unitOfWork.Save();
-
-                            return photoKindToAdd;
-                        }
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        private Instance GetIntance(IList<string> nameParts)
-        {
-            Instance instance = _instanceRepository.SingleOrDefault(i => i.Name == nameParts[0]);
-
-            return instance;
         }
 
         private IQueryable<PhotoUpload> ApplyFilter(IQueryable<PhotoUpload> photos, ListRequest request)
