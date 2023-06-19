@@ -1,11 +1,13 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 @using MarketplaceBetter.Services.Model
 
 @page "/child-instances"
 @inject ISnackbar Snackbar
-@inject IChildInstanceService ChildInstanceService
 @inject IDialogService DialogService
+@inject IChildInstanceService ChildInstanceService
+@inject IAPlusContentService APlusContentService
 
 <MudText Typo="Typo.h4" Class="mt-2">Child Instances</MudText>
 
@@ -14,6 +16,7 @@
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
+            <MudButton OnClick="AddAPlusContent" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Success" Disabled="NoneSelected" Class="ml-2">Add A+ Content</MudButton>
             <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -149,6 +152,20 @@
         var result = await DialogService.Show<ChildInstancesSetStatusDialog>(null, new DialogParameters { ["ChildInstances"] = SelectedChilds.ToList() }).Result;
 
         ProcessDialogResult(result);
+    }
+
+    private async void AddAPlusContent()
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to add A+ content for selected childs?" }).Result;
+
+        if (!result.Canceled)
+        {
+            APlusContentService.AddForChilds(SelectedChilds.Select(c => c.Id).ToList());
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ content"));
+        }
     }
 
     private void OnSelectedItemsChanged(HashSet<ChildInstanceModel> selectedChilds)
