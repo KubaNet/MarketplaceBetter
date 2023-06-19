@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.APlusContents
         public long Id { get; set; }
 
         [Required]
+        [DisplayName("Type")]
         public APlusModuleModel Module { get; set; }
 
         [Required]

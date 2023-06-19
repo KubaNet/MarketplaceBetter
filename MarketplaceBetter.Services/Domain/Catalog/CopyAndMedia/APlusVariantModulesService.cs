@@ -54,14 +54,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
             modules = ApplyFilter(modules, request);
             modules = ApplySorting(modules, request);
 
-            var groupedPhotos = modules.ToList().GroupBy(m => new { m.ContentId, m.Content.InstanceId });
+            var groupedModules = modules.ToList().GroupBy(m => new { m.ContentId, m.Content.InstanceId });
 
             if (!request.ShowAll)
             {
-                groupedPhotos = groupedPhotos.Skip(request.Page * request.PageSize).Take(request.PageSize);
+                groupedModules = groupedModules.Skip(request.Page * request.PageSize).Take(request.PageSize);
             }
 
-            return groupedPhotos.Select(m => new APlusVariantModulesModel
+            return groupedModules.Select(m => new APlusVariantModulesModel
             {
                 Content = _mapper.Map<APlusContentModel>(m.First().Content),
                 Instance = _mapper.Map<InstanceModel>(m.First().Content.Instance),

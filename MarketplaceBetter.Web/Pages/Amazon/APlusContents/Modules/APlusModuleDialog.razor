@@ -173,13 +173,14 @@
         if (AddingSimilar)
         {
             ModuleValue.Id = 0;
-            ModuleValue.Order++;
         }
 
         Brand = Brands.Single(b => b.Id == ModuleValue.Content.Product.Brand.Id);
         ActivateProduct(Brand.Id);
         Product = Products.Single(p => p.Id == ModuleValue.Content.Product.Id);
         Instance = Instances.Single(i => i.Id == ModuleValue.Content.Instance.Id);
+
+        Contents = ContentService.GetAllFor(Brand, Product, Instance);
 
         ModuleValue.Content = Contents.Single(c => c.Id == ModuleValue.Content.Id);
         ModuleValue.Module = Modules.Single(s => s.Id == ModuleValue.Module.Id);
@@ -247,9 +248,12 @@
     private void HandleContentChanged(APlusContentModel content)
     {
         ModuleValue.Content = content;
+        if (ModuleValue.Order == 0)
+        {
+            ModuleValue.Order = 1;
+        }
 
         OrderDisabled = false;
-        ModuleValue.Order = ModuleValueService.GetNextOrder(content.Id);
     }
 
     private void HandleModuleChanged(APlusModuleModel module)
@@ -283,7 +287,7 @@
 
     private async void HandleValidSubmit()
     {
-         ValidationResult result = ModuleValueValidator.Validate(ModuleValue, MetricsInfo.MetricsCount);
+        ValidationResult result = ModuleValueValidator.Validate(ModuleValue, MetricsInfo.MetricsCount);
 
         if (result.IsValid)
         {

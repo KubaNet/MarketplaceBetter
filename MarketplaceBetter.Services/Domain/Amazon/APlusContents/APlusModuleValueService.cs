@@ -280,7 +280,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 						"id" => modules.Where(m => m.Id == searchField.Value.ParseToIntOrDefault()),
 						"content" => modules.Where(m => m.Content.Name.Contains(searchField.Value)),
                         "product" => modules.Where(m => m.Content.Product.Code.Contains(searchField.Value)),
-                        "variant" => modules.Where(m => m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || v.Variant.Asin.Contains(searchField.Value))),
+                        "variant" => modules.Where(m => m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || v.Variant.Asin.Contains(searchField.Value))
+                            || (m.Content.AllVariants && m.Content.Product.Variants.Any(v => v.Sku.Contains(searchField.Value) || v.Asin.Contains(searchField.Value)))),
                         "name" => modules.Where(m => m.Module.Name.Contains(searchField.Value)),
 						"order" => modules.Where(m => m.Order == searchField.Value.ParseToIntOrDefault()),
                         "instance" => modules.Where(m => m.Content.Instance.Name.Contains(searchField.Value)),
@@ -293,6 +294,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 						|| m.Content.Name.Contains(searchString)
                         || m.Content.Product.Code.Contains(searchString)
                         || m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchString) || v.Variant.Asin.Contains(searchString))
+                        || (m.Content.AllVariants && m.Content.Product.Variants.Any(v => v.Sku.Contains(searchString) || v.Asin.Contains(searchString)))
                         || m.Module.Name.Contains(searchString)
 						|| m.Order == searchString.ParseToIntOrDefault()
                         || m.Content.Instance.Name.Contains(searchString));
