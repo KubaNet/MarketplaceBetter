@@ -52,6 +52,7 @@
 @code {
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
     [Parameter][SupplyParameterFromQuery] public string ContentName { get; set; }
+    [Parameter][SupplyParameterFromQuery] public string VariantSku { get; set; }
 
     private MudTable<APlusModuleValueModel> Table;
     private ListRequest ListRequest = new();
@@ -71,7 +72,11 @@
         {
             ListRequest.SearchString = SearchString;
         }
-        if (!String.IsNullOrWhiteSpace(ContentName))
+        if (!String.IsNullOrWhiteSpace(VariantSku))
+        {
+            ListRequest.SearchString = $"variant: {VariantSku}";
+        }
+        else if (!String.IsNullOrWhiteSpace(ContentName))
         {
             ListRequest.SearchString = $"content: {ContentName}";
         }
