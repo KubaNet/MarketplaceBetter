@@ -1,4 +1,5 @@
-﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Model;
 
@@ -34,7 +35,16 @@
             <MudTd DataLabel="Product">@context.Content.Product.Code</MudTd>
             <MudTd DataLabel="Variant"><APlusContentVariantsDisplay Variants="@context.Content.Variants.Select(v => v.Variant).OrderBy(v => v.Sku).ToList()" /></MudTd>
             <MudTd DataLabel="Name">@context.Module.Name</MudTd>
-            <MudTd DataLabel="Elements"><APlusElementsDisplay Elements="context.Elements" /></MudTd>
+            <MudTd DataLabel="Elements">
+                @if (context.Module.SystemName == APlusModuleEnum.StandardComparisonChart)
+                {
+                    <span @onclick="() => ShowComparisonChart(context)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">.. show elements ..</span>
+                }
+                else
+                {
+                    <APlusElementsDisplay Elements="context.Elements" />
+                }
+            </MudTd>
             <MudTd DataLabel="Order">@context.Order</MudTd>
             <MudTd DataLabel="Instance">@context.Content.Instance.Name</MudTd>
             <MudTd>
@@ -50,6 +60,7 @@
 </MainBody>
 
 @code {
+    [CascadingParameter] private MudTheme BetterTheme { get; set; }
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
     [Parameter][SupplyParameterFromQuery] public string ContentName { get; set; }
     [Parameter][SupplyParameterFromQuery] public string VariantSku { get; set; }
@@ -134,7 +145,7 @@
 
     private async void Delete(APlusModuleValueModel moduleValue)
     {
-        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete module <b>{ moduleValue.Module.Name }</b> for content <b>{ moduleValue.Content.Name }</b> ?" }).Result;
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete module <b>{moduleValue.Module.Name}</b> for content <b>{moduleValue.Content.Name}</b> ?" }).Result;
 
         if (!result.Canceled)
         {
@@ -152,5 +163,10 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private async void ShowComparisonChart(APlusModuleValueModel module)
+    {
+        await DialogService.Show<ComparisonChartDisplay>(null, new DialogParameters { ["Module"] = module }).Result;
     }
 }

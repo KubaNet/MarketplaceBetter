@@ -1,0 +1,24 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+
+<MudDialog Style="min-width: 500px;">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Comparison chart</MudText>
+    </TitleContent>
+    <DialogContent>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public APlusModuleValueModel Module { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void Close() => MudDialog.Cancel();
+}

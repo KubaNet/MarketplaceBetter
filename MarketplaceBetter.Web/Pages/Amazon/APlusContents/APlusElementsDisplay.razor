@@ -79,9 +79,7 @@
 }
 
 @code {
-    [CascadingParameter]
-    private MudTheme BetterTheme { get; set; }
-
+    [CascadingParameter] private MudTheme BetterTheme { get; set; }
     [Parameter] public IList<APlusElementValueModel> Elements { get; set; }
 
     private IDictionary<string, bool> OpenInfo = new Dictionary<string, bool>();

@@ -1,7 +1,10 @@
 ﻿@using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 @using MarketplaceBetter.Domain.Model.Other;
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 @using TinyMCE.Blazor;
+
+@inject IRefreshService RefreshService
 
 <MudText Typo="Typo.h6" Class="mt-3">Metrics</MudText>
 
@@ -37,7 +40,9 @@
             <Editor @bind-Value="elementValue.BodyText" Field="() => elementValue.BodyText" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
             break;
         case APlusElementTypeEnum.Image:
-            <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" />
+            string name = $"ASIN (product {(productIndex % 6) + 1})";
+            APlusElementValueModel productAsinField = ProductsElements.SingleOrDefault(e => e.Element.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" ProductAsinField="productAsinField" />
             break;
         case APlusElementTypeEnum.TrueOrFalse:
             <MudCheckBox Label="@elementValue.Element.Name" @bind-Checked="elementValue.TrueOrFalse" TriState="true" For="() => elementValue.TrueOrFalse" />
@@ -92,6 +97,8 @@
     {
         base.OnInitialized();
 
+        RefreshService.RefreshRequested += RefreshMe;
+
         MetricsElements = ModuleValue.Elements.Where(e => e.Element.Name.StartsWith("Metric")).OrderBy(e => e.Element.Order).ToList();
         ProductsElements = ModuleValue.Elements.Where(e => !e.Element.Name.StartsWith("Metric") && !e.Element.Name.StartsWith("Checked?") && !e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
         ProductsMetricsElements = ModuleValue.Elements.Where(e => e.Element.Name.StartsWith("Checked?") || e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
@@ -112,6 +119,11 @@
                 MetricsInfo.MetricsCount = i + 1;
             }
         }
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
     }
 
     private void SetInitialValues()

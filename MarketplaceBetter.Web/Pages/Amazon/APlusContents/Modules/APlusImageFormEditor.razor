@@ -2,6 +2,8 @@
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 
 @inject IAPlusImageCloudService ImageCloudService
+@inject IRefreshService RefreshService
+@inject IVariantPhotoNamingHelper NamingHelper
 
 @if (UploadState)
 {
@@ -40,6 +42,7 @@ else
     [Parameter] public APlusElementValueModel ElementValue { get; set; }
     [Parameter] public IDictionary<string, IBrowserFile> ImagesToAdd { get; set; }
     [Parameter] public IList<string> ImagesToDelete { get; set; }
+    [Parameter] public APlusElementValueModel ProductAsinField { get; set; }
 
     private string ElementName;
     private string InputName;
@@ -59,6 +62,22 @@ else
     {
         ImagesToAdd.Remove(ElementName);
         ImagesToAdd.Add(ElementName, changeEvent.File);
+
+        if (ProductAsinField != null)
+        {
+            IList<MarketplaceBetter.Domain.Entities.Catalog.Products.Variant> variants = NamingHelper.GetVariantsFrom(changeEvent.File.Name);
+
+            if (variants != null && variants.Any())
+            {
+                ProductAsinField.SingleLineText = variants[0].Asin;
+            }
+            else
+            {
+                ProductAsinField.SingleLineText = "nie rozpoznano wariantu z nazwy zdjęcia";
+            }
+
+            RefreshService.RequestRefresh();
+        }
     }
 
     private void DeleteImage()
