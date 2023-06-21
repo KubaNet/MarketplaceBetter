@@ -19,6 +19,8 @@ namespace MarketplaceBetter.Services.Specialized.Interfaces
 
         string GetBiggerUrlForLists(string cloudId, string version);
 
+        string GetSmallerUrlForDisplay(string cloudId, string version);
+
         void Delete(IList<string> cloudIds);
     }
 }

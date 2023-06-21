@@ -1,10 +1,90 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Services.Specialized.Interfaces;
 
-<MudDialog Style="min-width: 500px;">
+@inject IAPlusImageCloudService ImageCloudService
+
+<MudDialog Style="min-width: 1800px;">
     <TitleContent>
-        <MudText Typo="Typo.h6">Comparison chart</MudText>
+        <MudText Typo="Typo.h6">@Module.Module.Name - @Module.Content.Name</MudText>
     </TitleContent>
     <DialogContent>
+        <div class="d-flex flex-grow-1">
+            <div class="d-flex mr-4" style="min-width: 200px;">
+            </div>
+            <div class="d-flex flex-auto">
+                <MudGrid>
+                    @for (int i = 1; i <= 6; i++)
+                    {
+                        int index = i;
+                        APlusElementValueModel imageElement = ProductsElements.Single(e => e.Element.Name.Equals($"Image (product {index})"));
+                        APlusElementValueModel highlightElement = ProductsElements.Single(e => e.Element.Name.Equals($"Highlight Column (product {index})"));
+                        <MudItem xs="2">
+                            <MudText Typo="Typo.subtitle1" Align="Align.Center">Product @index</MudText>
+                            <MudCheckBox Label="Highlight Column" Checked="highlightElement.TrueOrFalse" ReadOnly="true" />
+                            @if (imageElement.Image != null)
+                            {
+                                <MudTooltip Placement="Placement.Right">
+                                    <ChildContent>
+                                        <MudLink Typo="Typo.body2" Href="@ImageCloudService.GetOriginalUrl(imageElement.Image.CloudId, imageElement.Image.Version)" Target="_blank">
+                                            <MudImage Src="@ImageCloudService.GetSmallerUrlForDisplay(imageElement.Image.CloudId, imageElement.Image.Version)" />
+                                        </MudLink>
+                                    </ChildContent>
+                                    <TooltipContent>Click to open in new window</TooltipContent>
+                                </MudTooltip>
+                            }
+                        </MudItem>
+                    }
+
+                    @for (int i = 1; i <= 6; i++)
+                    {
+                        int index = i;
+                        APlusElementValueModel keywordsElement = ProductsElements.Single(e => e.Element.Name.Equals($"Image Keywords (product {index})"));
+                        APlusElementValueModel titleElement = ProductsElements.Single(e => e.Element.Name.Equals($"Title (product {index})"));
+                        APlusElementValueModel asinElement = ProductsElements.Single(e => e.Element.Name.Equals($"ASIN (product {index})"));
+                        <MudItem xs="2">
+                            <MudTextField Label="Image Keywords" Value="keywordsElement.SingleLineText" ReadOnly="true" />
+                            <MudTextField Label="Title" Value="titleElement.SingleLineText" ReadOnly="true" />
+                            <MudTextField Label="ASIN" Value="asinElement.SingleLineText" ReadOnly="true" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            </div>
+        </div>
+        <div class="mt-10"></div>
+        @for (int i = 1; i <= 10; i++)
+        {
+            int metricIndex = i;
+            APlusElementValueModel metricElement = MetricsElements.Single(e => e.Element.Name.Equals($"Metric {metricIndex}"));
+            <div class="d-flex flex-grow-1">
+                <div class="d-flex mr-4" style="min-width: 200px;">
+                    <MudTextField Label="@String.Concat("Metric ", metricIndex)" Value="metricElement.SingleLineText" ReadOnly="true" />
+                </div>
+                <div class="d-flex flex-auto">
+                    <MudGrid>
+                        @for (int j = 1; j <= 6; j++)
+                        {
+                            int productIndex = j;
+                            APlusElementValueModel productMetricCheckboxElement = ProductsMetricsElements.Single(e => e.Element.Name.Equals($"Checked? (metric {metricIndex}, product {productIndex})"));
+                            APlusElementValueModel productMetricTextElement = ProductsMetricsElements.Single(e => e.Element.Name.Equals($"Text (metric {metricIndex}, product {productIndex})"));
+                            <MudItem xs="2">
+                                @if (productMetricCheckboxElement.TrueOrFalse.HasValue)
+                                {
+                                    <div class="d-flex flex-grow">
+                                        <div class="d-flex flex-1"></div>
+                                        <div class="d-flex"><MudCheckBox Checked="productMetricCheckboxElement.TrueOrFalse" ReadOnly="true" /></div>
+                                        <div class="d-flex flex-1"></div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <MudTextField Label="Text" Value="productMetricTextElement.SingleLineText" ReadOnly="true" />
+                                }
+                            </MudItem>
+                        }
+                    </MudGrid>
+                </div>
+            </div>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Close">Close</MudButton>
@@ -15,9 +95,17 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public APlusModuleValueModel Module { get; set; }
 
+    private IList<APlusElementValueModel> MetricsElements;
+    private IList<APlusElementValueModel> ProductsElements;
+    private IList<APlusElementValueModel> ProductsMetricsElements;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
+        MetricsElements = Module.Elements.Where(e => e.Element.Name.StartsWith("Metric")).OrderBy(e => e.Element.Order).ToList();
+        ProductsElements = Module.Elements.Where(e => !e.Element.Name.StartsWith("Metric") && !e.Element.Name.StartsWith("Checked?") && !e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
+        ProductsMetricsElements = Module.Elements.Where(e => e.Element.Name.StartsWith("Checked?") || e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
     }
 
     private void Close() => MudDialog.Cancel();

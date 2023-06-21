@@ -88,7 +88,12 @@ namespace MarketplaceBetter.Services.Specialized
             return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Height(700).Width(1000).Crop("limit")).BuildUrl(cloudId);
         }
 
-		public void Delete(IList<string> cloudIds)
+		public string GetSmallerUrlForDisplay(string cloudId, string version)
+		{
+            return _cloudinary.Api.UrlImgUp.Version(version).Transform(new Transformation().Width(200).Crop("limit")).BuildUrl(cloudId);
+        }
+
+        public void Delete(IList<string> cloudIds)
 		{
             foreach (var cloudIdsChunk in cloudIds.Chunk(50))
             {

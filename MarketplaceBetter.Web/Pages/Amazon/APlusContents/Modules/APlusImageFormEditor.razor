@@ -22,19 +22,20 @@
 }
 else
 {
-    <div class="my-4">
-        <MudTooltip Placement="Placement.Right">
-            <ChildContent>
-                <MudLink Typo="Typo.body1" Href="@ElementValue.Image.Url" Target="_blank" @onmouseenter="() => ShowImage()" @onmouseleave="() => HideImage()" Style="font-weight: bold; text-decoration: none;">
-                    @ElementName
-                </MudLink>
-            </ChildContent>
-            <TooltipContent>Click to open in new window</TooltipContent>
-        </MudTooltip>
-        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Title="Click to delete" OnClick="DeleteImage"></MudIconButton>
-        <MudPopover Open="ImageOpen" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
-            <MudImage Src="@ImageCloudService.GetBiggerUrlForLists(ElementValue.Image.CloudId, ElementValue.Image.Version)" />
-        </MudPopover>
+    <div class="my-4 d-flex align-center">
+        <div class="d-flex">
+            <MudTooltip Placement="Placement.Right">
+                <ChildContent>
+                    <MudLink Typo="Typo.body2" Href="@ImageCloudService.GetOriginalUrl(ElementValue.Image.CloudId, ElementValue.Image.Version)" Target="_blank">
+                        <MudImage Src="@ImageCloudService.GetSmallerUrlForDisplay(ElementValue.Image.CloudId, ElementValue.Image.Version)" />
+                    </MudLink>
+                </ChildContent>
+                <TooltipContent>Click to open in new window</TooltipContent>
+            </MudTooltip>
+        </div>
+        <div class="d-flex">
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Title="Click to delete" OnClick="DeleteImage"></MudIconButton>
+        </div>
     </div>
 }
 
@@ -47,7 +48,6 @@ else
     private string ElementName;
     private string InputName;
     private bool UploadState = true;
-    private bool ImageOpen = false;
 
     protected override void OnInitialized()
     {
@@ -85,15 +85,5 @@ else
         ImagesToDelete.Add(ElementName);
         UploadState = true;
         ElementValue.Image = null;
-    }
-
-    private void ShowImage()
-    {
-        ImageOpen = true;
-    }
-
-    private void HideImage()
-    {
-        ImageOpen = false;
     }
 }

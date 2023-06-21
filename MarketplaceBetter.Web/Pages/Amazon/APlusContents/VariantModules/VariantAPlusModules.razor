@@ -164,6 +164,8 @@
 
     private async void ShowComparisonChart(APlusModuleValueModel module)
     {
-        await DialogService.Show<ComparisonChartDisplay>(null, new DialogParameters { ["Module"] = module }).Result;
+        DialogOptions options = new DialogOptions() { CloseButton = true };
+
+        await DialogService.Show<ComparisonChartDisplay>(null, new DialogParameters { ["Module"] = module }, options).Result;
     }
 }
