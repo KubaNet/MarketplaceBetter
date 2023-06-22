@@ -16,7 +16,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces
 
 		IList<APlusModuleValueModel> GetForListRequest(ListRequest request);
 
-		int GetNextOrder(long contentId);
+        IList<APlusModuleValueModel> GetAllChartsForProduct(long productId, int order);
+
+        int GetNextOrder(long contentId);
 
 		void Add(APlusModuleValueModel module);
 

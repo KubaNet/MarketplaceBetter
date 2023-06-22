@@ -1,14 +1,21 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
+@using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 
 @inject IAPlusImageCloudService ImageCloudService
+@inject IAPlusModuleValueService ModuleService
 
 <MudDialog Style="min-width: 1800px;">
     <TitleContent>
-        <MudText Typo="Typo.h6">@Module.Module.Name - @Module.Content.Name</MudText>
+        <div style="text-align: center;">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.NavigateBefore" Color="Color.Default" Disabled="ProductModules.Count < 2" Class="ml-10 mr-4" OnClick="Previous">previous</MudButton>
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.NavigateNext" Color="Color.Default" Disabled="ProductModules.Count < 2" Class="mr-4" OnClick="Next">next</MudButton>
+        </div>
     </TitleContent>
     <DialogContent>
-        <div class="d-flex flex-grow-1">
+        <MudText Typo="Typo.h6" Inline="true">@Module.Module.Name - @Module.Content.Name</MudText>
+        <span class="ml-2">Module @(Index + 1) / @ProductModules.Count</span>
+        <div class="d-flex flex-grow-1 mt-4">
             <div class="d-flex mr-4" style="min-width: 200px;">
             </div>
             <div class="d-flex flex-auto">
@@ -99,13 +106,50 @@
     private IList<APlusElementValueModel> ProductsElements;
     private IList<APlusElementValueModel> ProductsMetricsElements;
 
+    private IList<APlusModuleValueModel> ProductModules { get; set; }
+    private int Index;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        MetricsElements = Module.Elements.Where(e => e.Element.Name.StartsWith("Metric")).OrderBy(e => e.Element.Order).ToList();
-        ProductsElements = Module.Elements.Where(e => !e.Element.Name.StartsWith("Metric") && !e.Element.Name.StartsWith("Checked?") && !e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
-        ProductsMetricsElements = Module.Elements.Where(e => e.Element.Name.StartsWith("Checked?") || e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
+        InitializeElements(Module);
+
+        ProductModules = ModuleService.GetAllChartsForProduct(Module.Content.Product.Id, Module.Order);
+
+        Index = ProductModules.IndexOf(ProductModules.Single(m => m.Content.Name == Module.Content.Name && m.Order == Module.Order));
+    }
+
+    private void InitializeElements(APlusModuleValueModel module)
+    {
+        Module = module;
+        MetricsElements = module.Elements.Where(e => e.Element.Name.StartsWith("Metric")).OrderBy(e => e.Element.Order).ToList();
+        ProductsElements = module.Elements.Where(e => !e.Element.Name.StartsWith("Metric") && !e.Element.Name.StartsWith("Checked?") && !e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
+        ProductsMetricsElements = module.Elements.Where(e => e.Element.Name.StartsWith("Checked?") || e.Element.Name.StartsWith("Text")).OrderBy(e => e.Element.Order).ToList();
+    }
+
+    private void Previous()
+    {
+        Index--;
+        if (Index < 0)
+        {
+            Index = ProductModules.Count - 1;
+        }
+
+        InitializeElements(ProductModules[Index]);
+        StateHasChanged();
+    }
+
+    private void Next()
+    {
+        Index++;
+        if (Index >= ProductModules.Count)
+        {
+            Index = 0;
+        }
+
+        InitializeElements(ProductModules[Index]);
+        StateHasChanged();
     }
 
     private void Close() => MudDialog.Cancel();
