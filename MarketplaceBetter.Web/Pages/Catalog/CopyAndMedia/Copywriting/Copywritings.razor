@@ -3,8 +3,9 @@
 @using MarketplaceBetter.Services.Model
 
 @page "/copywriting"
-@inject ICopywritingService CopywritingService
+@inject NavigationManager Navigation
 @inject IDialogService DialogService
+@inject ICopywritingService CopywritingService
 
 <MudText Typo="Typo.h4" Class="mt-2">Copywriting</MudText>
 
@@ -73,6 +74,9 @@
     private void FilterCopywritings(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

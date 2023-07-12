@@ -4,6 +4,8 @@
 @using MarketplaceBetter.Services.Model
 
 @page "/child-instances"
+
+@inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IChildInstanceService ChildInstanceService
@@ -105,6 +107,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

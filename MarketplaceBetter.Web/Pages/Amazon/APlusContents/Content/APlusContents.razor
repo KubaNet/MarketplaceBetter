@@ -4,9 +4,10 @@
 
 @page "/a-plus-content"
 
+@inject NavigationManager Navigation
 @inject ISnackbar Snackbar
-@inject IAPlusContentService ContentService
 @inject IDialogService DialogService
+@inject IAPlusContentService ContentService
 
 <MudText Typo="Typo.h4" Class="mt-2">A+ Content</MudText>
 
@@ -101,6 +102,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

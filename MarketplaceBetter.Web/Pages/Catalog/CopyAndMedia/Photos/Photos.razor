@@ -4,10 +4,10 @@
 @using MarketplaceBetter.Specialized.Interfaces
 
 @page "/photos"
+@inject NavigationManager Navigation
 @inject ISnackbar Snackbar
-@inject NavigationManager NavigationManager
-@inject IPhotoService PhotoService
 @inject IDialogService DialogService
+@inject IPhotoService PhotoService
 @inject IPhotoCloudService PhotoCloudService
 
 <MudText Typo="Typo.h4" Class="mt-2">Photos</MudText>
@@ -96,6 +96,9 @@
     {
         ListRequest.SearchString = searchString;
 
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
+
         Table.ReloadServerData();
 
         StateHasChanged();
@@ -110,7 +113,7 @@
 
     private void AddMultiple()
     {
-        NavigationManager.NavigateTo($"add-photos");
+        Navigation.NavigateTo($"add-photos");
     }
 
     private async void AddSimilar(long id)

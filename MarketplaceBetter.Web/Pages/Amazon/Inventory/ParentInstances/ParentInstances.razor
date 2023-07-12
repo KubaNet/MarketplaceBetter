@@ -6,6 +6,8 @@
 @using System.IO
 
 @page "/parent-instances"
+
+@inject NavigationManager Navigation
 @inject IJSRuntime JS
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
@@ -120,6 +122,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

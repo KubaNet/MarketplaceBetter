@@ -3,8 +3,9 @@
 @using MarketplaceBetter.Services.Model;
 
 @page "/product-colors"
-@inject IProductColorService ProductColorService
+@inject NavigationManager Navigation
 @inject IDialogService DialogService
+@inject IProductColorService ProductColorService
 
 <MudText Typo="Typo.h4" Class="mt-2">Product Colors</MudText>
 
@@ -85,6 +86,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

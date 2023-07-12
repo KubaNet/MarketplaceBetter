@@ -6,9 +6,10 @@
 
 @page "/variant-photos"
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
 @inject IVariantPhotosService VariantPhotosService
 @inject IPhotoTypeService PhotoTypeService
-@inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">Variant Photos</MudText>
 
@@ -106,6 +107,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

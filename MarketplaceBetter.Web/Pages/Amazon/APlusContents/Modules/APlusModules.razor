@@ -5,9 +5,10 @@
 
 @page "/a-plus-modules"
 
+@inject NavigationManager Navigation
 @inject ISnackbar Snackbar
-@inject IAPlusModuleValueService ModuleValueService
 @inject IDialogService DialogService
+@inject IAPlusModuleValueService ModuleValueService
 
 <MudText Typo="Typo.h4" Class="mt-2">A+ Modules</MudText>
 
@@ -110,6 +111,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

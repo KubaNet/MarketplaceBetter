@@ -3,9 +3,10 @@
 @using MarketplaceBetter.Services.Model;
 
 @page "/variants"
+@inject NavigationManager Navigation
 @inject ISnackbar Snackbar
-@inject IVariantService VariantService
 @inject IDialogService DialogService
+@inject IVariantService VariantService
 
 <MudText Typo="Typo.h4" Class="mt-2">Variants</MudText>
 
@@ -108,6 +109,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

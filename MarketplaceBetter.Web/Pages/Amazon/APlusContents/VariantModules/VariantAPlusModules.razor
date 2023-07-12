@@ -4,9 +4,11 @@
 @using MarketplaceBetter.Services.Model;
 
 @page "/variant-a-plus-modules"
+
+@inject NavigationManager Navigation
 @inject ISnackbar Snackbar
-@inject IAPlusVariantModulesService VariantModulesService
 @inject IDialogService DialogService
+@inject IAPlusVariantModulesService VariantModulesService
 
 <MudText Typo="Typo.h4" Class="mt-2">Variant A+ Modules</MudText>
 
@@ -127,6 +129,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

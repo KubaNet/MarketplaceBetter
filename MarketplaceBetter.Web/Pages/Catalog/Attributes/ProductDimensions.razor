@@ -7,10 +7,11 @@
 
 @page "/product-dimensions"
 
+@inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 @inject IProductDimensionsService DimensionsService
 @inject IUserService UserService
-@inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">Product Dimensions</MudText>
 
@@ -186,6 +187,9 @@
     private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
 

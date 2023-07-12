@@ -3,8 +3,9 @@
 @using MarketplaceBetter.Services.Model
 
 @page "/colors"
-@inject IColorService ColorService
+@inject NavigationManager Navigation
 @inject IDialogService DialogService
+@inject IColorService ColorService
 
 <MudText Typo="Typo.h4" Class="mt-2">Colors</MudText>
 
@@ -70,6 +71,9 @@
 	private void Filter(string searchString)
 	{
 		ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
 		Table.ReloadServerData();
 
