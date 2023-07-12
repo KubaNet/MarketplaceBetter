@@ -13,10 +13,11 @@
 @using MarketplaceBetter.Services.Model;
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 
+@inject NavigationManager Navigation
+@inject IEntityStatusService StatusService
 @inject IBrandService BrandService
 @inject IInstanceService InstanceService
 @inject IUserService UserService
-@inject NavigationManager NavigationManager
 @inject IProductService ProductService
 @inject IVariantService VariantService
 @inject ICopywritingService CopywritingService
@@ -48,10 +49,18 @@
                     </div>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudCheckBox T="bool" Checked="ShowDrafts" Label="Show Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnShowDraftsChange"></MudCheckBox>
+                        <MudSelect T="EntityStatusModel" Value="Status" Label="Status" DisableUnderLine="true" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedStatusChange">
+                            @foreach (var status in Statuses)
+                            {
+                                <MudSelectItem Value="status">@status.Name</MudSelectItem>
+                            }
+                        </MudSelect>
                     </div>
                     <div>
-                        <MudCheckBox T="bool" Checked="ShowWithdrawn" Label="Show Withdrawn" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnShowWithdrawnChange"></MudCheckBox>
+                        <MudCheckBox T="bool" Checked="HideDrafts" Label="Hide Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideDraftsChange"></MudCheckBox>
+                    </div>
+                    <div>
+                        <MudCheckBox T="bool" Checked="HideWithdrawn" Label="Hide Withdrawn" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideWithdrawnChange"></MudCheckBox>
                     </div>
                     <div>
                         <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedBrandChange">
@@ -89,13 +98,16 @@
 </AuthorizeView>
 
 @code {
+    private EntityStatusModel AllStatuses = new EntityStatusModel { Name = "All" };
+    private EntityStatusModel Status;
+    private List<EntityStatusModel> Statuses;
     private BrandModel AllBrands = new BrandModel() { Name = "All" };
     private BrandModel Brand;
     private List<BrandModel> Brands;
     private InstanceModel Instance;
     private IList<InstanceModel> Instances;
-    private bool ShowDrafts = false;
-    private bool ShowWithdrawn = false;
+    private bool HideDrafts = false;
+    private bool HideWithdrawn = false;
     private bool GlobalSearchResultsOpen = false;
     private RenderFragment GlobalSearchResults;
 
@@ -112,10 +124,27 @@
     {
         base.OnInitialized();
 
+        InitializeCurrentStatus();
         InitializeCurrentBrand();
         InitializeCurrentInstance();
         InitializeDraftsSetting();
         InitializeWithdrawnSetting();
+    }
+
+    private void InitializeCurrentStatus()
+    {
+        Statuses = new List<EntityStatusModel>();
+        Statuses.Add(AllStatuses);
+        Statuses.AddRange(StatusService.GetAll());
+
+        if (UserService.IsSpecificStatus())
+        {
+            Status = Statuses.Single(b => b.Id == UserService.GetCurrentStatus().Id);
+        }
+        else
+        {
+            Status = Statuses.Single(b => b.Id == 0);
+        }
     }
 
     private void InitializeCurrentBrand()
@@ -149,12 +178,21 @@
 
     private void InitializeDraftsSetting()
     {
-        ShowDrafts = UserService.ShowDrafts();
+        HideDrafts = UserService.HideDrafts();
     }
 
     private void InitializeWithdrawnSetting()
     {
-        ShowWithdrawn = UserService.ShowWithdrawn();
+        HideWithdrawn = UserService.HideWithdrawn();
+    }
+
+    private void OnSelectedStatusChange(EntityStatusModel status)
+    {
+        Status = status;
+
+        UserService.SetCurrentStatus(status);
+
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 
     private void OnSelectedBrandChange(BrandModel brand)
@@ -163,7 +201,7 @@
 
         UserService.SetCurrentBrand(brand);
 
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 
     private void OnSelectedInstanceChange(InstanceModel instance)
@@ -172,21 +210,21 @@
 
         UserService.SetCurrentInstance(instance);
 
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 
-    private void OnShowDraftsChange(bool showDrafts)
+    private void OnHideDraftsChange(bool hideDrafts)
     {
-        UserService.SetShowDrafts(showDrafts);
+        UserService.SetHideDrafts(hideDrafts);
 
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 
-    private void OnShowWithdrawnChange(bool showWithdrawn)
+    private void OnHideWithdrawnChange(bool hideWithdrawn)
     {
-        UserService.SetShowWithdrawn(showWithdrawn);
+        UserService.SetHideWithdrawn(hideWithdrawn);
 
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 
     private void SearchGlobally(string searchString)
@@ -240,7 +278,7 @@
 
     private void GoToResults(string baseUrl, string searchString)
     {
-        NavigationManager.NavigateTo($"{baseUrl}?SearchString={searchString}", true);
+        Navigation.NavigateTo($"{baseUrl}?SearchString={searchString}", true);
     }
 
     private class SearchResult

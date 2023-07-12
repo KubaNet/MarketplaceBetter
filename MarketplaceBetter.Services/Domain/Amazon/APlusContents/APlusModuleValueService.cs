@@ -262,19 +262,25 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 				modules = modules.Where(m => m.Content.InstanceId == currentInstance.Id);
 			}
 
-			bool showDrafts = _userService.ShowDrafts();
-			if (!showDrafts)
-			{
-				modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Draft);
-			}
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (currentStatus != null && _userService.IsSpecificStatus())
+            {
+                modules = modules.Where(m => m.Content.StatusId == currentStatus.Id);
+            }
 
-			bool showWithdrawn = _userService.ShowWithdrawn();
-			if (!showWithdrawn)
-			{
-				modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Withdrawn);
-			}
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts)
+            {
+                modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Draft);
+            }
 
-			if (string.IsNullOrWhiteSpace(request.SearchString))
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn)
+            {
+                modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
+            if (string.IsNullOrWhiteSpace(request.SearchString))
 			{
 				return modules;
 			}

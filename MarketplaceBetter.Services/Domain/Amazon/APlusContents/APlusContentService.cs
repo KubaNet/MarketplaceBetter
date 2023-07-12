@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
@@ -231,14 +232,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                 contents = contents.Where(c => c.InstanceId == currentInstance.Id);
             }
 
-            bool showDrafts = _userService.ShowDrafts();
-            if (!showDrafts)
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (currentStatus != null && _userService.IsSpecificStatus())
+            {
+                contents = contents.Where(c => c.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts)
             {
                 contents = contents.Where(c => c.Status.SystemName != EntityStatusEnum.Draft);
             }
 
-            bool showWithdrawn = _userService.ShowWithdrawn();
-            if (!showWithdrawn)
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn)
             {
                 contents = contents.Where(c => c.Status.SystemName != EntityStatusEnum.Withdrawn);
             }

@@ -22,10 +22,11 @@ namespace MarketplaceBetter.Services.Domain.Base
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TimeSpan LOGIN_TIMEOUT = TimeSpan.FromMinutes(30);
 
+        private long? CurrentStatusIdChache;
         private long? CurrentBrandIdCache;
         private long CurrentInstanceIdCache;
-        private bool ShowDraftsCache;
-        private bool ShowWithdrawnCache;
+        private bool HideDraftsCache;
+        private bool HideWithdrawnCache;
         private string ExpandedMenuCache;
 
         public UserService(
@@ -46,20 +47,6 @@ namespace MarketplaceBetter.Services.Domain.Base
             User user = GetCurrentUser();
 
             UpdateSettingsCache(user);
-        }
-
-        private void UpdateSettingsCache(User user)
-        {
-            if (user == null)
-            {
-                return;
-            }
-
-            CurrentBrandIdCache = user.CurrentBrandId;
-            CurrentInstanceIdCache = user.CurrentInstanceId;
-            ShowDraftsCache = user.ShowDrafts;
-            ShowWithdrawnCache = user.ShowWithdrawn;
-            ExpandedMenuCache = user.ExpandedMenu;
         }
 
         public IList<UserModel> GetAll() => _mapper.Map<IList<UserModel>>(_repository.GetAll());
@@ -131,6 +118,11 @@ namespace MarketplaceBetter.Services.Domain.Base
                 return false;
             }
 
+            if (user.CurrentStatusId != CurrentStatusIdChache)
+            {
+                return true;
+            }    
+
             if (user.CurrentBrandId != CurrentBrandIdCache)
             {
                 return true;
@@ -141,12 +133,12 @@ namespace MarketplaceBetter.Services.Domain.Base
                 return true;
             }
 
-            if (user.ShowDrafts != ShowDraftsCache)
+            if (user.HideDrafts != HideDraftsCache)
             {
                 return true;
             }
 
-            if (user.ShowWithdrawn != ShowWithdrawnCache)
+            if (user.HideWithdrawn != HideWithdrawnCache)
             {
                 return true;
             }
@@ -162,6 +154,44 @@ namespace MarketplaceBetter.Services.Domain.Base
         public string GetCurrentUserLogin()
         {
             return GetCurrentUser()?.Login;
+        }
+
+        public EntityStatusModel GetCurrentStatus()
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<EntityStatusModel>(user.CurrentStatus);
+        }
+
+        public void SetCurrentStatus(EntityStatusModel status)
+        {
+            User user = GetCurrentUser();
+
+            if (status == null || status.Id == 0)
+            {
+                user.CurrentStatusId = null;
+            }
+            else
+            {
+                user.CurrentStatusId = status.Id;
+            }
+
+            _repository.Update(user);
+            _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
+        }
+
+        public bool IsSpecificStatus()
+        {
+            EntityStatusModel status = GetCurrentStatus();
+
+            return status != null;
         }
 
         public BrandModel GetCurrentBrand()
@@ -279,7 +309,7 @@ namespace MarketplaceBetter.Services.Domain.Base
             SaveExpandedMenuItems(menuItems);
         }
 
-        public bool ShowDrafts()
+        public bool HideDrafts()
         {
             User user = GetCurrentUser();
 
@@ -288,10 +318,10 @@ namespace MarketplaceBetter.Services.Domain.Base
                 return false;
             }
 
-            return user.ShowDrafts;
+            return user.HideDrafts;
         }
 
-        public void SetShowDrafts(bool showDrafts)
+        public void SetHideDrafts(bool hideDrafts)
         {
             User user = GetCurrentUser();
 
@@ -300,7 +330,7 @@ namespace MarketplaceBetter.Services.Domain.Base
                 return;
             }
 
-            user.ShowDrafts = showDrafts;
+            user.HideDrafts = hideDrafts;
 
             _repository.Update(user);
             _unitOfWork.Save();
@@ -308,7 +338,7 @@ namespace MarketplaceBetter.Services.Domain.Base
             UpdateSettingsCache(user);
         }
 
-        public bool ShowWithdrawn()
+        public bool HideWithdrawn()
         {
             User user = GetCurrentUser();
 
@@ -317,10 +347,10 @@ namespace MarketplaceBetter.Services.Domain.Base
                 return false;
             }
 
-            return user.ShowWithdrawn;
+            return user.HideWithdrawn;
         }
 
-        public void SetShowWithdrawn(bool showWithdrawn)
+        public void SetHideWithdrawn(bool hideWithdrawn)
         {
             User user = GetCurrentUser();
 
@@ -329,12 +359,27 @@ namespace MarketplaceBetter.Services.Domain.Base
                 return;
             }
 
-            user.ShowWithdrawn = showWithdrawn;
+            user.HideWithdrawn = hideWithdrawn;
 
             _repository.Update(user);
             _unitOfWork.Save();
 
             UpdateSettingsCache(user);
+        }
+
+        private void UpdateSettingsCache(User user)
+        {
+            if (user == null)
+            {
+                return;
+            }
+
+            CurrentStatusIdChache = user.CurrentStatusId;
+            CurrentBrandIdCache = user.CurrentBrandId;
+            CurrentInstanceIdCache = user.CurrentInstanceId;
+            HideDraftsCache = user.HideDrafts;
+            HideWithdrawnCache = user.HideWithdrawn;
+            ExpandedMenuCache = user.ExpandedMenu;
         }
 
         private User GetCurrentUser()

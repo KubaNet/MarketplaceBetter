@@ -17,13 +17,15 @@ namespace MarketplaceBetter.Domain.Model.Base
 
         public DateTime? IpLastPing { get; set; }
 
+        public EntityStatusModel Status { get; set; }
+
         public BrandModel CurrentBrand { get; set; }
 
         public InstanceModel CurrentInstance { get; set; }
 
-        public bool ShowDrafts { get; set; }
+        public bool HideDrafts { get; set; }
 
-        public bool ShowWithdrawn { get; set; }
+        public bool HideWithdrawn { get; set; }
 
         public string ExpandedMenu { get; set; }
     }

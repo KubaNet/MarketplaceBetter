@@ -12,6 +12,7 @@ using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using Microsoft.VisualBasic;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -181,14 +182,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 childs = childs.Where(c => c.InstanceId == currentInstance.Id);
             }
 
-            bool showDrafts = _userService.ShowDrafts();
-            if (!showDrafts)
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (currentStatus != null && _userService.IsSpecificStatus())
+            {
+                childs = childs.Where(c => c.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts)
             {
                 childs = childs.Where(c => c.Status.SystemName != EntityStatusEnum.Draft);
             }
 
-            bool showWithdrawn = _userService.ShowWithdrawn();
-            if (!showWithdrawn)
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn)
             {
                 childs = childs.Where(c => c.Status.SystemName != EntityStatusEnum.Withdrawn);
             }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -141,14 +142,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 variants = variants.Where(v => v.Product.BrandId == currentBrand.Id);
             }
 
-            bool showDrafts = _userService.ShowDrafts();
-            if (!showDrafts)
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (currentStatus != null && _userService.IsSpecificStatus())
+            {
+                variants = variants.Where(v => v.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts)
             {
                 variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Draft);
             }
 
-            bool showWithdrawn = _userService.ShowWithdrawn();
-            if (!showWithdrawn)
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn)
             {
                 variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Withdrawn);
             }

@@ -85,14 +85,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
                 modules = modules.Where(m => m.Content.InstanceId == _userService.GetCurrentInstance().Id || m.Content.InstanceId == instanceAllId);
             }
 
-            bool showDrafts = _userService.ShowDrafts();
-            if (!showDrafts)
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (currentStatus != null && _userService.IsSpecificStatus())
+            {
+                modules = modules.Where(m => m.Content.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts)
             {
                 modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Draft);
             }
 
-            bool showWithdrawn = _userService.ShowWithdrawn();
-            if (!showWithdrawn)
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn)
             {
                 modules = modules.Where(m => m.Content.Status.SystemName != EntityStatusEnum.Withdrawn);
             }

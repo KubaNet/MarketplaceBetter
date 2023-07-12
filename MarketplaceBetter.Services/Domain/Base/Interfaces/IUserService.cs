@@ -25,6 +25,12 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 
         string GetCurrentUserLogin();
 
+        EntityStatusModel GetCurrentStatus();
+
+        void SetCurrentStatus(EntityStatusModel status);
+
+        bool IsSpecificStatus();
+
         BrandModel GetCurrentBrand();
 
         void SetCurrentBrand(BrandModel brand);
@@ -41,12 +47,12 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 
         void SetExpanded(MenuItemEnum menu, bool expanded);
 
-        bool ShowDrafts();
+        bool HideDrafts();
 
-        void SetShowDrafts(bool showDrafts);
+        void SetHideDrafts(bool hideDrafts);
 
-        bool ShowWithdrawn();
+        bool HideWithdrawn();
 
-        void SetShowWithdrawn(bool showWithdrawn);
+        void SetHideWithdrawn(bool hideWithdrawn);
     }
 }

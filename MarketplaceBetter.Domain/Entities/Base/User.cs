@@ -17,6 +17,10 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         public DateTime? IpLastPing { get; set; }
 
+        public long? CurrentStatusId { get; set; }
+
+        public virtual EntityStatus CurrentStatus { get; set; }
+
         public long? CurrentBrandId { get; set; }
 
         public virtual Brand CurrentBrand { get; set; }
@@ -25,9 +29,9 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         public virtual Instance CurrentInstance { get; set; }
 
-        public bool ShowDrafts { get; set; }
+        public bool HideDrafts { get; set; }
 
-        public bool ShowWithdrawn { get; set; }
+        public bool HideWithdrawn { get; set; }
 
         public string ExpandedMenu { get; set; }
     }

@@ -167,14 +167,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 parents = parents.Where(p => p.InstanceId == currentInstance.Id);
             }
 
-            bool showDrafts = _userService.ShowDrafts();
-            if (!showDrafts)
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (currentStatus != null && _userService.IsSpecificStatus())
+            {
+                parents = parents.Where(p => p.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts)
             {
                 parents = parents.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
             }
 
-            bool showWithdrawn = _userService.ShowWithdrawn();
-            if (!showWithdrawn)
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn)
             {
                 parents = parents.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
