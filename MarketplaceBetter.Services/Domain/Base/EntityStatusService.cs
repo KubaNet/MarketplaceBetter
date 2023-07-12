@@ -55,7 +55,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
                 _unitOfWork.Save();
 
-                OnProductStatusChangeDown(product.Id, status.Id, true, true);
+                //OnProductStatusChangeDown(product.Id, status.Id, true, true);
             }
         }
 
@@ -70,8 +70,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
                 _unitOfWork.Save();
 
-                OnVariantStatusChangeDown(variant.Id, status.Id);
-                OnVariantStatusChangeUp(variantToUpdate, status.Id, true);
+                //OnVariantStatusChangeDown(variant.Id, status.Id);
+                //OnVariantStatusChangeUp(variantToUpdate, status.Id, true);
             }
         }
 
@@ -86,8 +86,8 @@ namespace MarketplaceBetter.Services.Domain.Base
 
                 _unitOfWork.Save();
 
-                OnParentInstanceStatusChangeUp(parentToUpdate, status.Id);
-                OnParentInstanceStatusChangeOfChilds(parentToUpdate, status.Id);
+                //OnParentInstanceStatusChangeUp(parentToUpdate, status.Id);
+                //OnParentInstanceStatusChangeOfChilds(parentToUpdate, status.Id);
             }
         }
 
@@ -101,7 +101,7 @@ namespace MarketplaceBetter.Services.Domain.Base
                 _childRepository.Update(childToUpdate);
                 _unitOfWork.Save();
 
-                OnChildInstanceStatusChangeUp(childToUpdate, status.Id, true);
+                //OnChildInstanceStatusChangeUp(childToUpdate, status.Id, true);
             }
         }
 

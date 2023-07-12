@@ -28,7 +28,7 @@
             <MudTh><MudTableSortLabel SortLabel="asin" T="ParentInstanceModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="status" T="ParentInstanceModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="ParentInstanceModel">Instance</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="product" T="ParentInstanceModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="ParentInstanceModel">Code</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ParentInstanceModel">Brand</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="template" T="ParentInstanceModel">Template</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="category" T="ParentInstanceModel">Category</MudTableSortLabel></MudTh>
@@ -43,7 +43,7 @@
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
-            <MudTd DataLabel="Product">@context.Product.Code</MudTd>
+            <MudTd DataLabel="Code">@context.Product.Code</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd DataLabel="Template"><TemplateDisplay Parent="@context" /></MudTd>
             <MudTd DataLabel="Category"><CategoryDisplay Category="@context.Category" /></MudTd>

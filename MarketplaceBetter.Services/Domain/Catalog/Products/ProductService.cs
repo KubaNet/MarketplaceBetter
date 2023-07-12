@@ -156,7 +156,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "code", "brand", "collection", "color_group", "size_group" };
+                string[] searchFieldNames = new[] { "id", "name", "code", "status", "brand", "collection", "color_group", "size_group" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -166,6 +166,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         "id" => products.Where(p => p.Id == searchField.Value.ParseToIntOrDefault()),
                         "name" => products.Where(p => p.Name.Contains(searchField.Value)),
                         "code" => products.Where(p => p.Code.Contains(searchField.Value)),
+                        "status" => products.Where(p => p.Status.Name.Contains(searchField.Value)),
                         "brand" => products.Where(p => p.Brand.Name.Contains(searchField.Value)),
                         "collection" => products.Where(p => p.Collection.Name.Contains(searchField.Value)),
                         "color_group" => products.Where(p => p.ColorGroup.Name.Contains(searchField.Value)),
@@ -178,6 +179,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     products = products.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Name.Contains(searchString)
                         || p.Code.Contains(searchString)
+                        || p.Status.Name.Contains(searchString)
                         || p.Brand.Name.Contains(searchString)
                         || p.Collection.Name.Contains(searchString)
                         || p.ColorGroup.Name.Contains(searchString)

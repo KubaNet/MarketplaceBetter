@@ -188,7 +188,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "product", "brand", "template", "category", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "code", "brand", "template", "category", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -200,7 +200,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "asin" => parents.Where(p => p.Asin.Contains(searchField.Value)),
                         "instance" => parents.Where(p => p.Instance.Name.Contains(searchField.Value)),
                         "status" => parents.Where(p => p.Status.Name.Contains(searchField.Value)),
-                        "product" => parents.Where(p => p.Product.Name.Contains(searchField.Value)),
+                        "code" => parents.Where(p => p.Product.Code.Contains(searchField.Value)),
                         "brand" => parents.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
                         "template" => parents.Where(p => p.Template.FileName.Contains(searchField.Value)),
                         "category" => parents.Where(p => p.Category.Contains(searchField.Value)),
@@ -215,7 +215,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || p.Asin.Contains(searchString)
                         || p.Instance.Name.Contains(searchString)
                         || p.Status.Name.Contains(searchString)
-                        || p.Product.Name.Contains(searchString)
+                        || p.Product.Code.Contains(searchString)
                         || p.Product.Brand.Name.Contains(searchString)
                         || p.Template.FileName.Contains(searchString)
                         || p.Category.Contains(searchString));
@@ -236,7 +236,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "asin" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Asin) : parents.OrderByDescending(p => p.Asin),
                     "instance" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Instance.Name) : parents.OrderByDescending(p => p.Instance.Name),
                     "status" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Status.Name) : parents.OrderByDescending(p => p.Status.Name),
-                    "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Name) : parents.OrderByDescending(p => p.Product.Name),
+                    "product" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Code) : parents.OrderByDescending(p => p.Product.Code),
                     "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Brand.Name) : parents.OrderByDescending(p => p.Product.Brand.Name),
                     "template" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Template.FileName) : parents.OrderByDescending(p => p.Template.FileName),
                     "category" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Category) : parents.OrderByDescending(p => p.Category),
