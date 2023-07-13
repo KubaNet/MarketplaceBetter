@@ -97,7 +97,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private IQueryable<Copywriting> ApplyFilter(IQueryable<Copywriting> copywritings, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 copywritings = copywritings.Where(c => c.Product.BrandId == currentBrand.Id);
             }

@@ -57,10 +57,10 @@
                         </MudSelect>
                     </div>
                     <div>
-                        <MudCheckBox T="bool" Checked="HideDrafts" Label="Hide Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideDraftsChange"></MudCheckBox>
+                        <MudCheckBox T="bool" Checked="HideDrafts" Label="Hide Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideDraftsChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
                     </div>
                     <div>
-                        <MudCheckBox T="bool" Checked="HideWithdrawn" Label="Hide Withdrawn" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideWithdrawnChange"></MudCheckBox>
+                        <MudCheckBox T="bool" Checked="HideWithdrawn" Label="Hide Withdrawn" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideWithdrawnChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
                     </div>
                     <div>
                         <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedBrandChange">
@@ -108,6 +108,7 @@
     private IList<InstanceModel> Instances;
     private bool HideDrafts = false;
     private bool HideWithdrawn = false;
+    private bool DraftsAndWithdrawnDisabled = false;
     private bool GlobalSearchResultsOpen = false;
     private RenderFragment GlobalSearchResults;
 
@@ -145,6 +146,8 @@
         {
             Status = Statuses.Single(b => b.Id == 0);
         }
+
+        DraftsAndWithdrawnDisabled = Status.Name != "All";
     }
 
     private void InitializeCurrentBrand()
@@ -166,6 +169,7 @@
     private void InitializeCurrentInstance()
     {
         Instances = InstanceService.GetAll();
+
         if (UserService.IsSpecificInstance())
         {
             Instance = Instances.Single(i => i.Id == UserService.GetCurrentInstance().Id);
@@ -189,8 +193,9 @@
     private void OnSelectedStatusChange(EntityStatusModel status)
     {
         Status = status;
-
         UserService.SetCurrentStatus(status);
+
+        DraftsAndWithdrawnDisabled = Status.Name != "All";
 
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
@@ -198,7 +203,6 @@
     private void OnSelectedBrandChange(BrandModel brand)
     {
         Brand = brand;
-
         UserService.SetCurrentBrand(brand);
 
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
@@ -207,7 +211,6 @@
     private void OnSelectedInstanceChange(InstanceModel instance)
     {
         Instance = instance;
-
         UserService.SetCurrentInstance(instance);
 
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);

@@ -156,7 +156,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private IQueryable<ParentInstance> ApplyFilter(IQueryable<ParentInstance> parents, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 parents = parents.Where(p => p.Product.BrandId == currentBrand.Id);
             }
@@ -168,19 +168,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             }
 
             EntityStatusModel currentStatus = _userService.GetCurrentStatus();
-            if (currentStatus != null && _userService.IsSpecificStatus())
+            if (_userService.IsSpecificStatus())
             {
                 parents = parents.Where(p => p.StatusId == currentStatus.Id);
             }
 
             bool hideDrafts = _userService.HideDrafts();
-            if (hideDrafts)
+            if (hideDrafts && !_userService.IsSpecificStatus())
             {
                 parents = parents.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
             }
 
             bool hideWithdrawn = _userService.HideWithdrawn();
-            if (hideWithdrawn)
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
             {
                 parents = parents.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
             }

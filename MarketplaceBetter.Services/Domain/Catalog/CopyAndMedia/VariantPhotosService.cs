@@ -142,7 +142,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 photos = photos.Where(p => p.Variant.Product.BrandId == currentBrand.Id);
             }

@@ -91,7 +91,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
         private IQueryable<ColorGroup> ApplyFilter(IQueryable<ColorGroup> groups, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 groups = groups.Where(g => g.BrandId == currentBrand.Id);
             }

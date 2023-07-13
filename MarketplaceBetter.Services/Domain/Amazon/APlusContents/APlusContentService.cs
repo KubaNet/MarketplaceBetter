@@ -74,7 +74,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             IQueryable<APlusContent> contents = _repository.GetQuery();
 
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 contents = contents.Where(c => c.Product.BrandId == currentBrand.Id);
             }
@@ -221,7 +221,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         private IQueryable<APlusContent> ApplyFilter(IQueryable<APlusContent> contents, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 contents = contents.Where(c => c.Product.BrandId == currentBrand.Id);
             }
@@ -233,19 +233,19 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             }
 
             EntityStatusModel currentStatus = _userService.GetCurrentStatus();
-            if (currentStatus != null && _userService.IsSpecificStatus())
+            if (_userService.IsSpecificStatus())
             {
                 contents = contents.Where(c => c.StatusId == currentStatus.Id);
             }
 
             bool hideDrafts = _userService.HideDrafts();
-            if (hideDrafts)
+            if (hideDrafts && !_userService.IsSpecificStatus())
             {
                 contents = contents.Where(c => c.Status.SystemName != EntityStatusEnum.Draft);
             }
 
             bool hideWithdrawn = _userService.HideWithdrawn();
-            if (hideWithdrawn)
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
             {
                 contents = contents.Where(c => c.Status.SystemName != EntityStatusEnum.Withdrawn);
             }

@@ -93,7 +93,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
         private IQueryable<ColorTranslation> ApplyFilter(IQueryable<ColorTranslation> translations, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
 			{
 				translations = translations.Where(t => t.Color.Group.BrandId == currentBrand.Id);
 			}

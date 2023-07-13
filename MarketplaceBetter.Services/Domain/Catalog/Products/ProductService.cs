@@ -48,7 +48,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         public IList<ProductModel> GetAll()
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 return _mapper.Map<IList<ProductModel>>(_repository.Where(p => p.BrandId == currentBrand.Id).OrderBy(p => p.Name));
             }
@@ -131,25 +131,25 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 products = products.Where(p => p.BrandId == currentBrand.Id);
             }
 
             EntityStatusModel currentStatus = _userService.GetCurrentStatus();
-            if (currentStatus != null && _userService.IsSpecificStatus())
+            if (_userService.IsSpecificStatus())
             {
                 products = products.Where(p => p.StatusId == currentStatus.Id);
             }
 
             bool hideDrafts = _userService.HideDrafts();
-            if (hideDrafts)
+            if (hideDrafts && !_userService.IsSpecificStatus())
             {
                 products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
             }
 
             bool hideWithdrawn = _userService.HideWithdrawn();
-            if (hideWithdrawn)
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
             {
                 products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
             }

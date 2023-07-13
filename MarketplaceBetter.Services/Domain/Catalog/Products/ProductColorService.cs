@@ -72,7 +72,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
 			{
 				variants = variants.Where(v => v.Product.BrandId == currentBrand.Id);
 			}

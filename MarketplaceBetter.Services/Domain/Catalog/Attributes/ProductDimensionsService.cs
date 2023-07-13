@@ -41,7 +41,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
         public IList<ProductDimensionsModel> GetAll()
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 return _mapper.Map<IList<ProductDimensionsModel>>(_repository.Where(d => d.Product.BrandId == currentBrand.Id).OrderBy(d => d.Id));
             }
@@ -112,7 +112,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
         private IQueryable<ProductDimensions> ApplyFilter(IQueryable<ProductDimensions> dimensions, ListRequest request)
         {
             BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (currentBrand != null && _userService.IsSpecificBrand())
+            if (_userService.IsSpecificBrand())
             {
                 dimensions = dimensions.Where(d => d.Product.BrandId == currentBrand.Id);
             }
