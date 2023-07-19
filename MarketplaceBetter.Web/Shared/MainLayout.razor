@@ -49,7 +49,7 @@
                     </div>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudSelect T="EntityStatusModel" Value="Status" Label="Status" DisableUnderLine="true" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedStatusChange">
+                        <MudSelect T="EntityStatusModel" Value="Status" Label="Status" DisableUnderLine="true" MaxHeight="500" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedStatusChange">
                             @foreach (var status in Statuses)
                             {
                                 <MudSelectItem Value="status">@status.Name</MudSelectItem>

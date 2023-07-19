@@ -52,7 +52,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
+            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToUpdate || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
 
             photos = ApplyFilter(photos, request);
 
@@ -63,7 +63,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia
 
         public IList<VariantPhotosModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
+            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToUpdate || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
 
             photos = ApplyFilter(photos, request);
             photos = ApplySorting(photos, request);

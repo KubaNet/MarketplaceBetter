@@ -18,12 +18,18 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[EntityStatus] WHERE [SystemName] = 4)
     INSERT INTO [dbo].[EntityStatus] ([Name], [SystemName])
-    VALUES ('Do wycofania', 4)
-ELSE UPDATE [dbo].[EntityStatus] SET [Name] = 'Do wycofania' WHERE [SystemName] = 4
+    VALUES ('Do aktualizacji', 4)
+ELSE UPDATE [dbo].[EntityStatus] SET [Name] = 'Do aktualizacji' WHERE [SystemName] = 4
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[EntityStatus] WHERE [SystemName] = 5)
     INSERT INTO [dbo].[EntityStatus] ([Name], [SystemName])
-    VALUES ('Wycofany', 5)
-ELSE UPDATE [dbo].[EntityStatus] SET [Name] = 'Wycofany' WHERE [SystemName] = 5
+    VALUES ('Do wycofania', 5)
+ELSE UPDATE [dbo].[EntityStatus] SET [Name] = 'Do wycofania' WHERE [SystemName] = 5
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[EntityStatus] WHERE [SystemName] = 6)
+    INSERT INTO [dbo].[EntityStatus] ([Name], [SystemName])
+    VALUES ('Wycofany', 6)
+ELSE UPDATE [dbo].[EntityStatus] SET [Name] = 'Wycofany' WHERE [SystemName] = 6
 GO

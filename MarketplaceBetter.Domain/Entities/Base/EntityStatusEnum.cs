@@ -16,8 +16,10 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         Active = 3,
 
-        ToWithdrawn = 4,
+        ToUpdate = 4,
 
-        Withdrawn = 5
+        ToWithdrawn = 5,
+
+        Withdrawn = 6
     }
 }
