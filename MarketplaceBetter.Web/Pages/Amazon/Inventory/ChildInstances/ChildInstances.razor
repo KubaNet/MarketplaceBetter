@@ -57,8 +57,9 @@
 
 @code {
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
-    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
     [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? InstanceId { get; set; }
 
     private MudTable<ChildInstanceModel> Table;
     private ListRequest ListRequest = new();
@@ -80,10 +81,18 @@
         {
             ListRequest.SearchString = SearchString;
         }
-        if (ProductId.HasValue)
+        else
         {
-            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+            if (ProductId.HasValue)
+            {
+                ListRequest.SearchString += $"product_id: {ProductId.Value}";
+            }
+            if (InstanceId.HasValue)
+            {
+                ListRequest.SearchString += $" & instance_id: {InstanceId.Value}";
+            }
         }
+
         if (ShowAll.HasValue)
         {
             ListRequest.ShowAll = ShowAll.Value;

@@ -209,7 +209,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asins", "instance", "status", "variant", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asins", "instance", "status", "variant", "brand", "product_id", "instance_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -224,6 +224,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "variant" => childs.Where(c => c.Variant.Sku.Contains(searchField.Value)),
                         "brand" => childs.Where(c => c.Variant.Product.Brand.Name.Contains(searchField.Value)),
                         "product_id" => childs.Where(c => c.Variant.Product.Id == searchField.Value.ParseToIntOrDefault()),
+                        "instance_id" => childs.Where(c => c.Instance.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }

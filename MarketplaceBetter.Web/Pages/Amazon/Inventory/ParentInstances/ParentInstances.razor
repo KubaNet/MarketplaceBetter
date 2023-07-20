@@ -39,7 +39,7 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="SKU">
-                @context.Sku
+                <MudLink Href="@LinkHelper.GetUrlForChilds(context.Product.Id, context.Instance.Id)" title="View childs" Style="text-decoration: none;">@context.Sku</MudLink>
                 <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Asin" />
             </MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
