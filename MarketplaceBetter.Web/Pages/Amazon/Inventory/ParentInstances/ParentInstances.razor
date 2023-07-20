@@ -1,6 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
-@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Model
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 @using System.IO
@@ -169,7 +169,7 @@
 
     private async Task Export(long id, string sku)
     {
-        using Stream fileStream = TemplateCreator.CreateTemplateFor(id);
+    using Stream fileStream = TemplateCreator.CreateTemplateFor(id);
 
         using var streamReference = new DotNetStreamReference(fileStream);
 

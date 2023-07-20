@@ -1,5 +1,4 @@
 ﻿using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
-using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using System;
 using System.Collections.Generic;
 using System.Linq;

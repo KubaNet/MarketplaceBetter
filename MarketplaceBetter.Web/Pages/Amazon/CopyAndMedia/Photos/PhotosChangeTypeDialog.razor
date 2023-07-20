@@ -1,0 +1,58 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
+@using MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces;
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
+    using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
+
+@inject ISnackbar Snackbar
+@inject IPhotoService PhotoService
+@inject IPhotoTypeService PhotoTypeService
+@inject IPhotoValidator PhotoValidator
+
+<EditForm Model="Type" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title="Change type of photos">
+        <ValidationSummary />
+        <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Type">
+            @foreach (var type in Types)
+            {
+                <MudSelectItem Value="type">@type.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<PhotoModel> PhotosToUpdate { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private PhotoTypeModel Type = new PhotoTypeModel();
+    private IList<PhotoTypeModel> Types;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Types = PhotoTypeService.GetAll();
+
+        Type = Types.First();
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult validationResult = PhotoValidator.ValidateTypeChange(PhotosToUpdate, Type);
+
+        if (validationResult.IsValid)
+        {
+            PhotoService.UpdateType(PhotosToUpdate, Type);
+
+            Snackbar.AddSuccess("Type of photos was successfully changed.");
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(validationResult.Errors);
+        }
+    }
+}

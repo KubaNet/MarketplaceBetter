@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+﻿using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Validation;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
-using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces;

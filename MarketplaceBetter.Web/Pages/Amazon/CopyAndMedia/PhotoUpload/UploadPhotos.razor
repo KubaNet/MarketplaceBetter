@@ -1,0 +1,232 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
+@using MarketplaceBetter.Services.Model
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
+@using MarketplaceBetter.Specialized.Interfaces
+
+@page "/add-photos"
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+@inject IPhotoUploadService PhotoUploadService
+@inject IPhotoCloudService PhotoCloudService
+
+<MudText Typo="Typo.h4" Class="mt-2">Add multiple Photos</MudText>
+
+<MainBody>
+    <MudTable T="PhotoUploadModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoUploadModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
+        <ToolBarContent>
+            <MudTextField Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
+            <MudSpacer />
+            <MudButton OnClick="SetTypeForSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Workspaces" Color="Color.Dark" Disabled="NoneSelected" Class="ml-2">Set type</MudButton>
+            <MudButton OnClick="RemoveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Remove</MudButton>
+            <MudButton OnClick="Upload" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Info" Class="ml-2">Add Files</MudButton>
+            <MudButton OnClick="SaveSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PlaylistAddCheck" Color="Color.Primary" Disabled="NoneSelected" Class="ml-2">Save</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Photo</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="filename" T="PhotoUploadModel">File name</MudTableSortLabel></MudTh>
+            <MudTh>Variants</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="type" T="PhotoUploadModel">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="kind" T="PhotoUploadModel">Kind</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="PhotoUploadModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="width" T="PhotoUploadModel">Width</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="height" T="PhotoUploadModel">Height</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Photo"><PhotoOnListDisplay CloudId="@context.CloudId" Version="@context.Version" Size="PhotoOnListSizeEnum.S100" /></MudTd>
+            <MudTd DataLabel="FileName">@context.FileName</MudTd>
+            <MudTd DataLabel="Variants"><PhotoUploadVariantsDisplay Variants="@context.Variants" /></MudTd>
+            <MudTd DataLabel="Type">
+                @if (context.Type != null)
+                {
+                    @context.Type.Name
+                }
+                else
+                {
+                    <span class="red-text"><b>not set</b></span>
+                }
+            </MudTd>
+            <MudTd DataLabel="Kind">
+                @if (context.Kind != null)
+                {
+                    @context.Kind.Name
+                }
+                else
+                {
+                    <span class="red-text"><b>unrecognized</b></span>
+                }
+            </MudTd>
+            <MudTd DataLabel="Instance">
+                @if (context.Instance != null)
+                {
+                    @context.Instance.Name
+                }
+                else
+                {
+                    <span class="red-text"><b>unrecognized</b></span>
+                }
+            </MudTd>
+            <MudTd DataLabel="Width">@context.Width</MudTd>
+            <MudTd DataLabel="Height">@context.Height</MudTd>
+            <MudTd>
+                <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Remove(context))">Remove</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MainBody>
+
+@code {
+    private MudTable<PhotoUploadModel> Table;
+    private ListRequest ListRequest = new();
+    private IList<PhotoUploadModel> PhotoUploads { get; set; }
+    private int NumberOfPhotos;
+
+    private HashSet<PhotoUploadModel> SelectedPhotos = new HashSet<PhotoUploadModel>();
+    private bool NoneSelected = true;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+
+            var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
+
+            ProcessDialogResult(result);
+        }
+    }
+
+    private Task<TableData<PhotoUploadModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        PhotoUploads = PhotoUploadService.GetForListRequest(ListRequest);
+
+        NumberOfPhotos = PhotoUploads.Count;
+
+        return Task.FromResult(new TableData<PhotoUploadModel>() { TotalItems = PhotoUploads.Count, Items = PhotoUploads });
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private async void Upload()
+    {
+        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+
+        var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void Remove(PhotoUploadModel photoUpload)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove photo \"<b>{photoUpload.FileName}</b>\" ?" }).Result;
+
+        if (!result.Canceled)
+        {
+            PhotoUploadService.Remove(photoUpload);
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess("Photo was successfully removed.");
+        }
+    }
+
+    private async void RemoveSelected()
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to remove selected photos?" }).Result;
+
+        if (!result.Canceled)
+        {
+            PhotoUploadService.Remove(SelectedPhotos.ToList());
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess("Photos were successfully removed.");
+        }
+    }
+
+    private async void SetTypeForSelected()
+    {
+        if (SelectedPhotos.Any(p => p.Instance == null) || SelectedPhotos.Any(p => p.Variants == null) || SelectedPhotos.Any(p => p.Variants.Count == 0)
+            || SelectedPhotos.Any(p => p.Kind == null))
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("Can't set type of photos because some have unrecognized values.", Severity.Error);
+
+            return;
+        }
+
+        if (SelectedPhotos.SelectMany(p => p.Variants.Select(v => $"{v.Variant.Id}_{v.PhotoUpload.Instance.Id}")).Distinct().Count() 
+            != SelectedPhotos.SelectMany(p => p.Variants.Select(v => v.Variant.Id)).Count())
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("Can't set same type to multiple photos of same variant. Each photo of a variant has to have different type (or has to be for different instances).", Severity.Error);
+
+            return;
+        }
+
+        var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters { ["PhotoUploadsToUpdate"] = SelectedPhotos.ToList(), ["AllPhotoUploads"] = PhotoUploads }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void SaveSelected()
+    {
+        if (SelectedPhotos.Any(p => p.Instance == null) || SelectedPhotos.Any(p => p.Variants == null) || SelectedPhotos.Any(p => p.Variants.Count == 0)
+            || SelectedPhotos.Any(p => p.Type == null) || SelectedPhotos.Any(p => p.Kind == null))
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("Can't save photos because some have unrecognized values or type is not set.", Severity.Error);
+
+            return;
+        }
+
+        var result = await DialogService.Show<SavePhotosDialog>(null, new DialogParameters { ["PhotoUploads"] = SelectedPhotos.ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
+
+        Snackbar.AddSuccess("Photos were successfully saved.");
+
+        if (SelectedPhotos.Count == NumberOfPhotos)
+        {
+            NavigationManager.NavigateTo($"photos");
+        }
+        else
+        {
+            await Table.ReloadServerData();
+        }
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<PhotoUploadModel> selectedPhotos)
+    {
+        SelectedPhotos = selectedPhotos;
+
+        if (SelectedPhotos.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+}

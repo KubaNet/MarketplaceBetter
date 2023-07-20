@@ -1,6 +1,6 @@
-﻿using MarketplaceBetter.Domain.Entities.Base;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
-using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Specialized.Interfaces;

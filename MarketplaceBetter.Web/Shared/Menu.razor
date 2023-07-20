@@ -13,12 +13,6 @@
             <MudNavLink Href="/brands">Brands</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Copy & Media" Icon="@Icons.Material.Filled.PhotoLibrary" Expanded="UserService.IsExpanded(MenuItemEnum.CopyAndMedia)" HideExpandIcon="true" ExpandedChanged="CopyAndMediaExpandedChanged">
-            <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
-            <MudNavLink Href="/photos">Photos</MudNavLink>
-            <MudNavLink Href="/variant-photos">Variant Photos</MudNavLink>
-        </MudNavGroup>
-
         <MudNavGroup Title="Colors & Sizes" Icon="@Icons.Material.Filled.Palette" Expanded="UserService.IsExpanded(MenuItemEnum.ColorsAndSizes)" HideExpandIcon="true" ExpandedChanged="ColorsAndSizesExpandedChanged">
             <MudNavLink Href="/colors">Colors</MudNavLink>
             <MudNavLink Href="/product-colors">Product Colors</MudNavLink>
@@ -36,6 +30,12 @@
         <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="UserService.IsExpanded(MenuItemEnum.Inventory)" HideExpandIcon="true" ExpandedChanged="InventoryExpandedChanged">
             <MudNavLink Href="/parent-instances">Parent Instances</MudNavLink>
             <MudNavLink Href="/child-instances">Child Instances</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Copy & Media" Icon="@Icons.Material.Filled.PhotoLibrary" Expanded="UserService.IsExpanded(MenuItemEnum.CopyAndMedia)" HideExpandIcon="true" ExpandedChanged="CopyAndMediaExpandedChanged">
+            <MudNavLink Href="/copywriting">Copywriting</MudNavLink>
+            <MudNavLink Href="/photos">Photos</MudNavLink>
+            <MudNavLink Href="/variant-photos">Variant Photos</MudNavLink>
         </MudNavGroup>
 
         <MudNavGroup Title="A+ Content" Icon="@Icons.Material.Filled.AddPhotoAlternate" Expanded="UserService.IsExpanded(MenuItemEnum.APlusContent)" HideExpandIcon="true" ExpandedChanged="APlusContentExpandedChanged">
@@ -93,11 +93,6 @@
         UserService.SetExpanded(MenuItemEnum.Products, expaned);
     }
 
-    private void CopyAndMediaExpandedChanged(bool expaned)
-    {
-        UserService.SetExpanded(MenuItemEnum.CopyAndMedia, expaned);
-    }
-
     private void ColorsAndSizesExpandedChanged(bool expaned)
     {
         UserService.SetExpanded(MenuItemEnum.ColorsAndSizes, expaned);
@@ -118,6 +113,16 @@
         UserService.SetExpanded(MenuItemEnum.Inventory, expaned);
     }
 
+    private void CopyAndMediaExpandedChanged(bool expaned)
+    {
+        UserService.SetExpanded(MenuItemEnum.CopyAndMedia, expaned);
+    }
+
+    private void APlusContentExpandedChanged(bool expanded)
+    {
+        UserService.SetExpanded(MenuItemEnum.APlusContent, expanded);
+    }
+
     private void CampaignsExpandedChanged(bool expaned)
     {
         UserService.SetExpanded(MenuItemEnum.Campaigns, expaned);
@@ -126,11 +131,6 @@
     private void KeywordsExpandedChanged(bool expaned)
     {
         UserService.SetExpanded(MenuItemEnum.Keywords, expaned);
-    }
-
-    private void APlusContentExpandedChanged(bool expanded)
-    {
-        UserService.SetExpanded(MenuItemEnum.APlusContent, expanded);
     }
 
     private void SalesExpandedChanged(bool expaned)

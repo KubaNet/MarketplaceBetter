@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
+{
+    public enum PhotoTypeEnum
+    {
+        None = 0,
+
+        Swatch = 1,
+
+        Main = 2,
+
+        Other1 = 3,
+
+        Other2 = 4,
+
+        Other3 = 5,
+
+        Other4 = 6,
+
+        Other5 = 7,
+
+        Other6 = 8,
+
+        Other7 = 9,
+
+        Other8 = 10,
+    }
+}

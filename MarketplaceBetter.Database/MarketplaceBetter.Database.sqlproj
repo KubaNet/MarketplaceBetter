@@ -68,11 +68,11 @@
     <Folder Include="dbo\Tables\Amazon\Keywords" />
     <Folder Include="dbo\Tables\Catalog\ColorsAndSizes" />
     <Folder Include="dbo\Tables\Catalog\Products" />
-    <Folder Include="dbo\Tables\Catalog\CopyAndMedia" />
     <Folder Include="Scripts\CustomScripts" />
     <Folder Include="dbo\Tables\Catalog\Attributes" />
     <Folder Include="dbo\Tables\Amazon\APlusContents" />
     <Folder Include="dbo\Tables\Base" />
+    <Folder Include="dbo\Tables\Amazon\CopyAndMedia" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Inserts\02_Instances.sql" />
@@ -91,10 +91,6 @@
     <Build Include="dbo\Tables\Catalog\ColorsAndSizes\SizeGroup.sql" />
     <Build Include="dbo\Tables\Catalog\Products\Brand.sql" />
     <None Include="Scripts\Inserts\04_CopywritingElements.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\Copywriting.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\CopywritingElement.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoType.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\Photo.sql" />
     <None Include="Scripts\Inserts\05_PhotoTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetSource.sql" />
     <None Include="Scripts\Inserts\ResearchTargetSources.sql" />
@@ -116,10 +112,6 @@
     <None Include="Scripts\Inserts\MatchTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\NegativeKeyword.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\NegativeProduct.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoUpload.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoUploadVariant.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoKind.sql" />
-    <Build Include="dbo\Tables\Catalog\CopyAndMedia\PhotoKindBeginning.sql" />
     <None Include="Scripts\Inserts\06_PhotoKindBeginnings.sql" />
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Prod_SchemaCompare.scmp" />
@@ -156,5 +148,13 @@
     <Build Include="dbo\Tables\Base\EntityStatus.sql" />
     <Build Include="dbo\Tables\Base\Instance.sql" />
     <Build Include="dbo\Tables\Base\User.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\Copywriting.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\CopywritingElement.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\Photo.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoKind.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoKindBeginning.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoType.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoUpload.sql" />
+    <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoUploadVariant.sql" />
   </ItemGroup>
 </Project>

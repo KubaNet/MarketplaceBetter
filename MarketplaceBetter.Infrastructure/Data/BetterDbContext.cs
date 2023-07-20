@@ -1,19 +1,13 @@
-﻿using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
-using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
+﻿using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
+using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
+using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
-using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
-using System.Reflection.Metadata;
 
 namespace MarketplaceBetter.Infrastructure.Data
 {

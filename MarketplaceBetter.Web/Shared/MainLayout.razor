@@ -8,10 +8,10 @@
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Attributes.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
-@using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Model;
 @using MarketplaceBetter.Services.Specialized.Interfaces;
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 
 @inject NavigationManager Navigation
 @inject IEntityStatusService StatusService
@@ -243,15 +243,15 @@
         IList<SearchResult> searchResults = new List<SearchResult>();
         searchResults.Add(new SearchResult { EntityName = "Products", BaseUrl = "products", ResultsCount = ProductService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.ShoppingBasket });
         searchResults.Add(new SearchResult { EntityName = "Variants", BaseUrl = "variants", ResultsCount = VariantService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.ShoppingBasket });
-        searchResults.Add(new SearchResult { EntityName = "Copywriting", BaseUrl = "copywriting", ResultsCount = CopywritingService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
-        searchResults.Add(new SearchResult { EntityName = "Photos", BaseUrl = "photos", ResultsCount = PhotoService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
-        searchResults.Add(new SearchResult { EntityName = "Variant Photos", BaseUrl = "variant-photos", ResultsCount = VariantPhotosService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "Colors", BaseUrl = "colors", ResultsCount = ColorService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
         searchResults.Add(new SearchResult { EntityName = "Product Colors", BaseUrl = "product-colors", ResultsCount = ProductColorService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
         searchResults.Add(new SearchResult { EntityName = "Color Translations", BaseUrl = "color-translations", ResultsCount = ColorTranslationService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
         searchResults.Add(new SearchResult { EntityName = "Product Dimensions", BaseUrl = "product-dimensions", ResultsCount = ProductDimensionsService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.BorderColor });
         searchResults.Add(new SearchResult { EntityName = "Parent Instances", BaseUrl = "parent-instances", ResultsCount = ParentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
         searchResults.Add(new SearchResult { EntityName = "Child Instances", BaseUrl = "child-instances", ResultsCount = ChildService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
+        searchResults.Add(new SearchResult { EntityName = "Copywriting", BaseUrl = "copywriting", ResultsCount = CopywritingService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
+        searchResults.Add(new SearchResult { EntityName = "Photos", BaseUrl = "photos", ResultsCount = PhotoService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
+        searchResults.Add(new SearchResult { EntityName = "Variant Photos", BaseUrl = "variant-photos", ResultsCount = VariantPhotosService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "A+ Content", BaseUrl = "a-plus-content", ResultsCount = APlusContentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.AddPhotoAlternate });
 
         GlobalSearchResults = __builder =>

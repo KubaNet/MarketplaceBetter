@@ -1,12 +1,9 @@
 ﻿using CsvHelper.Configuration;
 using CsvHelper;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
-using MarketplaceBetter.Domain.Entities.Catalog.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Domain.Model.Catalog.CopyAndMedia;
 using MarketplaceBetter.Services.Specialized.Interfaces;
-using MarketplaceBetter.Services.Domain.Catalog.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -18,6 +15,9 @@ using System.Threading.Tasks;
 using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
+using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
+using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
+using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 
 namespace MarketplaceBetter.Services.Specialized
 {
