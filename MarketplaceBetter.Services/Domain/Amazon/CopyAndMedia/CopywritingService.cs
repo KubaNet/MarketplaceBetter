@@ -103,7 +103,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             }
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();
-            if (currentInstance != null && _userService.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 copywritings = copywritings.Where(c => c.InstanceId == currentInstance.Id);
             }

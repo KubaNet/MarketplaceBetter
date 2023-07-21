@@ -99,7 +99,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 			}
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();
-            if (currentInstance != null && _userService.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 translations = translations.Where(t => t.InstanceId == currentInstance.Id);
             }

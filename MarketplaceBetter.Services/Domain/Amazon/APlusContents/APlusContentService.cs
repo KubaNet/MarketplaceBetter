@@ -227,7 +227,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             }
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();
-            if (currentInstance != null && _userService.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 contents = contents.Where(c => c.InstanceId == currentInstance.Id);
             }

@@ -88,7 +88,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             IQueryable<APlusModuleValue> modules = _repository.Where(m => m.Module.SystemName == APlusModuleEnum.StandardComparisonChart && m.Order == order && m.Content.ProductId == productId).OrderBy(m => m.Content.Name);
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();
-            if (currentInstance != null && _userService.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 modules = modules.Where(m => m.Content.InstanceId == currentInstance.Id);
             }
@@ -257,7 +257,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 			}
 
 			InstanceModel currentInstance = _userService.GetCurrentInstance();
-			if (currentInstance != null && _userService.IsSpecificInstance())
+			if (_userService.IsSpecificInstance())
 			{
 				modules = modules.Where(m => m.Content.InstanceId == currentInstance.Id);
 			}

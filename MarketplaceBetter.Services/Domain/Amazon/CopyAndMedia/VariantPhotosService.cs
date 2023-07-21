@@ -23,6 +23,7 @@ using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -52,7 +53,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToUpdate || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
+            IQueryable<Photo> photos = _repository.GetQuery();
 
             photos = ApplyFilter(photos, request);
 
@@ -63,7 +64,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
         public IList<VariantPhotosModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<Photo> photos = _repository.GetQuery().Where(p => p.Variant.Status.SystemName == EntityStatusEnum.Active || p.Variant.Status.SystemName == EntityStatusEnum.ToUpdate || p.Variant.Status.SystemName == EntityStatusEnum.ToAdd);
+            IQueryable<Photo> photos = _repository.GetQuery();
 
             photos = ApplyFilter(photos, request);
             photos = ApplySorting(photos, request);
@@ -148,10 +149,28 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             }
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();
-            if (currentInstance != null && _userService.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
                 photos = photos.Where(p => p.InstanceId == _userService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
+            }
+
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (_userService.IsSpecificStatus())
+            {
+                photos = photos.Where(p => p.Variant.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts && !_userService.IsSpecificStatus())
+            {
+                photos = photos.Where(p => p.Variant.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
+            {
+                photos = photos.Where(p => p.Variant.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

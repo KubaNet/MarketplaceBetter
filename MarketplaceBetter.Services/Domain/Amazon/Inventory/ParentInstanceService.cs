@@ -162,7 +162,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             }
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();
-            if (currentInstance != null && _userService.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 parents = parents.Where(p => p.InstanceId == currentInstance.Id);
             }

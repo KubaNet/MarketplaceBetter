@@ -196,10 +196,28 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             }
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();
-            if (currentInstance != null && _userService.IsSpecificInstance())
+            if (_userService.IsSpecificInstance())
             {
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
                 photos = photos.Where(p => p.InstanceId == _userService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
+            }
+
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (_userService.IsSpecificStatus())
+            {
+                photos = photos.Where(p => p.Variant.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts && !_userService.IsSpecificStatus())
+            {
+                photos = photos.Where(p => p.Variant.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
+            {
+                photos = photos.Where(p => p.Variant.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
