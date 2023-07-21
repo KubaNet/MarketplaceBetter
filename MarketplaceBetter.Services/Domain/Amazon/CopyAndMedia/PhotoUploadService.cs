@@ -191,6 +191,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
         private IList<PhotoUploadVariant> CreatePhotoUploadVariants(PhotoUpload photoUpload, IList<Variant> variants)
         {
+            if (variants == null)
+            {
+                return null;
+            }
+
             IList<PhotoUploadVariant> photoUploadVariants = new List<PhotoUploadVariant>();
 
             foreach (var variant in variants)
