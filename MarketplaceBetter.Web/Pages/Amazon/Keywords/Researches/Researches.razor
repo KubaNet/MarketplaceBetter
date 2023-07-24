@@ -62,14 +62,14 @@
 
     private async void AddResearch()
     {
-        var result = await DialogService.Show<ResearchDialog>(null, new DialogParameters { ["Title"] = "Add Research" }).Result;
+        DialogResult result = await DialogService.Show<ResearchDialog>(null, new DialogParameters { ["Title"] = "Add Research" }).Result;
 
         ProcessResearchDialogResult(result);
     }
 
     private async void EditResearch(long id)
     {
-        var result = await DialogService.Show<ResearchDialog>(null, new DialogParameters { ["Title"] = "Edit Research", ["IsEdit"] = true, ["ResearchId"] = id }).Result;
+        DialogResult result = await DialogService.Show<ResearchDialog>(null, new DialogParameters { ["Title"] = "Edit Research", ["IsEdit"] = true, ["ResearchId"] = id }).Result;
 
         ProcessResearchDialogResult(result);
     }

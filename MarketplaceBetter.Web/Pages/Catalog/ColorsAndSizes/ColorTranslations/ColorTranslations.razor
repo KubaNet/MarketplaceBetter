@@ -89,21 +89,21 @@
 
     private async void Add()
     {
-        var result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Add Color Translation" }).Result;
+        DialogResult result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Add Color Translation" }).Result;
 
         ProcessDialogResult(result);
     }
 
     private async void AddSimilar(long id)
     {
-        var result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Add Color Translation", ["AddingSimilar"] = true, ["ColorTranslationId"] = id }).Result;
+        DialogResult result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Add Color Translation", ["AddingSimilar"] = true, ["ColorTranslationId"] = id }).Result;
 
         ProcessDialogResult(result);
     }
 
     private async void Edit(long id)
     {
-        var result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Edit Color Translation", ["IsEdit"] = true, ["ColorTranslationId"] = id }).Result;
+        DialogResult result = await DialogService.Show<ColorTranslationDialog>(null, new DialogParameters { ["Title"] = "Edit Color Translation", ["IsEdit"] = true, ["ColorTranslationId"] = id }).Result;
 
         ProcessDialogResult(result);
     }

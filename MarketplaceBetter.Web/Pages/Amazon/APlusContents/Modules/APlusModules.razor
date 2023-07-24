@@ -124,7 +124,7 @@
     {
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-        var result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module" }, options).Result;
+        DialogResult result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module" }, options).Result;
 
         ProcessDialogResult(result);
     }
@@ -133,7 +133,7 @@
     {
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-        var result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module", ["AddingSimilar"] = true, ["ModuleValueId"] = id }, options).Result;
+        DialogResult result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module", ["AddingSimilar"] = true, ["ModuleValueId"] = id }, options).Result;
 
         ProcessDialogResult(result);
     }
@@ -142,7 +142,7 @@
     {
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-        var result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Module", ["IsEdit"] = true, ["ModuleValueId"] = id }, options).Result;
+        DialogResult result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Module", ["IsEdit"] = true, ["ModuleValueId"] = id }, options).Result;
 
         ProcessDialogResult(result);
     }

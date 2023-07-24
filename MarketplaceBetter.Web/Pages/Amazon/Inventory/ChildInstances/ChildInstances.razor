@@ -127,14 +127,14 @@
 
     private async void Add()
     {
-        var result = await DialogService.Show<ChildInstanceDialog>(null, new DialogParameters { ["Title"] = "Add Child Instance" }).Result;
+        DialogResult result = await DialogService.Show<ChildInstanceDialog>(null, new DialogParameters { ["Title"] = "Add Child Instance" }).Result;
 
         ProcessDialogResult(result);
     }
 
     private async void Edit(long id)
     {
-        var result = await DialogService.Show<ChildInstanceDialog>(null, new DialogParameters { ["Title"] = "Edit Child Instance", ["IsEdit"] = true, ["ChildInstanceId"] = id }).Result;
+        DialogResult result = await DialogService.Show<ChildInstanceDialog>(null, new DialogParameters { ["Title"] = "Edit Child Instance", ["IsEdit"] = true, ["ChildInstanceId"] = id }).Result;
 
         ProcessDialogResult(result);
     }
@@ -163,7 +163,7 @@
 
     private async void ChangeStatusOfSelected()
     {
-        var result = await DialogService.Show<ChildInstancesSetStatusDialog>(null, new DialogParameters { ["ChildInstances"] = SelectedChilds.ToList() }).Result;
+        DialogResult result = await DialogService.Show<ChildInstancesSetStatusDialog>(null, new DialogParameters { ["ChildInstances"] = SelectedChilds.ToList() }).Result;
 
         ProcessDialogResult(result);
     }

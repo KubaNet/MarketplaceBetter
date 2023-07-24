@@ -120,21 +120,21 @@
 
     private async void Add()
     {
-        var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant" }).Result;
+        DialogResult result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant" }).Result;
 
         ProcessDialogResult(result);
     }
 
     private async void AddSimilar(long id)
     {
-        var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant", ["AddingSimilar"] = true, ["VariantId"] = id }).Result;
+        DialogResult result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Add Variant", ["AddingSimilar"] = true, ["VariantId"] = id }).Result;
 
         ProcessDialogResult(result);
     }
 
     private async void Edit(long id)
     {
-        var result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Edit Variant", ["IsEdit"] = true, ["VariantId"] = id }).Result;
+        DialogResult result = await DialogService.Show<VariantDialog>(null, new DialogParameters { ["Title"] = "Edit Variant", ["IsEdit"] = true, ["VariantId"] = id }).Result;
 
         ProcessDialogResult(result);
     }
@@ -163,7 +163,7 @@
 
     private async void ChangeStatusOfSelected()
     {
-        var result = await DialogService.Show<VariantsSetStatusDialog>(null, new DialogParameters { ["Variants"] = SelectedVariants.ToList() }).Result;
+        DialogResult result = await DialogService.Show<VariantsSetStatusDialog>(null, new DialogParameters { ["Variants"] = SelectedVariants.ToList() }).Result;
 
         ProcessDialogResult(result);
     }

@@ -63,14 +63,14 @@
 
     private async void AddSize()
     {
-        var result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Add Size" }).Result;
+        DialogResult result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Add Size" }).Result;
 
         ProcessSizeDialogResult(result);
     }
 
     private async void EditSize(long id)
     {
-        var result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Edit Size", ["IsEdit"] = true, ["SizeId"] = id }).Result;
+        DialogResult result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Edit Size", ["IsEdit"] = true, ["SizeId"] = id }).Result;
 
         ProcessSizeDialogResult(result);
     }

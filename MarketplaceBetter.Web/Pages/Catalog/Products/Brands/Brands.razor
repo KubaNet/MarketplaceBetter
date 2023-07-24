@@ -36,14 +36,14 @@
 
     private async void AddBrand()
     {
-        var result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Add Brand" }).Result;
+        DialogResult result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Add Brand" }).Result;
 
         ProcessBrandDialogResult(result);
     }
 
     private async void EditBrand(long id)
     {
-        var result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Edit Brand", ["IsEdit"] = true, ["BrandId"] = id }).Result;
+        DialogResult result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Edit Brand", ["IsEdit"] = true, ["BrandId"] = id }).Result;
 
         ProcessBrandDialogResult(result);
     }

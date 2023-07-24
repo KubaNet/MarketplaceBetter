@@ -61,14 +61,14 @@
 
     private async void AddPortfolio()
     {
-        var result = await DialogService.Show<PortfolioDialog>(null, new DialogParameters { ["Title"] = "Add Portfolio" }).Result;
+        DialogResult result = await DialogService.Show<PortfolioDialog>(null, new DialogParameters { ["Title"] = "Add Portfolio" }).Result;
 
         ProcessPortfolioDialogResult(result);
     }
 
     private async void EditPortfolio(long id)
     {
-        var result = await DialogService.Show<PortfolioDialog>(null, new DialogParameters { ["Title"] = "Edit Portfolio", ["IsEdit"] = true, ["PortfolioId"] = id }).Result;
+        DialogResult result = await DialogService.Show<PortfolioDialog>(null, new DialogParameters { ["Title"] = "Edit Portfolio", ["IsEdit"] = true, ["PortfolioId"] = id }).Result;
 
         ProcessPortfolioDialogResult(result);
     }

@@ -68,14 +68,14 @@
 
     private async void AddCampaign()
     {
-        var result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Add Campaign" }).Result;
+        DialogResult result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Add Campaign" }).Result;
 
         ProcessCampaignDialogResult(result);
     }
 
     private async void EditCampaign(long id)
     {
-        var result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Edit Campaign", ["IsEdit"] = true, ["CampaignId"] = id }).Result;
+        DialogResult result = await DialogService.Show<CampaignDialog>(null, new DialogParameters { ["Title"] = "Edit Campaign", ["IsEdit"] = true, ["CampaignId"] = id }).Result;
 
         ProcessCampaignDialogResult(result);
     }

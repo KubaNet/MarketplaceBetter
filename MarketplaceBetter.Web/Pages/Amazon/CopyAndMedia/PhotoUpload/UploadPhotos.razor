@@ -95,7 +95,7 @@
         {
             DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-            var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
+            DialogResult result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
 
             ProcessDialogResult(result);
         }
@@ -125,7 +125,7 @@
     {
         DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
 
-        var result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
+        DialogResult result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
 
         ProcessDialogResult(result);
     }
@@ -178,7 +178,7 @@
             return;
         }
 
-        var result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters { ["PhotoUploadsToUpdate"] = SelectedPhotos.ToList(), ["AllPhotoUploads"] = PhotoUploads }).Result;
+        DialogResult result = await DialogService.Show<UploadPhotosSetTypeDialog>(null, new DialogParameters { ["PhotoUploadsToUpdate"] = SelectedPhotos.ToList(), ["AllPhotoUploads"] = PhotoUploads }).Result;
 
         ProcessDialogResult(result);
     }
@@ -194,7 +194,7 @@
             return;
         }
 
-        var result = await DialogService.Show<SavePhotosDialog>(null, new DialogParameters { ["PhotoUploads"] = SelectedPhotos.ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
+        DialogResult result = await DialogService.Show<SavePhotosDialog>(null, new DialogParameters { ["PhotoUploads"] = SelectedPhotos.ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
 
         Snackbar.AddSuccess("Photos were successfully saved.");
 

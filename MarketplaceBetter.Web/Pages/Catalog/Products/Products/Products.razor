@@ -4,9 +4,10 @@
 @using MarketplaceBetter.Services.Model
 
 @page "/products"
+
+@inject IDialogService DialogService
 @inject NavigationManager Navigation
 @inject IProductService ProductService
-@inject IDialogService DialogService
 
 <MudText Typo="Typo.h4" Class="mt-2">Products</MudText>
 
@@ -103,14 +104,14 @@
 
 	private async void Add()
 	{
-		var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add Product" }).Result;
+		DialogResult result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Add Product" }).Result;
 
 		ProcessDialogResult(result);
 	}
 
 	private async void Edit(long id)
 	{
-		var result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit Product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
+		DialogResult result = await DialogService.Show<ProductDialog>(null, new DialogParameters { ["Title"] = "Edit Product", ["IsEdit"] = true, ["ProductId"] = id }).Result;
 
 		ProcessDialogResult(result);
 	}
@@ -125,7 +126,7 @@
 
 	private async void ChangeStatusOfSelected()
 	{
-		var result = await DialogService.Show<ProductsSetStatusDialog>(null, new DialogParameters { ["Products"] = SelectedProducts.ToList() }).Result;
+		DialogResult result = await DialogService.Show<ProductsSetStatusDialog>(null, new DialogParameters { ["Products"] = SelectedProducts.ToList() }).Result;
 
 		ProcessDialogResult(result);
 	}

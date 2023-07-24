@@ -66,21 +66,21 @@
 
     private async void AddNegativeKeyword()
     {
-        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Negative Keyword" }).Result;
+        DialogResult result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Negative Keyword" }).Result;
 
         ProcessNegativeKeywordDialogResult(result);
     }
 
     private async void AddSimilarNegativeKeyword(long id)
     {
-        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Negative Keyword", ["AddingSimilar"] = true, ["NegativeKeywordId"] = id }).Result;
+        DialogResult result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Add Negative Keyword", ["AddingSimilar"] = true, ["NegativeKeywordId"] = id }).Result;
 
         ProcessNegativeKeywordDialogResult(result);
     }
 
     private async void EditNegativeKeyword(long id)
     {
-        var result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Edit Negative Keyword", ["IsEdit"] = true, ["NegativeKeywordId"] = id }).Result;
+        DialogResult result = await DialogService.Show<NegativeKeywordDialog>(null, new DialogParameters { ["Title"] = "Edit Negative Keyword", ["IsEdit"] = true, ["NegativeKeywordId"] = id }).Result;
 
         ProcessNegativeKeywordDialogResult(result);
     }

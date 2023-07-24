@@ -133,7 +133,7 @@
 
     private async void Edit(long id)
     {
-        var result = await DialogService.Show<ParentInstanceDialog>(null, new DialogParameters { ["Title"] = "Edit Parent Instance", ["IsEdit"] = true, ["ParentInstanceId"] = id }).Result;
+        DialogResult result = await DialogService.Show<ParentInstanceDialog>(null, new DialogParameters { ["Title"] = "Edit Parent Instance", ["IsEdit"] = true, ["ParentInstanceId"] = id }).Result;
 
         ProcessDialogResult(result);
     }
@@ -148,7 +148,7 @@
 
     private async void ChangeStatusOfSelected()
     {
-        var result = await DialogService.Show<ParentInstancesSetStatusDialog>(null, new DialogParameters { ["ParentInstances"] = SelectedParents.ToList() }).Result;
+        DialogResult result = await DialogService.Show<ParentInstancesSetStatusDialog>(null, new DialogParameters { ["ParentInstances"] = SelectedParents.ToList() }).Result;
 
         ProcessDialogResult(result);
     }

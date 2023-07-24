@@ -60,14 +60,14 @@
 
     private async void AddAdGroup()
     {
-        var result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Add Ad Group" }).Result;
+        DialogResult result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Add Ad Group" }).Result;
 
         ProcessAdGroupDialogResult(result);
     }
 
     private async void EditAdGroup(long id)
     {
-        var result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Edit Ad Group", ["IsEdit"] = true, ["AdGroupId"] = id }).Result;
+        DialogResult result = await DialogService.Show<AdGroupDialog>(null, new DialogParameters { ["Title"] = "Edit Ad Group", ["IsEdit"] = true, ["AdGroupId"] = id }).Result;
 
         ProcessAdGroupDialogResult(result);
     }

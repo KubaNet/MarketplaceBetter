@@ -74,21 +74,21 @@
 
     private async void AddFromFile()
     {
-        var result = await DialogService.Show<ResearchTargetFromFileDialog>().Result;
+        DialogResult result = await DialogService.Show<ResearchTargetFromFileDialog>().Result;
 
         ProcessResearchTargetDialogResult(result);
     }
 
     private async void AddResearchTarget()
     {
-        var result = await DialogService.Show<ResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Add Research Target" }).Result;
+        DialogResult result = await DialogService.Show<ResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Add Research Target" }).Result;
 
         ProcessResearchTargetDialogResult(result);
     }
 
     private async void EditResearchTarget(long id)
     {
-        var result = await DialogService.Show<ResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Edit Research Target", ["IsEdit"] = true, ["ResearchTargetId"] = id }).Result;
+        DialogResult result = await DialogService.Show<ResearchTargetDialog>(null, new DialogParameters { ["Title"] = "Edit Research Target", ["IsEdit"] = true, ["ResearchTargetId"] = id }).Result;
 
         ProcessResearchTargetDialogResult(result);
     }

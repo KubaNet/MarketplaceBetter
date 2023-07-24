@@ -25,3 +25,23 @@ div.body-text-display ol {
     margin-bottom: 10px;
 }
 
+div.comment-display {
+    max-width: 1000px;
+}
+
+div.comment-display p {
+    margin-bottom: 10px;
+}
+
+div.comment-display ul {
+    list-style-type: disc;
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+div.comment-display ol {
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+

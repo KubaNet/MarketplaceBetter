@@ -60,14 +60,14 @@
 
     private async void AddProductAd()
     {
-        var result = await DialogService.Show<ProductAdDialog>(null, new DialogParameters { ["Title"] = "Add Product Ad" }).Result;
+        DialogResult result = await DialogService.Show<ProductAdDialog>(null, new DialogParameters { ["Title"] = "Add Product Ad" }).Result;
 
         ProcessProductAdDialogResult(result);
     }
 
     private async void EditProductAd(long id)
     {
-        var result = await DialogService.Show<ProductAdDialog>(null, new DialogParameters { ["Title"] = "Edit Product Ad", ["IsEdit"] = true, ["ProductAdId"] = id }).Result;
+        DialogResult result = await DialogService.Show<ProductAdDialog>(null, new DialogParameters { ["Title"] = "Edit Product Ad", ["IsEdit"] = true, ["ProductAdId"] = id }).Result;
 
         ProcessProductAdDialogResult(result);
     }

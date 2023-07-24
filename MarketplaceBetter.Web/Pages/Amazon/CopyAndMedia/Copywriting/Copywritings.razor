@@ -85,21 +85,21 @@
 
     private async void AddCopywriting()
     {
-        var result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Add Copywriting" }).Result;
+        DialogResult result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Add Copywriting" }).Result;
 
         ProcessCopywritingDialogResult(result);
     }
 
     private async void AddSimilarCopywriting(long id)
     {
-        var result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Add Copywriting", ["AddingSimilar"] = true, ["CopywritingId"] = id }).Result;
+        DialogResult result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Add Copywriting", ["AddingSimilar"] = true, ["CopywritingId"] = id }).Result;
 
         ProcessCopywritingDialogResult(result);
     }
 
     private async void EditCopywriting(long id)
     {
-        var result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Edit Copywriting", ["IsEdit"] = true, ["CopywritingId"] = id }).Result;
+        DialogResult result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Edit Copywriting", ["IsEdit"] = true, ["CopywritingId"] = id }).Result;
 
         ProcessCopywritingDialogResult(result);
     }

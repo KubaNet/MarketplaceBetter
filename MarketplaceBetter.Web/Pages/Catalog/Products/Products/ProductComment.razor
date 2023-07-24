@@ -1,17 +1,31 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
 
+@inject IDialogService DialogService
+
 @if (String.IsNullOrWhiteSpace(Product.Comment))
 {
-    <MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Default" Title="Click to add comment" OnClick="Add"></MudIconButton>
+    <MudTooltip Placement="Placement.Right" RootClass="ml-5">
+        <ChildContent><MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Default" OnClick="Add"></MudIconButton></ChildContent>
+        <TooltipContent>Click to add comment</TooltipContent>
+    </MudTooltip>
 }
 else
 {
-    <MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Primary" Title="Click to edit comment" OnClick="Edit"></MudIconButton>
+    <MudTooltip Placement="Placement.Right" RootClass="ml-5">
+        <ChildContent><MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Primary" OnClick="Edit" @onmouseenter="Show" @onmouseleave="Hide"></MudIconButton></ChildContent>
+        <TooltipContent>Click to edit comment</TooltipContent>
+    </MudTooltip>
+    <MudPopover Class="pa-4" Open="Open" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
+        <div class="comment-display">
+            @((MarkupString)Product.Comment)
+        </div>
+    </MudPopover>
 }
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public ProductModel Product { get; set; }
+
+    private bool Open = false;
 
     protected override void OnInitialized()
     {
@@ -20,11 +34,31 @@ else
 
     private async void Add()
     {
+        DialogResult result = await DialogService.Show<ProductCommentDialog>(null, new DialogParameters { ["Title"] = $"Add Comment for {Product.Name}", ["IsEdit"] = false, ["Product"] = Product }).Result;
 
+        if (!result.Canceled)
+        {
+            StateHasChanged();
+        }
     }
 
     private async void Edit()
     {
-        
+        DialogResult result = await DialogService.Show<ProductCommentDialog>(null, new DialogParameters { ["Title"] = $"Edit Comment for {Product.Name}", ["IsEdit"] = true, ["Product"] = Product }).Result;
+
+        if (!result.Canceled)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void Show()
+    {
+        Open = true;
+    }
+
+    private void Hide()
+    {
+        Open = false;
     }
 }

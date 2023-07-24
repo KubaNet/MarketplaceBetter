@@ -74,7 +74,7 @@
 
     private async void AddTargeting()
     {
-        var result = await DialogService.Show<AmazonTargetingDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Targeting" }).Result;
+        DialogResult result = await DialogService.Show<AmazonTargetingDialog>(null, new DialogParameters { ["Title"] = "Add Amazon Targeting" }).Result;
 
         ProcessAmazonTargetingDialogResult(result);
     }

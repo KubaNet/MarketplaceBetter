@@ -148,7 +148,7 @@
 
     private async void ChangeStatusOfSelected()
     {
-        var result = await DialogService.Show<APlusContentsSetStatusDialog>(null, new DialogParameters { ["Contents"] = SelectedVariantModules.Select(m => m.Content).ToList() }).Result;
+        DialogResult result = await DialogService.Show<APlusContentsSetStatusDialog>(null, new DialogParameters { ["Contents"] = SelectedVariantModules.Select(m => m.Content).ToList() }).Result;
 
         ProcessDialogResult(result);
     }

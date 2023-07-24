@@ -64,21 +64,21 @@
 
     private async void AddNegativeProduct()
     {
-        var result = await DialogService.Show<NegativeProductDialog>(null, new DialogParameters { ["Title"] = "Add Negative Product" }).Result;
+        DialogResult result = await DialogService.Show<NegativeProductDialog>(null, new DialogParameters { ["Title"] = "Add Negative Product" }).Result;
 
         ProcessNegativeProductDialogResult(result);
     }
 
     private async void AddSimilarNegativeProduct(long id)
     {
-        var result = await DialogService.Show<NegativeProductDialog>(null, new DialogParameters { ["Title"] = "Add Negative Product", ["AddingSimilar"] = true, ["NegativeProductId"] = id }).Result;
+        DialogResult result = await DialogService.Show<NegativeProductDialog>(null, new DialogParameters { ["Title"] = "Add Negative Product", ["AddingSimilar"] = true, ["NegativeProductId"] = id }).Result;
 
         ProcessNegativeProductDialogResult(result);
     }
 
     private async void EditNegativeProduct(long id)
     {
-        var result = await DialogService.Show<NegativeProductDialog>(null, new DialogParameters { ["Title"] = "Edit Negative Product", ["IsEdit"] = true, ["NegativeProductId"] = id }).Result;
+        DialogResult result = await DialogService.Show<NegativeProductDialog>(null, new DialogParameters { ["Title"] = "Edit Negative Product", ["IsEdit"] = true, ["NegativeProductId"] = id }).Result;
 
         ProcessNegativeProductDialogResult(result);
     }
