@@ -1,0 +1,30 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+
+@if (String.IsNullOrWhiteSpace(Product.Comment))
+{
+    <MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Default" Title="Click to add comment" OnClick="Add"></MudIconButton>
+}
+else
+{
+    <MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Primary" Title="Click to edit comment" OnClick="Edit"></MudIconButton>
+}
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public ProductModel Product { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private async void Add()
+    {
+
+    }
+
+    private async void Edit()
+    {
+        
+    }
+}

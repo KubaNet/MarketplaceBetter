@@ -163,7 +163,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "code", "status", "brand", "collection", "color_group", "size_group" };
+                string[] searchFieldNames = new[] { "id", "name", "code", "status", "brand", "collection", "color_group", "size_group", "comment" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -178,7 +178,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         "collection" => products.Where(p => p.Collection.Name.Contains(searchField.Value)),
                         "color_group" => products.Where(p => p.ColorGroup.Name.Contains(searchField.Value)),
                         "size_group" => products.Where(p => p.SizeGroup.Name.Contains(searchField.Value)),
-                        _ => throw new UnrecognizedSearchFieldException(searchField.Name)
+						"comment" => products.Where(p => p.Comment.Contains(searchField.Value)),
+						_ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
                 else
@@ -190,7 +191,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         || p.Brand.Name.Contains(searchString)
                         || p.Collection.Name.Contains(searchString)
                         || p.ColorGroup.Name.Contains(searchString)
-                        || p.SizeGroup.Name.Contains(searchString));
+                        || p.SizeGroup.Name.Contains(searchString)
+						|| p.Comment.Contains(searchString));
                 }
             }
 
@@ -211,7 +213,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     "color_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ColorGroup.Name) : products.OrderByDescending(p => p.ColorGroup.Name),
                     "size_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.SizeGroup.Name) : products.OrderByDescending(p => p.SizeGroup.Name),
                     "order" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Order) : products.OrderByDescending(p => p.Order),
-                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
+					"comment" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Comment) : products.OrderByDescending(p => p.Comment),
+					_ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
             else

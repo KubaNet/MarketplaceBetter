@@ -1,0 +1,62 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products;
+@using MarketplaceBetter.Services.Validation.Catalog.Products.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IProductCommentValidator Validator
+
+<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public ProductModel Product { get; set; }
+
+    private CustomValidation CustomValidation = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = Validator.Validate(Product.Comment);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                //ProductService.Update(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Comment"));
+            }
+            else
+            {
+                //ProductService.Add(Product);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Comment"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

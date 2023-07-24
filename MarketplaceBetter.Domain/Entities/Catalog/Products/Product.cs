@@ -36,6 +36,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Products
 
         public virtual EntityStatus Status { get; set; }
 
+        public string Comment { get; set; }
+
         public virtual IList<Variant> Variants { get; set; }
 
         public override string ToString()
