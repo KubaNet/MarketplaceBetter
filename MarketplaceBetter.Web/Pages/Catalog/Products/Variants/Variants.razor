@@ -29,6 +29,7 @@
             <MudTh><MudTableSortLabel SortLabel="ean" T="VariantModel">EAN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="asin" T="VariantModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="VariantModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="comment" T="VariantModel">Comment</MudTableSortLabel></MudTh>
             <MudTh Style="width: 250px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -42,6 +43,7 @@
             <MudTd DataLabel="EAN">@context.Ean</MudTd>
             <MudTd DataLabel="ASIN">@context.Asin</MudTd>
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+            <MudTd DataLabel="Comment"><VariantComment Variant="context" /></MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context.Id, context.Sku))">Delete</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>

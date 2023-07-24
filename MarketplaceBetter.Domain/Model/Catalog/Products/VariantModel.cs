@@ -38,5 +38,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         public string Asin { get; set; }
 
         public EntityStatusModel Status { get; set; }
+
+        public string Comment { get; set; }
     }
 }

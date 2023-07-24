@@ -169,7 +169,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "code", "brand", "color", "size", "ean", "asin", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "status", "product", "code", "brand", "color", "size", "ean", "asin", "comment", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -186,6 +186,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                         "size" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
                         "ean" => variants.Where(v => v.Ean.Contains(searchField.Value)),
                         "asin" => variants.Where(v => v.Asin.Contains(searchField.Value)),
+                        "comment" => variants.Where(v => v.Comment.Contains(searchField.Value)),
                         "product_id" => variants.Where(v => v.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -201,7 +202,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                       || v.Color.Name.Contains(searchString)
                       || v.Size.Name.Contains(searchString)
                       || v.Ean.Contains(searchString)
-                      || v.Asin.Contains(searchString));
+                      || v.Asin.Contains(searchString)
+                      || v.Comment.Contains(searchString)
+                      || v.Product.Id == searchString.ParseToIntOrDefault());
                 }
             }
 
@@ -224,6 +227,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     "size" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
                     "ean" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Ean) : variants.OrderByDescending(v => v.Ean),
                     "asin" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Asin) : variants.OrderByDescending(v => v.Asin),
+                    "comment" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Comment) : variants.OrderByDescending(v => v.Comment),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

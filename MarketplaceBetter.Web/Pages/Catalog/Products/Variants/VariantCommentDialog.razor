@@ -5,9 +5,9 @@
 
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
-@inject IProductCommentService CommentService
+@inject IVariantCommentService CommentService
 
-<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Variant" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <MudDialog Style="min-width: 1000px;">
         <TitleContent>
@@ -16,7 +16,7 @@
         <DialogContent>
             <DataAnnotationsValidator />
 
-            <Editor @bind-Value="Product.Comment" Field="() => Product.Comment" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
+            <Editor @bind-Value="Variant.Comment" Field="() => Variant.Comment" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
         </DialogContent>
         <DialogActions>
             @if (IsEdit)
@@ -24,7 +24,7 @@
                 <MudButton OnClick="Delete" Color="Color.Error" Class="mr-6">Delete</MudButton>
             }
             <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Save</MudButton>
         </DialogActions>
     </MudDialog>
 </EditForm>
@@ -33,7 +33,7 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public ProductModel Product { get; set; }
+    [Parameter] public VariantModel Variant { get; set; }
 
     private CustomValidation CustomValidation = new();
 
@@ -54,12 +54,12 @@
     {
         if (IsEdit)
         {
-            CommentService.Update(Product);
+            CommentService.Update(Variant);
             Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Comment"));
         }
         else
         {
-            CommentService.Add(Product);
+            CommentService.Add(Variant);
             Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Comment"));
         }
 
@@ -72,7 +72,7 @@
 
         if (!result.Canceled)
         {
-            CommentService.Delete(Product);
+            CommentService.Delete(Variant);
 
             Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Comment"));
 

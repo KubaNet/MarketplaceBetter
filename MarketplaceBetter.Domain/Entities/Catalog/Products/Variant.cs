@@ -32,6 +32,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Products
 
         public string Asin { get; set; }
 
+        public string Comment { get; set; }
+
         public override string ToString()
         {
             return Sku;

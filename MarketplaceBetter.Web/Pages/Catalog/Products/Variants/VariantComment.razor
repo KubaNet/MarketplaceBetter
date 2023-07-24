@@ -1,0 +1,64 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+
+@inject IDialogService DialogService
+
+@if (String.IsNullOrWhiteSpace(Variant.Comment))
+{
+    <MudTooltip Placement="Placement.Right" RootClass="ml-4">
+        <ChildContent><MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" OnClick="Add" Class="icon-light-grey"></MudIconButton></ChildContent>
+        <TooltipContent>Click to add comment</TooltipContent>
+    </MudTooltip>
+}
+else
+{
+    <MudTooltip Placement="Placement.Right" RootClass="ml-4">
+        <ChildContent><MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Dark" OnClick="Edit" @onmouseenter="Show" @onmouseleave="Hide"></MudIconButton></ChildContent>
+        <TooltipContent>Click to edit comment</TooltipContent>
+    </MudTooltip>
+    <MudPopover Class="pa-4" Open="Open" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
+        <div class="comment-display">
+            @((MarkupString)Variant.Comment)
+        </div>
+    </MudPopover>
+}
+
+@code {
+    [Parameter] public VariantModel Variant { get; set; }
+
+    private bool Open = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private async void Add()
+    {
+        DialogResult result = await DialogService.Show<VariantCommentDialog>(null, new DialogParameters { ["Title"] = $"Add Comment for {Variant.Sku}", ["IsEdit"] = false, ["Variant"] = Variant }).Result;
+
+        if (!result.Canceled)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async void Edit()
+    {
+        DialogResult result = await DialogService.Show<VariantCommentDialog>(null, new DialogParameters { ["Title"] = $"Edit Comment for {Variant.Sku}", ["IsEdit"] = true, ["Variant"] = Variant }).Result;
+
+        if (!result.Canceled)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void Show()
+    {
+        Open = true;
+    }
+
+    private void Hide()
+    {
+        Open = false;
+    }
+}

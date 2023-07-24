@@ -26,5 +26,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
         public string Sku { get; set; }
 
         public EntityStatusModel Status { get; set; }
+
+        public string Comment { get; set; }
     }
 }

@@ -8,6 +8,7 @@
 	[StatusId]		BIGINT							NOT NULL,
 	[TemplateId]	BIGINT							NULL,
 	[Category]		NVARCHAR(255)					NULL,
+	[Comment]		NVARCHAR (max)					NULL,
 	CONSTRAINT		[PK_ParentInstance]				PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_ParentInstance_Product]		FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
 	CONSTRAINT		[FK_ParentInstance_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),

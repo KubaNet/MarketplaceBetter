@@ -36,5 +36,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.Inventory
 
 		[BetterLength]
 		public string Category { get; set; }
+
+        public string Comment { get; set; }
     }
 }

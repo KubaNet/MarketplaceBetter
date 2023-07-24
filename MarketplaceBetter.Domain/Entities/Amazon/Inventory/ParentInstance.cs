@@ -32,6 +32,8 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.Inventory
 
         public string Category { get; set; }
 
+        public string Comment { get; set; }
+
         public override string ToString()
         {
             return Sku;
