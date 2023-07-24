@@ -34,7 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         private readonly IRepository<APlusContent> _repository;
         private readonly IRepository<Variant> _variantRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
-        private readonly IRepository<ChildInstance> _childRepository;
+        private readonly IRepository<Child> _childRepository;
         private readonly IUserService _userService;
         private readonly IAPlusModuleValueService _moduleService;
 
@@ -49,7 +49,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             _repository = unitOfWork.GetRepository<APlusContent>();
             _variantRepository = unitOfWork.GetRepository<Variant>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
-            _childRepository = unitOfWork.GetRepository<ChildInstance>();
+            _childRepository = unitOfWork.GetRepository<Child>();
             _userService = userService;
             _moduleService = moduleService;
         }
@@ -132,7 +132,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         {
             foreach (var childId in childsIds)
             {
-                ChildInstance child = _childRepository.Get(childId);
+                Child child = _childRepository.Get(childId);
                 Variant variant = child.Variant;
 
                 if (_repository.Any(c => c.InstanceId == child.InstanceId && c.Variants.Count == 1 && c.Variants.Any(v => v.VariantId == variant.Id)))

@@ -79,8 +79,8 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         // Amazon
         // => Inventory
-        public DbSet<ParentInstance> ParentInstance { get; set; }
-        public DbSet<ChildInstance> ChildInstance { get; set; }
+        public DbSet<Parent> Parent { get; set; }
+        public DbSet<Child> Child { get; set; }
         public DbSet<Template> Template { get; set; }
         // => APlusContent
         public DbSet<APlusElementType> APlusElementType { get; set; }

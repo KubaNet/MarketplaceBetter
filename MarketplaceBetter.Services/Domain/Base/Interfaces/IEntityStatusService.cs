@@ -18,9 +18,9 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 
         void ChangeStatus(IList<VariantModel> variants, EntityStatusModel status);
 
-        void ChangeStatus(IList<ParentInstanceModel> parents, EntityStatusModel status);
+        void ChangeStatus(IList<ParentModel> parents, EntityStatusModel status);
 
-        void ChangeStatus(IList<ChildInstanceModel> childs, EntityStatusModel status);
+        void ChangeStatus(IList<ChildModel> childs, EntityStatusModel status);
 
 		void ChangeStatus(IList<APlusContentModel> contents, EntityStatusModel status);
 	}

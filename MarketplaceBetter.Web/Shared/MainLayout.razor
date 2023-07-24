@@ -27,8 +27,8 @@
 @inject IProductColorService ProductColorService
 @inject IColorTranslationService ColorTranslationService
 @inject IProductDimensionsService ProductDimensionsService
-@inject IParentInstanceService ParentService
-@inject IChildInstanceService ChildService
+@inject IParentService ParentService
+@inject IChildService ChildService
 @inject IAPlusContentService APlusContentService
 
 <AuthorizeView>
@@ -247,8 +247,8 @@
         searchResults.Add(new SearchResult { EntityName = "Product Colors", BaseUrl = "product-colors", ResultsCount = ProductColorService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
         searchResults.Add(new SearchResult { EntityName = "Color Translations", BaseUrl = "color-translations", ResultsCount = ColorTranslationService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Palette });
         searchResults.Add(new SearchResult { EntityName = "Product Dimensions", BaseUrl = "product-dimensions", ResultsCount = ProductDimensionsService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.BorderColor });
-        searchResults.Add(new SearchResult { EntityName = "Parent Instances", BaseUrl = "parent-instances", ResultsCount = ParentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
-        searchResults.Add(new SearchResult { EntityName = "Child Instances", BaseUrl = "child-instances", ResultsCount = ChildService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
+        searchResults.Add(new SearchResult { EntityName = "Parents", BaseUrl = "parent-instances", ResultsCount = ParentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
+        searchResults.Add(new SearchResult { EntityName = "Childs", BaseUrl = "child-instances", ResultsCount = ChildService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
         searchResults.Add(new SearchResult { EntityName = "Copywriting", BaseUrl = "copywriting", ResultsCount = CopywritingService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "Photos", BaseUrl = "photos", ResultsCount = PhotoService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "Variant Photos", BaseUrl = "variant-photos", ResultsCount = VariantPhotosService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });

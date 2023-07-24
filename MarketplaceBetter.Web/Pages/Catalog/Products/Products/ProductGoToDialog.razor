@@ -14,8 +14,8 @@
             </MudListItem>
             <MudListItem Text="Amazon" InitiallyExpanded="true">
                 <NestedList>
-                    <MudListItem Text="Parent Instances" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ParentInstancesLink" />
-                    <MudListItem Text="Child Instances" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ChildInstancesLink" />
+                    <MudListItem Text="Parents" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ParentsLink" />
+                    <MudListItem Text="Childs" Icon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Href="@ChildsLink" />
                 </NestedList>
             </MudListItem>
         </MudList>
@@ -28,8 +28,8 @@
 
     private string ProductColorsLink;
     private string VariantsLink;
-    private string ParentInstancesLink;
-    private string ChildInstancesLink;
+    private string ParentsLink;
+    private string ChildsLink;
 
     protected override void OnInitialized()
     {
@@ -37,7 +37,7 @@
 
         ProductColorsLink = $"product-colors?productId={Product.Id}&showAll=true";
         VariantsLink = $"variants?productId={Product.Id}&showAll=true";
-        ParentInstancesLink = $"parent-instances?productId={Product.Id}&showAll=true";
-        ChildInstancesLink = $"child-instances?productId={Product.Id}&showAll=true";
+        ParentsLink = $"parent-instances?productId={Product.Id}&showAll=true";
+        ChildsLink = $"child-instances?productId={Product.Id}&showAll=true";
     }
 }

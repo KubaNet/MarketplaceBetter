@@ -23,8 +23,8 @@ namespace MarketplaceBetter.Services.Specialized
 {
     public class TemplateCreator : ITemplateCreator
     {
-        private readonly IRepository<ParentInstance> _parentRepository;
-        private readonly IRepository<ChildInstance> _childRepository;
+        private readonly IRepository<Parent> _parentRepository;
+        private readonly IRepository<Child> _childRepository;
         private readonly IRepository<ColorTranslation> _colorTranslationRepository;
         private readonly IRepository<ProductDimensions> _productDimensionsRepository;
         private readonly IPhotoService _photoService;
@@ -35,8 +35,8 @@ namespace MarketplaceBetter.Services.Specialized
             IPhotoService photoService,
             ICopywritingService copywritingService)
         {
-            _parentRepository = unitOfWork.GetRepository<ParentInstance>();
-            _childRepository = unitOfWork.GetRepository<ChildInstance>();
+            _parentRepository = unitOfWork.GetRepository<Parent>();
+            _childRepository = unitOfWork.GetRepository<Child>();
             _colorTranslationRepository = unitOfWork.GetRepository<ColorTranslation>();
             _productDimensionsRepository = unitOfWork.GetRepository<ProductDimensions>();
             _photoService = photoService;
@@ -55,12 +55,12 @@ namespace MarketplaceBetter.Services.Specialized
             };
 
             CsvWriter csv = new CsvWriter(writer, config);
-            ParentInstance parent = _parentRepository.Get(parentId);
+            Parent parent = _parentRepository.Get(parentId);
 
             WriteHeader(parent, csv);
             WriteParent(parent, csv);
 
-            IList<ChildInstance> childs = _childRepository.Where(c =>
+            IList<Child> childs = _childRepository.Where(c =>
                 c.Variant.ProductId == parent.ProductId && c.InstanceId == parent.InstanceId && c.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
             foreach (var child in childs)
             {
@@ -73,7 +73,7 @@ namespace MarketplaceBetter.Services.Specialized
             return stream;
         }
 
-        private void WriteHeader(ParentInstance parent, CsvWriter csv)
+        private void WriteHeader(Parent parent, CsvWriter csv)
         {
             csv.WriteField("Seller SKU");
             csv.WriteField("Brand Name");
@@ -112,7 +112,7 @@ namespace MarketplaceBetter.Services.Specialized
             csv.NextRecord();
         }
 
-        private void WriteParent(ParentInstance parent, CsvWriter csv)
+        private void WriteParent(Parent parent, CsvWriter csv)
         {
             csv.WriteField(parent.Sku);
             csv.WriteField(parent.Product.Brand.Name);
@@ -125,7 +125,7 @@ namespace MarketplaceBetter.Services.Specialized
             csv.NextRecord();
         }
 
-        private void WriteChild(ChildInstance child, CsvWriter csv)
+        private void WriteChild(Child child, CsvWriter csv)
         {
             ColorTranslation colorTranslation = _colorTranslationRepository.SingleOrDefault(t =>
                 t.ColorId == child.Variant.Color.Id && t.InstanceId == child.InstanceId);
@@ -159,7 +159,7 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(bulletPoint5?.Value);
         }
 
-        private void WriteProductDimensions(CsvWriter csv, ChildInstance child)
+        private void WriteProductDimensions(CsvWriter csv, Child child)
         {
             if (_productDimensionsRepository.Any(d => d.ProductId == child.Variant.ProductId))
             {
@@ -191,7 +191,7 @@ namespace MarketplaceBetter.Services.Specialized
             }
         }
 
-        private void WritePhotos(CsvWriter csv, ChildInstance child)
+        private void WritePhotos(CsvWriter csv, Child child)
         {
             PhotoModel main = _photoService.GetForVariant(child.Variant.Id, PhotoTypeEnum.Main);
             csv.WriteField(main?.Url);
@@ -215,14 +215,14 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(swatch?.Url);
         }
 
-        private string GetProductName(ParentInstance parent)
+        private string GetProductName(Parent parent)
         {
             CopywritingModel title = _copywritingService.GetForProduct(parent.ProductId, parent.InstanceId, CopywritingElementEnum.Title);
 
             return title?.Value;
         }
 
-        private string GetProductName(ChildInstance child, ColorTranslation colorTranslation)
+        private string GetProductName(Child child, ColorTranslation colorTranslation)
         {
             Variant variant = child.Variant;
             Size size = variant.Size;

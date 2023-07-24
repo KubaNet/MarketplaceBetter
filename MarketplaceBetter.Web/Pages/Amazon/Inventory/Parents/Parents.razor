@@ -1,0 +1,199 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
+@using MarketplaceBetter.Services.Model
+@using MarketplaceBetter.Services.Specialized.Interfaces;
+@using System.IO
+
+@page "/parents"
+
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IParentService ParentService
+@inject ITemplateCreator TemplateCreator
+@inject ITemplateService TemplateService
+
+<MudText Typo="Typo.h4" Class="mt-2">Parents</MudText>
+
+<MainBody>
+    <MudTable T="ParentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ParentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ParentModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sku" T="ParentModel">SKU</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="asin" T="ParentModel">ASIN</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ParentModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="ParentModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="ParentModel">Code</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ParentModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="template" T="ParentModel">Template</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="category" T="ParentModel">Category</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 250px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="SKU">
+                <MudLink Href="@LinkHelper.GetUrlForChilds(context.Product.Id, context.Instance.Id)" title="View childs" Style="text-decoration: none;">@context.Sku</MudLink>
+                <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Asin" />
+            </MudTd>
+            <MudTd DataLabel="ASIN">@context.Asin</MudTd>
+            <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Code">@context.Product.Code</MudTd>
+            <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
+            <MudTd DataLabel="Template"><TemplateDisplay Parent="@context" /></MudTd>
+            <MudTd DataLabel="Category"><CategoryDisplay Category="@context.Category" /></MudTd>
+            <MudTd>
+                <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context))" Class="d-inline-flex mt-0">
+                    <ButtonTemplate>
+                        <MudButton for="@file" HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Upload</MudButton>
+                    </ButtonTemplate>
+                </MudFileUpload>
+                <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => Export(context.Id, context.Sku))">Export</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @if (!ShowAll.HasValue || ShowAll == false)
+            {
+                <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+            }
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
+
+    private MudTable<ParentModel> Table;
+    private ListRequest ListRequest = new();
+
+    private HashSet<ParentModel> SelectedParents = new HashSet<ParentModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    private IBrowserFile File;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+        if (ShowAll.HasValue)
+        {
+            ListRequest.ShowAll = ShowAll.Value;
+        }
+    }
+
+    private Task<TableData<ParentModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<ParentModel> parents = ParentService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<ParentModel>() { TotalItems = ParentService.CountForListRequest(ListRequest), Items = parents });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private async void Edit(long id)
+    {
+        DialogResult result = await DialogService.Show<ParentDialog>(null, new DialogParameters { ["Title"] = "Edit Parent", ["IsEdit"] = true, ["ParentId"] = id }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+
+    private async void ChangeStatusOfSelected()
+    {
+        DialogResult result = await DialogService.Show<ParentsSetStatusDialog>(null, new DialogParameters { ["Parents"] = SelectedParents.ToList() }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void OnSelectedItemsChanged(HashSet<ParentModel> selectedParents)
+    {
+        SelectedParents = selectedParents;
+
+        if (SelectedParents.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+
+    private async Task Export(long id, string sku)
+    {
+    using Stream fileStream = TemplateCreator.CreateTemplateFor(id);
+
+        using var streamReference = new DotNetStreamReference(fileStream);
+
+        await JS.InvokeVoidAsync("DownloadFileFromStream", $"{sku}.csv", streamReference);
+    }
+
+    private async void UploadTemplate(ParentModel parent)
+    {
+        string fileWithoutExtension = File.Name.Remove(File.Name.LastIndexOf('.'));
+
+        if (fileWithoutExtension != parent.Sku)
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter; ;
+            Snackbar.Add("File name has to be same as SKU of the parent. Correct the name of file and upload it again.", Severity.Error);
+
+            return;
+        }
+
+        MemoryStream memoryStream = new MemoryStream();
+        await File.OpenReadStream(Standard.UploadTemplateSizeLimit).CopyToAsync(memoryStream);
+        memoryStream.Seek(0, SeekOrigin.Begin);
+
+        TemplateService.Save(memoryStream, File.Name, parent.Id);
+
+        await Table.ReloadServerData();
+    }
+}

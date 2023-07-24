@@ -15,12 +15,12 @@ namespace MarketplaceBetter.Services.Specialized
 {
     public class AdBulksheetRecordsCreator : IAdBulksheetRecordsCreator
     {
-        private readonly IRepository<ChildInstance> _childInstanceRepository;
+        private readonly IRepository<Child> _childRepository;
 
         public AdBulksheetRecordsCreator(
             IUnitOfWork unitOfWork)
         {
-            _childInstanceRepository = unitOfWork.GetRepository<ChildInstance>();
+            _childRepository = unitOfWork.GetRepository<Child>();
         }
 
         public SponsoredProductCsvRecord CreateSponsoredProductsCampaign(Campaign campaign)
@@ -100,15 +100,15 @@ namespace MarketplaceBetter.Services.Specialized
 
         private string GetProductSku(Campaign campaign, Variant variant)
         {
-            ChildInstance childInstance = _childInstanceRepository.SingleOrDefault(c => c.Variant.Id == variant.Id && c.InstanceId == campaign.InstanceId);
+            Child child = _childRepository.SingleOrDefault(c => c.Variant.Id == variant.Id && c.InstanceId == campaign.InstanceId);
 
-            if (childInstance != null)
+            if (child != null)
             {
-                return childInstance.Sku;
+                return child.Sku;
             }
             else
             {
-                return $"Brak ChildInstance dla wariantu {variant.Sku} i instancji {campaign.Instance.Name}";
+                return $"Brak Child dla wariantu {variant.Sku} i instancji {campaign.Instance.Name}";
             }
         }
 

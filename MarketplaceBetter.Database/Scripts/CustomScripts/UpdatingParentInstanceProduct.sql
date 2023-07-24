@@ -1,3 +1,3 @@
-﻿UPDATE [dbo].[ParentInstance]
+﻿UPDATE [dbo].[Parent]
    SET [ProductId] = P.ProductId
-   FROM [ParentInstance] PIN JOIN [Parent] P ON PIN.ParentId = P.Id
+   FROM [Parent] PIN JOIN [Parent] P ON PIN.ParentId = P.Id

@@ -27,7 +27,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Variant> _repository;
         private readonly IRepository<EntityStatus> _statusRepository;
-        private readonly IChildInstanceService _childInstanceService;
+        private readonly IChildService _childService;
         private readonly IPhotoService _photoService;
         private readonly IPhotoUploadService _photoUploadService;
         private readonly IUserService _userService;
@@ -35,7 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         public VariantService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IChildInstanceService childInstanceService,
+            IChildService childService,
             IPhotoService photoService,
             IPhotoUploadService photoUploadService,
             IUserService userService)
@@ -44,7 +44,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Variant>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
-            _childInstanceService = childInstanceService;
+            _childService = childService;
             _photoService = photoService;
             _photoUploadService = photoUploadService;
             _userService = userService;
@@ -97,7 +97,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Add(variantToAdd);
             _unitOfWork.Save();
 
-            _childInstanceService.AddForVariant(variantToAdd.Id);
+            _childService.AddForVariant(variantToAdd.Id);
         }
 
         public void Update(VariantModel variant)
@@ -109,12 +109,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Update(variantToUpdate);
             _unitOfWork.Save();
 
-            _childInstanceService.AddForVariant(variantToUpdate.Id);
+            _childService.AddForVariant(variantToUpdate.Id);
         }
 
         public void Delete(long id)
         {
-            _childInstanceService.DeleteAllForVariant(id);
+            _childService.DeleteAllForVariant(id);
             _photoService.DeleteAllForVariant(id);
             _photoUploadService.RemoveAllForVariant(id);
 

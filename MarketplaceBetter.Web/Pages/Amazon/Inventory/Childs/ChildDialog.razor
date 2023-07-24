@@ -1,0 +1,201 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Domain.Model.Base
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+@using MarketplaceBetter.Services.Domain.Base.Interfaces
+@using MarketplaceBetter.Services.Validation.Amazon.Inventory.Interfaces
+
+@inject ISnackbar Snackbar
+@inject IChildService ChildService
+@inject IChildValidator ChildValidator
+@inject IBrandService BrandService
+@inject IProductService ProductService
+@inject IVariantService VariantService
+@inject IInstanceService InstanceService
+@inject IUserService UserService
+
+<EditForm Model="Child" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Disabled="true" Label="Brand" T="BrandModel" Value="Brand">
+            @foreach (var brand in Brands)
+            {
+                <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Disabled="true" Label="Product" T="ProductModel" Value="Product">
+            @foreach (var product in Products)
+            {
+                <MudSelectItem Value="product">@product.Code</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Disabled="true" Label="Variant" T="VariantModel" Value="Child.Variant">
+            @foreach (var variant in Variants)
+            {
+                <MudSelectItem Value="variant">@variant.Sku</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Disabled="true" Label="Instance" T="InstanceModel" Value="Child.Instance">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="SKU" @bind-Value="Child.Sku" For="() => Child.Sku" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long ChildId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private ChildModel Child = new();
+    private BrandModel Brand;
+    private ProductModel Product;
+
+    private IList<BrandModel> Brands;
+    private IList<ProductModel> Products = new List<ProductModel>();
+    private IList<InstanceModel> Instances;
+    private IList<VariantModel> Variants = new List<VariantModel>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Brands = BrandService.GetAll(true);
+        Instances = InstanceService.GetAllNormal(true);
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+        else
+        {
+            if (UserService.IsSpecificBrand())
+            {
+                SetValuesForCurrentBrand();
+            }
+
+            if (UserService.IsSpecificInstance())
+            {
+                SetValuesForCurrentInstance();
+            }
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        Child = ChildService.Get(ChildId);
+
+        ActivateProduct(Child.Variant.Product.Brand.Id);
+        ActivateVariant(Child.Variant.Product.Id);
+
+        Brand = Brands.Single(b => b.Id == Child.Variant.Product.Brand.Id);
+        Product = Products.Single(b => b.Id == Child.Variant.Product.Id);
+        Child.Variant = Variants.Single(p => p.Id == Child.Variant.Id);
+        Child.Instance = Instances.Single(i => i.Id == Child.Instance.Id);
+    }
+
+    private void SetValuesForCurrentBrand()
+    {
+        BrandModel currentBrand = Brands.Single(b => b.Id == UserService.GetCurrentBrand().Id);
+
+        HandleBrandChanged(currentBrand);
+    }
+
+    private void SetValuesForCurrentInstance()
+    {
+        InstanceModel currentInstance = Instances.Single(b => b.Id == UserService.GetCurrentInstance().Id);
+
+        HandleInstanceChanged(currentInstance);
+    }
+
+    private void HandleBrandChanged(BrandModel brand)
+    {
+        Brand = brand;
+
+        ResetProduct();
+        ActivateProduct(brand.Id);
+        SetChildSku();
+    }
+
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        Child.Instance = instance;
+        SetChildSku();
+    }
+
+    private void HandleProductChanged(ProductModel product)
+    {
+        Product = product;
+
+        ResetVariant();
+        ActivateVariant(product.Id);
+        SetChildSku();
+    }
+
+    private void HandleVariantChanged(VariantModel variant)
+    {
+        Child.Variant = variant;
+        SetChildSku();
+    }
+
+    private void ResetProduct()
+    {
+        Product = null;
+        Products = new List<ProductModel>();
+    }
+
+    private void ResetVariant()
+    {
+        Child.Variant = null;
+        Variants = new List<VariantModel>();
+    }
+
+    private void ActivateProduct(long brandId)
+    {
+        Products = ProductService.GetAllForBrand(brandId);
+    }
+
+    private void ActivateVariant(long productId)
+    {
+        Variants = VariantService.GetAllForProduct(productId);
+    }
+
+    private void SetChildSku()
+    {
+        Child.Sku = ChildService.GetSkuFor(Child.Variant?.Id, Child.Instance?.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = ChildValidator.Validate(Child);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                ChildService.Update(Child);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Child"));
+            }
+            else
+            {
+                ChildService.Add(Child);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Child"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

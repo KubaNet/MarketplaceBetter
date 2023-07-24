@@ -1,0 +1,198 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/childs"
+
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IChildService ChildService
+@inject IAPlusContentService APlusContentService
+
+<MudText Typo="Typo.h4" Class="mt-2">Childs</MudText>
+
+<MainBody>
+    <MudTable T="ChildModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ChildModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="AddAPlusContent" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddPhotoAlternate" Color="Color.Primary" Disabled="NoneSelected" Class="ml-2">Add A+ Content</MudButton>
+            <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="ChildModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sku" T="ChildModel">SKU</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="asin" T="ChildModel">ASIN</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="ChildModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="ChildModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="variant" T="ChildModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="brand" T="ChildModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="SKU">
+                @context.Sku
+                <ProductPageLinkDisplay Instance="@context.Instance" Asin="@context.Variant.Asin" />
+            </MudTd>
+            <MudTd DataLabel="ASIN">@context.Variant.Asin</MudTd>
+            <MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd DataLabel="Brand">@context.Variant.Product.Brand.Name</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @if (!ShowAll.HasValue || ShowAll == false)
+            {
+                <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+            }
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? InstanceId { get; set; }
+
+    private MudTable<ChildModel> Table;
+    private ListRequest ListRequest = new();
+
+    private HashSet<ChildModel> SelectedChilds = new HashSet<ChildModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+        else
+        {
+            if (ProductId.HasValue)
+            {
+                ListRequest.SearchString += $"product_id: {ProductId.Value}";
+            }
+            if (InstanceId.HasValue)
+            {
+                ListRequest.SearchString += $" & instance_id: {InstanceId.Value}";
+            }
+        }
+
+        if (ShowAll.HasValue)
+        {
+            ListRequest.ShowAll = ShowAll.Value;
+        }
+    }
+
+    private Task<TableData<ChildModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<ChildModel> childs = ChildService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<ChildModel>() { TotalItems = ChildService.CountForListRequest(ListRequest), Items = childs });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private async void Add()
+    {
+        DialogResult result = await DialogService.Show<ChildDialog>(null, new DialogParameters { ["Title"] = "Add Child" }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void Edit(long id)
+    {
+        DialogResult result = await DialogService.Show<ChildDialog>(null, new DialogParameters { ["Title"] = "Edit Child", ["IsEdit"] = true, ["ChildId"] = id }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void Delete(long id, string sku)
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to delete child <b>{sku}</b> ?" }).Result;
+
+        if (!result.Canceled)
+        {
+            ChildService.Delete(id);
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Child"));
+        }
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+
+    private async void ChangeStatusOfSelected()
+    {
+        DialogResult result = await DialogService.Show<ChildsSetStatusDialog>(null, new DialogParameters { ["Childs"] = SelectedChilds.ToList() }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void AddAPlusContent()
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = $"Are you sure you want to add A+ content for selected childs?" }).Result;
+
+        if (!result.Canceled)
+        {
+            APlusContentService.AddForChilds(SelectedChilds.Select(c => c.Id).ToList());
+
+            await Table.ReloadServerData();
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("A+ content"));
+        }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<ChildModel> selectedChilds)
+    {
+        SelectedChilds = selectedChilds;
+
+        if (SelectedChilds.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+}

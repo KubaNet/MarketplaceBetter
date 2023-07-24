@@ -26,20 +26,20 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Product> _repository;
 		private readonly IRepository<EntityStatus> _statusRepository;
-        private readonly IParentInstanceService _parentInstanceService;
+        private readonly IParentService _parentService;
 		private readonly IUserService _userService;
 
         public ProductService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IParentInstanceService parentInstanceService,
+            IParentService parentService,
             IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Product>();
 			_statusRepository = unitOfWork.GetRepository<EntityStatus>();
-            _parentInstanceService = parentInstanceService;
+            _parentService = parentService;
 			_userService = userService;
         }
 
@@ -90,7 +90,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Add(productToAdd);
             _unitOfWork.Save();
 
-            _parentInstanceService.AddForProduct(productToAdd.Id);
+            _parentService.AddForProduct(productToAdd.Id);
         }
 
         public void Update(ProductModel product)
@@ -102,7 +102,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _repository.Update(productToUpdate);
             _unitOfWork.Save();
 
-            _parentInstanceService.AddForProduct(productToUpdate.Id);
+            _parentService.AddForProduct(productToUpdate.Id);
         }
 
 		public int GetMaxOrder()

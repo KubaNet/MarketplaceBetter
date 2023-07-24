@@ -16,7 +16,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
     public class TemplateService : ITemplateService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<ParentInstance> _parentRepository;
+        private readonly IRepository<Parent> _parentRepository;
         private readonly IRepository<Template> _templateRepository;
         private readonly string _templatesFolderPath;
 
@@ -25,14 +25,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             IWebHostEnvironment environment)
         {
             _unitOfWork = unitOfWork;
-            _parentRepository = unitOfWork.GetRepository<ParentInstance>();
+            _parentRepository = unitOfWork.GetRepository<Parent>();
             _templateRepository = unitOfWork.GetRepository<Template>();
             _templatesFolderPath = Path.Combine(environment.WebRootPath, "_templates");
         }
 
         public void Save(Stream fileStream, string fileName, long parentId)
         {
-            ParentInstance parent = _parentRepository.Get(parentId);
+            Parent parent = _parentRepository.Get(parentId);
 
             if (parent.Template != null)
             {
@@ -64,7 +64,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             DeleteTemplate(template);
         }
 
-        private void Create(ParentInstance parent, string fileName, string folderPath)
+        private void Create(Parent parent, string fileName, string folderPath)
         {
             Template template = new Template { FileName = fileName, Path = folderPath };
 
