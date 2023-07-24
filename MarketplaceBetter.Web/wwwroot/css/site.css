@@ -44,4 +44,8 @@ div.comment-display ol {
     margin-bottom: 10px;
 }
 
+button.icon-light-grey svg.mud-icon-root.mud-svg-icon {
+    fill: #00000042;
+}
+
 
