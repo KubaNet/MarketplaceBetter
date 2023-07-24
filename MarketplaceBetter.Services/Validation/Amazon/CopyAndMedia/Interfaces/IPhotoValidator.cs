@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces
+namespace MarketplaceBetter.Services.Validation.Amazon.CopyAndMedia.Interfaces
 {
     public interface IPhotoValidator
     {

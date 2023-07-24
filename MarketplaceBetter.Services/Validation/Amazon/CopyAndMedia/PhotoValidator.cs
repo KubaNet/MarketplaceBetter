@@ -2,14 +2,14 @@
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;
-using MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia.Interfaces;
+using MarketplaceBetter.Services.Validation.Amazon.CopyAndMedia.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Validation.Catalog.CopyAndMedia
+namespace MarketplaceBetter.Services.Validation.Amazon.CopyAndMedia
 {
     public class PhotoValidator : IPhotoValidator
     {
