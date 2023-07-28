@@ -209,7 +209,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asins", "instance", "status", "variant", "brand", "product_id", "instance_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asins", "instance", "status", "variant", "brand", "comment", "product_id", "instance_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -223,6 +223,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "status" => childs.Where(c => c.Status.Name.Contains(searchField.Value)),
                         "variant" => childs.Where(c => c.Variant.Sku.Contains(searchField.Value)),
                         "brand" => childs.Where(c => c.Variant.Product.Brand.Name.Contains(searchField.Value)),
+                        "comment" => childs.Where(c => c.Comment.Contains(searchField.Value)),
                         "product_id" => childs.Where(c => c.Variant.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         "instance_id" => childs.Where(c => c.Instance.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -236,7 +237,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || c.Instance.Name.Contains(searchString)
                         || c.Status.Name.Contains(searchString)
                         || c.Variant.Sku.Contains(searchString)
-                        || c.Variant.Product.Brand.Name.Contains(searchString));
+                        || c.Variant.Product.Brand.Name.Contains(searchString)
+                        || c.Comment.Contains(searchString));
                 }
             }
 
@@ -256,6 +258,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "status" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Status.Name) : childs.OrderByDescending(c => c.Status.Name),
                     "variant" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Variant.Sku) : childs.OrderByDescending(c => c.Variant.Sku),
                     "brand" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Variant.Product.Brand.Name) : childs.OrderByDescending(c => c.Variant.Product.Brand.Name),
+                    "comment" => request.SortDirection == SortDirection.Ascending ? childs.OrderBy(c => c.Comment) : childs.OrderByDescending(c => c.Comment),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

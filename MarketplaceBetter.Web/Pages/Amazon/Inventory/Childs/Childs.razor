@@ -29,6 +29,7 @@
             <MudTh><MudTableSortLabel SortLabel="instance" T="ChildModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="variant" T="ChildModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="brand" T="ChildModel">Brand</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="comment" T="ChildModel">Comment</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -42,6 +43,7 @@
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Brand">@context.Variant.Product.Brand.Name</MudTd>
+            <MudTd DataLabel="Comment"><ChildComment Child="context" /></MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
             </MudTd>
