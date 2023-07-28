@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
@@ -194,7 +195,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "code", "brand", "template", "category", "product_id" };
+                string[] searchFieldNames = new[] { "id", "sku", "asin", "instance", "status", "code", "brand", "template", "category", "comment", "product_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -210,6 +211,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         "brand" => parents.Where(p => p.Product.Brand.Name.Contains(searchField.Value)),
                         "template" => parents.Where(p => p.Template.FileName.Contains(searchField.Value)),
                         "category" => parents.Where(p => p.Category.Contains(searchField.Value)),
+                        "comment" => parents.Where(p => p.Comment.Contains(searchField.Value)),
                         "product_id" => parents.Where(p => p.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
@@ -224,7 +226,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                         || p.Product.Code.Contains(searchString)
                         || p.Product.Brand.Name.Contains(searchString)
                         || p.Template.FileName.Contains(searchString)
-                        || p.Category.Contains(searchString));
+                        || p.Category.Contains(searchString)
+                        || p.Comment.Contains(searchString));
                 }
             }
 
@@ -246,6 +249,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     "brand" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Product.Brand.Name) : parents.OrderByDescending(p => p.Product.Brand.Name),
                     "template" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Template.FileName) : parents.OrderByDescending(p => p.Template.FileName),
                     "category" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Category) : parents.OrderByDescending(p => p.Category),
+                    "comment" => request.SortDirection == SortDirection.Ascending ? parents.OrderBy(p => p.Comment) : parents.OrderByDescending(p => p.Comment),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

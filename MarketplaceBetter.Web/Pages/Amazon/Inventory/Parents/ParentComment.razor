@@ -1,8 +1,8 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 
 @inject IDialogService DialogService
 
-@if (String.IsNullOrWhiteSpace(Product.Comment))
+@if (String.IsNullOrWhiteSpace(Parent.Comment))
 {
     <MudTooltip Placement="Placement.Right" RootClass="ml-4" ShowOnFocus="false">
         <ChildContent><MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" OnClick="Add" Class="icon-light-grey"></MudIconButton></ChildContent>
@@ -17,13 +17,13 @@ else
     </MudTooltip>
     <MudPopover Class="pa-4" Open="Open" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
         <div class="comment-display">
-            @((MarkupString)Product.Comment)
+            @((MarkupString)Parent.Comment)
         </div>
     </MudPopover>
 }
 
 @code {
-    [Parameter] public ProductModel Product { get; set; }
+    [Parameter] public ParentModel Parent { get; set; }
 
     private bool Open = false;
 
@@ -34,7 +34,7 @@ else
 
     private async void Add()
     {
-        DialogResult result = await DialogService.Show<ProductCommentDialog>(null, new DialogParameters { ["Title"] = $"Add Comment for {Product.Name}", ["IsEdit"] = false, ["Product"] = Product }).Result;
+        DialogResult result = await DialogService.Show<ParentCommentDialog>(null, new DialogParameters { ["Title"] = $"Add Comment for {Parent.Sku}", ["IsEdit"] = false, ["Parent"] = Parent }).Result;
 
         if (!result.Canceled)
         {
@@ -44,7 +44,7 @@ else
 
     private async void Edit()
     {
-        DialogResult result = await DialogService.Show<ProductCommentDialog>(null, new DialogParameters { ["Title"] = $"Edit Comment for {Product.Name}", ["IsEdit"] = true, ["Product"] = Product }).Result;
+        DialogResult result = await DialogService.Show<ParentCommentDialog>(null, new DialogParameters { ["Title"] = $"Edit Comment for {Parent.Sku}", ["IsEdit"] = true, ["Parent"] = Parent }).Result;
 
         if (!result.Canceled)
         {

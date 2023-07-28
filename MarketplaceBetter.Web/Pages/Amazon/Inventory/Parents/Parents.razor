@@ -34,6 +34,7 @@
             <MudTh><MudTableSortLabel SortLabel="brand" T="ParentModel">Brand</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="template" T="ParentModel">Template</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="category" T="ParentModel">Category</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="comment" T="ParentModel">Comment</MudTableSortLabel></MudTh>
             <MudTh Style="width: 250px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -49,6 +50,7 @@
             <MudTd DataLabel="Brand">@context.Product.Brand.Name</MudTd>
             <MudTd DataLabel="Template"><TemplateDisplay Parent="@context" /></MudTd>
             <MudTd DataLabel="Category"><CategoryDisplay Category="@context.Category" /></MudTd>
+            <MudTd DataLabel="Comment"><ParentComment Parent="context" /></MudTd>
             <MudTd>
                 <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context))" Class="d-inline-flex mt-0">
                     <ButtonTemplate>

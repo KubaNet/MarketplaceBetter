@@ -1,12 +1,12 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.Products;
-@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
 @using TinyMCE.Blazor;
 
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
-@inject IProductCommentService CommentService
+@inject IParentCommentService CommentService
 
-<EditForm Model="Product" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Parent" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <MudDialog Style="min-width: 1000px;">
         <TitleContent>
@@ -14,7 +14,7 @@
         </TitleContent>
         <DialogContent>
             <DataAnnotationsValidator />
-            <Editor @bind-Value="Product.Comment" Field="() => Product.Comment" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
+            <Editor @bind-Value="Parent.Comment" Field="() => Parent.Comment" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
         </DialogContent>
         <DialogActions>
             @if (IsEdit)
@@ -31,7 +31,7 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public ProductModel Product { get; set; }
+    [Parameter] public ParentModel Parent { get; set; }
 
     private CustomValidation CustomValidation = new();
 
@@ -52,12 +52,12 @@
     {
         if (IsEdit)
         {
-            CommentService.Update(Product);
+            CommentService.Update(Parent);
             Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Comment"));
         }
         else
         {
-            CommentService.Add(Product);
+            CommentService.Add(Parent);
             Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Comment"));
         }
 
@@ -70,7 +70,7 @@
 
         if (!result.Canceled)
         {
-            CommentService.Delete(Product);
+            CommentService.Delete(Parent);
 
             Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Comment"));
 

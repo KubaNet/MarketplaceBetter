@@ -4,14 +4,14 @@
 
 @if (String.IsNullOrWhiteSpace(Variant.Comment))
 {
-    <MudTooltip Placement="Placement.Right" RootClass="ml-4">
+    <MudTooltip Placement="Placement.Right" RootClass="ml-4" ShowOnFocus="false">
         <ChildContent><MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" OnClick="Add" Class="icon-light-grey"></MudIconButton></ChildContent>
         <TooltipContent>Click to add comment</TooltipContent>
     </MudTooltip>
 }
 else
 {
-    <MudTooltip Placement="Placement.Right" RootClass="ml-4">
+    <MudTooltip Placement="Placement.Right" RootClass="ml-4" ShowOnFocus="false">
         <ChildContent><MudIconButton Icon="@Icons.Material.Filled.Message" Size="Size.Small" Color="Color.Dark" OnClick="Edit" @onmouseenter="Show" @onmouseleave="Hide"></MudIconButton></ChildContent>
         <TooltipContent>Click to edit comment</TooltipContent>
     </MudTooltip>
