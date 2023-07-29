@@ -142,6 +142,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 variants = variants.Where(v => v.Product.BrandId == currentBrand.Id);
             }
 
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                variants = variants.Where(v => v.Product.CollectionId == currentCollection.Id);
+            }
+
             EntityStatusModel currentStatus = _userService.GetCurrentStatus();
             if (_userService.IsSpecificStatus())
             {

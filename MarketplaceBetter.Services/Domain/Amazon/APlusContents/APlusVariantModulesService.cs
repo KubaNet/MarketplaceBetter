@@ -78,6 +78,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                 modules = modules.Where(m => m.Content.Product.BrandId == currentBrand.Id);
             }
 
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                modules = modules.Where(m => m.Content.Product.CollectionId == currentCollection.Id);
+            }
+
             InstanceModel currentInstance = _userService.GetCurrentInstance();
             if (_userService.IsSpecificInstance())
             {

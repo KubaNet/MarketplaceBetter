@@ -31,6 +31,7 @@
             <MudTh><MudTableSortLabel SortLabel="width" T="PhotoModel">Width</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="height" T="PhotoModel">Height</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="uploaded" T="PhotoModel">Uploaded</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="comment" T="PhotoModel">Comment</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -43,6 +44,7 @@
             <MudTd DataLabel="Width">@context.Width</MudTd>
             <MudTd DataLabel="Height">@context.Height</MudTd>
             <MudTd DataLabel="Uploaded">@context.Uploaded</MudTd>
+            <MudTd DataLabel="Comment"><PhotoComment Photo="context" /></MudTd>
             <MudTd>
                 <MudButton Class="mt-1" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="@(() => Delete(context.Id, context.Type.Name, context.Variant.Sku))">Delete</MudButton>
             </MudTd>

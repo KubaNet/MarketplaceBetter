@@ -37,6 +37,12 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 
         bool IsSpecificBrand();
 
+        CollectionModel GetCurrentCollection();
+
+        void SetCurrentCollection(CollectionModel collection);
+
+        bool IsSpecificCollection();
+
         InstanceModel GetCurrentInstance();
 
         void SetCurrentInstance(InstanceModel instance);

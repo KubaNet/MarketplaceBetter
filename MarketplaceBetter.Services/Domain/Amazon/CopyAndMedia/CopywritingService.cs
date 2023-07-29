@@ -102,6 +102,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                 copywritings = copywritings.Where(c => c.Product.BrandId == currentBrand.Id);
             }
 
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                copywritings = copywritings.Where(c => c.Product.CollectionId == currentCollection.Id);
+            }
+
             InstanceModel currentInstance = _userService.GetCurrentInstance();
             if (_userService.IsSpecificInstance())
             {

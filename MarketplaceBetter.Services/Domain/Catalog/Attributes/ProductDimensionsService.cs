@@ -117,6 +117,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
                 dimensions = dimensions.Where(d => d.Product.BrandId == currentBrand.Id);
             }
 
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                dimensions = dimensions.Where(d => d.Product.CollectionId == currentCollection.Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return dimensions;

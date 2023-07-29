@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -77,7 +78,31 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 				variants = variants.Where(v => v.Product.BrandId == currentBrand.Id);
 			}
 
-			if (string.IsNullOrWhiteSpace(request.SearchString))
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                variants = variants.Where(v => v.Product.CollectionId == currentCollection.Id);
+            }
+
+            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (_userService.IsSpecificStatus())
+            {
+                variants = variants.Where(v => v.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts && !_userService.IsSpecificStatus())
+            {
+                variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
+            {
+                variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
+            if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return variants;
             }

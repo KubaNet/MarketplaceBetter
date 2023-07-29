@@ -25,6 +25,10 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         public virtual Brand CurrentBrand { get; set; }
 
+        public long? CurrentCollectionId { get; set; }
+
+        public virtual Collection CurrentCollection { get; set; }
+
         public long CurrentInstanceId { get; set; }
 
         public virtual Instance CurrentInstance { get; set; }

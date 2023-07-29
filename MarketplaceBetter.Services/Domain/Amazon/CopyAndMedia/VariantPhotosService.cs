@@ -148,6 +148,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                 photos = photos.Where(p => p.Variant.Product.BrandId == currentBrand.Id);
             }
 
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                photos = photos.Where(p => p.Variant.Product.CollectionId == currentCollection.Id);
+            }
+
             InstanceModel currentInstance = _userService.GetCurrentInstance();
             if (_userService.IsSpecificInstance())
             {

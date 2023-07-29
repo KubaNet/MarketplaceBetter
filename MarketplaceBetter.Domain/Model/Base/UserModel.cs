@@ -21,6 +21,8 @@ namespace MarketplaceBetter.Domain.Model.Base
 
         public BrandModel CurrentBrand { get; set; }
 
+        public CollectionModel CurrentCollection { get; set; }
+
         public InstanceModel CurrentInstance { get; set; }
 
         public bool HideDrafts { get; set; }

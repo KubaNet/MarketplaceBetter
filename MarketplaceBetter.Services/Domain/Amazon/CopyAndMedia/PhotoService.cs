@@ -1,23 +1,21 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
+using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
-using MarketplaceBetter.Services.Domain.Base.Interfaces;
-using MarketplaceBetter.Domain.Entities.Base;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MarketplaceBetter.Domain.Model.Base;
-using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
-using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
-using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -34,7 +32,6 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
-            IInstanceService instanceService,
             IUserService userService)
         {
             _mapper = mapper;
@@ -195,6 +192,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                 photos = photos.Where(p => p.Variant.Product.BrandId == currentBrand.Id);
             }
 
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                photos = photos.Where(p => p.Variant.Product.CollectionId == currentCollection.Id);
+            }
+
             InstanceModel currentInstance = _userService.GetCurrentInstance();
             if (_userService.IsSpecificInstance())
             {
@@ -229,7 +232,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "product_id", "variant", "size", "color", "instance", "file_name", "type", "kind", "height", "width" };
+                string[] searchFieldNames = new[] { "id", "product", "product_id", "variant", "size", "color", "instance", "file_name", "type", "kind", "height", "width", "comment" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -248,6 +251,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         "kind" => photos.Where(p => p.Kind.Name.Contains(searchField.Value)),
                         "height" => photos.Where(p => p.Height == searchField.Value.ParseToIntOrDefault()),
                         "width" => photos.Where(p => p.Width == searchField.Value.ParseToIntOrDefault()),
+                        "comment" => photos.Where(p => p.Comment.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -264,7 +268,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         || p.Type.Name.Contains(searchString)
                         || p.Kind.Name.Contains(searchString)
                         || p.Height == searchString.ParseToIntOrDefault()
-                        || p.Width == searchString.ParseToIntOrDefault());
+                        || p.Width == searchString.ParseToIntOrDefault()
+                        || p.Comment.Contains(searchString));
                 }
             }
 
@@ -287,6 +292,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                     "height" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Height).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Height).ThenBy(p => p.Type.Id),
                     "width" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Width).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Width).ThenBy(p => p.Type.Id),
                     "uploaded" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Uploaded).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Uploaded).ThenBy(p => p.Type.Id),
+                    "comment" => request.SortDirection == SortDirection.Ascending ? photos.OrderBy(p => p.Comment).ThenBy(p => p.Type.Id) : photos.OrderByDescending(p => p.Comment).ThenBy(p => p.Type.Id),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

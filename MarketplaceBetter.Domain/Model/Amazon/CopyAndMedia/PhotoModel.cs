@@ -37,5 +37,7 @@ namespace MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
         public int Width { get; set; }
 
         public DateTime Uploaded { get; set; }
+
+        public string Comment { get; set; }
     }
 }

@@ -1,0 +1,80 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
+@using TinyMCE.Blazor;
+
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IPhotoCommentService CommentService
+
+<EditForm Model="Photo" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <MudDialog Style="min-width: 1000px;">
+        <TitleContent>
+            <MudText Typo="Typo.h6">@Title</MudText>
+        </TitleContent>
+        <DialogContent>
+            <DataAnnotationsValidator />
+            <Editor @bind-Value="Photo.Comment" Field="() => Photo.Comment" Conf="EditorConfiguration" ScriptSrc="/lib/tinymce/tinymce.min.js" ClassName="mt-4" />
+        </DialogContent>
+        <DialogActions>
+            @if (IsEdit)
+            {
+                <MudButton OnClick="Delete" Color="Color.Error" Class="mr-6">Delete</MudButton>
+            }
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public PhotoModel Photo { get; set; }
+
+    private CustomValidation CustomValidation = new();
+
+    private Dictionary<string, object> EditorConfiguration = new Dictionary<string, object>{
+        { "toolbar", "undo redo | bold italic underline | numlist bullist" },
+        { "plugins", "lists" },
+        { "menubar", false }
+    };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void HandleValidSubmit()
+    {
+        if (IsEdit)
+        {
+            CommentService.Update(Photo);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Comment"));
+        }
+        else
+        {
+            CommentService.Add(Photo);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Comment"));
+        }
+
+        MudDialog.Close();
+    }
+
+    private async void Delete()
+    {
+        DialogResult result = await DialogService.Show<ConfirmDialog>(null, new DialogParameters { ["Question"] = "Are you sure you want to delete this comment?" }).Result;
+
+        if (!result.Canceled)
+        {
+            CommentService.Delete(Photo);
+
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyDeleted("Comment"));
+
+            MudDialog.Close();
+        }
+    }
+}

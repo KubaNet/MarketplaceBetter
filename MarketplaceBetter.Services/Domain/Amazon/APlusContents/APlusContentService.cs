@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
-using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -15,14 +13,9 @@ using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
-using Microsoft.AspNetCore.Http.HttpResults;
 using MudBlazor;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
@@ -224,6 +217,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             if (_userService.IsSpecificBrand())
             {
                 contents = contents.Where(c => c.Product.BrandId == currentBrand.Id);
+            }
+
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                contents = contents.Where(c => c.Product.CollectionId == currentCollection.Id);
             }
 
             InstanceModel currentInstance = _userService.GetCurrentInstance();

@@ -176,6 +176,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 childs = childs.Where(c => c.Variant.Product.BrandId == currentBrand.Id);
             }
 
+            CollectionModel currentCollection = _userService.GetCurrentCollection();
+            if (_userService.IsSpecificCollection())
+            {
+                childs = childs.Where(c => c.Variant.Product.CollectionId == currentCollection.Id);
+            }
+
             InstanceModel currentInstance = _userService.GetCurrentInstance();
             if (_userService.IsSpecificInstance())
             {

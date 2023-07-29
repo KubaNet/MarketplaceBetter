@@ -15,7 +15,7 @@
 
 @inject NavigationManager Navigation
 @inject IEntityStatusService StatusService
-@inject IBrandService BrandService
+@inject IBrandCollectionService BrandCollectionService
 @inject IInstanceService InstanceService
 @inject IUserService UserService
 @inject IProductService ProductService
@@ -63,8 +63,8 @@
                         <MudCheckBox T="bool" Checked="HideWithdrawn" Label="Hide Withdrawn" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideWithdrawnChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
                     </div>
                     <div>
-                        <MudSelect T="BrandModel" Value="Brand" Label="Brand" DisableUnderLine="true" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedBrandChange">
-                            @foreach (var brand in Brands)
+                        <MudSelect T="BrandCollectionModel" Value="BrandCollection" Label="Brand -- Collection" DisableUnderLine="true" Style="width: 180px;" MaxHeight="800" Class="ml-6" ValueChanged="OnSelectedBrandChange">
+                            @foreach (var brand in BrandsAndCollections)
                             {
                                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
                             }
@@ -101,9 +101,9 @@
     private EntityStatusModel AllStatuses = new EntityStatusModel { Name = "All" };
     private EntityStatusModel Status;
     private List<EntityStatusModel> Statuses;
-    private BrandModel AllBrands = new BrandModel() { Name = "All" };
-    private BrandModel Brand;
-    private List<BrandModel> Brands;
+    private BrandCollectionModel AllBrandsAndCollections = new BrandCollectionModel() { Name = "All" };
+    private BrandCollectionModel BrandCollection;
+    private List<BrandCollectionModel> BrandsAndCollections;
     private InstanceModel Instance;
     private IList<InstanceModel> Instances;
     private bool HideDrafts = false;
@@ -126,7 +126,7 @@
         base.OnInitialized();
 
         InitializeCurrentStatus();
-        InitializeCurrentBrand();
+        InitializeCurrentBrandCollection();
         InitializeCurrentInstance();
         InitializeDraftsSetting();
         InitializeWithdrawnSetting();
@@ -144,25 +144,29 @@
         }
         else
         {
-            Status = Statuses.Single(b => b.Id == 0);
+            Status = Statuses.First();
         }
 
         DraftsAndWithdrawnDisabled = Status.Name != "All";
     }
 
-    private void InitializeCurrentBrand()
+    private void InitializeCurrentBrandCollection()
     {
-        Brands = new List<BrandModel>();
-        Brands.Add(AllBrands);
-        Brands.AddRange(BrandService.GetAll());
+        BrandsAndCollections = new List<BrandCollectionModel>();
+        BrandsAndCollections.Add(AllBrandsAndCollections);
+        BrandsAndCollections.AddRange(BrandCollectionService.GetAll());
 
         if (UserService.IsSpecificBrand())
         {
-            Brand = Brands.Single(b => b.Id == UserService.GetCurrentBrand().Id);
+            BrandCollection = BrandsAndCollections.Single(b => b.IsBrand && b.Brand.Id == UserService.GetCurrentBrand().Id);
+        }
+        else if (UserService.IsSpecificCollection())
+        {
+            BrandCollection = BrandsAndCollections.Single(c => c.IsCollection && c.Collection.Id == UserService.GetCurrentCollection().Id);
         }
         else
         {
-            Brand = Brands.Single(b => b.Id == 0);
+            BrandCollection = BrandsAndCollections.First();
         }
     }
 
@@ -200,10 +204,24 @@
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 
-    private void OnSelectedBrandChange(BrandModel brand)
+    private void OnSelectedBrandChange(BrandCollectionModel brandCollection)
     {
-        Brand = brand;
-        UserService.SetCurrentBrand(brand);
+        BrandCollection = brandCollection;
+        if (brandCollection.IsBrand)
+        {
+            UserService.SetCurrentBrand(brandCollection.Brand);
+            UserService.SetCurrentCollection(null);
+        }
+        else if (brandCollection.IsCollection)
+        {
+            UserService.SetCurrentCollection(brandCollection.Collection);
+            UserService.SetCurrentBrand(null);
+        }
+        else
+        {
+            UserService.SetCurrentBrand(null);
+            UserService.SetCurrentCollection(null);
+        }
 
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }

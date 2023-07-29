@@ -24,6 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private long? CurrentStatusIdChache;
         private long? CurrentBrandIdCache;
+        private long? CurrentCollectionIdCache;
         private long CurrentInstanceIdCache;
         private bool HideDraftsCache;
         private bool HideWithdrawnCache;
@@ -124,6 +125,11 @@ namespace MarketplaceBetter.Services.Domain.Base
             }    
 
             if (user.CurrentBrandId != CurrentBrandIdCache)
+            {
+                return true;
+            }
+
+            if (user.CurrentCollectionId != CurrentCollectionIdCache)
             {
                 return true;
             }
@@ -230,6 +236,44 @@ namespace MarketplaceBetter.Services.Domain.Base
             BrandModel brand = GetCurrentBrand();
 
             return brand != null;
+        }
+
+        public CollectionModel GetCurrentCollection()
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<CollectionModel>(user.CurrentCollection);
+        }
+
+        public void SetCurrentCollection(CollectionModel collection)
+        {
+            User user = GetCurrentUser();
+
+            if (collection == null || collection.Id == 0)
+            {
+                user.CurrentCollectionId = null;
+            }
+            else
+            {
+                user.CurrentCollectionId = collection.Id;
+            }
+
+            _repository.Update(user);
+            _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
+        }
+
+        public bool IsSpecificCollection()
+        {
+            CollectionModel collection = GetCurrentCollection();
+
+            return collection != null;
         }
 
         public InstanceModel GetCurrentInstance()
@@ -376,6 +420,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             CurrentStatusIdChache = user.CurrentStatusId;
             CurrentBrandIdCache = user.CurrentBrandId;
+            CurrentCollectionIdCache = user.CurrentCollectionId;
             CurrentInstanceIdCache = user.CurrentInstanceId;
             HideDraftsCache = user.HideDrafts;
             HideWithdrawnCache = user.HideWithdrawn;
