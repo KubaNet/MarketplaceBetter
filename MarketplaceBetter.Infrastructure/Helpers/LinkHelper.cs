@@ -11,7 +11,7 @@ namespace MarketplaceBetter.Infrastructure.Helpers
     {
         public static string GetUrlForChilds(long productId, long instanceId)
         {
-            return $"child-instances?productId={productId}&instanceId={instanceId}&showAll=true";
+            return $"childs?productId={productId}&instanceId={instanceId}&showAll=true";
         }
     }
 }
