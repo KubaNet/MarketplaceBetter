@@ -2,6 +2,7 @@
 
 @using MarketplaceBetter.Domain.Entities.Base;
 @using MarketplaceBetter.Domain.Model.Base;
+@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 @using MarketplaceBetter.Domain.Model.Catalog.Products
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces;
@@ -16,6 +17,7 @@
 @inject NavigationManager Navigation
 @inject IEntityStatusService StatusService
 @inject IBrandCollectionService BrandCollectionService
+@inject IStandardSizeService StandardSizeService
 @inject IInstanceService InstanceService
 @inject IUserService UserService
 @inject IProductService ProductService
@@ -41,9 +43,9 @@
             <MudAppBar Dense="true" Elevation="1">
                 <div class="d-flex flex-grow-1">
                     <MudImage Src="images/mb-logo.png" Height="45"></MudImage>
-                    <div id="GlobalSearch" style="width: 400px;" class="ml-8">
-                        <MudTextField T="string" Placeholder="Search" ValueChanged="SearchGlobally" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                        <MudPopover Open="GlobalSearchResultsOpen" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" Class="pa-3" Style="margin-top: -12px; width: 400px;">
+                    <div id="GlobalSearch" style="width: 350px;" class="ml-8">
+                        <MudTextField T="string" Placeholder="Search" ValueChanged="SearchGlobally" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="MudBlazor.Size.Medium" Class="mt-0"></MudTextField>
+                        <MudPopover Open="GlobalSearchResultsOpen" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" Class="pa-3" Style="margin-top: -12px; width: 350px;">
                             @GlobalSearchResults
                         </MudPopover>
                     </div>
@@ -67,6 +69,14 @@
                             @foreach (var brand in BrandsAndCollections)
                             {
                                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </div>
+                    <div>
+                        <MudSelect T="StandardSizeModel" Value="Size" Label="Size" DisableUnderLine="true" MaxHeight="500" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedSizeChange">
+                            @foreach (var size in Sizes)
+                            {
+                                <MudSelectItem Value="size">@size.Name</MudSelectItem>
                             }
                         </MudSelect>
                     </div>
@@ -101,11 +111,18 @@
     private EntityStatusModel AllStatuses = new EntityStatusModel { Name = "All" };
     private EntityStatusModel Status;
     private List<EntityStatusModel> Statuses;
+
     private BrandCollectionModel AllBrandsAndCollections = new BrandCollectionModel() { Name = "All" };
     private BrandCollectionModel BrandCollection;
     private List<BrandCollectionModel> BrandsAndCollections;
+
+    private StandardSizeModel AllSizes = new StandardSizeModel { Name = "All" };
+    private StandardSizeModel Size;
+    private List<StandardSizeModel> Sizes;
+
     private InstanceModel Instance;
     private IList<InstanceModel> Instances;
+
     private bool HideDrafts = false;
     private bool HideWithdrawn = false;
     private bool DraftsAndWithdrawnDisabled = false;
@@ -127,6 +144,7 @@
 
         InitializeCurrentStatus();
         InitializeCurrentBrandCollection();
+        InitializeCurrentSize();
         InitializeCurrentInstance();
         InitializeDraftsSetting();
         InitializeWithdrawnSetting();
@@ -167,6 +185,22 @@
         else
         {
             BrandCollection = BrandsAndCollections.First();
+        }
+    }
+
+    private void InitializeCurrentSize()
+    {
+        Sizes = new List<StandardSizeModel>();
+        Sizes.Add(AllSizes);
+        Sizes.AddRange(StandardSizeService.GetAll());
+
+        if (UserService.IsSpecificSize())
+        {
+            Size = Sizes.Single(s => s.Id == UserService.GetCurrentSize().Id);
+        }
+        else
+        {
+            Size = Sizes.First();
         }
     }
 
@@ -222,6 +256,14 @@
             UserService.SetCurrentBrand(null);
             UserService.SetCurrentCollection(null);
         }
+
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+
+    private void OnSelectedSizeChange(StandardSizeModel size)
+    {
+        Size = size;
+        UserService.SetCurrentSize(size);
 
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }

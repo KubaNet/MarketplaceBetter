@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
 using System;
@@ -36,6 +37,12 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
         void SetCurrentBrand(BrandModel brand);
 
         bool IsSpecificBrand();
+
+        StandardSizeModel GetCurrentSize();
+
+        void SetCurrentSize(StandardSizeModel size);
+
+        bool IsSpecificSize();
 
         CollectionModel GetCurrentCollection();
 

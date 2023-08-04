@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,10 @@ namespace MarketplaceBetter.Domain.Entities.Base
         public long? CurrentCollectionId { get; set; }
 
         public virtual Collection CurrentCollection { get; set; }
+
+        public long? CurrentSizeId { get; set; }
+
+        public virtual StandardSize CurrentSize { get; set; }
 
         public long CurrentInstanceId { get; set; }
 

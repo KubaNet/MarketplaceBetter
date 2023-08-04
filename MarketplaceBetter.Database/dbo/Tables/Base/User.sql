@@ -7,6 +7,7 @@
 	[IpLastPing]			DATETIME2					NULL,
 	[CurrentStatusId]		BIGINT						NULL,
 	[CurrentBrandId]		BIGINT						NULL,
+	[CurrentSizeId]			BIGINT						NULL,
 	[CurrentCollectionId]	BIGINT						NULL,
 	[CurrentInstanceId]		BIGINT						NOT NULL,
 	[HideDrafts]			BIT							NOT NULL,
@@ -15,6 +16,7 @@
 	CONSTRAINT				[PK_User]					PRIMARY KEY ([Id]),
 	CONSTRAINT				[FK_User_CurrentStatus]		FOREIGN KEY ([CurrentStatusId])		REFERENCES [dbo].[EntityStatus] ([Id]),
 	CONSTRAINT				[FK_User_CurrentBrand]		FOREIGN KEY ([CurrentBrandId])		REFERENCES [dbo].[Brand] ([Id]),
+	CONSTRAINT				[FK_User_CurrentSize]		FOREIGN KEY ([CurrentSizeId])		REFERENCES [dbo].[StandardSize] ([Id]),
 	CONSTRAINT				[FK_User_CurrentCollection]	FOREIGN KEY ([CurrentCollectionId])	REFERENCES [dbo].[Collection] ([Id]),
 	CONSTRAINT				[FK_User_CurrentInstance]	FOREIGN KEY ([CurrentInstanceId])	REFERENCES [dbo].[Instance] ([Id]),
 );

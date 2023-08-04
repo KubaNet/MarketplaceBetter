@@ -65,6 +65,15 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<ColorGroup> ColorGroup { get; set; }
         public DbSet<Size> Size { get; set; }
         public DbSet<SizeGroup> SizeGroup { get; set; }
+        public DbSet<StandardSize> StandardSize { get; set; }
+        // => Attributes
+        public DbSet<ProductDimensions> ProductDimensions { get; set; }
+
+        // Amazon
+        // => Inventory
+        public DbSet<Parent> Parent { get; set; }
+        public DbSet<Child> Child { get; set; }
+        public DbSet<Template> Template { get; set; }
         // => CopyAndMedia
         public DbSet<Copywriting> Copywriting { get; set; }
         public DbSet<CopywritingElement> CopywritingElement { get; set; }
@@ -74,14 +83,6 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<PhotoKindBeginning> PhotoKindBeginning { get; set; }
         public DbSet<PhotoUpload> PhotoUpload { get; set; }
         public DbSet<PhotoUploadVariant> PhotoUploadVariant { get; set; }
-        // => Attributes
-        public DbSet<ProductDimensions> ProductDimensions { get; set; }
-
-        // Amazon
-        // => Inventory
-        public DbSet<Parent> Parent { get; set; }
-        public DbSet<Child> Child { get; set; }
-        public DbSet<Template> Template { get; set; }
         // => APlusContent
         public DbSet<APlusElementType> APlusElementType { get; set; }
         public DbSet<APlusElement> APlusElement { get; set; }

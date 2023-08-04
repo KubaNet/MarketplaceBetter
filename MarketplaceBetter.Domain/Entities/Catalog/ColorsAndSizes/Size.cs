@@ -18,6 +18,10 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes
 
         public virtual SizeGroup Group { get; set; }
 
+        public long StandardSizeId { get; set; }
+
+        public virtual StandardSize StandardSize { get; set; }
+
         public override string ToString()
         {
             return Name;

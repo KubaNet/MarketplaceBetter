@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
@@ -24,6 +25,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
         private long? CurrentStatusIdChache;
         private long? CurrentBrandIdCache;
+        private long? CurrentSizeIdCache;
         private long? CurrentCollectionIdCache;
         private long CurrentInstanceIdCache;
         private bool HideDraftsCache;
@@ -125,6 +127,11 @@ namespace MarketplaceBetter.Services.Domain.Base
             }    
 
             if (user.CurrentBrandId != CurrentBrandIdCache)
+            {
+                return true;
+            }
+
+            if (user.CurrentSizeId != CurrentSizeIdCache)
             {
                 return true;
             }
@@ -236,6 +243,44 @@ namespace MarketplaceBetter.Services.Domain.Base
             BrandModel brand = GetCurrentBrand();
 
             return brand != null;
+        }
+
+        public StandardSizeModel GetCurrentSize()
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<StandardSizeModel>(user.CurrentSize);
+        }
+
+        public void SetCurrentSize(StandardSizeModel size)
+        {
+            User user = GetCurrentUser();
+
+            if (size == null || size.Id == 0)
+            {
+                user.CurrentSizeId = null;
+            }
+            else
+            {
+                user.CurrentSizeId = size.Id;
+            }
+
+            _repository.Update(user);
+            _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
+        }
+
+        public bool IsSpecificSize()
+        {
+            StandardSizeModel size = GetCurrentSize();
+
+            return size != null;
         }
 
         public CollectionModel GetCurrentCollection()
@@ -420,6 +465,7 @@ namespace MarketplaceBetter.Services.Domain.Base
 
             CurrentStatusIdChache = user.CurrentStatusId;
             CurrentBrandIdCache = user.CurrentBrandId;
+            CurrentSizeIdCache = user.CurrentSizeId;
             CurrentCollectionIdCache = user.CurrentCollectionId;
             CurrentInstanceIdCache = user.CurrentInstanceId;
             HideDraftsCache = user.HideDrafts;

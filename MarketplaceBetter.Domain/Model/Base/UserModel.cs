@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace MarketplaceBetter.Domain.Model.Base
         public BrandModel CurrentBrand { get; set; }
 
         public CollectionModel CurrentCollection { get; set; }
+
+        public StandardSizeModel CurrentSize { get; set; }
 
         public InstanceModel CurrentInstance { get; set; }
 
