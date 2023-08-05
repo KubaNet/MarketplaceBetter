@@ -24,6 +24,7 @@ using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -142,28 +143,34 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
         private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 photos = photos.Where(p => p.Variant.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 photos = photos.Where(p => p.Variant.Product.CollectionId == currentCollection.Id);
             }
 
-            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (_userService.IsSpecificSize())
+            {
+                StandardSizeModel currentSize = _userService.GetCurrentSize();
+                photos = photos.Where(p => p.Variant.Size.StandardSizeId == currentSize.Id);
+            }
+
             if (_userService.IsSpecificInstance())
             {
+                InstanceModel currentInstance = _userService.GetCurrentInstance();
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
                 photos = photos.Where(p => p.InstanceId == _userService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
             }
 
-            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
             if (_userService.IsSpecificStatus())
             {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
                 photos = photos.Where(p => p.Variant.StatusId == currentStatus.Id);
             }
 

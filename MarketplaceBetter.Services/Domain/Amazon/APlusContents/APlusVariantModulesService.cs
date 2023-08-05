@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -72,28 +73,34 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
         private IQueryable<APlusModuleValue> ApplyFilter(IQueryable<APlusModuleValue> modules, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 modules = modules.Where(m => m.Content.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 modules = modules.Where(m => m.Content.Product.CollectionId == currentCollection.Id);
             }
 
-            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (_userService.IsSpecificSize())
+            {
+                StandardSizeModel currentSize = _userService.GetCurrentSize();
+                modules = modules.Where(m => !m.Content.Variants.Any() || m.Content.Variants.Any(v => v.Variant.Size.StandardSizeId == currentSize.Id));
+            }
+
             if (_userService.IsSpecificInstance())
             {
+                InstanceModel currentInstance = _userService.GetCurrentInstance();
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
                 modules = modules.Where(m => m.Content.InstanceId == _userService.GetCurrentInstance().Id || m.Content.InstanceId == instanceAllId);
             }
 
-            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
             if (_userService.IsSpecificStatus())
             {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
                 modules = modules.Where(m => m.Content.StatusId == currentStatus.Id);
             }
 

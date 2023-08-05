@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -54,9 +56,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public IList<VariantModel> GetAll()
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 return _mapper.Map<IList<VariantModel>>(_repository.Where(v => v.Product.BrandId == currentBrand.Id).OrderBy(v => v.Sku));
             }
             else
@@ -136,21 +138,27 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 variants = variants.Where(v => v.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 variants = variants.Where(v => v.Product.CollectionId == currentCollection.Id);
             }
 
-            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+            if (_userService.IsSpecificSize())
+            {
+                StandardSizeModel currentSize = _userService.GetCurrentSize();
+                variants = variants.Where(v => v.Size.StandardSizeId == currentSize.Id);
+            }
+
             if (_userService.IsSpecificStatus())
             {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
                 variants = variants.Where(v => v.StatusId == currentStatus.Id);
             }
 

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -96,22 +98,40 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
         private IQueryable<Copywriting> ApplyFilter(IQueryable<Copywriting> copywritings, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 copywritings = copywritings.Where(c => c.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 copywritings = copywritings.Where(c => c.Product.CollectionId == currentCollection.Id);
             }
 
-            InstanceModel currentInstance = _userService.GetCurrentInstance();
             if (_userService.IsSpecificInstance())
             {
+                InstanceModel currentInstance = _userService.GetCurrentInstance();
                 copywritings = copywritings.Where(c => c.InstanceId == currentInstance.Id);
+            }
+
+            if (_userService.IsSpecificStatus())
+            {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+                copywritings = copywritings.Where(c => c.Product.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts && !_userService.IsSpecificStatus())
+            {
+                copywritings = copywritings.Where(c => c.Product.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
+            {
+                copywritings = copywritings.Where(c => c.Product.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

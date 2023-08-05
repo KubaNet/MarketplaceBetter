@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -170,27 +171,33 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<Child> ApplyFilter(IQueryable<Child> childs, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 childs = childs.Where(c => c.Variant.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 childs = childs.Where(c => c.Variant.Product.CollectionId == currentCollection.Id);
             }
 
-            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (_userService.IsSpecificSize())
+            {
+                StandardSizeModel currentSize = _userService.GetCurrentSize();
+                childs = childs.Where(c => c.Variant.Size.StandardSizeId == currentSize.Id);
+            }
+
             if (_userService.IsSpecificInstance())
             {
+                InstanceModel currentInstance = _userService.GetCurrentInstance();
                 childs = childs.Where(c => c.InstanceId == currentInstance.Id);
             }
 
-            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
             if (_userService.IsSpecificStatus())
             {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
                 childs = childs.Where(c => c.StatusId == currentStatus.Id);
             }
 

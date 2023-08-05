@@ -156,27 +156,27 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         private IQueryable<Parent> ApplyFilter(IQueryable<Parent> parents, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 parents = parents.Where(p => p.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 parents = parents.Where(p => p.Product.CollectionId == currentCollection.Id);
             }
 
-            InstanceModel currentInstance = _userService.GetCurrentInstance();
             if (_userService.IsSpecificInstance())
             {
+                InstanceModel currentInstance = _userService.GetCurrentInstance();
                 parents = parents.Where(p => p.InstanceId == currentInstance.Id);
             }
 
-            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
             if (_userService.IsSpecificStatus())
             {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
                 parents = parents.Where(p => p.StatusId == currentStatus.Id);
             }
 

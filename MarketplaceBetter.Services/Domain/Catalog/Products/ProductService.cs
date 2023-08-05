@@ -47,9 +47,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public IList<ProductModel> GetAll()
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 return _mapper.Map<IList<ProductModel>>(_repository.Where(p => p.BrandId == currentBrand.Id).OrderBy(p => p.Name));
             }
             else
@@ -130,21 +130,21 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         private IQueryable<Product> ApplyFilter(IQueryable<Product> products, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 products = products.Where(p => p.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 products = products.Where(p => p.CollectionId == currentCollection.Id);
             }
 
-            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
             if (_userService.IsSpecificStatus())
             {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
                 products = products.Where(p => p.StatusId == currentStatus.Id);
             }
 

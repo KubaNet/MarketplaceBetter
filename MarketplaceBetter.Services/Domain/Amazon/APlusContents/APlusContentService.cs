@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -51,9 +53,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
         public IList<APlusContentModel> GetAll(bool onlyCurrent)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
-            if (onlyCurrent && _userService.IsSpecificBrand() && currentBrand != null)
+            if (onlyCurrent && _userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 return _mapper.Map<IList<APlusContentModel>>(_repository.Where(c => c.Product.Brand.Id == currentBrand.Id).OrderBy(c => c.Name));
             }
             else
@@ -66,9 +68,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
         {
             IQueryable<APlusContent> contents = _repository.GetQuery();
 
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 contents = contents.Where(c => c.Product.BrandId == currentBrand.Id);
             }
 
@@ -213,27 +215,33 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
         private IQueryable<APlusContent> ApplyFilter(IQueryable<APlusContent> contents, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 contents = contents.Where(c => c.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 contents = contents.Where(c => c.Product.CollectionId == currentCollection.Id);
             }
 
-            InstanceModel currentInstance = _userService.GetCurrentInstance();
+            if (_userService.IsSpecificSize())
+            {
+                StandardSizeModel currentSize = _userService.GetCurrentSize();
+                contents = contents.Where(c => !c.Variants.Any() || c.Variants.Any(v => v.Variant.Size.StandardSizeId == currentSize.Id));
+            }
+
             if (_userService.IsSpecificInstance())
             {
+                InstanceModel currentInstance = _userService.GetCurrentInstance();
                 contents = contents.Where(c => c.InstanceId == currentInstance.Id);
             }
 
-            EntityStatusModel currentStatus = _userService.GetCurrentStatus();
             if (_userService.IsSpecificStatus())
             {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
                 contents = contents.Where(c => c.StatusId == currentStatus.Id);
             }
 

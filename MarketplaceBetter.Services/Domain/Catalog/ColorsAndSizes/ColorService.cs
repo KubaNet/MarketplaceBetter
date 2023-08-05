@@ -91,10 +91,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         private IQueryable<Color> ApplyFilter(IQueryable<Color> colors, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
 			{
-				colors = colors.Where(c => c.Group.BrandId == currentBrand.Id);
+                BrandModel currentBrand = _userService.GetCurrentBrand();
+                colors = colors.Where(c => c.Group.BrandId == currentBrand.Id);
 			}
 
 			if (string.IsNullOrWhiteSpace(request.SearchString))

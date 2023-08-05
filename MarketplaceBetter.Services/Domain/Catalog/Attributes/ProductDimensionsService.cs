@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Attributes;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
@@ -40,9 +44,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
 
         public IList<ProductDimensionsModel> GetAll()
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 return _mapper.Map<IList<ProductDimensionsModel>>(_repository.Where(d => d.Product.BrandId == currentBrand.Id).OrderBy(d => d.Id));
             }
             else
@@ -111,16 +115,40 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
 
         private IQueryable<ProductDimensions> ApplyFilter(IQueryable<ProductDimensions> dimensions, ListRequest request)
         {
-            BrandModel currentBrand = _userService.GetCurrentBrand();
             if (_userService.IsSpecificBrand())
             {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
                 dimensions = dimensions.Where(d => d.Product.BrandId == currentBrand.Id);
             }
 
-            CollectionModel currentCollection = _userService.GetCurrentCollection();
             if (_userService.IsSpecificCollection())
             {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
                 dimensions = dimensions.Where(d => d.Product.CollectionId == currentCollection.Id);
+            }
+
+            if (_userService.IsSpecificSize())
+            {
+                StandardSizeModel currentSize = _userService.GetCurrentSize();
+                dimensions = dimensions.Where(d => d.Size.StandardSizeId == currentSize.Id);
+            }
+
+            if (_userService.IsSpecificStatus())
+            {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+                dimensions = dimensions.Where(d => d.Product.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts && !_userService.IsSpecificStatus())
+            {
+                dimensions = dimensions.Where(d => d.Product.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
+            {
+                dimensions = dimensions.Where(d => d.Product.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))
