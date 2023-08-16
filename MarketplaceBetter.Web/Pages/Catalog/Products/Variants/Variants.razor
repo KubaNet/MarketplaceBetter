@@ -11,7 +11,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variants</MudText>
 
 <MainBody>
-    <MudTable T="VariantModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="VariantModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" FixedHeader="true" Height="800px" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />

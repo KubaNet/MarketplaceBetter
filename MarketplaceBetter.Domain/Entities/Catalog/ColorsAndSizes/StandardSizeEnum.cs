@@ -10,14 +10,16 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes
     {
         None = 0,
 
-        OneSize = 1,
+        OneSizePlusM = 1,
 
-        XS = 2,
+        OneSize = 2,
 
-        S = 3,
+        XS = 3,
 
-        M = 4,
+        S = 4,
 
-        L = 5
+        M = 5,
+
+        L = 6
     }
 }

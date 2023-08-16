@@ -61,7 +61,7 @@ namespace MarketplaceBetter.Services.Specialized
             WriteParent(parent, csv);
 
             IList<Child> childs = _childRepository.Where(c =>
-                c.Variant.ProductId == parent.ProductId && c.InstanceId == parent.InstanceId && c.Status.SystemName != EntityStatusEnum.Withdrawn).OrderBy(c => c.Sku).ToList();
+                c.Variant.ProductId == parent.ProductId && c.InstanceId == parent.InstanceId && c.Status.SystemName != EntityStatusEnum.Withdrawn).OrderByDescending(c => c.Variant.Color.Name).ThenByDescending(c => c.Variant.Size.Name).ToList();
             foreach (var child in childs)
             {
                 WriteChild(child, csv);

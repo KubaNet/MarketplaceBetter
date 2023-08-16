@@ -25,6 +25,7 @@ using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -158,7 +159,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             if (_userService.IsSpecificSize())
             {
                 StandardSizeModel currentSize = _userService.GetCurrentSize();
-                photos = photos.Where(p => p.Variant.Size.StandardSizeId == currentSize.Id);
+                if (currentSize.SystemName == StandardSizeEnum.OneSizePlusM)
+                {
+                    photos = photos.Where(p => p.Variant.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || p.Variant.Size.StandardSize.SystemName == StandardSizeEnum.M);
+                }
+                else
+                {
+                    photos = photos.Where(p => p.Variant.Size.StandardSizeId == currentSize.Id);
+                }
             }
 
             if (_userService.IsSpecificInstance())

@@ -171,11 +171,11 @@
 
     private async Task Export(long id, string sku)
     {
-    using Stream fileStream = TemplateCreator.CreateTemplateFor(id);
+        using Stream fileStream = TemplateCreator.CreateTemplateFor(id);
 
         using var streamReference = new DotNetStreamReference(fileStream);
 
-        await JS.InvokeVoidAsync("DownloadFileFromStream", $"{sku}.csv", streamReference);
+        await JS.InvokeVoidAsync("DownloadFileFromStream", $"cms_{sku}.csv", streamReference);
     }
 
     private async void UploadTemplate(ParentModel parent)

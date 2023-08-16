@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Attributes;
@@ -130,7 +131,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
             if (_userService.IsSpecificSize())
             {
                 StandardSizeModel currentSize = _userService.GetCurrentSize();
-                dimensions = dimensions.Where(d => d.Size.StandardSizeId == currentSize.Id);
+                if (currentSize.SystemName == StandardSizeEnum.OneSizePlusM)
+                {
+                    dimensions = dimensions.Where(d => d.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || d.Size.StandardSize.SystemName == StandardSizeEnum.M);
+                }
+                else
+                {
+                    dimensions = dimensions.Where(d => d.Size.StandardSizeId == currentSize.Id);
+                }
             }
 
             if (_userService.IsSpecificStatus())

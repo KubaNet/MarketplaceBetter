@@ -2,6 +2,8 @@
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
@@ -18,6 +20,7 @@ using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -203,7 +206,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             if (_userService.IsSpecificSize())
             {
                 StandardSizeModel currentSize = _userService.GetCurrentSize();
-                photos = photos.Where(p => p.Variant.Size.StandardSizeId == currentSize.Id);
+                if (currentSize.SystemName == StandardSizeEnum.OneSizePlusM)
+                {
+                    photos = photos.Where(p => p.Variant.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || p.Variant.Size.StandardSize.SystemName == StandardSizeEnum.M);
+                }
+                else
+                {
+                    photos = photos.Where(p => p.Variant.Size.StandardSizeId == currentSize.Id);
+                }
             }
 
             if (_userService.IsSpecificInstance())

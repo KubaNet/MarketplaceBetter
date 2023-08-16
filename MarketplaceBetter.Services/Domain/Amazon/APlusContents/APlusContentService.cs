@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
@@ -230,7 +231,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
             if (_userService.IsSpecificSize())
             {
                 StandardSizeModel currentSize = _userService.GetCurrentSize();
-                contents = contents.Where(c => !c.Variants.Any() || c.Variants.Any(v => v.Variant.Size.StandardSizeId == currentSize.Id));
+                if (currentSize.SystemName == StandardSizeEnum.OneSizePlusM)
+                {
+                    contents = contents.Where(c => !c.Variants.Any() || c.Variants.Any(v => v.Variant.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || v.Variant.Size.StandardSize.SystemName == StandardSizeEnum.M));
+                }
+                else
+                {
+                    contents = contents.Where(c => !c.Variants.Any() || c.Variants.Any(v => v.Variant.Size.StandardSizeId == currentSize.Id));
+                }
             }
 
             if (_userService.IsSpecificInstance())

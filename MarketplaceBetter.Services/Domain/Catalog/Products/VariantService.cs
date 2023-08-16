@@ -153,7 +153,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             if (_userService.IsSpecificSize())
             {
                 StandardSizeModel currentSize = _userService.GetCurrentSize();
-                variants = variants.Where(v => v.Size.StandardSizeId == currentSize.Id);
+                if (currentSize.SystemName == StandardSizeEnum.OneSizePlusM)
+                {
+                    variants = variants.Where(v => v.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || v.Size.StandardSize.SystemName == StandardSizeEnum.M);
+                }
+                else
+                {
+                    variants = variants.Where(v => v.Size.StandardSizeId == currentSize.Id);
+                }
             }
 
             if (_userService.IsSpecificStatus())
