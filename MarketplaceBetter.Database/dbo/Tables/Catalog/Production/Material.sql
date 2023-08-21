@@ -5,7 +5,7 @@
 	[SupplierCode]	NVARCHAR (255)			NOT NULL,
 	[KindId]		BIGINT					NOT NULL,
 	[SupplierId]	BIGINT					NOT NULL,
-	[PricePLN]		DECIMAL					NOT NULL,
+	[PricePLN]		DECIMAL (19,2)			NOT NULL,
 	[UnitId]		BIGINT					NOT NULL,
 	CONSTRAINT		[PK_Material]			PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_Material_Kind]		FOREIGN KEY ([KindId])		REFERENCES [dbo].[MaterialKind] ([Id]),

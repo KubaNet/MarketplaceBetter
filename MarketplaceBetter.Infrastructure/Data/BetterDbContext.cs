@@ -7,6 +7,7 @@ using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Entities.Sales.InputData;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarketplaceBetter.Infrastructure.Data
@@ -52,6 +53,8 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<User> User { get; set; }
         public DbSet<Instance> Instance { get; set; }
         public DbSet<EntityStatus> EntityStatus { get; set; }
+        public DbSet<Country> Country { get; set; }
+        public DbSet<Currency> Currency { get; set; }
 
         // Catalog
         // => Products
@@ -110,6 +113,10 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<ResearchTargetSource> ResearchTargetSource { get; set; }
         public DbSet<ResearchTargetStatus> ResearchTargetStatus { get; set; }
         public DbSet<ResearchResult> ResearchResult { get; set; }
+
+        // Sales
+        // => Input Data
+        public DbSet<AmazonFulfilledShipment> AmazonFulfilledShipment { get; set; }
 
         //public override int SaveChanges()
         //{
