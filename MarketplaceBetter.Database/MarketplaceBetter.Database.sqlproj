@@ -73,6 +73,7 @@
     <Folder Include="dbo\Tables\Amazon\APlusContents" />
     <Folder Include="dbo\Tables\Base" />
     <Folder Include="dbo\Tables\Amazon\CopyAndMedia" />
+    <Folder Include="dbo\Tables\Catalog\Production" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Inserts\02_Instances.sql" />
@@ -154,5 +155,9 @@
     <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoUpload.sql" />
     <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoUploadVariant.sql" />
     <Build Include="dbo\Tables\Catalog\ColorsAndSizes\StandardSize.sql" />
+    <Build Include="dbo\Tables\Catalog\Production\Supplier.sql" />
+    <Build Include="dbo\Tables\Catalog\Production\MaterialKind.sql" />
+    <Build Include="dbo\Tables\Base\MeasurementUnit.sql" />
+    <Build Include="dbo\Tables\Catalog\Production\Material.sql" />
   </ItemGroup>
 </Project>
