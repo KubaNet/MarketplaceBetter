@@ -133,7 +133,7 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(child.Sku);
             csv.WriteField(child.Variant.Product.Brand.Name);
             csv.WriteField(GetProductName(child, colorTranslation));
-            csv.WriteField(child.Variant.Asin);
+            csv.WriteField(child.Variant.Asin ?? child.Variant.Ean);
             csv.WriteField(colorTranslation?.Translation);
             csv.WriteField(colorTranslation?.Mapping);
             csv.WriteField(child.Variant.Size.Name);

@@ -97,10 +97,11 @@
         {
             ListRequest.SearchString = SearchString;
         }
-        if (ProductId.HasValue)
+        else if (ProductId.HasValue)
         {
             ListRequest.SearchString = $"product_id: {ProductId.Value}";
         }
+
         if (ShowAll.HasValue)
         {
             ListRequest.ShowAll = ShowAll.Value;
@@ -195,6 +196,8 @@
         memoryStream.Seek(0, SeekOrigin.Begin);
 
         TemplateService.Save(memoryStream, File.Name, parent.Id);
+
+        Snackbar.AddSuccess("Template was successfully uploaded");
 
         await Table.ReloadServerData();
     }

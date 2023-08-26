@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Extensions
 {
-    public static class StringExtenstions
+    public static class StringExtensions
     {
         public static int ParseToIntOrDefault(this string numberString)
         {
@@ -23,7 +23,14 @@ namespace MarketplaceBetter.Infrastructure.Extensions
             return number;
         }
 
-        public static IList<string> SplitForFiltering(this string searchString)
+		public static decimal ParseToDecimalOrDefault(this string numberString)
+		{
+			decimal.TryParse(numberString, out decimal number);
+
+			return number;
+		}
+
+		public static IList<string> SplitForFiltering(this string searchString)
         {
             IList<string> searchStrings = new List<string>();
             foreach (var searchStringElement in searchString.Split('&'))

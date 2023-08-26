@@ -1,0 +1,98 @@
+﻿@using MarketplaceBetter.Domain.Model.Sales;
+@using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
+@using MarketplaceBetter.Services.Model;
+
+@page "/amazon-fulfilled-shipments"
+
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject IAmazonFulfilledShipmentService AmazonFulfilledShipmentService
+
+<MudText Typo="Typo.h4" Class="mt-2">Amazon Fulfilled Shipments</MudText>
+
+<MainBody>
+	<MudTable T="AmazonFulfilledShipmentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonFulfilledShipmentModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+		<ToolBarContent>
+			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="AmazonFulfilledShipmentModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Amazon Order Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_item_id" T="AmazonFulfilledShipmentModel">Amazon Order Item Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Code</MudTableSortLabel></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+			<MudTd DataLabel="Amazon Order Item Id">@context.AmazonOrderItemId</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+			<MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+		</PagerContent>
+	</MudTable>
+</MainBody>
+
+@code {
+	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+	private MudTable<AmazonFulfilledShipmentModel> Table;
+	private ListRequest ListRequest = new();
+
+	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		ProcessQueryParameters();		
+	}
+
+	private void ProcessQueryParameters()
+	{
+		if (!String.IsNullOrWhiteSpace(SearchString))
+		{
+			ListRequest.SearchString = SearchString;
+		}
+	}
+
+	private Task<TableData<AmazonFulfilledShipmentModel>> Reload(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<AmazonFulfilledShipmentModel> shipments = AmazonFulfilledShipmentService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<AmazonFulfilledShipmentModel>() { TotalItems = AmazonFulfilledShipmentService.CountForListRequest(ListRequest), Items = shipments });
+	}
+
+	private void OnRowsPerPageChanged(int rowsPerPage)
+	{
+		CurrentRowsPerPageValue = rowsPerPage;
+	}
+
+	private void Filter(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+		Navigation.NavigateTo(newUrl, replace: true);
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+}

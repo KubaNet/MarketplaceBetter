@@ -84,10 +84,11 @@
         {
             ListRequest.SearchString = SearchString;
         }
-        if (ProductId.HasValue)
+        else if (ProductId.HasValue)
         {
             ListRequest.SearchString = $"product_id: {ProductId.Value}";
         }
+
         if (ShowAll.HasValue)
         {
             ListRequest.ShowAll = ShowAll.Value;
