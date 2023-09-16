@@ -1,0 +1,72 @@
+﻿@using System.IO
+@using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IAmazonFulfilledShipmentService AmazonFulfilledShipmentService
+
+<EditForm Model="FileName" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title="Add Amazon Fulfilled Shipments from file">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputFile id="FileInput" OnChange="UploadFile" hidden />
+        <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="FileInput">
+            Upload File
+        </MudButton>
+        @if (File != null)
+        {
+            <MudList>
+                <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                    @File.Name <code>@File.Size bytes</code>
+                </MudListItem>
+            </MudList>
+        }
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private string FileName = "dfazsd";
+    private IBrowserFile File = null;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void UploadFile(InputFileChangeEventArgs e)
+    {
+        File = e.File;
+    }
+
+    private async void HandleValidSubmit()
+    {
+        ValidationResult validationResult = new();
+
+        if (File == null)
+        {
+            validationResult.AddError("Please upload a file");
+        }
+        else if (!File.Name.EndsWith(".txt") && !File.Name.EndsWith(".csv"))
+        {
+            validationResult.AddError("File extension should be .txt or .csv");
+        }
+
+        if (validationResult.IsValid)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            await File.OpenReadStream(maxAllowedSize: 100000000).CopyToAsync(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            AmazonFulfilledShipmentService.AddFromFile(memoryStream);
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(validationResult.Errors);
+        }
+    }
+}

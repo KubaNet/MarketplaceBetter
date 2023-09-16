@@ -15,6 +15,7 @@
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
+            <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="AmazonFulfilledShipmentModel">Id</MudTableSortLabel></MudTh>
@@ -119,5 +120,20 @@
         Table.ReloadServerData();
 
         StateHasChanged();
+    }
+
+    private async void AddFromFile()
+    {
+        DialogResult result = await DialogService.Show<AmazonFulfilledShipmentsFromFileDialog>().Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
     }
 }
