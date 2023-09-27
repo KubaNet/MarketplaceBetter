@@ -16,7 +16,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 
         IList<VariantPhotosModel> GetForListRequest(ListRequest request);
 
-        void PrepareForDownload(PhotoModel photo, VariantModel variant);
+        Task PrepareForDownload(PhotoModel photo, VariantModel variant);
 
         Stream DownloadPhotos();
 

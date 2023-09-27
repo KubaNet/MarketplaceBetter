@@ -57,7 +57,7 @@
                 StateHasChanged();
 
                 await Task.Delay(500);
-                VariantPhotosService.PrepareForDownload(photo, variantPhoto.Variant);
+                await VariantPhotosService.PrepareForDownload(photo, variantPhoto.Variant);
 
                 CurrentProgressValue += progressStep;
                 CurrentPhotoNumber++;

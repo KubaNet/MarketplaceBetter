@@ -86,7 +86,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             }).ToList();
         }
 
-        public async void PrepareForDownload(PhotoModel photo, VariantModel variant)
+        public async Task PrepareForDownload(PhotoModel photo, VariantModel variant)
         {
             if (variant.Asin == null)
             {
