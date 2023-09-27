@@ -16,6 +16,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 
         PhotoModel GetForVariant(long variantId, PhotoTypeEnum type);
 
+        IList<PhotoModel> GetForVariantAndInstanceAll(long variantId);
+
         int CountForListRequest(ListRequest request);
 
         IList<PhotoModel> GetForListRequest(ListRequest request);

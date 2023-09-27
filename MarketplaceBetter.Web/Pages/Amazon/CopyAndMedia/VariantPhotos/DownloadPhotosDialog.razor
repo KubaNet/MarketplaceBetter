@@ -1,10 +1,12 @@
 ﻿@using System.IO;
 @using System.Threading;
+@using MarketplaceBetter.Domain.Entities.Base;
 @using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 @using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Specialized.Interfaces;
 
 @inject IVariantPhotosService VariantPhotosService
+@inject IPhotoService PhotoService
 @inject IPhotoCloudService PhotoCloudService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -12,12 +14,12 @@
 
 <MudDialog Style="min-width: 60%;">
     <TitleContent>
-        <MudText Typo="Typo.h6">Preparing @TotalPhotoCount photos to download.</MudText>
+        <MudText Typo="Typo.h6">Preparing @Photos.Count photos to download.</MudText>
     </TitleContent>
     <DialogContent>
         <MudContainer>
             <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
-            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b>. Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Progress <b>@CurrentPhotoNumber / @Photos.Count</b>. Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
             <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">All photos prepared. Downloading will start soon, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
         </MudContainer>
     </DialogContent>
@@ -27,41 +29,67 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public IList<VariantPhotosModel> VariantPhotos { get; set; }
 
+    IList<PhotoModel> Photos = new List<PhotoModel>();
+
     private PhotoModel CurrentPhoto;
     private string CurrentVariant;
     private double CurrentProgressValue;
     private int CurrentPhotoNumber = 0;
-    private int TotalPhotoCount;
     private bool PhotoInfoHidden = false;
     private bool RemovingInfoHidden = true;
 
     protected override void OnInitialized()
     {
-        TotalPhotoCount = VariantPhotos.SelectMany(v => v.Photos).Count();
+        PreparePhotos();
 
         Download();
+    }
+
+    private void PreparePhotos()
+    {
+        foreach (var variantPhoto in VariantPhotos)
+        {
+            if (variantPhoto.Instance.SystemName == InstanceEnum.All)
+            {
+                Photos = variantPhoto.Photos;
+            }
+            else
+            {
+                IList<PhotoModel> instanceAllPhotos = PhotoService.GetForVariantAndInstanceAll(variantPhoto.Variant.Id);
+
+                foreach (var photo in instanceAllPhotos)
+                {
+                    if (!variantPhoto.Photos.Any(p => p.Type.Id == photo.Type.Id))
+                    {
+                        Photos.Add(photo);
+                    }
+                }
+
+                foreach (var photo in variantPhoto.Photos)
+                {
+                    Photos.Add(photo);
+                }
+            }
+        }
     }
 
     private async void Download()
     {
         await Task.Delay(500);
 
-        double progressStep = (double)100 / (double)TotalPhotoCount;
+        double progressStep = (double)100 / (double)Photos.Count;
 
-        foreach (var variantPhoto in VariantPhotos)
+        foreach (var photo in Photos)
         {
-            foreach (var photo in variantPhoto.Photos)
-            {
-                CurrentPhoto = photo;
-                CurrentVariant = variantPhoto.Variant.Sku;
-                StateHasChanged();
+            CurrentPhoto = photo;
+            CurrentVariant = photo.Variant.Sku;
+            StateHasChanged();
 
-                await Task.Delay(500);
-                await VariantPhotosService.PrepareForDownload(photo, variantPhoto.Variant);
+            await Task.Delay(500);
+            await VariantPhotosService.PrepareForDownload(photo, photo.Variant);
 
-                CurrentProgressValue += progressStep;
-                CurrentPhotoNumber++;
-            }
+            CurrentProgressValue += progressStep;
+            CurrentPhotoNumber++;
         }
 
         CurrentProgressValue = 100;

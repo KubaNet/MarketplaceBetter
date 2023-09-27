@@ -49,12 +49,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
 
-        public PhotoModel GetForVariant(long variantId, PhotoTypeEnum type)
-        {
-            Photo photo = _repository.SingleOrDefault(p => p.VariantId == variantId & p.Type.SystemName == type);
+        public PhotoModel GetForVariant(long variantId, PhotoTypeEnum type) => _mapper.Map<PhotoModel>(_repository.SingleOrDefault(p => p.VariantId == variantId & p.Type.SystemName == type));
 
-            return _mapper.Map<PhotoModel>(photo);
-        }
+        public IList<PhotoModel> GetForVariantAndInstanceAll(long variantId) => _mapper.Map<IList<PhotoModel>>(_repository.Where(p => p.VariantId == variantId && p.Instance.SystemName == InstanceEnum.All));
 
         public int CountForListRequest(ListRequest request)
         {
