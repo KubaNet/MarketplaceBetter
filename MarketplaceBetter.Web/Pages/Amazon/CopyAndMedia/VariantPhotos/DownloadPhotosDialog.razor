@@ -51,7 +51,10 @@
         {
             if (variantPhoto.Instance.SystemName == InstanceEnum.All)
             {
-                Photos = variantPhoto.Photos;
+                foreach (var photo in variantPhoto.Photos)
+                {
+                    Photos.Add(photo);
+                }
             }
             else
             {
