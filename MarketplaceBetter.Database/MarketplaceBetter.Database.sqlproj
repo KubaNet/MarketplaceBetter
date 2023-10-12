@@ -65,7 +65,6 @@
     <Folder Include="dbo\Tables\Amazon" />
     <Folder Include="dbo\Tables\Amazon\Campaigns" />
     <Folder Include="dbo\Tables\Amazon\Inventory" />
-    <Folder Include="dbo\Tables\Amazon\Keywords" />
     <Folder Include="dbo\Tables\Catalog\ColorsAndSizes" />
     <Folder Include="dbo\Tables\Catalog\Products" />
     <Folder Include="Scripts\CustomScripts" />
@@ -80,8 +79,6 @@
     <None Include="Scripts\Inserts\01_Countries.sql" />
     <None Include="Scripts\Inserts\AmazonTargetingStatuses.sql" />
     <None Include="Scripts\Inserts\AmazonTargetingTypes.sql" />
-    <Build Include="dbo\Tables\Amazon\Keywords\ResearchTarget.sql" />
-    <Build Include="dbo\Tables\Amazon\Keywords\Research.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\Child.sql" />
     <Build Include="dbo\Tables\Amazon\Inventory\Parent.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\Campaign.sql" />
@@ -93,11 +90,6 @@
     <Build Include="dbo\Tables\Catalog\Products\Brand.sql" />
     <None Include="Scripts\Inserts\04_CopywritingElements.sql" />
     <None Include="Scripts\Inserts\05_PhotoTypes.sql" />
-    <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetSource.sql" />
-    <None Include="Scripts\Inserts\ResearchTargetSources.sql" />
-    <Build Include="dbo\Tables\Amazon\Keywords\ResearchTargetStatus.sql" />
-    <None Include="Scripts\Inserts\ResearchTargetStatuses.sql" />
-    <Build Include="dbo\Tables\Amazon\Keywords\ResearchResult.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\CampaignType.sql" />
     <None Include="Scripts\Inserts\CampaignTypes.sql" />
     <Build Include="dbo\Tables\Amazon\Campaigns\CampaignStrategy.sql" />

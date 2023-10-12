@@ -2,7 +2,6 @@
 using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
-using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
@@ -107,12 +106,6 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<NegativeProduct> NegativeProduct { get; set; }
         public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
         public DbSet<AmazonTargeting> AmazonTargeting { get; set; }
-        // => Keywords
-        public DbSet<Research> Research { get; set; }
-        public DbSet<ResearchTarget> ResearchTarget { get; set; }
-        public DbSet<ResearchTargetSource> ResearchTargetSource { get; set; }
-        public DbSet<ResearchTargetStatus> ResearchTargetStatus { get; set; }
-        public DbSet<ResearchResult> ResearchResult { get; set; }
 
         // Sales
         // => Input Data

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CsvHelper.Configuration;
 using CsvHelper;
-using MarketplaceBetter.Domain.Entities.Amazon.Keywords;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
 using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Data;

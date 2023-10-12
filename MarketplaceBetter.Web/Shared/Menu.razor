@@ -54,11 +54,6 @@
             <MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Keywords" Icon="@Icons.Material.Filled.ManageSearch" Expanded="UserService.IsExpanded(MenuItemEnum.Keywords)" HideExpandIcon="true" ExpandedChanged="KeywordsExpandedChanged">
-            <MudNavLink Href="/researches">Researches</MudNavLink>
-            <MudNavLink Href="/research-targets">Research Targets</MudNavLink>
-            <MudNavLink Href="/research-results">Research Results</MudNavLink>
-        </MudNavGroup>
     </MudNavGroup>
     <MudNavGroup Title="Sales" Icon="@Icons.Material.Filled.MonetizationOn" Expanded="UserService.IsExpanded(MenuItemEnum.Sales)" HideExpandIcon="true" ExpandedChanged="SalesExpandedChanged">
         <MudNavGroup Title="Input Data" Icon="@Icons.Material.Filled.TableView" Expanded="UserService.IsExpanded(MenuItemEnum.InputData)" HideExpandIcon="true" ExpandedChanged="InputDataExpandedChanged">
@@ -126,11 +121,6 @@
     private void CampaignsExpandedChanged(bool expaned)
     {
         UserService.SetExpanded(MenuItemEnum.Campaigns, expaned);
-    }
-
-    private void KeywordsExpandedChanged(bool expaned)
-    {
-        UserService.SetExpanded(MenuItemEnum.Keywords, expaned);
     }
 
     private void SalesExpandedChanged(bool expaned)
