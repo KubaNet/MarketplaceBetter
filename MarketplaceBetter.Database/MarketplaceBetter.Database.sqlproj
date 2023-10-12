@@ -129,6 +129,7 @@
     <Build Include="dbo\Tables\Amazon\Inventory\Template.sql" />
     <None Include="Scripts\Inserts\11_StandardSizes.sql" />
     <None Include="Scripts\CustomScripts\SelectingChildsWithTooLongSKU.sql" />
+    <None Include="Scripts\Inserts\12_Currencies.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />

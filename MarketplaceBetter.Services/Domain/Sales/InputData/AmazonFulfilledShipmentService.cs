@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData
 {
@@ -26,14 +27,20 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<AmazonFulfilledShipment> _repository;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
 
         public AmazonFulfilledShipmentService(
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ICountryService countryService,
+            ICurrencyService currencyService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<AmazonFulfilledShipment>();
+            _countryService = countryService;
+            _currencyService = currencyService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -74,6 +81,27 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 AmazonFulfilledShipment shipment = new AmazonFulfilledShipment();
 
                 shipment.AmazonOrderId = csv.GetField("Amazon Order Id");
+                shipment.AmazonOrderItemId = csv.GetField("Amazon Order Item ID");
+                shipment.MerchantSku = csv.GetField("Merchant SKU");
+                shipment.DispatchedQuantity = csv.GetField<int>("Dispatched Quantity");
+                shipment.Currency = _currencyService.GetByName(csv.GetField("Currency"));
+                shipment.ItemPrice = csv.GetField<decimal>("Item Price");
+                shipment.ItemTax = csv.GetField<decimal>("Item Tax");
+                shipment.DeliveryPrice = csv.GetField<decimal>("Delivery Price");
+                shipment.DeliveryTax = csv.GetField<decimal>("Delivery Tax");
+                shipment.GiftWrapPrice = csv.GetField<decimal>("Gift Wrap Price");
+                shipment.GiftWrappingTax = csv.GetField<decimal>("Gift Wrapping Tax");
+                shipment.ItemPromoDiscount = csv.GetField<decimal>("Item Promo Discount");
+                shipment.ShipmentPromoDiscount = csv.GetField<decimal>("Shipment Promo Discount");
+                shipment.RecipientName = csv.GetField("Recipient Name");
+                shipment.DeliveryAddress1 = csv.GetField("Delivery Address 1");
+                shipment.DeliveryAddress2 = csv.GetField("Delivery Address 2");
+                shipment.DeliveryAddress3 = csv.GetField("Delivery Address 3");
+                shipment.DeliveryCityTown = csv.GetField("Delivery City/Town");
+                shipment.DeliveryCounty = csv.GetField("Delivery County");
+                shipment.DeliveryPostcode = csv.GetField("Delivery Postcode");
+                shipment.DeliveryCountry = _countryService.GetByCode(csv.GetField("Delivery Country Code"));
+                shipment.FC = csv.GetField("FC");
 
                 _repository.Add(shipment);
             }
