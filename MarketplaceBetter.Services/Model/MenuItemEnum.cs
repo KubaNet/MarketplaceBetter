@@ -26,6 +26,8 @@ namespace MarketplaceBetter.Services.Model
 
         InputData = 20,
 
+        SalesSettings = 21,
+
         Inventory = 30,
 
         APlusContent = 31

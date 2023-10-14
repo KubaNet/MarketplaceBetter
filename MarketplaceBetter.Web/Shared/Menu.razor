@@ -46,6 +46,9 @@
 
     </MudNavGroup>
     <MudNavGroup Title="Sales" Icon="@Icons.Material.Filled.MonetizationOn" Expanded="UserService.IsExpanded(MenuItemEnum.Sales)" HideExpandIcon="true" ExpandedChanged="SalesExpandedChanged">
+        <MudNavGroup Title="Settings" Icon="@Icons.Material.Filled.DisplaySettings" Expanded="UserService.IsExpanded(MenuItemEnum.SalesSettings)" HideExpandIcon="true" ExpandedChanged="SalesSettingsExpandedChanged">
+            <MudNavLink Href="/filfillment-centers">Fulfillment Centers</MudNavLink>
+        </MudNavGroup>
         <MudNavGroup Title="Input Data" Icon="@Icons.Material.Filled.TableView" Expanded="UserService.IsExpanded(MenuItemEnum.InputData)" HideExpandIcon="true" ExpandedChanged="InputDataExpandedChanged">
             <MudNavLink Href="/amazon-fulfilled-shipments">Amazon Shipments</MudNavLink>
         </MudNavGroup>
@@ -116,6 +119,11 @@
     private void InputDataExpandedChanged(bool expaned)
     {
         UserService.SetExpanded(MenuItemEnum.InputData, expaned);
+    }
+
+    private void SalesSettingsExpandedChanged(bool expaned)
+    {
+        UserService.SetExpanded(MenuItemEnum.SalesSettings, expaned);
     }
 
     public void Dispose()

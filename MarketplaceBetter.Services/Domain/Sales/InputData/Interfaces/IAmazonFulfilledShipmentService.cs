@@ -1,4 +1,4 @@
-﻿using MarketplaceBetter.Domain.Model.Sales;
+﻿using MarketplaceBetter.Domain.Model.Sales.InputData;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces
 {
-	public interface IAmazonFulfilledShipmentService
+    public interface IAmazonFulfilledShipmentService
 	{
 		int CountForListRequest(ListRequest request);
 

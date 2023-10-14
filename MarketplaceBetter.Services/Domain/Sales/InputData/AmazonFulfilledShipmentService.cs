@@ -2,7 +2,6 @@
 using CsvHelper.Configuration;
 using CsvHelper;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
-using MarketplaceBetter.Domain.Model.Sales;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
@@ -18,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
+using MarketplaceBetter.Domain.Model.Sales.InputData;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData
 {
@@ -219,7 +219,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             }
             else
             {
-                shipments = shipments.OrderBy(s => s.Id);
+                shipments = shipments.OrderByDescending(s => s.Id);
             }
 
             return shipments;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Model.Sales
+namespace MarketplaceBetter.Domain.Model.Sales.InputData
 {
     public class AmazonFulfilledShipmentModel
     {
