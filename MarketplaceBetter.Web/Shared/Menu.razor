@@ -44,16 +44,6 @@
             <MudNavLink Href="/variant-a-plus-modules">Variant Modules</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Campaigns" Icon="@Icons.Material.Filled.SwitchAccessShortcutAdd" Expanded="UserService.IsExpanded(MenuItemEnum.Campaigns)" HideExpandIcon="true" ExpandedChanged="CampaignsExpandedChanged">
-            <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
-            <MudNavLink Href="/portfolios">Portfolios</MudNavLink>
-            <MudNavLink Href="/ad-groups">Ad Groups</MudNavLink>
-            <MudNavLink Href="/product-ads">Product Ads</MudNavLink>
-            <MudNavLink Href="/negative-keywords">Negative Keywords</MudNavLink>
-            <MudNavLink Href="/negative-products">Negative Products</MudNavLink>
-            <MudNavLink Href="/amazontargeting">Targeting</MudNavLink>
-        </MudNavGroup>
-
     </MudNavGroup>
     <MudNavGroup Title="Sales" Icon="@Icons.Material.Filled.MonetizationOn" Expanded="UserService.IsExpanded(MenuItemEnum.Sales)" HideExpandIcon="true" ExpandedChanged="SalesExpandedChanged">
         <MudNavGroup Title="Input Data" Icon="@Icons.Material.Filled.TableView" Expanded="UserService.IsExpanded(MenuItemEnum.InputData)" HideExpandIcon="true" ExpandedChanged="InputDataExpandedChanged">
@@ -116,11 +106,6 @@
     private void APlusContentExpandedChanged(bool expanded)
     {
         UserService.SetExpanded(MenuItemEnum.APlusContent, expanded);
-    }
-
-    private void CampaignsExpandedChanged(bool expaned)
-    {
-        UserService.SetExpanded(MenuItemEnum.Campaigns, expaned);
     }
 
     private void SalesExpandedChanged(bool expaned)

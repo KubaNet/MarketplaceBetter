@@ -28,10 +28,6 @@ namespace MarketplaceBetter.Services.Model
 
         Inventory = 30,
 
-        Campaigns = 31,
-
-        Keywords = 32,
-
-        APlusContent = 33
+        APlusContent = 31
     }
 }

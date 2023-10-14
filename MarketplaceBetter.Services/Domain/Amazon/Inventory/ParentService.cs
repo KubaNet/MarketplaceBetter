@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;

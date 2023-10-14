@@ -1,5 +1,4 @@
 ﻿using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
-using MarketplaceBetter.Domain.Entities.Amazon.Campaigns;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
@@ -94,18 +93,6 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<APlusModuleValue> APlusModuleValue { get; set; }
         public DbSet<APlusContent> APlusContent { get; set; }
         public DbSet<APlusContentVariant> APlusContentVariant { get; set; }
-        // => Campaigns
-        public DbSet<Campaign> Campaign { get; set; }
-        public DbSet<CampaignType> CampaignType { get; set; }
-        public DbSet<CampaignStrategy> CampaignStrategy { get; set; }
-        public DbSet<AdEntityStatus> AdEntityStatus { get; set; }
-        public DbSet<AdGroup> AdGroup { get; set; }
-        public DbSet<ProductAd> ProductAd { get; set; }
-        public DbSet<MatchType> MatchType { get; set; }
-        public DbSet<NegativeKeyword> NegativeKeyword { get; set; }
-        public DbSet<NegativeProduct> NegativeProduct { get; set; }
-        public DbSet<AmazonTargetingStatus> AmazonTargetingStatus { get; set; }
-        public DbSet<AmazonTargeting> AmazonTargeting { get; set; }
 
         // Sales
         // => Input Data
