@@ -132,7 +132,7 @@
     <Build Include="dbo\Tables\Amazon\CopyAndMedia\PhotoUploadVariant.sql" />
     <Build Include="dbo\Tables\Catalog\ColorsAndSizes\StandardSize.sql" />
     <Build Include="dbo\Tables\Base\Currency.sql" />
-    <Build Include="dbo\Tables\Sales\InputData\AmazonFulfilledShipment.sql" />
-    <Build Include="dbo\Tables\Sales\Settings\AmazonFulfillmentCenter.sql" />
+    <Build Include="dbo\Tables\Sales\InputData\FulfilledShipment.sql" />
+    <Build Include="dbo\Tables\Sales\Settings\FulfillmentCenter.sql" />
   </ItemGroup>
 </Project>

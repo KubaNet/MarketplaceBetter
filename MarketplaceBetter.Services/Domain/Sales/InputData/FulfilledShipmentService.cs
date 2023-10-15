@@ -21,15 +21,15 @@ using MarketplaceBetter.Domain.Model.Sales.InputData;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData
 {
-    public class AmazonFulfilledShipmentService : IAmazonFulfilledShipmentService
+    public class FulfilledShipmentService : IFulfilledShipmentService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<AmazonFulfilledShipment> _repository;
+        private readonly IRepository<FulfilledShipment> _repository;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
 
-        public AmazonFulfilledShipmentService(
+        public FulfilledShipmentService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICountryService countryService,
@@ -37,29 +37,29 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _repository = unitOfWork.GetRepository<AmazonFulfilledShipment>();
+            _repository = unitOfWork.GetRepository<FulfilledShipment>();
             _countryService = countryService;
             _currencyService = currencyService;
         }
 
         public int CountForListRequest(ListRequest request)
         {
-            IQueryable<AmazonFulfilledShipment> shipments = _repository.GetQuery();
+            IQueryable<FulfilledShipment> shipments = _repository.GetQuery();
 
             shipments = ApplyFilter(shipments, request);
 
             return shipments.Count();
         }
 
-        public IList<AmazonFulfilledShipmentModel> GetForListRequest(ListRequest request)
+        public IList<FulfilledShipmentModel> GetForListRequest(ListRequest request)
         {
-            IQueryable<AmazonFulfilledShipment> shipments = _repository.GetQuery();
+            IQueryable<FulfilledShipment> shipments = _repository.GetQuery();
 
             shipments = ApplyFilter(shipments, request);
             shipments = ApplySorting(shipments, request);
             shipments = ApplyPaging(shipments, request);
 
-            return _mapper.Map<IList<AmazonFulfilledShipmentModel>>(shipments);
+            return _mapper.Map<IList<FulfilledShipmentModel>>(shipments);
         }
 
         public void AddFromFile(MemoryStream file)
@@ -77,7 +77,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             while (csv.Read())
             {
-                AmazonFulfilledShipment shipment = new AmazonFulfilledShipment();
+                FulfilledShipment shipment = new FulfilledShipment();
 
                 shipment.AmazonOrderId = csv.GetField("Amazon Order Id");
                 shipment.AmazonOrderItemId = csv.GetField("Amazon Order Item ID");
@@ -108,7 +108,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             _unitOfWork.Save();
         }
 
-        private IQueryable<AmazonFulfilledShipment> ApplyFilter(IQueryable<AmazonFulfilledShipment> shipments, ListRequest request)
+        private IQueryable<FulfilledShipment> ApplyFilter(IQueryable<FulfilledShipment> shipments, ListRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
@@ -185,7 +185,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             return shipments;
         }
 
-        private IQueryable<AmazonFulfilledShipment> ApplySorting(IQueryable<AmazonFulfilledShipment> shipments, ListRequest request)
+        private IQueryable<FulfilledShipment> ApplySorting(IQueryable<FulfilledShipment> shipments, ListRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
@@ -225,7 +225,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             return shipments;
         }
 
-        private IQueryable<AmazonFulfilledShipment> ApplyPaging(IQueryable<AmazonFulfilledShipment> shipments, ListRequest request)
+        private IQueryable<FulfilledShipment> ApplyPaging(IQueryable<FulfilledShipment> shipments, ListRequest request)
         {
             return shipments.Skip(request.Page * request.PageSize).Take(request.PageSize);
         }

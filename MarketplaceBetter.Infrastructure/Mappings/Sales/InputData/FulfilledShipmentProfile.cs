@@ -13,7 +13,7 @@ namespace MarketplaceBetter.Infrastructure.Mappings.Sales.InputData
     {
         public AmazonFulfillmentCenterProfile()
         {
-            CreateMap<AmazonFulfilledShipment, AmazonFulfilledShipmentModel>();
+            CreateMap<FulfilledShipment, FulfilledShipmentModel>();
         }
     }
 }

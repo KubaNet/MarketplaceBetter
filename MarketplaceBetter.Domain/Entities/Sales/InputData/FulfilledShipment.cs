@@ -1,16 +1,14 @@
-﻿using MarketplaceBetter.Domain.Model.Base;
+﻿using MarketplaceBetter.Domain.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Domain.Model.Sales.InputData
+namespace MarketplaceBetter.Domain.Entities.Sales.InputData
 {
-    public class AmazonFulfilledShipmentModel
+    public class FulfilledShipment : Entity
     {
-        public long Id { get; set; }
-
         public string AmazonOrderId { get; set; }
 
         public string AmazonOrderItemId { get; set; }
@@ -19,7 +17,9 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
 
         public int DispatchedQuantity { get; set; }
 
-        public CurrencyModel Currency { get; set; }
+        public long CurrencyId { get; set; }
+
+        public virtual Currency Currency { get; set; }
 
         public decimal ItemPrice { get; set; }
 
@@ -51,7 +51,9 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
 
         public string DeliveryPostcode { get; set; }
 
-        public CountryModel DeliveryCountry { get; set; }
+        public long DeliveryCountryId { get; set; }
+
+        public virtual Country DeliveryCountry { get; set; }
 
         public string FC { get; set; }
     }

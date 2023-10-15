@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Base
 {
-    public class AmazonFulfilledShipmentProfile : Profile
+    public class CurrencyProfile : Profile
     {
-        public AmazonFulfilledShipmentProfile()
+        public CurrencyProfile()
         {
             CreateMap<Currency, CurrencyModel>();
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Sales.Settings
 {
-    public class AmazonFulfillmentCenterModel
+    public class FulfillmentCenterModel
     {
         public long Id { get; set; }
 

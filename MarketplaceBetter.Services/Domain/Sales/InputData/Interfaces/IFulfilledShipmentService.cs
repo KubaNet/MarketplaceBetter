@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces
 {
-    public interface IAmazonFulfilledShipmentService
+    public interface IFulfilledShipmentService
 	{
 		int CountForListRequest(ListRequest request);
 
-		IList<AmazonFulfilledShipmentModel> GetForListRequest(ListRequest request);
+		IList<FulfilledShipmentModel> GetForListRequest(ListRequest request);
 
 		void AddFromFile(MemoryStream file);
 	}

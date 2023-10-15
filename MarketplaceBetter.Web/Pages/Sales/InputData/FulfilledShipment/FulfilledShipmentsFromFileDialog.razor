@@ -2,7 +2,7 @@
 @using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
 
 @inject ISnackbar Snackbar
-@inject IAmazonFulfilledShipmentService AmazonFulfilledShipmentService
+@inject IFulfilledShipmentService FulfilledShipmentService
 
 <EditForm Model="FileName" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -60,7 +60,7 @@
             await File.OpenReadStream(maxAllowedSize: 100000000).CopyToAsync(memoryStream);
             memoryStream.Seek(0, SeekOrigin.Begin);
 
-            AmazonFulfilledShipmentService.AddFromFile(memoryStream);
+            FulfilledShipmentService.AddFromFile(memoryStream);
 
             MudDialog.Close();
         }

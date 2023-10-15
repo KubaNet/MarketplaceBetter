@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Entities.Sales.Settings
 {
-    public class AmazonFulfillmentCenter : Entity
+    public class FulfillmentCenter : Entity
     {
         public string Code { get; set; }
 

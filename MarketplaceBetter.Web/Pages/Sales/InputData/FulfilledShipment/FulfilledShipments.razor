@@ -6,41 +6,41 @@
 
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
-@inject IAmazonFulfilledShipmentService AmazonFulfilledShipmentService
+@inject IFulfilledShipmentService FulfilledShipmentService
 
 <MudText Typo="Typo.h4" Class="mt-2">Amazon Fulfilled Shipments</MudText>
 
 <MainBody>
-    <MudTable T="AmazonFulfilledShipmentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AmazonFulfilledShipmentModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="FulfilledShipmentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<FulfilledShipmentModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortLabel="id" T="AmazonFulfilledShipmentModel">Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="AmazonFulfilledShipmentModel">Amazon Order Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="amazon_order_item_id" T="AmazonFulfilledShipmentModel">Amazon Order Item Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="merchant_sku" T="AmazonFulfilledShipmentModel">Merchant Sku</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="dispatched_quantity" T="AmazonFulfilledShipmentModel">Dispatched Quantity</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="currency" T="AmazonFulfilledShipmentModel">Currency</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="item_price" T="AmazonFulfilledShipmentModel">Item Price</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="item_tax" T="AmazonFulfilledShipmentModel">Item Tax</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_price" T="AmazonFulfilledShipmentModel">Delivery Price</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="deliver_tax" T="AmazonFulfilledShipmentModel">Delivery Tax</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="gift_wrap_price" T="AmazonFulfilledShipmentModel">Gift Wrap Price</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="gift_wrapping_tax" T="AmazonFulfilledShipmentModel">Gift Wrapping Tax</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="item_promo_discount" T="AmazonFulfilledShipmentModel">Item Promo Discount</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="shipment_promo_discount" T="AmazonFulfilledShipmentModel">Shipment Promo Discount</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="recipient_name" T="AmazonFulfilledShipmentModel">Recipient Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_address_1" T="AmazonFulfilledShipmentModel">Delivery Address 1</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_address_2" T="AmazonFulfilledShipmentModel">Delivery Address 2</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_address_3" T="AmazonFulfilledShipmentModel">Delivery Address 3</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_city_town" T="AmazonFulfilledShipmentModel">Delivery City Town</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_county" T="AmazonFulfilledShipmentModel">Delivery County</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_postcode" T="AmazonFulfilledShipmentModel">Delivery Postcode</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="delivery_country" T="AmazonFulfilledShipmentModel">Delivery Country</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="fc" T="AmazonFulfilledShipmentModel">FC</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="id" T="FulfilledShipmentModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="FulfilledShipmentModel">Amazon Order Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazon_order_item_id" T="FulfilledShipmentModel">Amazon Order Item Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="merchant_sku" T="FulfilledShipmentModel">Merchant Sku</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="dispatched_quantity" T="FulfilledShipmentModel">Dispatched Quantity</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="currency" T="FulfilledShipmentModel">Currency</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="item_price" T="FulfilledShipmentModel">Item Price</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="item_tax" T="FulfilledShipmentModel">Item Tax</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_price" T="FulfilledShipmentModel">Delivery Price</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="deliver_tax" T="FulfilledShipmentModel">Delivery Tax</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="gift_wrap_price" T="FulfilledShipmentModel">Gift Wrap Price</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="gift_wrapping_tax" T="FulfilledShipmentModel">Gift Wrapping Tax</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="item_promo_discount" T="FulfilledShipmentModel">Item Promo Discount</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="shipment_promo_discount" T="FulfilledShipmentModel">Shipment Promo Discount</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="recipient_name" T="FulfilledShipmentModel">Recipient Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_address_1" T="FulfilledShipmentModel">Delivery Address 1</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_address_2" T="FulfilledShipmentModel">Delivery Address 2</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_address_3" T="FulfilledShipmentModel">Delivery Address 3</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_city_town" T="FulfilledShipmentModel">Delivery City Town</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_county" T="FulfilledShipmentModel">Delivery County</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_postcode" T="FulfilledShipmentModel">Delivery Postcode</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="delivery_country" T="FulfilledShipmentModel">Delivery Country</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="fc" T="FulfilledShipmentModel">FC</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -76,7 +76,7 @@
 @code {
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
 
-    private MudTable<AmazonFulfilledShipmentModel> Table;
+    private MudTable<FulfilledShipmentModel> Table;
     private ListRequest ListRequest = new();
 
     private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
@@ -96,13 +96,13 @@
         }
     }
 
-    private Task<TableData<AmazonFulfilledShipmentModel>> Reload(TableState state)
+    private Task<TableData<FulfilledShipmentModel>> Reload(TableState state)
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<AmazonFulfilledShipmentModel> shipments = AmazonFulfilledShipmentService.GetForListRequest(ListRequest);
+        IList<FulfilledShipmentModel> shipments = FulfilledShipmentService.GetForListRequest(ListRequest);
 
-        return Task.FromResult(new TableData<AmazonFulfilledShipmentModel>() { TotalItems = AmazonFulfilledShipmentService.CountForListRequest(ListRequest), Items = shipments });
+        return Task.FromResult(new TableData<FulfilledShipmentModel>() { TotalItems = FulfilledShipmentService.CountForListRequest(ListRequest), Items = shipments });
     }
 
     private void OnRowsPerPageChanged(int rowsPerPage)
@@ -124,7 +124,7 @@
 
     private async void AddFromFile()
     {
-        DialogResult result = await DialogService.Show<AmazonFulfilledShipmentsFromFileDialog>().Result;
+        DialogResult result = await DialogService.Show<FulfilledShipmentsFromFileDialog>().Result;
 
         ProcessDialogResult(result);
     }

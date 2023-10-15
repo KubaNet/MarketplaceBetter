@@ -96,7 +96,7 @@ namespace MarketplaceBetter.Infrastructure.Data
 
         // Sales
         // => Input Data
-        public DbSet<AmazonFulfilledShipment> AmazonFulfilledShipment { get; set; }
+        public DbSet<FulfilledShipment> FulfilledShipment { get; set; }
 
         //public override int SaveChanges()
         //{

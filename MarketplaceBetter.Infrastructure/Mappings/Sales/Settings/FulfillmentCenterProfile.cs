@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Sales.Settings
 {
-    public class AmazonFulfillmentCenterProfile : Profile
+    public class FulfillmentCenterProfile : Profile
     {
-        public AmazonFulfillmentCenterProfile()
+        public FulfillmentCenterProfile()
         {
-            CreateMap<AmazonFulfillmentCenter, AmazonFulfillmentCenterModel>();
+            CreateMap<FulfillmentCenter, FulfillmentCenterModel>();
         }
     }
 }
