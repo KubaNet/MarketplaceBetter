@@ -1,0 +1,88 @@
+﻿@using MarketplaceBetter.Domain.Model.Base;
+@using MarketplaceBetter.Domain.Model.Sales.Settings;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
+@using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
+@using MarketplaceBetter.Services.Validation.Sales.Settings.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IVatRuleService VatRuleService
+@inject IVatRuleValidator VatRuleValidator
+@inject ICountryService CountryService
+
+<EditForm Model="VatRule" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudSelect Label="Country From" T="CountryModel" @bind-Value="VatRule.CountryFrom" For="() => VatRule.CountryFrom">
+            @foreach (var country in Countries)
+            {
+                <MudSelectItem Value="country">@country.Name (@country.Code)</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect Label="Country To" T="CountryModel" @bind-Value="VatRule.CountryTo" For="() => VatRule.CountryTo">
+            @foreach (var country in Countries)
+            {
+                <MudSelectItem Value="country">@country.Name (@country.Code)</MudSelectItem>
+            }
+        </MudSelect>
+        <MudNumericField Label="Vat Value" T="int" @bind-Value="VatRule.VatValue" Variant="Variant.Text" Min="1" Max="30" HideSpinButtons="true" />
+        <MudTextField Label="Vat Number" @bind-Value="VatRule.VatNumber" For="() => VatRule.VatNumber" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long VatRuleId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private VatRuleModel VatRule = new();
+
+    private IList<CountryModel> Countries;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Countries = CountryService.GetAll();
+
+        if (IsEdit)
+        {
+            SetInitialValues();
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        VatRule = VatRuleService.Get(VatRuleId);
+        VatRule.CountryFrom = Countries.Single(b => b.Id == VatRule.CountryFrom.Id);
+        VatRule.CountryTo = Countries.Single(b => b.Id == VatRule.CountryTo.Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = VatRuleValidator.Validate(VatRule);
+
+        if (result.IsValid)
+        {
+            if (IsEdit)
+            {
+                VatRuleService.Update(VatRule);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Vat Rule"));
+            }
+            else
+            {
+                VatRuleService.Add(VatRule);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Vat Rule"));
+            }
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}

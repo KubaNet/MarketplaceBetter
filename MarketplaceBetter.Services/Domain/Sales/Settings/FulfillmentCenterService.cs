@@ -16,13 +16,13 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Sales.Settings
 {
-    public class SettingsService : IFulfillmentCenterService
+    public class FulfillmentCenterService : IFulfillmentCenterService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<FulfillmentCenter> _repository;
 
-        public SettingsService(
+        public FulfillmentCenterService(
             IMapper mapper,
             IUnitOfWork unitOfWork)
         {

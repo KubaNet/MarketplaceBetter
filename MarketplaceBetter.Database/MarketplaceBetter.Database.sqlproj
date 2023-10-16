@@ -134,5 +134,6 @@
     <Build Include="dbo\Tables\Base\Currency.sql" />
     <Build Include="dbo\Tables\Sales\InputData\FulfilledShipment.sql" />
     <Build Include="dbo\Tables\Sales\Settings\FulfillmentCenter.sql" />
+    <Build Include="dbo\Tables\Sales\Settings\VatRule.sql" />
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@
         <MudSelect Label="Country" T="CountryModel" @bind-Value="FulfillmentCenter.Country" For="() => FulfillmentCenter.Country">
             @foreach (var country in Countries)
             {
-                <MudSelectItem Value="country">@country.Name</MudSelectItem>
+                <MudSelectItem Value="country">@country.Name (@country.Code)</MudSelectItem>
             }
         </MudSelect>
     </FormDialog>

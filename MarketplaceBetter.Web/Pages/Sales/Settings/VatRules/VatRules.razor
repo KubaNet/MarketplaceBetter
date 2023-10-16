@@ -2,31 +2,35 @@
 @using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 @using MarketplaceBetter.Services.Model
 
-@page "/fulfillment-centers"
+@page "/vat-rules"
 
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
-@inject IFulfillmentCenterService FulfillmentCenterService
+@inject IVatRuleService VatRuleService
 
-<MudText Typo="Typo.h4" Class="mt-2">Fulfillment Centers</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Vat Rules</MudText>
 
 <MainBody>
-	<MudTable T="FulfillmentCenterModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<FulfillmentCenterModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+	<MudTable T="VatRuleModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VatRuleModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Fulfillment Center</MudButton>
+			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Vat Rule</MudButton>
 		</ToolBarContent>
 		<HeaderContent>
-			<MudTh><MudTableSortLabel SortLabel="id" T="FulfillmentCenterModel">Id</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="code" T="FulfillmentCenterModel">Code</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="country" T="FulfillmentCenterModel">Country</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="id" T="VatRuleModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="country_from" T="VatRuleModel">Country From</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="country_to" T="VatRuleModel">Country To</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="vat_value" T="VatRuleModel">Vat Value</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="vat_number" T="VatRuleModel">Vat Number</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 100px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
-			<MudTd DataLabel="Code">@context.Code</MudTd>
-			<MudTd DataLabel="Country">@context.Country.Name (@context.Country.Code)</MudTd>
+			<MudTd DataLabel="Country From">@context.CountryFrom.Name (@context.CountryFrom.Code)</MudTd>
+			<MudTd DataLabel="Country To">@context.CountryTo.Name (@context.CountryTo.Code)</MudTd>
+			<MudTd DataLabel="Vat Value">@context.VatValue %</MudTd>
+			<MudTd DataLabel="Vat Number">@context.VatNumber</MudTd>
 			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
 		</RowTemplate>
 		<PagerContent>
@@ -38,7 +42,7 @@
 @code {
 	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
 
-	private MudTable<FulfillmentCenterModel> Table;
+	private MudTable<VatRuleModel> Table;
 	private ListRequest ListRequest = new();
 
 	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
@@ -58,13 +62,13 @@
 		}
 	}
 
-	private Task<TableData<FulfillmentCenterModel>> Reload(TableState state)
+	private Task<TableData<VatRuleModel>> Reload(TableState state)
 	{
 		state.PopulateListRequest(ListRequest);
 
-		IList<FulfillmentCenterModel> centers = FulfillmentCenterService.GetForListRequest(ListRequest);
+		IList<VatRuleModel> centers = VatRuleService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<FulfillmentCenterModel>() { TotalItems = FulfillmentCenterService.CountForListRequest(ListRequest), Items = centers });
+		return Task.FromResult(new TableData<VatRuleModel>() { TotalItems = VatRuleService.CountForListRequest(ListRequest), Items = centers });
 	}
 
 	private void OnRowsPerPageChanged(int rowsPerPage)
@@ -86,14 +90,14 @@
 
 	private async void Add()
 	{
-		DialogResult result = await DialogService.Show<FulfillmentCenterDialog>(null, new DialogParameters { ["Title"] = "Add Fulfillment Center" }).Result;
+		DialogResult result = await DialogService.Show<VatRuleDialog>(null, new DialogParameters { ["Title"] = "Add Vat Rule" }).Result;
 
 		ProcessDialogResult(result);
 	}
 
 	private async void Edit(long id)
 	{
-		DialogResult result = await DialogService.Show<FulfillmentCenterDialog>(null, new DialogParameters { ["Title"] = "Edit Fulfillment Center", ["IsEdit"] = true, ["FulfillmentCenterId"] = id }).Result;
+		DialogResult result = await DialogService.Show<VatRuleDialog>(null, new DialogParameters { ["Title"] = "Edit Vat Rule", ["IsEdit"] = true, ["VatRuleId"] = id }).Result;
 
 		ProcessDialogResult(result);
 	}
