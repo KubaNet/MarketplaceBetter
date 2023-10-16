@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Model.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
     public interface ICountryService
     {
         Country GetByCode(string code);
+
+        IList<CountryModel> GetAll();
     }
 }

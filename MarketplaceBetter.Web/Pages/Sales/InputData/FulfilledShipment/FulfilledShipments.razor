@@ -2,13 +2,13 @@
 @using MarketplaceBetter.Domain.Model.Sales.InputData;
 @using MarketplaceBetter.Services.Model;
 
-@page "/amazon-fulfilled-shipments"
+@page "/fulfilled-shipments"
 
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
 @inject IFulfilledShipmentService FulfilledShipmentService
 
-<MudText Typo="Typo.h4" Class="mt-2">Amazon Fulfilled Shipments</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Fulfilled Shipments</MudText>
 
 <MainBody>
     <MudTable T="FulfilledShipmentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<FulfilledShipmentModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">

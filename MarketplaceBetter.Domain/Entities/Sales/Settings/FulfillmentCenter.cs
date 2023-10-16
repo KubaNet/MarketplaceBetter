@@ -13,6 +13,6 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Settings
 
         public long CountryId { get; set; }
 
-        public Country Country { get; set; }
+        public virtual Country Country { get; set; }
     }
 }

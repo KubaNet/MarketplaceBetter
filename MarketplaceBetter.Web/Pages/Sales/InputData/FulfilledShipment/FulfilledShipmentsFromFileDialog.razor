@@ -6,7 +6,7 @@
 
 <EditForm Model="FileName" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <FormDialog Title="Add Amazon Fulfilled Shipments">
+    <FormDialog Title="Add Fulfilled Shipments">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <InputFile id="FileInput" OnChange="UploadFile" hidden />

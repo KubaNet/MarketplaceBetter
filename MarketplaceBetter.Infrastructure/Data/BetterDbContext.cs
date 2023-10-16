@@ -6,6 +6,7 @@ using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
+using MarketplaceBetter.Domain.Entities.Sales.Settings;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarketplaceBetter.Infrastructure.Data
@@ -94,9 +95,11 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<APlusContent> APlusContent { get; set; }
         public DbSet<APlusContentVariant> APlusContentVariant { get; set; }
 
-        // Sales
-        // => Input Data
-        public DbSet<FulfilledShipment> FulfilledShipment { get; set; }
+		// Sales
+		// => Settings
+		public DbSet<FulfillmentCenter> FulfillmentCenter { get; set; }
+		// => Input Data
+		public DbSet<FulfilledShipment> FulfilledShipment { get; set; }
 
         //public override int SaveChanges()
         //{
