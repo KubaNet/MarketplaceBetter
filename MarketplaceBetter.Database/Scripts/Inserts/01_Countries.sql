@@ -72,210 +72,210 @@ GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 13)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('CzechRepublic', 13, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'CzechRepublic', [Code] = 'IE' WHERE [SystemName] = 13
+    VALUES ('CzechRepublic', 13, 'CZ')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'CzechRepublic', [Code] = 'CZ' WHERE [SystemName] = 13
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 14)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Belgium', 14, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Belgium', [Code] = 'IE' WHERE [SystemName] = 14
+    VALUES ('Belgium', 14, 'BE')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Belgium', [Code] = 'BE' WHERE [SystemName] = 14
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 15)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Bulgaria', 15, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Bulgaria', [Code] = 'IE' WHERE [SystemName] = 15
+    VALUES ('Bulgaria', 15, 'BG')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Bulgaria', [Code] = 'BG' WHERE [SystemName] = 15
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 16)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Croatia', 16, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Croatia', [Code] = 'IE' WHERE [SystemName] = 16
+    VALUES ('Croatia', 16, 'HR')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Croatia', [Code] = 'HR' WHERE [SystemName] = 16
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 17)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Cyprus', 12, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Cyprus', [Code] = 'IE' WHERE [SystemName] = 12
+    VALUES ('Cyprus', 17, 'CY')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Cyprus', [Code] = 'CY' WHERE [SystemName] = 17
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 18)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Denmark', 18, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Denmark', [Code] = 'IE' WHERE [SystemName] = 18
+    VALUES ('Denmark', 18, 'DK')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Denmark', [Code] = 'DK' WHERE [SystemName] = 18
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 19)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Estonia', 19, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Estonia', [Code] = 'IE' WHERE [SystemName] = 19
+    VALUES ('Estonia', 19, 'EE')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Estonia', [Code] = 'EE' WHERE [SystemName] = 19
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 20)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Finland', 20, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Finland', [Code] = 'IE' WHERE [SystemName] = 20
+    VALUES ('Finland', 20, 'FI')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Finland', [Code] = 'FI' WHERE [SystemName] = 20
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 21)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Greece', 21, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Greece', [Code] = 'IE' WHERE [SystemName] = 21
+    VALUES ('Greece', 21, 'GR')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Greece', [Code] = 'GR' WHERE [SystemName] = 21
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 22)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Lithuania', 22, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Lithuania', [Code] = 'IE' WHERE [SystemName] = 22
+    VALUES ('Lithuania', 22, 'LT')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Lithuania', [Code] = 'LT' WHERE [SystemName] = 22
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 23)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Luxembourg', 23, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Luxembourg', [Code] = 'IE' WHERE [SystemName] = 23
+    VALUES ('Luxembourg', 23, 'LU')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Luxembourg', [Code] = 'LU' WHERE [SystemName] = 23
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 24)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Latvia', 24, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Latvia', [Code] = 'IE' WHERE [SystemName] = 24
+    VALUES ('Latvia', 24, 'LV')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Latvia', [Code] = 'LV' WHERE [SystemName] = 24
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 25)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Malta', 25, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Malta', [Code] = 'IE' WHERE [SystemName] = 25
+    VALUES ('Malta', 25, 'MT')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Malta', [Code] = 'MT' WHERE [SystemName] = 25
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 26)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Portugal', 26, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Portugal', [Code] = 'IE' WHERE [SystemName] = 26
+    VALUES ('Portugal', 26, 'PT')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Portugal', [Code] = 'PT' WHERE [SystemName] = 26
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 27)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Romania', 27, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Romania', [Code] = 'IE' WHERE [SystemName] = 27
+    VALUES ('Romania', 27, 'RO')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Romania', [Code] = 'RO' WHERE [SystemName] = 27
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 28)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Slovakia', 28, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Slovakia', [Code] = 'IE' WHERE [SystemName] = 28
+    VALUES ('Slovakia', 28, 'SK')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Slovakia', [Code] = 'SK' WHERE [SystemName] = 28
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 29)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Slovenia', 29, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Slovenia', [Code] = 'IE' WHERE [SystemName] = 29
+    VALUES ('Slovenia', 29, 'SI')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Slovenia', [Code] = 'SI' WHERE [SystemName] = 29
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 30)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Hungary', 30, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Hungary', [Code] = 'IE' WHERE [SystemName] = 30
+    VALUES ('Hungary', 30, 'HU')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Hungary', [Code] = 'HU' WHERE [SystemName] = 30
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 31)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Monaco', 31, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Monaco', [Code] = 'IE' WHERE [SystemName] = 31
+    VALUES ('Monaco', 31, 'MC')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Monaco', [Code] = 'MC' WHERE [SystemName] = 31
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 32)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Jersey', 32, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Jersey', [Code] = 'IE' WHERE [SystemName] = 32
+    VALUES ('Jersey', 32, 'JE')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Jersey', [Code] = 'JE' WHERE [SystemName] = 32
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 33)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Guernsey', 33, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Guernsey', [Code] = 'IE' WHERE [SystemName] = 33
+    VALUES ('Guernsey', 33, 'GG')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Guernsey', [Code] = 'GG' WHERE [SystemName] = 33
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 34)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Norway', 34, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Norway', [Code] = 'IE' WHERE [SystemName] = 34
+    VALUES ('Norway', 34, 'NO')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Norway', [Code] = 'NO' WHERE [SystemName] = 34
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 35)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Israel', 35, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Israel', [Code] = 'IE' WHERE [SystemName] = 35
+    VALUES ('Israel', 35, 'IL')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Israel', [Code] = 'IL' WHERE [SystemName] = 35
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 36)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Qatar', 36, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Qatar', [Code] = 'IE' WHERE [SystemName] = 36
+    VALUES ('Qatar', 36, 'QA')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Qatar', [Code] = 'QA' WHERE [SystemName] = 36
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 37)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Switzerland', 37, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Switzerland', [Code] = 'IE' WHERE [SystemName] = 37
+    VALUES ('Switzerland', 37, 'CH')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Switzerland', [Code] = 'CH' WHERE [SystemName] = 37
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 38)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Kuwait', 38, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Kuwait', [Code] = 'IE' WHERE [SystemName] = 38
+    VALUES ('Kuwait', 38, 'KW')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Kuwait', [Code] = 'KW' WHERE [SystemName] = 38
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 39)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Japan', 39, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Japan', [Code] = 'IE' WHERE [SystemName] = 39
+    VALUES ('Japan', 39, 'JP')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Japan', [Code] = 'JP' WHERE [SystemName] = 39
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 40)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Mexico', 40, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Mexico', [Code] = 'IE' WHERE [SystemName] = 40
+    VALUES ('Mexico', 40, 'MX')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Mexico', [Code] = 'MX' WHERE [SystemName] = 40
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 41)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('China', 12, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'China', [Code] = 'IE' WHERE [SystemName] = 12
+    VALUES ('China', 41, 'CN')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'China', [Code] = 'CN' WHERE [SystemName] = 41
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 42)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Chile', 42, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Chile', [Code] = 'IE' WHERE [SystemName] = 42
+    VALUES ('Chile', 42, 'CL')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Chile', [Code] = 'CL' WHERE [SystemName] = 42
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 43)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Taiwan', 43, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Taiwan', [Code] = 'IE' WHERE [SystemName] = 43
+    VALUES ('Taiwan', 43, 'TW')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Taiwan', [Code] = 'TW' WHERE [SystemName] = 43
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 44)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Egypt', 44, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Egypt', [Code] = 'IE' WHERE [SystemName] = 44
+    VALUES ('Egypt', 44, 'EG')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Egypt', [Code] = 'EG' WHERE [SystemName] = 44
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 45)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('HongKong', 45, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'HongKong', [Code] = 'IE' WHERE [SystemName] = 45
+    VALUES ('HongKong', 45, 'HK')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'HongKong', [Code] = 'HK' WHERE [SystemName] = 45
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 46)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Iceland', 46, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Iceland', [Code] = 'IE' WHERE [SystemName] = 46
+    VALUES ('Iceland', 46, 'IS')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Iceland', [Code] = 'IS' WHERE [SystemName] = 46
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 47)
     INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
-    VALUES ('Bahrain', 47, 'IE')
-ELSE UPDATE [dbo].[Country] SET [Name] = 'Bahrain', [Code] = 'IE' WHERE [SystemName] = 47
+    VALUES ('Bahrain', 47, 'BH')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Bahrain', [Code] = 'BH' WHERE [SystemName] = 47
 GO
