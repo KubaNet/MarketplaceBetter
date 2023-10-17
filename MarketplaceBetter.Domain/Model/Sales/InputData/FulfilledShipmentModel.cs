@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
 
         public string AmazonOrderId { get; set; }
 
+        public string ShipmentItemId { get; set; }
+
         public string AmazonOrderItemId { get; set; }
 
         public string MerchantSku { get; set; }

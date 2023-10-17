@@ -30,6 +30,78 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         Poland = 10,
 
-        Austria = 11
+        Austria = 11,
+
+        Ireland = 12,
+
+        CzechRepublic = 13,
+
+        Belgium = 14,
+
+        Bulgaria = 15,
+
+        Croatia = 16,
+
+        Cyprus = 17,
+
+        Denmark = 18,
+
+        Estonia = 19,
+
+        Finland = 20,
+
+        Greece = 21,
+
+        Lithuania = 22,
+
+        Luxembourg = 23,
+
+        Latvia = 24,
+
+        Malta = 25,
+
+        Portugal = 26,
+
+        Romania = 27,
+
+        Slovakia = 28,
+
+        Slovenia = 29,
+
+        Hungary = 30,
+
+        Monaco = 31,
+
+        Jersey = 32,
+
+        Guernsey = 33,
+
+        Norway = 34,
+
+        Israel = 35,
+
+        Qatar = 36,
+
+        Switzerland = 37,
+
+        Kuwait = 38,
+
+        Japan = 39,
+
+        Mexico = 40,
+
+        China = 41,
+
+        Chile = 42,
+
+        Taiwan = 43,
+
+        Egypt = 44,
+
+        HongKong = 45,
+
+        Iceland = 46,
+
+        Bahrain = 47
     }
 }
