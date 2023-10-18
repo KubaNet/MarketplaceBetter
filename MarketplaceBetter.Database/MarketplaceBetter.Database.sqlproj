@@ -73,6 +73,7 @@
     <Folder Include="dbo\Tables\Amazon\CopyAndMedia" />
     <Folder Include="dbo\Tables\Sales\InputData" />
     <Folder Include="dbo\Tables\Sales\Settings" />
+    <Folder Include="dbo\Tables\Sales\Invoicing" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Inserts\02_Instances.sql" />
@@ -135,5 +136,7 @@
     <Build Include="dbo\Tables\Sales\InputData\FulfilledShipment.sql" />
     <Build Include="dbo\Tables\Sales\Settings\FulfillmentCenter.sql" />
     <Build Include="dbo\Tables\Sales\Settings\VatRule.sql" />
+    <Build Include="dbo\Tables\Sales\Invoicing\Invoice.sql" />
+    <Build Include="dbo\Tables\Sales\Invoicing\InvoiceEntry.sql" />
   </ItemGroup>
 </Project>

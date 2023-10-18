@@ -6,6 +6,7 @@ using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
+using MarketplaceBetter.Domain.Entities.Sales.Invoicing;
 using MarketplaceBetter.Domain.Entities.Sales.Settings;
 using Microsoft.EntityFrameworkCore;
 
@@ -101,6 +102,9 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<VatRule> VatRule {  get; set; }
 		// => Input Data
 		public DbSet<FulfilledShipment> FulfilledShipment { get; set; }
+        // => Invoicing
+        public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<InvoiceEntry> InvoiceEntry { get; set; }
 
         //public override int SaveChanges()
         //{
