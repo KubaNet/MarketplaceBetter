@@ -6,6 +6,7 @@
 	[AmazonOrderItemId]		NVARCHAR (255)				NOT NULL,
 	[PaymentsDate]			DATETIME2					NOT NULL,
 	[MerchantSku]			NVARCHAR (255)				NOT NULL,
+	[Title]					NVARCHAR (255)				NOT NULL,
 	[DispatchedQuantity]	INT							NOT NULL,
 	[CurrencyId]			BIGINT						NOT NULL,
 	[ItemPrice]				DECIMAL	(19,2)				NOT NULL,

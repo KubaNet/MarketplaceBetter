@@ -13,6 +13,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
     {
         ChildModel Get(long id);
 
+        ChildModel GetBySku(string sku);
+
         IList<ChildModel> GetAll();
 
         IList<ChildModel> GetAllForBrand(long brandId, long instanceId);

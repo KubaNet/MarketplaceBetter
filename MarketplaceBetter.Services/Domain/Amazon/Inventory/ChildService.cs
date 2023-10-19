@@ -52,6 +52,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         public ChildModel Get(long id) => _mapper.Map<ChildModel>(_repository.Get(id));
 
+        public ChildModel GetBySku(string sku) => _mapper.Map<ChildModel>(_repository.SingleOrDefault(c => c.Sku.Equals(sku)));
+
         public IList<ChildModel> GetAll() => _mapper.Map<IList<ChildModel>>(_repository.GetQuery().OrderBy(c => c.Sku));
 
         public IList<ChildModel> GetAllForBrand(long brandId, long instanceId) => _mapper.Map<IList<ChildModel>>(

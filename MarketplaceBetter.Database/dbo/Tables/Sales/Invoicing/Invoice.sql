@@ -13,10 +13,10 @@
 	[BuyerState]			NVARCHAR (255)				NOT NULL,
 	[BuyerCountry]			NVARCHAR (255)				NOT NULL,
 	[VatRuleId]				BIGINT						NOT NULL,
-	[ShippingGrossPrice]	NVARCHAR (255)				NOT NULL,
+	[ShippingGrossPrice]	DECIMAL(19,2)				NOT NULL,
 	[IsIssued]				BIT							NOT NULL,
-	[ApiNumber]				NVARCHAR (255)				NOT NULL,
-	[ApiError]				NVARCHAR (255)				NOT NULL,
+	[ApiNumber]				NVARCHAR (255)				NULL,
+	[ApiError]				NVARCHAR (255)				NULL,
 	CONSTRAINT				[PK_Invoice]				PRIMARY KEY ([Id]),
 	CONSTRAINT				[FK_Invoice_VatRule]		FOREIGN KEY ([VatRuleId])	REFERENCES [dbo].[VatRule] ([Id]),
 );

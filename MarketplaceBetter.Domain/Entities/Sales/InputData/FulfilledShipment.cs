@@ -19,6 +19,8 @@ namespace MarketplaceBetter.Domain.Entities.Sales.InputData
 
         public string MerchantSku { get; set; }
 
+        public string Title { get; set; }
+
         public int DispatchedQuantity { get; set; }
 
         public long CurrencyId { get; set; }

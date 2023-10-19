@@ -21,6 +21,8 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
 
         public string MerchantSku { get; set; }
 
+        public string Title { get; set; }
+
         public int DispatchedQuantity { get; set; }
 
         public CurrencyModel Currency { get; set; }

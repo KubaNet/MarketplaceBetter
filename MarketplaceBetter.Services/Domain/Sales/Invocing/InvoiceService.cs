@@ -2,12 +2,14 @@
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
 using MarketplaceBetter.Domain.Entities.Sales.Invoicing;
 using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Sales.InputData;
 using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 using MarketplaceBetter.Domain.Model.Sales.Settings;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
+using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 using MarketplaceBetter.Services.Helpers;
@@ -29,12 +31,14 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
         private readonly IRepository<FulfilledShipment> _fulfilledShipmentRepository;
         private readonly IFulfillmentCenterService _fulfillmentCenterService;
         private readonly IVatRuleService _vatRuleService;
+        private readonly IVariantService _variantService;
 
         public InvoiceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IFulfillmentCenterService fulfillmentCenterService,
-            IVatRuleService vatRuleService)
+            IVatRuleService vatRuleService,
+            IVariantService variantService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -42,6 +46,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             _fulfilledShipmentRepository = unitOfWork.GetRepository<FulfilledShipment>();
             _fulfillmentCenterService = fulfillmentCenterService;
             _vatRuleService = vatRuleService;
+            _variantService = variantService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -88,10 +93,31 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                     continue;
                 }
 
+                IList<string> invalidVariants = new List<string>();
+                foreach (var shipment in groupedShipment.Value)
+                {
+                    VariantModel variant = _variantService.GetBySku(shipment.MerchantSku);
+
+                    if (variant == null)
+                    {
+                        invalidVariants.Add(shipment.MerchantSku);
+                    }
+                }
+
+                if (invalidVariants.Any())
+                {
+                    foreach (var shipment in groupedShipment.Value)
+                    {
+                        LogErrorFor(shipment, $"Unrecognized SKU: {string.Join(", ", invalidVariants)}");
+                    }
+                    continue;
+                }
+
                 Invoice invoice = new Invoice();
 
                 invoice.OrderId = firstShipment.AmazonOrderId;
                 invoice.PaymentDate = firstShipment.PaymentsDate;
+                invoice.Buyer = $"{firstShipment.RecipientName}\r\n{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}\r\n{firstShipment.DeliveryPostcode} {firstShipment.DeliveryCityTown} {firstShipment.DeliveryCounty}\r\n{firstShipment.DeliveryCountry.Name}";
                 invoice.BuyerFirstName = GetFirstName(firstShipment.RecipientName);
                 invoice.BuyerLastName = GetLastName(firstShipment.RecipientName);
                 invoice.BuyerStreet = $"{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}";
@@ -105,6 +131,27 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                     invoice.ShippingGrossPrice -= groupedShipment.Value.Sum(s => s.DeliveryTax);
                 }
                 invoice.VatRuleId = vatRule.Id;
+
+                invoice.Entries = new List<InvoiceEntry>();
+
+                foreach (var shipment in groupedShipment.Value)
+                {
+                    InvoiceEntry entry = new InvoiceEntry();
+
+                    entry.OrderItemId = shipment.AmazonOrderItemId;
+                    entry.ShipmentItemId = shipment.ShipmentItemId;
+                    entry.CurrencyId = shipment.Currency.Id;
+                    entry.ProductName = shipment.Title;
+                    entry.GrossPrice = shipment.ItemPrice + shipment.ItemTax + shipment.GiftWrapPrice + shipment.GiftWrappingTax + shipment.ItemPromoDiscount;
+                    entry.Quantity = shipment.DispatchedQuantity;
+                    entry.Sku = shipment.MerchantSku;
+                    entry.VariantId = _variantService.GetBySku(shipment.MerchantSku).Id;
+
+                    invoice.Entries.Add(entry);
+                }
+
+                _repository.Add(invoice);
+                _unitOfWork.Save();
             }
         }
 

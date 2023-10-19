@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -53,6 +55,22 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         }
 
         public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
+
+        public VariantModel GetBySku(string sku)
+        {
+            ChildModel child = _childService.GetBySku(sku);
+            if (child == null)
+            {
+                child = _childService.GetBySku($"f{sku}");
+            }
+
+            if (child == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<VariantModel>(child.Variant);
+        }
 
         public IList<VariantModel> GetAll()
         {

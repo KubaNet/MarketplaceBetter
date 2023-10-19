@@ -96,6 +96,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 shipment.AmazonOrderItemId = csv.GetField("Amazon Order Item ID");
                 shipment.PaymentsDate = csv.GetField<DateTime>("Payments Date");
                 shipment.MerchantSku = csv.GetField("Merchant SKU");
+                shipment.Title = csv.GetField("Title");
                 shipment.DispatchedQuantity = csv.GetField<int>("Dispatched Quantity");
                 shipment.Currency = _currencyService.GetByName(csv.GetField("Currency"));
                 shipment.ItemPrice = csv.GetField<decimal>("Item Price");
@@ -136,9 +137,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "amazon_order_id", "shipment_item_id", "amazon_order_item_id", "merchant_sku", "dispatched_quantity", "currency", "item_price", "item_tax",
-                    "delivery_price", "delivery_tax", "gif_wrap_price", "gift_wrapping_tax", "item_promo_discount", "shipment_promo_discount", "recipient_name", "delivery_address_1",
-                    "delivery_address_2", "delivery_address_3", "delivery_city_town", "delivery_county", "delivery_postcode", "delivery_country", "fc" };
+                string[] searchFieldNames = new[] { "id", "amazon_order_id", "shipment_item_id", "amazon_order_item_id", "merchant_sku", "title", "dispatched_quantity", "currency", 
+                    "item_price", "item_tax", "delivery_price", "delivery_tax", "gif_wrap_price", "gift_wrapping_tax", "item_promo_discount", "shipment_promo_discount", 
+                    "recipient_name", "delivery_address_1", "delivery_address_2", "delivery_address_3", "delivery_city_town", "delivery_county", "delivery_postcode", "delivery_country", "fc" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -150,6 +151,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                         "shipment_item_id" => shipments.Where(s => s.ShipmentItemId.Contains(searchField.Value)),
                         "amazon_order_item_id" => shipments.Where(s => s.AmazonOrderItemId.Contains(searchField.Value)),
                         "merchant_sku" => shipments.Where(s => s.MerchantSku.Contains(searchField.Value)),
+                        "title" => shipments.Where(s => s.Title.Contains(searchField.Value)),
                         "dispatched_quantity" => shipments.Where(s => s.DispatchedQuantity == searchField.Value.ParseToIntOrDefault()),
                         "currency" => shipments.Where(s => s.Currency.Name.Contains(searchField.Value)),
                         "item_price" => shipments.Where(s => s.ItemPrice == searchField.Value.ParseToDecimalOrDefault()),
@@ -179,6 +181,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                         || s.ShipmentItemId.Contains(searchString)
                         || s.AmazonOrderItemId.Contains(searchString)
                         || s.MerchantSku.Contains(searchString)
+                        || s.Title.Contains(searchString)
                         || s.DispatchedQuantity == searchString.ParseToIntOrDefault()
                         || s.Currency.Name.Contains(searchString)
                         || s.ItemPrice == searchString.ParseToDecimalOrDefault()
@@ -216,6 +219,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                     "amazon_order_item_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.AmazonOrderItemId) : shipments.OrderByDescending(s => s.AmazonOrderItemId),
                     "payments_date" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.PaymentsDate) : shipments.OrderByDescending(s => s.PaymentsDate),
                     "merchant_sku" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.MerchantSku) : shipments.OrderByDescending(s => s.MerchantSku),
+                    "title" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Title) : shipments.OrderByDescending(s => s.Title),
                     "dispatched_quantity" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.DispatchedQuantity) : shipments.OrderByDescending(s => s.DispatchedQuantity),
                     "currency" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Currency.Name) : shipments.OrderByDescending(s => s.Currency.Name),
                     "item_price" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.ItemPrice) : shipments.OrderByDescending(s => s.ItemPrice),
