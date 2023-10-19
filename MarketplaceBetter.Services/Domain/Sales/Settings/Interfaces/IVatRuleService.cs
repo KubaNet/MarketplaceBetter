@@ -12,6 +12,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces
 	{
 		VatRuleModel Get(long id);
 
+		VatRuleModel GetFor(long countryFromId, long countryToId);
+
 		int CountForListRequest(ListRequest request);
 
 		IList<VatRuleModel> GetForListRequest(ListRequest request);

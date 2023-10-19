@@ -94,6 +94,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 }
 
                 shipment.AmazonOrderItemId = csv.GetField("Amazon Order Item ID");
+                shipment.PaymentsDate = csv.GetField<DateTime>("Payments Date");
                 shipment.MerchantSku = csv.GetField("Merchant SKU");
                 shipment.DispatchedQuantity = csv.GetField<int>("Dispatched Quantity");
                 shipment.Currency = _currencyService.GetByName(csv.GetField("Currency"));
@@ -213,6 +214,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                     "amazon_order_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.AmazonOrderId) : shipments.OrderByDescending(s => s.AmazonOrderId),
                     "shipment_item_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.ShipmentItemId) : shipments.OrderByDescending(s => s.ShipmentItemId),
                     "amazon_order_item_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.AmazonOrderItemId) : shipments.OrderByDescending(s => s.AmazonOrderItemId),
+                    "payments_date" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.PaymentsDate) : shipments.OrderByDescending(s => s.PaymentsDate),
                     "merchant_sku" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.MerchantSku) : shipments.OrderByDescending(s => s.MerchantSku),
                     "dispatched_quantity" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.DispatchedQuantity) : shipments.OrderByDescending(s => s.DispatchedQuantity),
                     "currency" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Currency.Name) : shipments.OrderByDescending(s => s.Currency.Name),

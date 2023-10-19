@@ -4,6 +4,7 @@
 	[AmazonOrderId]			NVARCHAR (255)				NOT NULL,
 	[ShipmentItemId]		NVARCHAR (255)				NOT NULL,
 	[AmazonOrderItemId]		NVARCHAR (255)				NOT NULL,
+	[PaymentsDate]			DATETIME2					NOT NULL,
 	[MerchantSku]			NVARCHAR (255)				NOT NULL,
 	[DispatchedQuantity]	INT							NOT NULL,
 	[CurrencyId]			BIGINT						NOT NULL,

@@ -28,17 +28,20 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
         private readonly IRepository<Invoice> _repository;
         private readonly IRepository<FulfilledShipment> _fulfilledShipmentRepository;
         private readonly IFulfillmentCenterService _fulfillmentCenterService;
+        private readonly IVatRuleService _vatRuleService;
 
         public InvoiceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IFulfillmentCenterService fulfillmentCenterService)
+            IFulfillmentCenterService fulfillmentCenterService,
+            IVatRuleService vatRuleService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Invoice>();
             _fulfilledShipmentRepository = unitOfWork.GetRepository<FulfilledShipment>();
             _fulfillmentCenterService = fulfillmentCenterService;
+            _vatRuleService = vatRuleService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -66,6 +69,88 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments = new Dictionary<string, IList<FulfilledShipmentModel>>();
 
             groupedShipments = GroupShipments(shipments);
+
+            foreach (var groupedShipment in groupedShipments)
+            {
+                FulfilledShipmentModel firstShipment = groupedShipment.Value.First();
+
+                CountryModel countryFrom = _fulfillmentCenterService.GetFor(firstShipment.FC).Country;
+                CountryModel countryTo = firstShipment.DeliveryCountry;
+
+                VatRuleModel vatRule = _vatRuleService.GetFor(countryFrom.Id, countryTo.Id);
+                if (vatRule == null)
+                {
+                    foreach (var shipment in groupedShipment.Value)
+                    {
+                        LogErrorFor(shipment, $"No VAT rule defined for CountryFrom: {countryFrom.Name} ({countryFrom.Code}) and CountryTo: {countryTo.Name} {countryTo.Code}");
+                    }
+
+                    continue;
+                }
+
+                Invoice invoice = new Invoice();
+
+                invoice.OrderId = firstShipment.AmazonOrderId;
+                invoice.PaymentDate = firstShipment.PaymentsDate;
+                invoice.BuyerFirstName = GetFirstName(firstShipment.RecipientName);
+                invoice.BuyerLastName = GetLastName(firstShipment.RecipientName);
+                invoice.BuyerStreet = $"{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}";
+                invoice.BuyerCity = firstShipment.DeliveryCityTown;
+                invoice.BuyerPostalCode = firstShipment.DeliveryPostcode;
+                invoice.BuyerState = firstShipment.DeliveryCounty;
+                invoice.BuyerCountry = firstShipment.DeliveryCountry.Name;
+                invoice.ShippingGrossPrice = groupedShipment.Value.Sum(s => s.DeliveryPrice + s.DeliveryTax + s.ShipmentPromoDiscount);
+                if (groupedShipment.Value.Sum(s => s.ShipmentPromoDiscount) != 0)
+                {
+                    invoice.ShippingGrossPrice -= groupedShipment.Value.Sum(s => s.DeliveryTax);
+                }
+                invoice.VatRuleId = vatRule.Id;
+            }
+        }
+
+        private string GetFirstName(string fullName)
+        {
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                return "Amazon";
+            }
+
+            string[] fullNameParts = fullName.Split(' ');
+
+            if (fullNameParts.Length < 1 || string.IsNullOrWhiteSpace(fullNameParts[0]))
+            {
+                return "Amazon";
+            }
+
+            return fullNameParts[0];
+        }
+
+        private string GetLastName(string fullName)
+        {
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                return "Customer";
+            }
+
+            string[] fullNameParts = fullName.Split(' ');
+            string lastName = string.Empty;
+
+            if (fullNameParts.Length < 2)
+            {
+                return "Customer";
+            }
+
+            for (int i = 1; i < fullNameParts.Length; i++)
+            {
+                lastName += fullNameParts[i];
+
+                if (i < fullNameParts.Length - 1)
+                {
+                    lastName += " ";
+                }
+            }
+
+            return lastName;
         }
 
         private IDictionary<string, IList<FulfilledShipmentModel>> GroupShipments(IList<FulfilledShipmentModel> shipments)
@@ -79,6 +164,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 if (fulfillmentCenter == null)
                 {
                     LogErrorFor(shipment, $"Unrecognized Fulfillement Center: {shipment.FC}");
+
+                    continue;
                 }
 
                 string key = $"{shipment.AmazonOrderId}_{fulfillmentCenter.Country.Code}";

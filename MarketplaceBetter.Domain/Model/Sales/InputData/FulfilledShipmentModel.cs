@@ -17,6 +17,8 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
 
         public string AmazonOrderItemId { get; set; }
 
+        public DateTime PaymentsDate { get; set; }
+
         public string MerchantSku { get; set; }
 
         public int DispatchedQuantity { get; set; }

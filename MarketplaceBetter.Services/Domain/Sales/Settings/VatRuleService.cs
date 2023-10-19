@@ -33,7 +33,11 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 
 		public VatRuleModel Get(long id) => _mapper.Map<VatRuleModel>(_repository.Get(id));
 
-		public int CountForListRequest(ListRequest request)
+		public VatRuleModel GetFor(long countryFromId, long countryToId) => _mapper.Map<VatRuleModel>(_repository.SingleOrDefault(r => r.CountryFromId == countryFromId 
+			&& r.CountryToId == countryToId));
+
+
+        public int CountForListRequest(ListRequest request)
 		{
 			IQueryable<VatRule> rules = _repository.GetQuery();
 
