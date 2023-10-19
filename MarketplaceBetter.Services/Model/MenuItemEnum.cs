@@ -28,6 +28,8 @@ namespace MarketplaceBetter.Services.Model
 
         SalesSettings = 21,
 
+        Invoicing = 22,
+
         Inventory = 30,
 
         APlusContent = 31

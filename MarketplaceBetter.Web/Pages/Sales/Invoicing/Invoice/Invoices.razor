@@ -1,0 +1,83 @@
+﻿@using MarketplaceBetter.Domain.Model.Sales.Invoicing;
+@using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
+@using MarketplaceBetter.Services.Model
+
+@page "/invoices"
+
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject IInvoiceService InvoiceService
+
+<MudText Typo="Typo.h4" Class="mt-2">Invoices</MudText>
+
+<MainBody>
+	<MudTable T="InvoiceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<InvoiceModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+		<ToolBarContent>
+			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="InvoiceModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="number" T="InvoiceModel">Number</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="order_id" T="InvoiceModel">Order Id</MudTableSortLabel></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Number">@context.Number</MudTd>
+			<MudTd DataLabel="Order Id">@context.OrderId</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+		</PagerContent>
+	</MudTable>
+</MainBody>
+
+@code {
+	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+	private MudTable<InvoiceModel> Table;
+	private ListRequest ListRequest = new();
+
+	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		ProcessQueryParameters();		
+	}
+
+	private void ProcessQueryParameters()
+	{
+		if (!String.IsNullOrWhiteSpace(SearchString))
+		{
+			ListRequest.SearchString = SearchString;
+		}
+	}
+
+	private Task<TableData<InvoiceModel>> Reload(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<InvoiceModel> centers = InvoiceService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<InvoiceModel>() { TotalItems = InvoiceService.CountForListRequest(ListRequest), Items = centers });
+	}
+
+	private void OnRowsPerPageChanged(int rowsPerPage)
+	{
+		CurrentRowsPerPageValue = rowsPerPage;
+	}
+
+	private void Filter(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+		Navigation.NavigateTo(newUrl, replace: true);
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+}

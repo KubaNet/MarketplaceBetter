@@ -43,6 +43,6 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
 
         public string ApiError { get; set; }
 
-        public IList<InvoiceEntry> Entries { get; set; }
+        public virtual IList<InvoiceEntry> Entries { get; set; }
     }
 }
