@@ -33,6 +33,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 
         public FulfillmentCenterModel Get(long id) => _mapper.Map<FulfillmentCenterModel>(_repository.Get(id));
 
+        public FulfillmentCenterModel GetFor(string code) => _mapper.Map<FulfillmentCenterModel>(_repository.SingleOrDefault(c => c.Code.Equals(code)));
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<FulfillmentCenter> centers = _repository.GetQuery();

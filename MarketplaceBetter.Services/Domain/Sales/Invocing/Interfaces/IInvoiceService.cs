@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Sales.Invoicing;
+﻿using MarketplaceBetter.Domain.Model.Sales.InputData;
+using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces
         int CountForListRequest(ListRequest request);
 
         IList<InvoiceModel> GetForListRequest(ListRequest request);
+
+        void Create(IList<FulfilledShipmentModel> shipments);
     }
 }

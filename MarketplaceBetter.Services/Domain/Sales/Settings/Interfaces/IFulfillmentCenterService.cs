@@ -12,6 +12,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces
     {
         FulfillmentCenterModel Get(long id);
 
+        FulfillmentCenterModel GetFor(string code);
+
         int CountForListRequest(ListRequest request);
 
         IList<FulfillmentCenterModel> GetForListRequest(ListRequest request);

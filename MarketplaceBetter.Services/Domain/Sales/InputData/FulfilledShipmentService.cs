@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Domain.Model.Sales.InputData;
+using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData
 {
@@ -28,18 +29,21 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
         private readonly IRepository<FulfilledShipment> _repository;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly IInvoiceService _invoiceService;
 
         public FulfilledShipmentService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICountryService countryService,
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            IInvoiceService invoiceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<FulfilledShipment>();
             _countryService = countryService;
             _currencyService = currencyService;
+            _invoiceService = invoiceService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -74,6 +78,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             csv.Read();
             csv.ReadHeader();
+
+            IList<FulfilledShipment> shipments = new List<FulfilledShipment>();
 
             while (csv.Read())
             {
@@ -110,9 +116,12 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 shipment.FC = csv.GetField("FC");
 
                 _repository.Add(shipment);
+                shipments.Add(shipment);
             }
 
             _unitOfWork.Save();
+
+            _invoiceService.Create(_mapper.Map<IList<FulfilledShipmentModel>>(shipments));
         }
 
         private IQueryable<FulfilledShipment> ApplyFilter(IQueryable<FulfilledShipment> shipments, ListRequest request)

@@ -56,5 +56,7 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
         public CountryModel DeliveryCountry { get; set; }
 
         public string FC { get; set; }
+
+        public string Error { get; set; }
     }
 }

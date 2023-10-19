@@ -58,5 +58,7 @@ namespace MarketplaceBetter.Domain.Entities.Sales.InputData
         public virtual Country DeliveryCountry { get; set; }
 
         public string FC { get; set; }
+
+        public string Error { get; set; }
     }
 }

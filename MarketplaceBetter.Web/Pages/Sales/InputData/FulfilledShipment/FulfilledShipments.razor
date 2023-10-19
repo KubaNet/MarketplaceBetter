@@ -19,6 +19,7 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="FulfilledShipmentModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="FulfilledShipmentModel">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="FulfilledShipmentModel">Amazon Order Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="shipment_item_id" T="FulfilledShipmentModel">Shipment Item Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="amazon_order_item_id" T="FulfilledShipmentModel">Amazon Order Item Id</MudTableSortLabel></MudTh>
@@ -45,6 +46,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Status">@context.Error</MudTd>
             <MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
             <MudTd DataLabel="Shipment Item Id">@context.ShipmentItemId</MudTd>
             <MudTd DataLabel="Amazon Order Item Id">@context.AmazonOrderItemId</MudTd>

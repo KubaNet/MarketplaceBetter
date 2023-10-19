@@ -105,6 +105,7 @@
     <None Include="Scripts\Inserts\11_StandardSizes.sql" />
     <None Include="Scripts\CustomScripts\SelectingChildsWithTooLongSKU.sql" />
     <None Include="Scripts\Inserts\12_Currencies.sql" />
+    <None Include="Scripts\CustomScripts\InsertingFulfillmentCenters.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />
