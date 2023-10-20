@@ -140,12 +140,10 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
 
                     entry.OrderItemId = shipment.AmazonOrderItemId;
                     entry.ShipmentItemId = shipment.ShipmentItemId;
+                    entry.VariantId = _variantService.GetBySku(shipment.MerchantSku).Id;
                     entry.CurrencyId = shipment.Currency.Id;
-                    entry.ProductName = shipment.Title;
                     entry.GrossPrice = shipment.ItemPrice + shipment.ItemTax + shipment.GiftWrapPrice + shipment.GiftWrappingTax + shipment.ItemPromoDiscount;
                     entry.Quantity = shipment.DispatchedQuantity;
-                    entry.Sku = shipment.MerchantSku;
-                    entry.VariantId = _variantService.GetBySku(shipment.MerchantSku).Id;
 
                     invoice.Entries.Add(entry);
                 }
@@ -286,7 +284,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             }
             else
             {
-                invoices = invoices.OrderBy(i => i.Id);
+                invoices = invoices.OrderByDescending(i => i.Id);
             }
 
             return invoices;

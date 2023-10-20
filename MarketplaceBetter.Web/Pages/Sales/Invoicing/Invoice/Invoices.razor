@@ -11,73 +11,125 @@
 <MudText Typo="Typo.h4" Class="mt-2">Invoices</MudText>
 
 <MainBody>
-	<MudTable T="InvoiceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<InvoiceModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
-		<ToolBarContent>
-			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-			<MudSpacer />
-		</ToolBarContent>
-		<HeaderContent>
-			<MudTh><MudTableSortLabel SortLabel="id" T="InvoiceModel">Id</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="number" T="InvoiceModel">Number</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="order_id" T="InvoiceModel">Order Id</MudTableSortLabel></MudTh>
-		</HeaderContent>
-		<RowTemplate>
-			<MudTd DataLabel="Id">@context.Id</MudTd>
-			<MudTd DataLabel="Number">@context.Number</MudTd>
-			<MudTd DataLabel="Order Id">@context.OrderId</MudTd>
-		</RowTemplate>
-		<PagerContent>
-			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
-		</PagerContent>
-	</MudTable>
+    <MudTable T="InvoiceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<InvoiceModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="InvoiceModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="number" T="InvoiceModel">Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="is_issued" T="InvoiceModel">Is Issued</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="api_number" T="InvoiceModel">Api Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="api_error" T="InvoiceModel">Api Error</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="order_id" T="InvoiceModel">Order Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="payment_date" T="InvoiceModel">Payment Date</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="buyer_first_name" T="InvoiceModel">Buyer First Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="buyer_last_name" T="InvoiceModel">Buyer Last Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="buyer_street" T="InvoiceModel">Buyer Street</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="buyer_city" T="InvoiceModel">Buyer City</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="buyer_postal_code" T="InvoiceModel">Buyer Postal Code</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="buyer_state" T="InvoiceModel">Buyer State</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="buyer_country" T="InvoiceModel">Buyer Country</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="vat_number" T="InvoiceModel">Vat Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="vat_value" T="InvoiceModel">Vat Value</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="shipping_gross_price" T="InvoiceModel">Shipping Gross Price</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Number">@context.Number</MudTd>
+            <MudTd DataLabel="Is Issued">@context.IsIssued</MudTd>
+            <MudTd DataLabel="Api Number">@context.ApiNumber</MudTd>
+            <MudTd DataLabel="Api Error">@context.ApiError</MudTd>
+            <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
+            <MudTd DataLabel="Payment Date">@context.PaymentDate</MudTd>
+            <MudTd DataLabel="Buyer First Name">@context.BuyerFirstName</MudTd>
+            <MudTd DataLabel="Buyer Last Name">@context.BuyerLastName</MudTd>
+            <MudTd DataLabel="Buyer Street">@context.BuyerStreet</MudTd>
+            <MudTd DataLabel="Buyer City">@context.BuyerCity</MudTd>
+            <MudTd DataLabel="Buyer Postal Code">@context.BuyerPostalCode</MudTd>
+            <MudTd DataLabel="Buyer State">@context.BuyerState</MudTd>
+            <MudTd DataLabel="Buyer Country">@context.BuyerCountry</MudTd>
+            <MudTd DataLabel="Vat Number">@context.VatRule.VatNumber</MudTd>
+            <MudTd DataLabel="Vat Value">@context.VatRule.VatValue %</MudTd>
+            <MudTd DataLabel="Shipping Gross Price">@context.ShippingGrossPrice</MudTd>
+        </RowTemplate>
+        <ChildRowContent>
+            <MudTr>
+                <td colspan="17">
+                    <MudTable Items="context.Entries" Context="EntryContext" Hover="true">
+                        <HeaderContent>
+                            <MudTh>Order Item Id</MudTh>
+                            <MudTh>Shipment Item Id</MudTh>
+                            <MudTh>Variant</MudTh>
+                            <MudTh>Currency</MudTh>
+                            <MudTh>Quantity</MudTh>
+                            <MudTh>Gross Price</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Order Item Id">@EntryContext.OrderItemId</MudTd>
+                            <MudTd DataLabel="Shipment Item Id">@EntryContext.ShipmentItemId</MudTd>
+                            <MudTd DataLabel="Variant">@EntryContext.Variant.Sku</MudTd>
+                            <MudTd DataLabel="Currency">@EntryContext.Currency.Name</MudTd>
+                            <MudTd DataLabel="Quantity">@EntryContext.Quantity</MudTd>
+                            <MudTd DataLabel="Gross Price">@EntryContext.GrossPrice</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </td>
+            </MudTr>
+        </ChildRowContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
 </MainBody>
 
 @code {
-	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
 
-	private MudTable<InvoiceModel> Table;
-	private ListRequest ListRequest = new();
+    private MudTable<InvoiceModel> Table;
+    private ListRequest ListRequest = new();
 
-	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		ProcessQueryParameters();		
-	}
+        ProcessQueryParameters();
+    }
 
-	private void ProcessQueryParameters()
-	{
-		if (!String.IsNullOrWhiteSpace(SearchString))
-		{
-			ListRequest.SearchString = SearchString;
-		}
-	}
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+    }
 
-	private Task<TableData<InvoiceModel>> Reload(TableState state)
-	{
-		state.PopulateListRequest(ListRequest);
+    private Task<TableData<InvoiceModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
 
-		IList<InvoiceModel> centers = InvoiceService.GetForListRequest(ListRequest);
+        IList<InvoiceModel> centers = InvoiceService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<InvoiceModel>() { TotalItems = InvoiceService.CountForListRequest(ListRequest), Items = centers });
-	}
+        return Task.FromResult(new TableData<InvoiceModel>() { TotalItems = InvoiceService.CountForListRequest(ListRequest), Items = centers });
+    }
 
-	private void OnRowsPerPageChanged(int rowsPerPage)
-	{
-		CurrentRowsPerPageValue = rowsPerPage;
-	}
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
 
-	private void Filter(string searchString)
-	{
-		ListRequest.SearchString = searchString;
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
 
-		string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
-		Navigation.NavigateTo(newUrl, replace: true);
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
 
-		Table.ReloadServerData();
+        Table.ReloadServerData();
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 }

@@ -14,9 +14,9 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
 
         public string ShipmentItemId { get; set; }
 
-        public string Sku { get; set; }
+        public long VariantId { get; set; }
 
-        public string ProductName { get; set; }
+        public virtual Variant Variant { get; set; }
 
         public long CurrencyId { get; set; }
 
@@ -25,9 +25,5 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
         public int Quantity { get; set; }
 
         public decimal GrossPrice { get; set; }
-
-        public long VariantId { get; set; }
-
-        public virtual Variant Variant { get; set; }
     }
 }
