@@ -4,6 +4,7 @@
 
 @page "/invoices"
 
+@inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
 @inject IInvoiceService InvoiceService
@@ -11,10 +12,11 @@
 <MudText Typo="Typo.h4" Class="mt-2">Invoices</MudText>
 
 <MainBody>
-    <MudTable T="InvoiceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<InvoiceModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="InvoiceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<InvoiceModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
+            <MudButton OnClick="Issue" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DoubleArrow" Color="Color.Primary" Disabled="NoneSelected" Class="ml-2">Issue</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="InvoiceModel">Id</MudTableSortLabel></MudTh>
@@ -38,7 +40,7 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Number">@context.Number</MudTd>
-            <MudTd DataLabel="Is Issued">@context.IsIssued</MudTd>
+            <MudTd DataLabel="Is Issued"><BoolDisplay BoolValue="context.IsIssued" /></MudTd>
             <MudTd DataLabel="Api Number">@context.ApiNumber</MudTd>
             <MudTd DataLabel="Api Error">@context.ApiError</MudTd>
             <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
@@ -90,6 +92,8 @@
     private MudTable<InvoiceModel> Table;
     private ListRequest ListRequest = new();
 
+    private HashSet<InvoiceModel> SelectedInvoices = new HashSet<InvoiceModel>();
+    private bool NoneSelected = true;
     private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
@@ -131,5 +135,29 @@
         Table.ReloadServerData();
 
         StateHasChanged();
+    }
+
+    private void OnSelectedItemsChanged(HashSet<InvoiceModel> selectedInvoices)
+    {
+        SelectedInvoices = selectedInvoices;
+
+        if (SelectedInvoices.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+
+    private void Issue()
+    {
+        if (SelectedInvoices.All(i => i.IsIssued))
+        {
+            Snackbar.Add("All selected invoices are already issued.", Severity.Warning);
+
+            return;
+        }
     }
 }

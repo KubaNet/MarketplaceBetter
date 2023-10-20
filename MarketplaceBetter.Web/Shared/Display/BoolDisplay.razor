@@ -1,0 +1,20 @@
+﻿@if (BoolValue.HasValue)
+{
+    if (BoolValue == true)
+    {
+        <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Success" />
+    }
+    else
+    {
+        <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" />
+    }
+}
+
+@code {
+    [Parameter] public bool? BoolValue { get; set; }
+
+    protected override void OnInitialized()
+    {
+        
+    }
+}

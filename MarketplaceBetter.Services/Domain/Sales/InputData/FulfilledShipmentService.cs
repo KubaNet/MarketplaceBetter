@@ -123,7 +123,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             _unitOfWork.Save();
 
-            _invoiceService.Create(_mapper.Map<IList<FulfilledShipmentModel>>(shipments));
+            _invoiceService.CreateAndIssue(_mapper.Map<IList<FulfilledShipmentModel>>(shipments));
         }
 
         private IQueryable<FulfilledShipment> ApplyFilter(IQueryable<FulfilledShipment> shipments, ListRequest request)

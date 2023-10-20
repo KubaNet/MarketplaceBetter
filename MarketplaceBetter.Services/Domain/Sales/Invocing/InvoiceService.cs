@@ -69,11 +69,29 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             return _mapper.Map<IList<InvoiceModel>>(invoices);
         }
 
-        public void Create(IList<FulfilledShipmentModel> shipments)
+        public void CreateAndIssue(IList<FulfilledShipmentModel> shipments)
         {
-            IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments = new Dictionary<string, IList<FulfilledShipmentModel>>();
+            IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments = GroupShipments(shipments);
 
-            groupedShipments = GroupShipments(shipments);
+            IList<Invoice> invoices = CreateFrom(groupedShipments);
+
+            Issue(_mapper.Map<IList<InvoiceModel>>(invoices));            
+        }
+
+        public void Issue(IList<InvoiceModel> invoices)
+        {
+            foreach (var invoice in invoices)
+            {
+                if (invoice.IsIssued)
+                {
+                    continue;
+                }
+            }
+        }
+
+        private IList<Invoice> CreateFrom(IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments)
+        {
+            IList<Invoice> invoices = new List<Invoice>();
 
             foreach (var groupedShipment in groupedShipments)
             {
@@ -150,7 +168,11 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
 
                 _repository.Add(invoice);
                 _unitOfWork.Save();
+
+                invoices.Add(invoice);
             }
+
+            return invoices;
         }
 
         private string GetFirstName(string fullName)

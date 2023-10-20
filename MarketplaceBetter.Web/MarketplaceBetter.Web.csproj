@@ -33,4 +33,10 @@
     <Folder Include="wwwroot\_templates\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Shared\Display\BoolDisplay.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>
