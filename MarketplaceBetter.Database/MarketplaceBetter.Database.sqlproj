@@ -139,5 +139,7 @@
     <Build Include="dbo\Tables\Sales\Settings\VatRule.sql" />
     <Build Include="dbo\Tables\Sales\Invoicing\Invoice.sql" />
     <Build Include="dbo\Tables\Sales\Invoicing\InvoiceEntry.sql" />
+    <Build Include="dbo\Tables\Sales\Settings\ProductAccountingData.sql" />
+    <Build Include="dbo\Tables\Sales\Settings\ProductionCost.sql" />
   </ItemGroup>
 </Project>

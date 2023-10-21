@@ -11,5 +11,5 @@
 );
 GO
 
-CREATE UNIQUE INDEX UIX_CountryFrom_CountryTo  ON [dbo].[VatRule] ([CountryFromId] ASC, [CountryToId] ASC);
+CREATE UNIQUE INDEX UIX_VatRule_CountryFrom_CountryTo  ON [dbo].[VatRule] ([CountryFromId] ASC, [CountryToId] ASC);
 GO
