@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,5 +63,7 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
         public string FC { get; set; }
 
         public string Error { get; set; }
+
+        public InvoiceModel Invoice { get; set; }
     }
 }

@@ -268,7 +268,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "number", "order_id" };
+                string[] searchFieldNames = new[] { "id", "number", "api_number", "api_error", "order_id", "buyer_first_name", "buyer_last_name",
+                    "buyer_street", "buyer_city", "buyer_postal_code", "buyer_state", "buyer_country", "vat_number", "vat_value" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -277,7 +278,18 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                     {
                         "id" => invoices.Where(i => i.Id == searchField.Value.ParseToIntOrDefault()),
                         "number" => invoices.Where(i => i.Number.Contains(searchField.Value)),
+                        "api_number" => invoices.Where(i => i.ApiNumber.Contains(searchField.Value)),
+                        "api_error" => invoices.Where(i => i.ApiError.Contains(searchField.Value)),
                         "order_id" => invoices.Where(i => i.OrderId.Contains(searchField.Value)),
+                        "buyer_first_name" => invoices.Where(i => i.BuyerFirstName.Contains(searchField.Value)),
+                        "buyer_last_name" => invoices.Where(i => i.BuyerLastName.Contains(searchField.Value)),
+                        "buyer_street" => invoices.Where(i => i.BuyerStreet.Contains(searchField.Value)),
+                        "buyer_city" => invoices.Where(i => i.BuyerCity.Contains(searchField.Value)),
+                        "buyer_postal_code" => invoices.Where(i => i.BuyerPostalCode.Contains(searchField.Value)),
+                        "buyer_state" => invoices.Where(i => i.BuyerState.Contains(searchField.Value)),
+                        "buyer_country" => invoices.Where(i => i.BuyerCountry.Contains(searchField.Value)),
+                        "vat_number" => invoices.Where(i => i.VatRule.VatNumber.Contains(searchField.Value)),
+                        "vat_value" => invoices.Where(i => i.VatRule.VatValue == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -285,7 +297,18 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 {
                     invoices = invoices.Where(i => i.Id == searchString.ParseToIntOrDefault()
                         || i.Number.Contains(searchString)
-                        || i.OrderId.Contains(searchString));
+                        || i.ApiNumber.Contains(searchString)
+                        || i.ApiError.Contains(searchString)
+                        || i.OrderId.Contains(searchString)
+                        || i.BuyerFirstName.Contains(searchString)
+                        || i.BuyerLastName.Contains(searchString)
+                        || i.BuyerStreet.Contains(searchString)
+                        || i.BuyerCity.Contains(searchString)
+                        || i.BuyerPostalCode.Contains(searchString)
+                        || i.BuyerState.Contains(searchString)
+                        || i.BuyerCountry.Contains(searchString)
+                        || i.VatRule.VatNumber.Contains(searchString)
+                        || i.VatRule.VatValue == searchString.ParseToIntOrDefault());
                 }
             }
 
@@ -300,7 +323,19 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.Id) : invoices.OrderByDescending(i => i.Id),
                     "number" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.Number) : invoices.OrderByDescending(i => i.Number),
+                    "is_issued" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.IsIssued) : invoices.OrderByDescending(i => i.IsIssued),
+                    "api_number" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.ApiNumber) : invoices.OrderByDescending(i => i.ApiNumber),
+                    "api_error" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.ApiError) : invoices.OrderByDescending(i => i.ApiError),
                     "order_id" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.OrderId) : invoices.OrderByDescending(i => i.OrderId),
+                    "buyer_first_name" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerFirstName) : invoices.OrderByDescending(i => i.BuyerFirstName),
+                    "buyer_last_name" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerLastName) : invoices.OrderByDescending(i => i.BuyerLastName),
+                    "buyer_street" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerStreet) : invoices.OrderByDescending(i => i.BuyerStreet),
+                    "buyer_city" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerCity) : invoices.OrderByDescending(i => i.BuyerCity),
+                    "buyer_postal_code" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerPostalCode) : invoices.OrderByDescending(i => i.BuyerPostalCode),
+                    "buyer_state" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerState) : invoices.OrderByDescending(i => i.BuyerState),
+                    "buyer_country" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerCountry) : invoices.OrderByDescending(i => i.BuyerCountry),
+                    "vat_number" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.VatRule.VatNumber) : invoices.OrderByDescending(i => i.VatRule.VatNumber),
+                    "vat_value" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.VatRule.VatValue) : invoices.OrderByDescending(i => i.VatRule.VatValue),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

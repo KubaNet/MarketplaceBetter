@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Sales.Invoicing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,5 +65,9 @@ namespace MarketplaceBetter.Domain.Entities.Sales.InputData
         public string FC { get; set; }
 
         public string Error { get; set; }
+
+        public long? InvoiceId { get; set; }
+
+        public virtual Invoice Invoice { get; set; }
     }
 }

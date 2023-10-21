@@ -48,7 +48,16 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Invoice">@context.Error</MudTd>
+            <MudTd DataLabel="Invoice">
+                @if (context.Invoice != null)
+                {
+                    
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Error">@context.Error</MudAlert>
+                }
+            </MudTd>
             <MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>
             <MudTd DataLabel="Shipment Item Id">@context.ShipmentItemId</MudTd>
             <MudTd DataLabel="Amazon Order Item Id">@context.AmazonOrderItemId</MudTd>

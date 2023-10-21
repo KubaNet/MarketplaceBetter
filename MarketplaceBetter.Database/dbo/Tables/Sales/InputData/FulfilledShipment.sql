@@ -27,8 +27,10 @@
 	[DeliveryCountryId]		BIGINT						NOT NULL,
 	[FC]					NVARCHAR (255)				NOT NULL,
 	[Error]					NVARCHAR (255)				NULL,
+	[InvoiceId]				BIGINT						NULL,
 	CONSTRAINT	[PK_FulfilledShipment]					PRIMARY KEY ([Id]),
 	CONSTRAINT  [FK_FulfilledShipment_Currency]			FOREIGN KEY ([CurrencyId])	REFERENCES [dbo].[Currency] ([Id]),
 	CONSTRAINT  [FK_FulfilledShipment_DeliveryCountry]	FOREIGN KEY ([DeliveryCountryId])	REFERENCES [dbo].[Country] ([Id]),
+	CONSTRAINT  [FK_FulfilledShipment_Invoice]			FOREIGN KEY ([InvoiceId])	REFERENCES [dbo].[Invoice] ([Id]),
 );
 GO

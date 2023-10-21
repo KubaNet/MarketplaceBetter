@@ -42,7 +42,12 @@
             <MudTd DataLabel="Number">@context.Number</MudTd>
             <MudTd DataLabel="Is Issued"><BoolDisplay BoolValue="context.IsIssued" /></MudTd>
             <MudTd DataLabel="Api Number">@context.ApiNumber</MudTd>
-            <MudTd DataLabel="Api Error">@context.ApiError</MudTd>
+            <MudTd DataLabel="Api Error">
+                @if (context.ApiError != null)
+                {
+                    <MudAlert Severity="Severity.Error">@context.ApiError</MudAlert>
+                }
+            </MudTd>
             <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
             <MudTd DataLabel="Payment Date">@context.PaymentDate</MudTd>
             <MudTd DataLabel="Buyer First Name">@context.BuyerFirstName</MudTd>
