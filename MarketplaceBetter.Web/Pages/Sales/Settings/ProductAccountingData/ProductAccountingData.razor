@@ -15,20 +15,22 @@
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Fulfillment Center</MudButton>
+			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Accounting Data</MudButton>
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="ProductAccountingDataModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="product" T="ProductAccountingDataModel">Product</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="invoice_name" T="ProductAccountingDataModel">Invoice Name</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="commodity_code" T="ProductAccountingDataModel">Commodity Code</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="weight" T="ProductAccountingDataModel">Weight</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 100px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
-			<MudTd DataLabel="Product">@context.Product</MudTd>
+			<MudTd DataLabel="Product">@context.Product.Name</MudTd>
 			<MudTd DataLabel="Invoice Name">@context.InvoiceName</MudTd>
 			<MudTd DataLabel="Commodity Code">@context.CommodityCode</MudTd>
+			<MudTd DataLabel="Weight">@context.Weight kg</MudTd>
 			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
 		</RowTemplate>
 		<PagerContent>

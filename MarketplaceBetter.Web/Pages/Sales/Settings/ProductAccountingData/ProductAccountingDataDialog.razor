@@ -1,25 +1,27 @@
-﻿@using MarketplaceBetter.Domain.Model.Base;
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products;
 @using MarketplaceBetter.Domain.Model.Sales.Settings;
-@using MarketplaceBetter.Services.Domain.Base.Interfaces;
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.Attributes.Interfaces;
+@using MarketplaceBetter.Services.Validation.Sales.Settings.Interfaces;
 
 @inject ISnackbar Snackbar
-@inject IFulfillmentCenterService FulfillmentCenterService
-@inject IFulfillmentCenterValidator FulfillmentCenterValidator
-@inject ICountryService CountryService
+@inject IProductAccountingDataService ProductAccountingDataService
+@inject IProductAccountingDataValidator ProductAccountingDataValidator
+@inject IProductService ProductService
 
-<EditForm Model="FulfillmentCenter" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="ProductAccountingData" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudTextField Label="Code" @bind-Value="FulfillmentCenter.Code" For="() => FulfillmentCenter.Code" />
-        <MudSelect Label="Country" T="CountryModel" @bind-Value="FulfillmentCenter.Country" For="() => FulfillmentCenter.Country">
-            @foreach (var country in Countries)
+        <MudSelect Label="Product" T="ProductModel" @bind-Value="ProductAccountingData.Product" For="() => ProductAccountingData.Product">
+            @foreach (var product in Products)
             {
-                <MudSelectItem Value="country">@country.Name (@country.Code)</MudSelectItem>
+                <MudSelectItem Value="product">@product.Name (@product.Code)</MudSelectItem>
             }
         </MudSelect>
+        <MudTextField Label="Invoice Name" @bind-Value="ProductAccountingData.InvoiceName" For="() => ProductAccountingData.InvoiceName" />
+        <MudTextField Label="Commodity Code" @bind-Value="ProductAccountingData.CommodityCode" For="() => ProductAccountingData.CommodityCode" />
     </FormDialog>
 </EditForm>
 
@@ -27,18 +29,18 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long FulfillmentCenterId { get; set; }
+    [Parameter] public long ProductAccountingDataId { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private FulfillmentCenterModel FulfillmentCenter = new();
+    private ProductAccountingDataModel ProductAccountingData = new();
 
-    private IList<CountryModel> Countries;
+    private IList<ProductModel> Products;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Countries = CountryService.GetAll();
+        Products = ProductService.GetAll();
 
         if (IsEdit)
         {
@@ -48,25 +50,25 @@
 
     private void SetInitialValues()
     {
-        FulfillmentCenter = FulfillmentCenterService.Get(FulfillmentCenterId);
-        FulfillmentCenter.Country = Countries.Single(b => b.Id == FulfillmentCenter.Country.Id);
+        ProductAccountingData = ProductAccountingDataService.Get(ProductAccountingDataId);
+        ProductAccountingData.Product = Products.Single(b => b.Id == ProductAccountingData.Product.Id);
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = FulfillmentCenterValidator.Validate(FulfillmentCenter);
+        ValidationResult result = ProductAccountingDataValidator.Validate(ProductAccountingData);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                FulfillmentCenterService.Update(FulfillmentCenter);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Fulfillment Center"));
+                ProductAccountingDataService.Update(ProductAccountingData);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Product Accounting Data"));
             }
             else
             {
-                FulfillmentCenterService.Add(FulfillmentCenter);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Fulfillment Center"));
+                ProductAccountingDataService.Add(ProductAccountingData);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Product Accounting Data"));
             }
 
             MudDialog.Close();

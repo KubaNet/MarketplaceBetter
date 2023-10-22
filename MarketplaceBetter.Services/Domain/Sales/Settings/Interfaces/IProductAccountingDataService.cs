@@ -10,8 +10,14 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces
 {
     public interface IProductAccountingDataService
     {
+        ProductAccountingDataModel Get(long id);
+
         int CountForListRequest(ListRequest request);
 
         IList<ProductAccountingDataModel> GetForListRequest(ListRequest request);
+
+        void Add(ProductAccountingDataModel data);
+
+        void Update(ProductAccountingDataModel data);
     }
 }

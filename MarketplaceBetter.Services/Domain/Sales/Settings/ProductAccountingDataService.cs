@@ -30,6 +30,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<ProductAccountingData>();
         }
+
+        public ProductAccountingDataModel Get(long id) => _mapper.Map<ProductAccountingDataModel>(_repository.Get(id));
+
         public int CountForListRequest(ListRequest request)
         {
             IQueryable<ProductAccountingData> data = _repository.GetQuery();
@@ -48,6 +51,34 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
             data = ApplyPaging(data, request);
 
             return _mapper.Map<IList<ProductAccountingDataModel>>(data);
+        }
+
+        public void Add(ProductAccountingDataModel data)
+        {
+            ProductAccountingData dataToAdd = new();
+
+            TransferValues(dataToAdd, data);
+
+            _repository.Add(dataToAdd);
+            _unitOfWork.Save();
+        }
+
+        public void Update(ProductAccountingDataModel data)
+        {
+            ProductAccountingData dataToUpdate = _repository.Get(data.Id);
+
+            TransferValues(dataToUpdate, data);
+
+            _repository.Update(dataToUpdate);
+            _unitOfWork.Save();
+        }
+
+        private void TransferValues(ProductAccountingData toData, ProductAccountingDataModel fromData)
+        {
+            toData.ProductId = fromData.Product.Id;
+            toData.InvoiceName = fromData.InvoiceName;
+            toData.CommodityCode = fromData.CommodityCode;
+            toData.Weight = fromData.Weight;
         }
 
         private IQueryable<ProductAccountingData> ApplyFilter(IQueryable<ProductAccountingData> data, ListRequest request)
@@ -97,7 +128,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
                     "product" => request.SortDirection == SortDirection.Ascending ? data.OrderBy(d => d.Product.Name) : data.OrderByDescending(d => d.Product.Name),
                     "invoice_name" => request.SortDirection == SortDirection.Ascending ? data.OrderBy(d => d.InvoiceName) : data.OrderByDescending(d => d.InvoiceName),
                     "commodity_code" => request.SortDirection == SortDirection.Ascending ? data.OrderBy(d => d.CommodityCode) : data.OrderByDescending(d => d.CommodityCode),
-                    _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
+					"weight" => request.SortDirection == SortDirection.Ascending ? data.OrderBy(d => d.Weight) : data.OrderByDescending(d => d.Weight),
+					_ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
             else

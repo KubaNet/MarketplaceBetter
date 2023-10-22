@@ -2,7 +2,7 @@
 using MarketplaceBetter.Domain.Model.Sales.Settings;
 using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;
-using MarketplaceBetter.Services.Validation.Catalog.Attributes.Interfaces;
+using MarketplaceBetter.Services.Validation.Sales.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

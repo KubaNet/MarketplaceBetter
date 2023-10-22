@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Validation.Sales.Settings.Interfaces
 {
-    public interface IFulfillmentCenterValidator
+    public interface IProductAccountingDataValidator
     {
-        ValidationResult Validate(FulfillmentCenterModel center);
+        ValidationResult Validate(ProductAccountingDataModel data);
     }
 }
