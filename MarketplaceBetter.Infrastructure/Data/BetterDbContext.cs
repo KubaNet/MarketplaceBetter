@@ -100,8 +100,9 @@ namespace MarketplaceBetter.Infrastructure.Data
 		// => Settings
 		public DbSet<FulfillmentCenter> FulfillmentCenter { get; set; }
         public DbSet<VatRule> VatRule {  get; set; }
-		// => Input Data
-		public DbSet<FulfilledShipment> FulfilledShipment { get; set; }
+        public DbSet<ProductAccountingData> ProductAccountingData { get; set; }
+        // => Input Data
+        public DbSet<FulfilledShipment> FulfilledShipment { get; set; }
         // => Invoicing
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<InvoiceEntry> InvoiceEntry { get; set; }

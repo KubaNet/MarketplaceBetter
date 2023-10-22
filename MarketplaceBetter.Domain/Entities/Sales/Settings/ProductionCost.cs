@@ -13,6 +13,6 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Settings
 
         public long CurrencyId { get; set; }
 
-        public Currency Currency { get; set; }
+        public virtual Currency Currency { get; set; }
     }
 }
