@@ -13,6 +13,7 @@ namespace MarketplaceBetter.Domain.Model.Sales.Settings
     {
         public long Id { get; set; }
 
+        [Required]
         public ProductModel Product { get; set; }
 
         [Display(Name = "Invoice Name")]

@@ -29,6 +29,11 @@ namespace MarketplaceBetter.Services.Validation.Sales.Settings
 				result.AddErrorFor<ProductAccountingDataModel>(d => d.Product, "There already exists Accounting Data for this Product");
 			}
 
+			if (data.Weight <= 0)
+			{
+                result.AddErrorFor<ProductAccountingDataModel>(d => d.Weight, "Weight has to be bigger than 0.00");
+            }
+
 			return result;
 		}
 	}

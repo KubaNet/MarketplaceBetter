@@ -9,6 +9,11 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Settings
 {
     public class ProductAccountingData : Entity
     {
+        public ProductAccountingData()
+        {
+            ProductionCosts = new List<ProductionCost>();
+        }
+
         public long ProductId { get; set; }
 
         public virtual Product Product { get; set; }

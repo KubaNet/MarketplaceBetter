@@ -79,6 +79,30 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
             toData.InvoiceName = fromData.InvoiceName;
             toData.CommodityCode = fromData.CommodityCode;
             toData.Weight = fromData.Weight;
+
+            foreach (var fromCost in fromData.ProductionCosts)
+            {
+                if (toData.Id == 0)
+                {
+                    ProductionCost toCost = new ProductionCost();
+
+                    TransferValues(toCost, fromCost);
+
+                    toData.ProductionCosts.Add(toCost);
+                }
+                else
+                {
+                    ProductionCost toCost = toData.ProductionCosts.Single(c => c.Id == fromCost.Id);
+
+                    TransferValues(toCost, fromCost);
+                }
+            }
+        }
+
+        private void TransferValues(ProductionCost toCost, ProductionCostModel fromCost)
+        {
+            toCost.Cost = fromCost.Cost;
+            toCost.CurrencyId = fromCost.Currency.Id;
         }
 
         private IQueryable<ProductAccountingData> ApplyFilter(IQueryable<ProductAccountingData> data, ListRequest request)

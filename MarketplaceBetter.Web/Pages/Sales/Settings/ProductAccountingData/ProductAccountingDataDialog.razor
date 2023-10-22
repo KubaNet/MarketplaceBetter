@@ -1,5 +1,7 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.Products;
+﻿@using MarketplaceBetter.Domain.Model.Base;
+@using MarketplaceBetter.Domain.Model.Catalog.Products;
 @using MarketplaceBetter.Domain.Model.Sales.Settings;
+@using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 @using MarketplaceBetter.Services.Validation.Catalog.Attributes.Interfaces;
@@ -9,6 +11,7 @@
 @inject IProductAccountingDataService ProductAccountingDataService
 @inject IProductAccountingDataValidator ProductAccountingDataValidator
 @inject IProductService ProductService
+@inject ICurrencyService CurrencyService
 
 <EditForm Model="ProductAccountingData" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -22,6 +25,11 @@
         </MudSelect>
         <MudTextField Label="Invoice Name" @bind-Value="ProductAccountingData.InvoiceName" For="() => ProductAccountingData.InvoiceName" />
         <MudTextField Label="Commodity Code" @bind-Value="ProductAccountingData.CommodityCode" For="() => ProductAccountingData.CommodityCode" />
+        <MudNumericField Label="Weight" @bind-Value="ProductAccountingData.Weight" For="() => ProductAccountingData.Weight" Format="N2" Min="0.01" />
+        @foreach (var cost in ProductAccountingData.ProductionCosts)
+        {
+            <MudNumericField T="decimal" Label="@string.Concat("Cost in ", cost.Currency.Name)" @bind-Value="cost.Cost" For="() => cost.Cost" Format="N2" Min="0.01M" />
+        }
     </FormDialog>
 </EditForm>
 
@@ -35,16 +43,29 @@
     private ProductAccountingDataModel ProductAccountingData = new();
 
     private IList<ProductModel> Products;
+    private IList<CurrencyModel> Currencies;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         Products = ProductService.GetAll();
+        Currencies = CurrencyService.GetAll();
 
         if (IsEdit)
         {
             SetInitialValues();
+        }
+        else
+        {
+            ProductAccountingData.ProductionCosts = new List<ProductionCostModel>();
+            foreach (var currency in Currencies)
+            {
+                ProductAccountingData.ProductionCosts.Add(new ProductionCostModel
+                    {
+                        Currency = currency,
+                    });
+            }
         }
     }
 
