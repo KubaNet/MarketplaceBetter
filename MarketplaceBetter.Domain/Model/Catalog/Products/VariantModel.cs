@@ -40,5 +40,10 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         public EntityStatusModel Status { get; set; }
 
         public string Comment { get; set; }
+
+        public override string ToString()
+        {
+            return Sku;
+        }
     }
 }

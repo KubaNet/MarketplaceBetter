@@ -26,9 +26,9 @@ namespace MarketplaceBetter.Services.Validation.Sales.Settings
 		{
 			ValidationResult result = new();
 
-			if (_repository.Any(s => s.Id != sku.Id && s.VariantId == sku.Variant.Id && s.Sku.Equals(sku.Sku)))
+			if (_repository.Any(s => s.Id != sku.Id && s.Sku.Equals(sku.Sku)))
 			{
-				result.AddErrorFor<AdditionalSkuModel>(s => s.Sku, ValidationMessages.PropertyNotUnique, "Variant", "Additional Sku");
+				result.AddErrorFor<AdditionalSkuModel>(s => s.Sku, "Such SKU is already assigned to variant.");
 			}
 
 			return result;

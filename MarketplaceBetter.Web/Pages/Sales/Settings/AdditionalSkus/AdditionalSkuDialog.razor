@@ -7,14 +7,14 @@
 @inject ISnackbar Snackbar
 @inject IAdditionalSkuService AdditionalSkuService
 @inject IAdditionalSkuValidator AdditionalSkuValidator
+@inject IVariantService VariantService
 
 <EditForm Model="AdditionalSku" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <ValidationSummary />
-        <MudTextField Label="Variant" @bind-Value="AdditionalSku.Variant.Sku" For="() => AdditionalSku.Variant.Sku" />
-        <MudTextField Label="Sku" @bind-Value="AdditionalSku.Sku" For="() => AdditionalSku.Sku" />
+        <MudAutocomplete T="VariantModel" Label="Variant" @bind-Value="AdditionalSku.Variant" For="() => AdditionalSku.Variant" ResetValueOnEmptyText="true" SearchFunc="SearchVariants" />
+        <MudTextField Label="SKU" @bind-Value="AdditionalSku.Sku" For="() => AdditionalSku.Sku" />
     </FormDialog>
 </EditForm>
 
@@ -27,11 +27,13 @@
     private CustomValidation CustomValidation = new();
     private AdditionalSkuModel AdditionalSku = new();
 
+    private IList<VariantModel> Variants;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        AdditionalSku.Variant = new VariantModel();
+        Variants = VariantService.GetAll();
     }
 
     private void HandleValidSubmit()
@@ -41,7 +43,7 @@
         if (result.IsValid)
         {
             AdditionalSkuService.Add(AdditionalSku);
-            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Additional Sku"));
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Additional SKU"));
 
             MudDialog.Close();
         }
@@ -49,5 +51,15 @@
         {
             CustomValidation.DisplayErrors(result.Errors);
         }
+    }
+
+    private async Task<IEnumerable<VariantModel>> SearchVariants(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Variants;
+        }
+
+        return Variants.Where(v => v.Sku.Contains(value, StringComparison.OrdinalIgnoreCase));
     }
 }

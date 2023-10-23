@@ -17,7 +17,7 @@ namespace MarketplaceBetter.Domain.Model.Sales.Settings
 
 		[Display(Name = "SKU")]
 		[Required]
-		[StringLength(40, MinimumLength = 40)]
+		[StringLength(40, MinimumLength = 2)]
 		public string Sku { get; set; }
 	}
 }

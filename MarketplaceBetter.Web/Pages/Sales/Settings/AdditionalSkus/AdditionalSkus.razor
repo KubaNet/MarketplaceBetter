@@ -8,26 +8,24 @@
 @inject NavigationManager Navigation
 @inject IAdditionalSkuService AdditionalSkuService
 
-<MudText Typo="Typo.h4" Class="mt-2">Additional Skus</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Additional SKUs</MudText>
 
 <MainBody>
 	<MudTable T="AdditionalSkuModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AdditionalSkuModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Additional Sku</MudButton>
+			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Additional SKU</MudButton>
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh><MudTableSortLabel SortLabel="id" T="AdditionalSkuModel">Id</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="variant" T="AdditionalSkuModel">Variant</MudTableSortLabel></MudTh>
-			<MudTh><MudTableSortLabel SortLabel="sku" T="AdditionalSkuModel">Sku</MudTableSortLabel></MudTh>
-			<MudTh Style="width: 100px;">Actions</MudTh>
+			<MudTh><MudTableSortLabel SortLabel="sku" T="AdditionalSkuModel">SKU</MudTableSortLabel></MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Id">@context.Id</MudTd>
 			<MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
-			<MudTd DataLabel="Sku">@context.Sku</MudTd>
-			<MudTd></MudTd>
+			<MudTd DataLabel="SKU">@context.Sku</MudTd>
 		</RowTemplate>
 		<PagerContent>
 			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
@@ -86,7 +84,7 @@
 
 	private async void Add()
 	{
-		DialogResult result = await DialogService.Show<AdditionalSkuDialog>(null, new DialogParameters { ["Title"] = "Add Additional Sku" }).Result;
+		DialogResult result = await DialogService.Show<AdditionalSkuDialog>(null, new DialogParameters { ["Title"] = "Add Additional SKU" }).Result;
 
 		ProcessDialogResult(result);
 	}

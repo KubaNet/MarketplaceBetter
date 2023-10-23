@@ -8,5 +8,5 @@
 );
 GO
 
-CREATE UNIQUE INDEX UIX_AdditionalSku_Variant_Sku  ON [dbo].[AdditionalSku] ([VariantId] ASC, [Sku] ASC);
+CREATE UNIQUE INDEX UIX_AdditionalSku_Sku  ON [dbo].[AdditionalSku] ([Sku] ASC);
 GO
