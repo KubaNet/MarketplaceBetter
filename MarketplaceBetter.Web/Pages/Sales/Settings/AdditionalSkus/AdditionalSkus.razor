@@ -1,0 +1,101 @@
+﻿@using MarketplaceBetter.Domain.Model.Sales.Settings;
+@using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
+@using MarketplaceBetter.Services.Model
+
+@page "/additional-skus"
+
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject IAdditionalSkuService AdditionalSkuService
+
+<MudText Typo="Typo.h4" Class="mt-2">Additional Skus</MudText>
+
+<MainBody>
+	<MudTable T="AdditionalSkuModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AdditionalSkuModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+		<ToolBarContent>
+			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+			<MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Additional Sku</MudButton>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh><MudTableSortLabel SortLabel="id" T="AdditionalSkuModel">Id</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="variant" T="AdditionalSkuModel">Variant</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="sku" T="AdditionalSkuModel">Sku</MudTableSortLabel></MudTh>
+			<MudTh Style="width: 100px;">Actions</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Id">@context.Id</MudTd>
+			<MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
+			<MudTd DataLabel="Sku">@context.Sku</MudTd>
+			<MudTd></MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+		</PagerContent>
+	</MudTable>
+</MainBody>
+
+@code {
+	[Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+	private MudTable<AdditionalSkuModel> Table;
+	private ListRequest ListRequest = new();
+
+	private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		ProcessQueryParameters();		
+	}
+
+	private void ProcessQueryParameters()
+	{
+		if (!String.IsNullOrWhiteSpace(SearchString))
+		{
+			ListRequest.SearchString = SearchString;
+		}
+	}
+
+	private Task<TableData<AdditionalSkuModel>> Reload(TableState state)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<AdditionalSkuModel> centers = AdditionalSkuService.GetForListRequest(ListRequest);
+
+		return Task.FromResult(new TableData<AdditionalSkuModel>() { TotalItems = AdditionalSkuService.CountForListRequest(ListRequest), Items = centers });
+	}
+
+	private void OnRowsPerPageChanged(int rowsPerPage)
+	{
+		CurrentRowsPerPageValue = rowsPerPage;
+	}
+
+	private void Filter(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+		string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+		Navigation.NavigateTo(newUrl, replace: true);
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+	private async void Add()
+	{
+		DialogResult result = await DialogService.Show<AdditionalSkuDialog>(null, new DialogParameters { ["Title"] = "Add Additional Sku" }).Result;
+
+		ProcessDialogResult(result);
+	}
+
+	private void ProcessDialogResult(DialogResult result)
+	{
+		if (!result.Canceled)
+		{
+			Table.ReloadServerData();
+		}
+	}
+}

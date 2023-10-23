@@ -1,0 +1,53 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products;
+@using MarketplaceBetter.Domain.Model.Sales.Settings;
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+@using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
+@using MarketplaceBetter.Services.Validation.Sales.Settings.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IAdditionalSkuService AdditionalSkuService
+@inject IAdditionalSkuValidator AdditionalSkuValidator
+
+<EditForm Model="AdditionalSku" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title=@Title>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudTextField Label="Variant" @bind-Value="AdditionalSku.Variant.Sku" For="() => AdditionalSku.Variant.Sku" />
+        <MudTextField Label="Sku" @bind-Value="AdditionalSku.Sku" For="() => AdditionalSku.Sku" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public long AdditionalSkuId { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private AdditionalSkuModel AdditionalSku = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        AdditionalSku.Variant = new VariantModel();
+    }
+
+    private void HandleValidSubmit()
+    {
+        ValidationResult result = AdditionalSkuValidator.Validate(AdditionalSku);
+
+        if (result.IsValid)
+        {
+            AdditionalSkuService.Add(AdditionalSku);
+            Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Additional Sku"));
+
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(result.Errors);
+        }
+    }
+}
