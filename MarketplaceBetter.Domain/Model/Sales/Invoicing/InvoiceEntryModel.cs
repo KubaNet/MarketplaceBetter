@@ -16,6 +16,8 @@ namespace MarketplaceBetter.Domain.Model.Sales.Invoicing
 
         public string ShipmentItemId { get; set; }
 
+        public string InvoiceName { get; set; }
+
         public VariantModel Variant { get; set; }
 
         public long CurrencyId { get; set; }

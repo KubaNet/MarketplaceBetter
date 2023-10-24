@@ -3,6 +3,7 @@
 	[Id]				BIGINT						NOT NULL	IDENTITY,
 	[OrderItemId]		NVARCHAR (255)				NOT NULL,
 	[ShipmentItemId]	NVARCHAR (255)				NOT NULL,
+	[InvoiceName]		NVARCHAR (255)				NOT NULL,
 	[VariantId]			BIGINT						NOT NULL,
 	[CurrencyId]		BIGINT						NOT NULL,
 	[Quantity]			INT							NOT NULL,

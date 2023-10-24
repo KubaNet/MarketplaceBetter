@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
 using MarketplaceBetter.Domain.Entities.Sales.Invoicing;
+using MarketplaceBetter.Domain.Entities.Sales.Settings;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Sales.InputData;
@@ -29,6 +30,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Invoice> _repository;
         private readonly IRepository<FulfilledShipment> _fulfilledShipmentRepository;
+        private readonly IRepository<ProductAccountingData> _productAccountingData;
         private readonly IFulfillmentCenterService _fulfillmentCenterService;
         private readonly IVatRuleService _vatRuleService;
         private readonly IVariantService _variantService;
@@ -44,6 +46,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Invoice>();
             _fulfilledShipmentRepository = unitOfWork.GetRepository<FulfilledShipment>();
+            _productAccountingData = unitOfWork.GetRepository<ProductAccountingData>();
             _fulfillmentCenterService = fulfillmentCenterService;
             _vatRuleService = vatRuleService;
             _variantService = variantService;
@@ -92,6 +95,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 }
 
                 IList<string> invalidVariants = new List<string>();
+                IList<ProductModel> productsWithMissingAccountingData = new List<ProductModel>();
                 foreach (var shipment in groupedShipment.Value)
                 {
                     VariantModel variant = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku);
@@ -100,6 +104,17 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                     {
                         invalidVariants.Add(shipment.MerchantSku);
                     }
+                    else
+                    {
+                        ProductAccountingData productData = _productAccountingData.SingleOrDefault(d => d.ProductId == variant.Product.Id);
+
+                        if (productData == null)
+                        {
+                            productsWithMissingAccountingData.Add(variant.Product);
+
+                            continue;
+                        }
+                    }
                 }
 
                 if (invalidVariants.Any())
@@ -107,6 +122,16 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                     foreach (var shipment in groupedShipment.Value)
                     {
                         LogErrorFor(shipment, $"Unrecognized SKU: {string.Join(", ", invalidVariants)}");
+                    }
+
+                    continue;
+                }
+
+                if (productsWithMissingAccountingData.Any())
+                {
+                    foreach (var shipment in groupedShipment.Value)
+                    {
+                        LogErrorFor(shipment, $"Missing Accounting Data for products: {string.Join(", ", productsWithMissingAccountingData.Select(p => p.Name))}");
                     }
 
                     continue;
@@ -137,9 +162,12 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 {
                     InvoiceEntry entry = new InvoiceEntry();
 
+                    VariantModel variant = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku);
+
                     entry.OrderItemId = shipment.AmazonOrderItemId;
                     entry.ShipmentItemId = shipment.ShipmentItemId;
-                    entry.VariantId = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku).Id;
+                    entry.InvoiceName = _productAccountingData.Single(d => d.ProductId == variant.Product.Id).InvoiceName;
+                    entry.VariantId = variant.Id;
                     entry.CurrencyId = shipment.Currency.Id;
                     entry.GrossPrice = shipment.ItemPrice + shipment.ItemTax + shipment.GiftWrapPrice + shipment.GiftWrappingTax + shipment.ItemPromoDiscount;
                     entry.Quantity = shipment.DispatchedQuantity;

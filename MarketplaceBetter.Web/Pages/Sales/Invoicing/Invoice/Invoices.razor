@@ -63,25 +63,31 @@
         </RowTemplate>
         <ChildRowContent>
             <MudTr>
-                <td colspan="17">
-                    <MudTable Items="context.Entries" Context="EntryContext" Hover="true">
-                        <HeaderContent>
-                            <MudTh>Order Item Id</MudTh>
-                            <MudTh>Shipment Item Id</MudTh>
-                            <MudTh>Variant</MudTh>
-                            <MudTh>Currency</MudTh>
-                            <MudTh>Quantity</MudTh>
-                            <MudTh>Gross Price</MudTh>
-                        </HeaderContent>
-                        <RowTemplate>
-                            <MudTd DataLabel="Order Item Id">@EntryContext.OrderItemId</MudTd>
-                            <MudTd DataLabel="Shipment Item Id">@EntryContext.ShipmentItemId</MudTd>
-                            <MudTd DataLabel="Variant">@EntryContext.Variant.Sku</MudTd>
-                            <MudTd DataLabel="Currency">@EntryContext.Currency.Name</MudTd>
-                            <MudTd DataLabel="Quantity">@EntryContext.Quantity</MudTd>
-                            <MudTd DataLabel="Gross Price">@EntryContext.GrossPrice</MudTd>
-                        </RowTemplate>
-                    </MudTable>
+                <td colspan="18">
+                    <MudCard Style="border-radius: 0;">
+                        <MudCardContent>
+                            <MudTable Items="context.Entries" Context="EntryContext" Hover="true">
+                                <HeaderContent>
+                                    <MudTh>Order Item Id</MudTh>
+                                    <MudTh>Shipment Item Id</MudTh>
+                                    <MudTh>Invoice Name</MudTh>
+                                    <MudTh>Variant</MudTh>
+                                    <MudTh>Currency</MudTh>
+                                    <MudTh>Quantity</MudTh>
+                                    <MudTh>Gross Price</MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    <MudTd DataLabel="Order Item Id">@EntryContext.OrderItemId</MudTd>
+                                    <MudTd DataLabel="Shipment Item Id">@EntryContext.ShipmentItemId</MudTd>
+                                    <MudTd DataLabel="Invoice Name">@EntryContext.InvoiceName</MudTd>
+                                    <MudTd DataLabel="Variant">@EntryContext.Variant.Sku</MudTd>
+                                    <MudTd DataLabel="Currency">@EntryContext.Currency.Name</MudTd>
+                                    <MudTd DataLabel="Quantity">@EntryContext.Quantity</MudTd>
+                                    <MudTd DataLabel="Gross Price">@EntryContext.GrossPrice</MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        </MudCardContent>
+                    </MudCard>
                 </td>
             </MudTr>
         </ChildRowContent>

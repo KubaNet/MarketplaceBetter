@@ -14,6 +14,8 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
 
         public string ShipmentItemId { get; set; }
 
+        public string InvoiceName { get; set; }
+
         public long VariantId { get; set; }
 
         public virtual Variant Variant { get; set; }
