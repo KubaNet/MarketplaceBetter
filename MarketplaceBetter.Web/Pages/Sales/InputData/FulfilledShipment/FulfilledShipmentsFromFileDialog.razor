@@ -62,6 +62,8 @@
 
             FulfilledShipmentService.AddFromFile(memoryStream);
 
+            Snackbar.AddSuccess("Fulfilled Shipments were created. See Invoice column to check if all invoices were also created.");
+
             MudDialog.Close();
         }
         else

@@ -1,20 +1,24 @@
 ﻿@using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
 @using MarketplaceBetter.Domain.Model.Sales.InputData;
+@using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
 @using MarketplaceBetter.Services.Model;
 
 @page "/fulfilled-shipments"
 
+@inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
 @inject IFulfilledShipmentService FulfilledShipmentService
+@inject IInvoiceService InvoiceService
 
 <MudText Typo="Typo.h4" Class="mt-2">Fulfilled Shipments</MudText>
 
 <MainBody>
-    <MudTable T="FulfilledShipmentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<FulfilledShipmentModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="FulfilledShipmentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<FulfilledShipmentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
+            <MudButton OnClick="Process" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowForwardIos" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Process</MudButton>
             <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -51,7 +55,7 @@
             <MudTd DataLabel="Invoice">
                 @if (context.Invoice != null)
                 {
-                    
+                    <MudLink Href="@string.Concat("/invoices?SearchString=Id: ", context.Invoice.Id)" Underline="Underline.None" Color="Color.Info">Invoice Id: @context.Invoice.Id</MudLink>
                 }
                 else
                 {
@@ -96,6 +100,8 @@
     private MudTable<FulfilledShipmentModel> Table;
     private ListRequest ListRequest = new();
 
+    private HashSet<FulfilledShipmentModel> SelectedShipments = new HashSet<FulfilledShipmentModel>();
+    private bool NoneSelected = true;
     private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
 
     protected override void OnInitialized()
@@ -152,5 +158,28 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<FulfilledShipmentModel> selectedShipments)
+    {
+        SelectedShipments = selectedShipments;
+
+        if (SelectedShipments.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+
+    private void Process()
+    {
+        InvoiceService.Create(SelectedShipments.ToList());
+
+        Snackbar.AddSuccess("Fulfilled Shipments were processed. See Invoice column to check if all invoices were created.");
+
+        Table.ReloadServerData();
     }
 }

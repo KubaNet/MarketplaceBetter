@@ -123,7 +123,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             _unitOfWork.Save();
 
-            _invoiceService.CreateAndIssue(_mapper.Map<IList<FulfilledShipmentModel>>(shipments));
+            _invoiceService.Create(_mapper.Map<IList<FulfilledShipmentModel>>(shipments));
         }
 
         private IQueryable<FulfilledShipment> ApplyFilter(IQueryable<FulfilledShipment> shipments, ListRequest request)
@@ -239,6 +239,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                     "delivery_postcode" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.DeliveryPostcode) : shipments.OrderByDescending(s => s.DeliveryPostcode),
                     "delivery_country" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.DeliveryCountry.Name) : shipments.OrderByDescending(s => s.DeliveryCountry.Name),
                     "fc" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.FC) : shipments.OrderByDescending(s => s.FC),
+                    "invoice" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Invoice.Id) : shipments.OrderByDescending(s => s.Invoice.Id),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

@@ -2,6 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Sales.Settings;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
@@ -31,6 +32,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Variant> _repository;
         private readonly IRepository<EntityStatus> _statusRepository;
+        private readonly IRepository<AdditionalSku> _additionalSkuRepository;
         private readonly IChildService _childService;
         private readonly IPhotoService _photoService;
         private readonly IPhotoUploadService _photoUploadService;
@@ -48,6 +50,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Variant>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
+            _additionalSkuRepository = unitOfWork.GetRepository<AdditionalSku>();
             _childService = childService;
             _photoService = photoService;
             _photoUploadService = photoUploadService;
@@ -56,7 +59,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
         public VariantModel Get(long id) => _mapper.Map<VariantModel>(_repository.Get(id));
 
-        public VariantModel GetBySku(string sku)
+        public VariantModel GetBySkuOrAdditionalSku(string sku)
         {
             ChildModel child = _childService.GetBySku(sku);
             if (child == null)
@@ -66,10 +69,19 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             if (child == null)
             {
+                AdditionalSku additionalSku = _additionalSkuRepository.SingleOrDefault(s => s.Sku.Equals(sku));
+
+                if (additionalSku != null)
+                {
+                    return _mapper.Map<VariantModel>(additionalSku.Variant);
+                }
+
                 return null;
             }
-
-            return _mapper.Map<VariantModel>(child.Variant);
+            else
+            {
+                return _mapper.Map<VariantModel>(child.Variant);
+            }
         }
 
         public IList<VariantModel> GetAll()

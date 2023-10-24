@@ -9,7 +9,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
     {
         VariantModel Get(long id);
 
-        VariantModel GetBySku(string sku);
+        VariantModel GetBySkuOrAdditionalSku(string sku);
 
         IList<VariantModel> GetAll();
 

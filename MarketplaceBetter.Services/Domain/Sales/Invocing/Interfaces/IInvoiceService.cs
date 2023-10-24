@@ -15,7 +15,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces
 
         IList<InvoiceModel> GetForListRequest(ListRequest request);
 
-        void CreateAndIssue(IList<FulfilledShipmentModel> shipments);
+        void Create(IList<FulfilledShipmentModel> shipments);
 
         void Issue(IList<InvoiceModel> invoices);
     }

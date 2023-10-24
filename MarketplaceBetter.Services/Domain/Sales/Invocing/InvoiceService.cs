@@ -69,29 +69,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             return _mapper.Map<IList<InvoiceModel>>(invoices);
         }
 
-        public void CreateAndIssue(IList<FulfilledShipmentModel> shipments)
+        public void Create(IList<FulfilledShipmentModel> shipments)
         {
-            IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments = GroupShipments(shipments);
-
-            IList<Invoice> invoices = CreateFrom(groupedShipments);
-
-            Issue(_mapper.Map<IList<InvoiceModel>>(invoices));            
-        }
-
-        public void Issue(IList<InvoiceModel> invoices)
-        {
-            foreach (var invoice in invoices)
-            {
-                if (invoice.IsIssued)
-                {
-                    continue;
-                }
-            }
-        }
-
-        private IList<Invoice> CreateFrom(IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments)
-        {
-            IList<Invoice> invoices = new List<Invoice>();
+            IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments = FilterAndGroupShipments(shipments);
 
             foreach (var groupedShipment in groupedShipments)
             {
@@ -114,7 +94,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 IList<string> invalidVariants = new List<string>();
                 foreach (var shipment in groupedShipment.Value)
                 {
-                    VariantModel variant = _variantService.GetBySku(shipment.MerchantSku);
+                    VariantModel variant = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku);
 
                     if (variant == null)
                     {
@@ -128,6 +108,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                     {
                         LogErrorFor(shipment, $"Unrecognized SKU: {string.Join(", ", invalidVariants)}");
                     }
+
                     continue;
                 }
 
@@ -158,7 +139,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
 
                     entry.OrderItemId = shipment.AmazonOrderItemId;
                     entry.ShipmentItemId = shipment.ShipmentItemId;
-                    entry.VariantId = _variantService.GetBySku(shipment.MerchantSku).Id;
+                    entry.VariantId = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku).Id;
                     entry.CurrencyId = shipment.Currency.Id;
                     entry.GrossPrice = shipment.ItemPrice + shipment.ItemTax + shipment.GiftWrapPrice + shipment.GiftWrappingTax + shipment.ItemPromoDiscount;
                     entry.Quantity = shipment.DispatchedQuantity;
@@ -169,10 +150,27 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 _repository.Add(invoice);
                 _unitOfWork.Save();
 
-                invoices.Add(invoice);
-            }
+                foreach (var shipment in groupedShipment.Value)
+                {
+                    FulfilledShipment shipmentToUpdate = _fulfilledShipmentRepository.Get(shipment.Id);
 
-            return invoices;
+                    shipmentToUpdate.InvoiceId = invoice.Id;
+
+                    _fulfilledShipmentRepository.Update(shipmentToUpdate);
+                    _unitOfWork.Save();
+                }
+            }
+        }
+
+        public void Issue(IList<InvoiceModel> invoices)
+        {
+            foreach (var invoice in invoices)
+            {
+                if (invoice.IsIssued)
+                {
+                    continue;
+                }
+            }
         }
 
         private string GetFirstName(string fullName)
@@ -220,12 +218,17 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             return lastName;
         }
 
-        private IDictionary<string, IList<FulfilledShipmentModel>> GroupShipments(IList<FulfilledShipmentModel> shipments)
+        private IDictionary<string, IList<FulfilledShipmentModel>> FilterAndGroupShipments(IList<FulfilledShipmentModel> shipments)
         {
             IDictionary<string, IList<FulfilledShipmentModel>> groupedShipments = new Dictionary<string, IList<FulfilledShipmentModel>>();
 
             foreach (var shipment in shipments)
             {
+                if (shipment.Invoice != null)
+                {
+                    continue;
+                }
+
                 FulfillmentCenterModel fulfillmentCenter = _fulfillmentCenterService.GetFor(shipment.FC);
 
                 if (fulfillmentCenter == null)
