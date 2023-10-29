@@ -11,12 +11,14 @@ namespace MarketplaceBetter.Domain.Entities.Base
     {
         None = 0,
 
-        USD = 1,
+        PLN = 1,
 
         EUR = 2,
 
         GBP = 3,
 
         SEK = 4,
+
+        USD = 5
     }
 }

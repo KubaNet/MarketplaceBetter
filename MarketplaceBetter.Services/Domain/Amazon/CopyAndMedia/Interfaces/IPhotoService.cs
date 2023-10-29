@@ -1,4 +1,5 @@
 ﻿using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
@@ -14,7 +15,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
     {
         PhotoModel Get(long id);
 
-        PhotoModel GetForVariant(long variantId, PhotoTypeEnum type);
+        PhotoModel GetForVariant(long variantId, PhotoTypeEnum type, InstanceEnum instance);
 
         IList<PhotoModel> GetForVariantAndInstanceAll(long variantId);
 

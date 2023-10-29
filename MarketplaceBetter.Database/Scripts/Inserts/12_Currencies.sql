@@ -1,7 +1,7 @@
 ﻿IF NOT EXISTS (SELECT NULL FROM [dbo].[Currency] WHERE [SystemName] = 1)
     INSERT INTO [dbo].[Currency] ([Name], [SystemName])
-    VALUES ('USD', 1)
-ELSE UPDATE [dbo].[Currency] SET [Name] = 'USD' WHERE [SystemName] = 1
+    VALUES ('PLN', 1)
+ELSE UPDATE [dbo].[Currency] SET [Name] = 'PLN' WHERE [SystemName] = 1
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[Currency] WHERE [SystemName] = 2)
@@ -20,4 +20,10 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[Currency] WHERE [SystemName] = 4)
     INSERT INTO [dbo].[Currency] ([Name], [SystemName])
     VALUES ('SEK', 4)
 ELSE UPDATE [dbo].[Currency] SET [Name] = 'SEK' WHERE [SystemName] = 4
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Currency] WHERE [SystemName] = 5)
+    INSERT INTO [dbo].[Currency] ([Name], [SystemName])
+    VALUES ('USD', 5)
+ELSE UPDATE [dbo].[Currency] SET [Name] = 'USD' WHERE [SystemName] = 5
 GO

@@ -16,7 +16,7 @@
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="Issue" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DoubleArrow" Color="Color.Primary" Disabled="NoneSelected" Class="ml-2">Issue</MudButton>
+            <MudButton OnClick="Issue" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DoubleArrow" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Issue</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="InvoiceModel">Id</MudTableSortLabel></MudTh>
@@ -25,6 +25,9 @@
             <MudTh><MudTableSortLabel SortLabel="api_number" T="InvoiceModel">Api Number</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="api_error" T="InvoiceModel">Api Error</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="order_id" T="InvoiceModel">Order Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="vat_number" T="InvoiceModel">Vat Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="vat_value" T="InvoiceModel">Vat Value</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="shipping_gross_price" T="InvoiceModel">Shipping Gross Price</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="payment_date" T="InvoiceModel">Payment Date</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="buyer_first_name" T="InvoiceModel">Buyer First Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="buyer_last_name" T="InvoiceModel">Buyer Last Name</MudTableSortLabel></MudTh>
@@ -33,9 +36,6 @@
             <MudTh><MudTableSortLabel SortLabel="buyer_postal_code" T="InvoiceModel">Buyer Postal Code</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="buyer_state" T="InvoiceModel">Buyer State</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="buyer_country" T="InvoiceModel">Buyer Country</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="vat_number" T="InvoiceModel">Vat Number</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="vat_value" T="InvoiceModel">Vat Value</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="shipping_gross_price" T="InvoiceModel">Shipping Gross Price</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -49,6 +49,9 @@
                 }
             </MudTd>
             <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
+            <MudTd DataLabel="Vat Number">@context.VatRule.VatNumber</MudTd>
+            <MudTd DataLabel="Vat Value">@context.VatRule.VatValue %</MudTd>
+            <MudTd DataLabel="Shipping Gross Price">@context.ShippingGrossPrice</MudTd>
             <MudTd DataLabel="Payment Date">@context.PaymentDate</MudTd>
             <MudTd DataLabel="Buyer First Name">@context.BuyerFirstName</MudTd>
             <MudTd DataLabel="Buyer Last Name">@context.BuyerLastName</MudTd>
@@ -57,9 +60,6 @@
             <MudTd DataLabel="Buyer Postal Code">@context.BuyerPostalCode</MudTd>
             <MudTd DataLabel="Buyer State">@context.BuyerState</MudTd>
             <MudTd DataLabel="Buyer Country">@context.BuyerCountry</MudTd>
-            <MudTd DataLabel="Vat Number">@context.VatRule.VatNumber</MudTd>
-            <MudTd DataLabel="Vat Value">@context.VatRule.VatValue %</MudTd>
-            <MudTd DataLabel="Shipping Gross Price">@context.ShippingGrossPrice</MudTd>
         </RowTemplate>
         <ChildRowContent>
             <MudTr>
