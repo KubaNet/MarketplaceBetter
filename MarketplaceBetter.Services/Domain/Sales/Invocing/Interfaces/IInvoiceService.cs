@@ -17,6 +17,6 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces
 
         void Create(IList<FulfilledShipmentModel> shipments);
 
-        int Issue(InvoiceModel invoice, int nextNumber);
+        Task<int> Issue(InvoiceModel invoice, int nextNumber);
     }
 }

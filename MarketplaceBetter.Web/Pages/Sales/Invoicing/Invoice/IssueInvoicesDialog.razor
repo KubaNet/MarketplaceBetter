@@ -1,9 +1,11 @@
 ﻿@using System.IO
 @using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 @using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
+@using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
 
 @inject ISnackbar Snackbar
 @inject IFulfilledShipmentService FulfilledShipmentService
+@inject IInvoiceService InvoiceService
 
 <EditForm Model="Model" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
@@ -48,6 +50,7 @@
 
         if (validationResult.IsValid)
         {
+            int nextNumber = Model.NextNumber;
             IssuingInProgress = true;
             double progressStep = (double)100 / (double)TotalInvoicesCount;
 
@@ -56,8 +59,9 @@
                 CurrentInvoice = invoice;
                 StateHasChanged();
 
-                await Task.Delay(1000);
+                nextNumber = await InvoiceService.Issue(invoice, nextNumber);
 
+                await Task.Delay(1000);
                 CurrentProgressValue += progressStep;
                 CurrentInvoiceNumber++;
             }

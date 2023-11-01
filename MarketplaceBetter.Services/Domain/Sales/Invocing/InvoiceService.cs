@@ -15,6 +15,7 @@ using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -34,13 +35,15 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
         private readonly IFulfillmentCenterService _fulfillmentCenterService;
         private readonly IVatRuleService _vatRuleService;
         private readonly IVariantService _variantService;
+        private readonly IFakturowoService _fakturowoService;
 
         public InvoiceService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IFulfillmentCenterService fulfillmentCenterService,
             IVatRuleService vatRuleService,
-            IVariantService variantService)
+            IVariantService variantService,
+            IFakturowoService fakturowoService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -50,6 +53,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             _fulfillmentCenterService = fulfillmentCenterService;
             _vatRuleService = vatRuleService;
             _variantService = variantService;
+            _fakturowoService = fakturowoService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -144,7 +148,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 invoice.Buyer = $"{firstShipment.RecipientName}\r\n{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}\r\n{firstShipment.DeliveryPostcode} {firstShipment.DeliveryCityTown} {firstShipment.DeliveryCounty}\r\n{firstShipment.DeliveryCountry.Name}";
                 invoice.BuyerFirstName = GetFirstName(firstShipment.RecipientName);
                 invoice.BuyerLastName = GetLastName(firstShipment.RecipientName);
-                invoice.BuyerStreet = $"{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}";
+                invoice.BuyerStreet = GetStreet($"{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}");
                 invoice.BuyerCity = firstShipment.DeliveryCityTown;
                 invoice.BuyerPostalCode = firstShipment.DeliveryPostcode;
                 invoice.BuyerState = firstShipment.DeliveryCounty;
@@ -190,14 +194,47 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             }
         }
 
-        public int Issue(InvoiceModel invoice, int nextNumber)
+        public async Task<int> Issue(InvoiceModel invoice, int nextNumber)
         {
             if (invoice.IsIssued)
             {
                 return nextNumber;
             }
 
+            if (invoice.VatRule.CountryFrom.Code.Equals("ES", StringComparison.InvariantCultureIgnoreCase))
+            {
+                invoice.Number = $"{nextNumber}/PL/{invoice.VatRule.CountryTo.Code}/{DateTime.Now.Year}";
+            }
+            else
+            {
+                invoice.Number = $"{nextNumber}/{invoice.VatRule.CountryFrom.Code}/{invoice.VatRule.CountryTo.Code}/{DateTime.Now.Year}";
+            }
+
+            await _fakturowoService.Issue(invoice);
+
+            Invoice invoiceToUpdate = _repository.Get(invoice.Id);
+
+            TransferIssueValues(invoiceToUpdate, invoice);
+
+            _repository.Update(invoiceToUpdate);
+            _unitOfWork.Save();
+
             return nextNumber + 1;
+        }
+
+        private void TransferIssueValues(Invoice toInvoice, InvoiceModel fromInvoice)
+        {
+            toInvoice.IsIssued = fromInvoice.IsIssued;
+            toInvoice.ApiNumber = fromInvoice.ApiNumber;
+            toInvoice.ApiError = fromInvoice.ApiError;
+            if (fromInvoice.IsIssued)
+            {
+                toInvoice.Number = fromInvoice.Number;
+            }
+            else
+            {
+                fromInvoice.Number = null;
+            }
         }
 
         private string GetFirstName(string fullName)
@@ -243,6 +280,16 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             }
 
             return lastName;
+        }
+
+        private string GetStreet(string street)
+        {
+            if (string.IsNullOrWhiteSpace(street))
+            {
+                return "Amazon Customer Street";
+            }
+
+            return street;
         }
 
         private IDictionary<string, IList<FulfilledShipmentModel>> FilterAndGroupShipments(IList<FulfilledShipmentModel> shipments)
