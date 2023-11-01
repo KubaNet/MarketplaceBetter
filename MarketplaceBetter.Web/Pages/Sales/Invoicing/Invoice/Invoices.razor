@@ -162,13 +162,20 @@
         }
     }
 
-    private void Issue()
+    private async void Issue()
     {
         if (SelectedInvoices.All(i => i.IsIssued))
         {
             Snackbar.Add("All selected invoices are already issued.", Severity.Warning);
 
             return;
+        }
+
+        DialogResult result = await DialogService.Show<IssueInvoicesDialog>(null, new DialogParameters { ["Invoices"] = SelectedInvoices.Where(i => !i.IsIssued).OrderBy(i => i.Id).ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
+
+        if (!result.Canceled)
+        {
+            await Table.ReloadServerData();
         }
     }
 }

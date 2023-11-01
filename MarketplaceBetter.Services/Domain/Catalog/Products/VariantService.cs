@@ -64,7 +64,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             ChildModel child = _childService.GetBySku(sku);
             if (child == null)
             {
-                child = _childService.GetBySku($"f{sku}");
+                string skuWithoutF = sku;
+                if (sku.StartsWith("f"))
+                {
+                    skuWithoutF = sku.Remove(0, 1);
+				}
+
+                child = _childService.GetBySku(skuWithoutF);
             }
 
             if (child == null)

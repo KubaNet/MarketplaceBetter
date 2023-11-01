@@ -190,15 +190,14 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             }
         }
 
-        public void Issue(IList<InvoiceModel> invoices)
+        public int Issue(InvoiceModel invoice, int nextNumber)
         {
-            foreach (var invoice in invoices)
+            if (invoice.IsIssued)
             {
-                if (invoice.IsIssued)
-                {
-                    continue;
-                }
+                return nextNumber;
             }
+
+            return nextNumber + 1;
         }
 
         private string GetFirstName(string fullName)
