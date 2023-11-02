@@ -2,6 +2,7 @@
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,5 +20,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces
         void Add(ProductAccountingDataModel data);
 
         void Update(ProductAccountingDataModel data);
+
+        Stream Export();
     }
 }
