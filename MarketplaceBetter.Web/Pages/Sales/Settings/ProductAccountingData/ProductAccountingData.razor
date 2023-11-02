@@ -2,13 +2,14 @@
 @using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 @using MarketplaceBetter.Services.Model
 
-@page "/product-accounting-data"
+@page "/products-accounting-data"
+<PageTitle>Products Accounting Data</PageTitle>
 
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
 @inject IProductAccountingDataService ProductAccountingDataService
 
-<MudText Typo="Typo.h4" Class="mt-2">Product Accounting Data</MudText>
+<MudText Typo="Typo.h4" Class="mt-2">Products Accounting Data</MudText>
 
 <MainBody>
 	<MudTable T="ProductAccountingDataModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductAccountingDataModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">

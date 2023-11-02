@@ -413,6 +413,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                     "buyer_country" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.BuyerCountry) : invoices.OrderByDescending(i => i.BuyerCountry),
                     "vat_number" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.VatRule.VatNumber) : invoices.OrderByDescending(i => i.VatRule.VatNumber),
                     "vat_value" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.VatRule.VatValue) : invoices.OrderByDescending(i => i.VatRule.VatValue),
+                    "payment_date" => request.SortDirection == SortDirection.Ascending ? invoices.OrderBy(i => i.PaymentDate) : invoices.OrderByDescending(i => i.PaymentDate),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
