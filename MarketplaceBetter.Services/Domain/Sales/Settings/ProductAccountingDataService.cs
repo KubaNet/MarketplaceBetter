@@ -28,6 +28,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IRepository<ProductAccountingData> _repository;
+		private readonly IRepository<Child> _childRepository;
+		private readonly IRepository<Currency> _currencyRepository;
+		private readonly IRepository<AdditionalSku> _additionalSkuRepository;
 
 		public ProductAccountingDataService(
 			IMapper mapper,
@@ -36,6 +39,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
 			_repository = unitOfWork.GetRepository<ProductAccountingData>();
+			_childRepository = unitOfWork.GetRepository<Child>();
+			_currencyRepository = unitOfWork.GetRepository<Currency>();
+			_additionalSkuRepository = unitOfWork.GetRepository<AdditionalSku>();
 		}
 
 		public ProductAccountingDataModel Get(long id) => _mapper.Map<ProductAccountingDataModel>(_repository.Get(id));
@@ -110,9 +116,41 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 
 		private void WriteProductData(ProductAccountingData productData, CsvWriter csv)
 		{
-			csv.WriteField(null);
-			csv.WriteField(productData.InvoiceName);
-			csv.NextRecord();
+			IList<Child> childs = _childRepository.Where(c => c.Variant.ProductId == productData.ProductId).ToList();
+			foreach (var child in childs)
+			{
+				foreach (var currency in _currencyRepository.GetAll())
+				{
+					ProductionCost cost = productData.ProductionCosts.SingleOrDefault(c => c.CurrencyId == currency.Id);
+
+					csv.WriteField(child.Sku);
+					csv.WriteField(productData.InvoiceName);
+					csv.WriteField(productData.CommodityCode);
+					csv.WriteField(productData.Weight);
+					csv.WriteField(cost?.Cost);
+					csv.WriteField(cost?.Currency.Name);
+
+					csv.NextRecord();
+				}
+			}
+
+			IList<AdditionalSku> additionalSkus = _additionalSkuRepository.Where(s => s.Variant.ProductId == productData.ProductId).ToList();
+			foreach (var additionalSku in additionalSkus)
+			{
+				foreach (var currency in _currencyRepository.GetAll())
+				{
+					ProductionCost cost = productData.ProductionCosts.SingleOrDefault(c => c.CurrencyId == currency.Id);
+
+					csv.WriteField(additionalSku.Sku);
+					csv.WriteField(productData.InvoiceName);
+					csv.WriteField(productData.CommodityCode);
+					csv.WriteField(productData.Weight);
+					csv.WriteField(cost?.Cost);
+					csv.WriteField(cost?.Currency.Name);
+
+					csv.NextRecord();
+				}
+			}
 		}
 
 		private void WriteHeader(CsvWriter csv)
