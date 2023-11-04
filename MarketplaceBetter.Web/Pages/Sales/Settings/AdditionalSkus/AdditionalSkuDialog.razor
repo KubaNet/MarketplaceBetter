@@ -54,13 +54,21 @@
         }
     }
 
-    private async Task<IEnumerable<VariantModel>> SearchVariants(string value)
+    private async Task<IEnumerable<VariantModel>> SearchVariants(string search)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(search))
         {
             return Variants;
         }
 
-        return Variants.Where(v => v.Sku.Contains(value, StringComparison.OrdinalIgnoreCase));
+        string[] searchParts = search.Split(' ');
+
+        IList<VariantModel> foundVariants = new List<VariantModel>(Variants);
+        foreach (var searchPart in searchParts)
+        {
+            foundVariants = foundVariants.Where(v => v.Sku.Contains(searchPart, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        return foundVariants;
     }
 }

@@ -145,14 +145,14 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
 
                 invoice.OrderId = firstShipment.AmazonOrderId;
                 invoice.PaymentDate = firstShipment.PaymentsDate;
-                invoice.Buyer = $"{firstShipment.RecipientName}\r\n{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}\r\n{firstShipment.DeliveryPostcode} {firstShipment.DeliveryCityTown} {firstShipment.DeliveryCounty}\r\n{firstShipment.DeliveryCountry.Name}";
-                invoice.BuyerFirstName = GetFirstName(firstShipment.RecipientName);
-                invoice.BuyerLastName = GetLastName(firstShipment.RecipientName);
-                invoice.BuyerStreet = GetStreet($"{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}");
-                invoice.BuyerCity = firstShipment.DeliveryCityTown;
-                invoice.BuyerPostalCode = firstShipment.DeliveryPostcode;
-                invoice.BuyerState = firstShipment.DeliveryCounty;
-                invoice.BuyerCountry = firstShipment.DeliveryCountry.Name;
+                invoice.Buyer = ClearProblematicChars($"{firstShipment.RecipientName}\r\n{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}\r\n{firstShipment.DeliveryPostcode} {firstShipment.DeliveryCityTown} {firstShipment.DeliveryCounty}\r\n{firstShipment.DeliveryCountry.Name}");
+                invoice.BuyerFirstName = ClearProblematicChars(GetFirstName(firstShipment.RecipientName));
+                invoice.BuyerLastName = ClearProblematicChars(GetLastName(firstShipment.RecipientName));
+                invoice.BuyerStreet = ClearProblematicChars(GetStreet($"{firstShipment.DeliveryAddress1} {firstShipment.DeliveryAddress2} {firstShipment.DeliveryAddress3}"));
+                invoice.BuyerCity = ClearProblematicChars(firstShipment.DeliveryCityTown);
+                invoice.BuyerPostalCode = ClearProblematicChars(firstShipment.DeliveryPostcode);
+                invoice.BuyerState = ClearProblematicChars(firstShipment.DeliveryCounty);
+                invoice.BuyerCountry = ClearProblematicChars(firstShipment.DeliveryCountry.Name);
                 invoice.ShippingGrossPrice = groupedShipment.Value.Sum(s => s.DeliveryPrice + s.DeliveryTax + s.ShipmentPromoDiscount);
                 if (groupedShipment.Value.Sum(s => s.ShipmentPromoDiscount) != 0)
                 {
@@ -219,7 +219,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             _repository.Update(invoiceToUpdate);
             _unitOfWork.Save();
 
-            return nextNumber + 1;
+            return invoice.IsIssued ? ++nextNumber : nextNumber;
         }
 
         private void TransferIssueValues(Invoice toInvoice, InvoiceModel fromInvoice)
@@ -235,6 +235,11 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             {
                 fromInvoice.Number = null;
             }
+        }
+
+        private string ClearProblematicChars(string value)
+        {
+            return value.Replace("&", null);
         }
 
         private string GetFirstName(string fullName)
