@@ -12,9 +12,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 {
     public interface IVariantPhotosService
     {
-        int CountForListRequest(ListRequest request);
+        int CountForListRequest(ListRequest request, bool showSharedOnly);
 
-        IList<VariantPhotosModel> GetForListRequest(ListRequest request);
+        IList<VariantPhotosModel> GetForListRequest(ListRequest request, bool showSharedOnly);
 
         Task PrepareForDownload(PhotoModel photo, VariantModel variant);
 

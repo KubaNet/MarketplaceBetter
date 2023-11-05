@@ -53,20 +53,20 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
         public IList<PhotoModel> GetForVariantAndInstanceAll(long variantId) => _mapper.Map<IList<PhotoModel>>(_repository.Where(p => p.VariantId == variantId && p.Instance.SystemName == InstanceEnum.All));
 
-        public int CountForListRequest(ListRequest request)
+        public int CountForListRequest(ListRequest request, bool showSharedOnly)
         {
             IQueryable<Photo> photos = _repository.GetQuery();
 
-            photos = ApplyFilter(photos, request);
+            photos = ApplyFilter(photos, request, showSharedOnly);
 
             return photos.Count();
         }
 
-        public IList<PhotoModel> GetForListRequest(ListRequest request)
+        public IList<PhotoModel> GetForListRequest(ListRequest request, bool showSharedOnly)
         {
             IQueryable<Photo> photos = _repository.GetQuery();
 
-            photos = ApplyFilter(photos, request);
+            photos = ApplyFilter(photos, request, showSharedOnly);
             photos = ApplySorting(photos, request);
             photos = ApplyPaging(photos, request);
 
@@ -186,7 +186,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             toPhoto.Uploaded = DateTime.Now;
         }
 
-        private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request)
+        private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request, bool showSharedOnly)
         {
             if (_userService.IsSpecificBrand())
             {
@@ -218,6 +218,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                 InstanceModel currentInstance = _userService.GetCurrentInstance();
                 long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
                 photos = photos.Where(p => p.InstanceId == _userService.GetCurrentInstance().Id || p.InstanceId == instanceAllId);
+            }
+
+            if (showSharedOnly)
+            {
+                long instanceAllId = _instanceRepository.Single(i => i.SystemName == InstanceEnum.All).Id;
+                photos = photos.Where(p => p.InstanceId == instanceAllId);
             }
 
             if (_userService.IsSpecificStatus())

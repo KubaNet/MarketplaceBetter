@@ -19,9 +19,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 
         IList<PhotoModel> GetForVariantAndInstanceAll(long variantId);
 
-        int CountForListRequest(ListRequest request);
+        int CountForListRequest(ListRequest request, bool showSharedOnly);
 
-        IList<PhotoModel> GetForListRequest(ListRequest request);
+        IList<PhotoModel> GetForListRequest(ListRequest request, bool showSharedOnly);
 
         void Add(PhotoModel photo);
 

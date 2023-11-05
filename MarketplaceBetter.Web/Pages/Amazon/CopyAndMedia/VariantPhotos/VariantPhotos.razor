@@ -20,6 +20,7 @@
     <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudCheckBox T="bool" Label="Show shared only" Checked="ShowSharedOnly" Class="mt-4" CheckedChanged="OnShowSharedOnlyChanged" />
             <MudSpacer />
             <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
         </ToolBarContent>
@@ -62,6 +63,7 @@
 
     private MudTable<VariantPhotosModel> Table;
     private ListRequest ListRequest = new();
+    private bool ShowSharedOnly;
     private IList<PhotoTypeModel> Types;
 
     private HashSet<VariantPhotosModel> SelectedVariantPhotos = new HashSet<VariantPhotosModel>();
@@ -97,9 +99,9 @@
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<VariantPhotosModel> variantPhotos = VariantPhotosService.GetForListRequest(ListRequest);
+        IList<VariantPhotosModel> variantPhotos = VariantPhotosService.GetForListRequest(ListRequest, ShowSharedOnly);
 
-        return Task.FromResult(new TableData<VariantPhotosModel>() { TotalItems = VariantPhotosService.CountForListRequest(ListRequest), Items = variantPhotos });
+        return Task.FromResult(new TableData<VariantPhotosModel>() { TotalItems = VariantPhotosService.CountForListRequest(ListRequest, ShowSharedOnly), Items = variantPhotos });
     }
 
     private void OnRowsPerPageChanged(int rowsPerPage)
@@ -115,7 +117,14 @@
         Navigation.NavigateTo(newUrl, replace: true);
 
         Table.ReloadServerData();
+        StateHasChanged();
+    }
 
+    private void OnShowSharedOnlyChanged(bool showSharedOnly)
+    {
+        ShowSharedOnly = showSharedOnly;
+        
+        Table.ReloadServerData();
         StateHasChanged();
     }
 
