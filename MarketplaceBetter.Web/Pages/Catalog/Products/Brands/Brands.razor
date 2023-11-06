@@ -36,6 +36,13 @@
 @code {
     private IList<BrandModel> BrandsData { get; set; }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        BrandsData = BrandService.GetAll();
+    }
+
     private async void AddBrand()
     {
         DialogResult result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Add Brand" }).Result;
@@ -54,16 +61,9 @@
     {
         if (!result.Canceled)
         {
-            BrandsData = BrandService.GetAll(true);
+            BrandsData = BrandService.GetAll();
 
             StateHasChanged();
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        BrandsData = BrandService.GetAll();
     }
 }
