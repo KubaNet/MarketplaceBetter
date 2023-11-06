@@ -33,3 +33,15 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[StandardSize] WHERE [SystemName] = 6)
     VALUES ('L', 6)
 ELSE UPDATE [dbo].[StandardSize] SET [Name] = 'L' WHERE [SystemName] = 6
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[StandardSize] WHERE [SystemName] = 7)
+    INSERT INTO [dbo].[StandardSize] ([Name], [SystemName])
+    VALUES ('XL', 7)
+ELSE UPDATE [dbo].[StandardSize] SET [Name] = 'XL' WHERE [SystemName] = 7
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[StandardSize] WHERE [SystemName] = 8)
+    INSERT INTO [dbo].[StandardSize] ([Name], [SystemName])
+    VALUES ('XXL', 8)
+ELSE UPDATE [dbo].[StandardSize] SET [Name] = 'XXL' WHERE [SystemName] = 8
+GO

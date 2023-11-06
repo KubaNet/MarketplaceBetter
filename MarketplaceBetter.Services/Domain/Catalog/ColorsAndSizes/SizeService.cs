@@ -24,6 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Size> _repository;
+        private readonly IRepository<StandardSize> _standardSizeRepository;
         private readonly IUserService _userService;
 
         public SizeService(
@@ -34,6 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Size>();
+            _standardSizeRepository = unitOfWork.GetRepository<StandardSize>();
             _userService = userService;
         }
 
@@ -68,6 +70,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
             Size sizeToAdd = new();
 
             TransferValues(sizeToAdd, size);
+
+            sizeToAdd.StandardSize = _standardSizeRepository.Single(s => s.SystemName == StandardSizeEnum.OneSize);
 
             _repository.Add(sizeToAdd);
             _unitOfWork.Save();

@@ -20,6 +20,10 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes
 
         M = 5,
 
-        L = 6
+        L = 6,
+
+        XL = 7,
+
+        XXL = 8
     }
 }

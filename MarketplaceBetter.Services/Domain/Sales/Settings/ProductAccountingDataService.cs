@@ -20,6 +20,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static MudBlazor.CategoryTypes;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 
 namespace MarketplaceBetter.Services.Domain.Sales.Settings
 {
@@ -31,10 +33,12 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 		private readonly IRepository<Child> _childRepository;
 		private readonly IRepository<Currency> _currencyRepository;
 		private readonly IRepository<AdditionalSku> _additionalSkuRepository;
+        private readonly IUserService _userService;
 
-		public ProductAccountingDataService(
+        public ProductAccountingDataService(
 			IMapper mapper,
-			IUnitOfWork unitOfWork)
+			IUnitOfWork unitOfWork,
+            IUserService userService)
 		{
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
@@ -42,6 +46,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 			_childRepository = unitOfWork.GetRepository<Child>();
 			_currencyRepository = unitOfWork.GetRepository<Currency>();
 			_additionalSkuRepository = unitOfWork.GetRepository<AdditionalSku>();
+			_userService = userService;
 		}
 
 		public ProductAccountingDataModel Get(long id) => _mapper.Map<ProductAccountingDataModel>(_repository.Get(id));
@@ -198,7 +203,19 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 
 		private IQueryable<ProductAccountingData> ApplyFilter(IQueryable<ProductAccountingData> data, ListRequest request)
 		{
-			if (string.IsNullOrWhiteSpace(request.SearchString))
+            if (_userService.IsSpecificBrand())
+            {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
+                data = data.Where(d => d.Product.BrandId == currentBrand.Id);
+            }
+
+            if (_userService.IsSpecificCollection())
+            {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
+                data = data.Where(d => d.Product.CollectionId == currentCollection.Id);
+            }
+
+            if (string.IsNullOrWhiteSpace(request.SearchString))
 			{
 				return data;
 			}
