@@ -6,7 +6,7 @@
 	[CommodityCode]	NVARCHAR (255)							NOT NULL,
 	[Weight]		FLOAT									NOT NULL,
 	CONSTRAINT		[PK_ProductAccountingData]				PRIMARY KEY ([Id]),
-	CONSTRAINT		[FK_ProductAccountingData_ProductId]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Country] ([Id]),
+	CONSTRAINT		[FK_ProductAccountingData_ProductId]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
 );
 GO
 
