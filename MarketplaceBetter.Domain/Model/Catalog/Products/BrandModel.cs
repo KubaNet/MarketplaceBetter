@@ -17,7 +17,7 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         public string Name { get; set; }
 
         [Required]
-        [StringLength(3, MinimumLength = 2)]
+        [StringLength(5, MinimumLength = 2)]
         public string Code { get; set; }
     }
 }

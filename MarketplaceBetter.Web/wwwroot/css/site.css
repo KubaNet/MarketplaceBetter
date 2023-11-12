@@ -48,4 +48,10 @@ button.icon-light-grey svg.mud-icon-root.mud-svg-icon {
     fill: #00000042;
 }
 
+.mud-table-dense * .mud-table-row .mud-table-cell {
+    padding: 6px 12px 6px 8px;
+}
 
+.mud-table-dense * .mud-table-row .variant-photo-sku-cell {
+    padding: 6px 2px 6px 6px;
+}

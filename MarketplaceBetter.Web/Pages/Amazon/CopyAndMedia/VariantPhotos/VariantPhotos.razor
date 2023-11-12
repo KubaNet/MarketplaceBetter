@@ -25,8 +25,7 @@
             <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortLabel="variant" T="VariantPhotosModel">Variant</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortLabel="asin" T="VariantPhotosModel">ASIN</MudTableSortLabel></MudTh>
+            <MudTh Class="variant-photo-sku-cell"><MudTableSortLabel SortLabel="variant" T="VariantPhotosModel">Variant</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="VariantPhotosModel">Instance</MudTableSortLabel></MudTh>
             @foreach (var type in Types)
             {
@@ -34,8 +33,7 @@
             }
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Variant">@context.Variant.Sku</MudTd>
-            <MudTd DataLabel="Asin">@context.Variant.Asin</MudTd>
+            <MudTd Class="variant-photo-sku-cell" DataLabel="Variant">@context.Variant.Sku</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             @foreach (var type in Types)
             {
