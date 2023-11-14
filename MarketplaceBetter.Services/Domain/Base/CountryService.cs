@@ -24,6 +24,8 @@ namespace MarketplaceBetter.Services.Domain.Base
             _repository = unitOfWork.GetRepository<Country>();
         }
 
+        public bool Exists(string code) => _repository.Any(c => c.Code == code);
+
         public Country GetByCode(string code) => _repository.Single(c => c.Code == code);
 
         public IList<CountryModel> GetAll() => _mapper.Map<IList<CountryModel>>(_repository.GetQuery().OrderBy(c => c.Name));

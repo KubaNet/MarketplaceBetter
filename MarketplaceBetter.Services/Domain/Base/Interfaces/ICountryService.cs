@@ -10,6 +10,8 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
 {
     public interface ICountryService
     {
+        bool Exists(string code);
+
         Country GetByCode(string code);
 
         IList<CountryModel> GetAll();

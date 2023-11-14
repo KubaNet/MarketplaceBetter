@@ -114,8 +114,17 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 shipment.DeliveryCityTown = csv.GetField("Delivery City/Town");
                 shipment.DeliveryCounty = csv.GetField("Delivery County");
                 shipment.DeliveryPostcode = csv.GetField("Delivery Postcode");
-                shipment.DeliveryCountry = _countryService.GetByCode(csv.GetField("Delivery Country Code"));
                 shipment.FC = csv.GetField("FC");
+
+                string countryCode = csv.GetField("Delivery Country Code");
+                if (_countryService.Exists(countryCode))
+                {
+                    shipment.DeliveryCountry = _countryService.GetByCode(countryCode);
+                }
+                else
+                {
+                    throw new Exception($"There doesn't exists a country with code {countryCode}");
+                }
 
                 _repository.Add(shipment);
                 shipments.Add(shipment);

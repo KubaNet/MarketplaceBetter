@@ -102,6 +102,8 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         Iceland = 46,
 
-        Bahrain = 47
+        Bahrain = 47,
+
+        India = 48
     }
 }
