@@ -129,6 +129,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 					ProductionCost cost = productData.ProductionCosts.SingleOrDefault(c => c.CurrencyId == currency.Id);
 
 					csv.WriteField(child.Sku);
+					csv.WriteField(productData.ProductId);
 					csv.WriteField(productData.InvoiceName);
 					csv.WriteField(productData.CommodityCode);
 					csv.WriteField(productData.Weight);
@@ -147,7 +148,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 					ProductionCost cost = productData.ProductionCosts.SingleOrDefault(c => c.CurrencyId == currency.Id);
 
 					csv.WriteField(additionalSku.Sku);
-					csv.WriteField(productData.InvoiceName);
+                    csv.WriteField(productData.ProductId);
+                    csv.WriteField(productData.InvoiceName);
 					csv.WriteField(productData.CommodityCode);
 					csv.WriteField(productData.Weight);
 					csv.WriteField(cost?.Cost);
@@ -161,7 +163,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 		private void WriteHeader(CsvWriter csv)
 		{
 			csv.WriteField("SKU");
-			csv.WriteField("Invoice Name");
+            csv.WriteField("Product Id");
+            csv.WriteField("Invoice Name");
 			csv.WriteField("Commodity Code");
 			csv.WriteField("Weight");
 			csv.WriteField("Production Cost Value");

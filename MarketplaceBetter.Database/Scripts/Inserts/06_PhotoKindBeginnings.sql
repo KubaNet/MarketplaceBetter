@@ -17,3 +17,8 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[PhotoKindBeginning] WHERE [Name] = 'S')
     INSERT INTO [dbo].[PhotoKindBeginning] ([Name])
     VALUES ('S')
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[PhotoKindBeginning] WHERE [Name] = 'L')
+    INSERT INTO [dbo].[PhotoKindBeginning] ([Name])
+    VALUES ('L')
+GO

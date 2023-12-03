@@ -8,10 +8,10 @@
 );
 GO
 
-CREATE UNIQUE INDEX UIX_Country_Name  ON [dbo].[Country] ([Name] ASC);
+CREATE UNIQUE INDEX UIX_Country_Name ON [dbo].[Country] ([Name] ASC);
 GO
 
-CREATE UNIQUE INDEX UIX_Country_SystemName  ON [dbo].[Country] ([SystemName] ASC);
+CREATE UNIQUE INDEX UIX_Country_SystemName ON [dbo].[Country] ([SystemName] ASC);
 GO
 
 CREATE UNIQUE INDEX UIX_Country_Code  ON [dbo].[Country] ([Code] ASC);
