@@ -92,7 +92,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
                 {
                     foreach (var shipment in groupedShipment.Value)
                     {
-                        LogErrorFor(shipment, $"No VAT rule defined for CountryFrom: {countryFrom.Name} ({countryFrom.Code}) and CountryTo: {countryTo.Name} {countryTo.Code}");
+                        LogErrorFor(shipment, $"No VAT rule defined for CountryFrom: {countryFrom.Name} ({countryFrom.Code}) and CountryTo: {countryTo.Name} ({countryTo.Code})");
                     }
 
                     continue;

@@ -104,6 +104,8 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         Bahrain = 47,
 
-        India = 48
+        India = 48,
+
+        UnitedArabEmirates = 49
     }
 }
