@@ -1,10 +1,12 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
 @using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Model;
+@using System.IO
 
 @page "/copywriting"
 <PageTitle>Copywriting</PageTitle>
 
+@inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
 @inject ICopywritingService CopywritingService
@@ -16,7 +18,8 @@
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterCopywritings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton OnClick="AddCopywriting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Copywriting</MudButton>
+            <MudButton OnClick="GetMissing" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudDownload" Color="Color.Info" Class="ml-2">Get Missing</MudButton>
+            <MudButton OnClick="AddCopywriting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Copywriting</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="CopywritingModel">Id</MudTableSortLabel></MudTh>
@@ -112,5 +115,14 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private async Task GetMissing()
+    {
+        using Stream fileStream = CopywritingService.GetMissing();
+
+        using var streamReference = new DotNetStreamReference(fileStream);
+
+        await JS.InvokeVoidAsync("DownloadFileFromStream", $"Missing Copywriting.csv", streamReference);
     }
 }

@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using CsvHelper.Configuration;
+using CsvHelper;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Sales.Settings;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -15,9 +18,13 @@ using MarketplaceBetter.Services.Model;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using Microsoft.Extensions.Hosting;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -26,6 +33,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Copywriting> _repository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Instance> _instanceRepository;
+        private readonly IRepository<CopywritingElement> _copywritingElementRepository;
         private readonly IUserService _userService;
 
         public CopywritingService(
@@ -36,6 +46,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Copywriting>();
+            _productRepository = unitOfWork.GetRepository<Product>();
+            _instanceRepository = unitOfWork.GetRepository<Instance>();
+            _copywritingElementRepository = unitOfWork.GetRepository<CopywritingElement>();
             _userService = userService;
         }
 
@@ -86,6 +99,93 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
             _repository.Update(copywritingToUpdate);
             _unitOfWork.Save();
+        }
+
+        public Stream GetMissing()
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+                Encoding = Encoding.UTF8,
+                HasHeaderRecord = false,
+            };
+
+            CsvWriter csv = new CsvWriter(writer, config);
+
+            csv.WriteField("Product");
+            csv.WriteField("Instance");
+            csv.WriteField("Copywriting Element");
+            csv.NextRecord();
+
+            IQueryable<Product> products = _productRepository.GetQuery();
+            products = FilterProducts(products);
+
+            foreach (var product in products.ToList().OrderBy(p => p.Order))
+            {
+                foreach (var instance in _instanceRepository.GetAll().Where(i => i.SystemName != InstanceEnum.All).OrderBy(i => i.SystemName))
+                {
+                    if (_userService.IsSpecificInstance() && _userService.GetCurrentInstance().SystemName != instance.SystemName)
+                    {
+                        continue;
+                    }
+
+                    foreach (var element in _copywritingElementRepository.GetAll().OrderBy(e => e.SystemName))
+                    {
+                        if (_repository.Any(c => c.ProductId == product.Id && c.InstanceId == instance.Id && c.ElementId == element.Id))
+                        {
+                            continue;
+                        }
+
+                        csv.WriteField(product.Code);
+                        csv.WriteField(instance.Name);
+                        csv.WriteField(element.Name);
+
+                        csv.NextRecord();
+                    }
+                }
+            }
+
+            writer.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
+        }
+
+        private IQueryable<Product> FilterProducts(IQueryable<Product> products)
+        {
+            if (_userService.IsSpecificBrand())
+            {
+                BrandModel currentBrand = _userService.GetCurrentBrand();
+                products = products.Where(p => p.BrandId == currentBrand.Id);
+            }
+
+            if (_userService.IsSpecificCollection())
+            {
+                CollectionModel currentCollection = _userService.GetCurrentCollection();
+                products = products.Where(p => p.CollectionId == currentCollection.Id);
+            }
+
+            if (_userService.IsSpecificStatus())
+            {
+                EntityStatusModel currentStatus = _userService.GetCurrentStatus();
+                products = products.Where(p => p.StatusId == currentStatus.Id);
+            }
+
+            bool hideDrafts = _userService.HideDrafts();
+            if (hideDrafts && !_userService.IsSpecificStatus())
+            {
+                products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Draft);
+            }
+
+            bool hideWithdrawn = _userService.HideWithdrawn();
+            if (hideWithdrawn && !_userService.IsSpecificStatus())
+            {
+                products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
+            return products;
         }
 
         private void TransferValues(Copywriting toCopywriting, CopywritingModel fromCopywriting)
