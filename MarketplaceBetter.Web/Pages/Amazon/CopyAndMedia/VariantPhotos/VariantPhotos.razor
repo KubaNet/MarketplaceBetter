@@ -26,6 +26,7 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh Class="variant-photo-sku-cell"><MudTableSortLabel SortLabel="variant" T="VariantPhotosModel">Variant</MudTableSortLabel></MudTh>
+            <MudTh Class="variant-photo-sku-cell"><MudTableSortLabel SortLabel="asin" T="VariantPhotosModel">ASIN</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="VariantPhotosModel">Instance</MudTableSortLabel></MudTh>
             @foreach (var type in Types)
             {
@@ -34,6 +35,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd Class="variant-photo-sku-cell" DataLabel="Variant">@context.Variant.Sku</MudTd>
+            <MudTd Class="variant-photo-sku-cell" DataLabel="ASIN">@context.Variant.Asin</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             @foreach (var type in Types)
             {
