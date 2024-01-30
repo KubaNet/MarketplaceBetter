@@ -43,7 +43,7 @@
                 else
                 {
                     <div @onclick="() => ToggleDescription(context.Id)">@context.Value</div>
-                    <MudPopover Class="pa-4" Open="OpenInfo[context.Id]" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OverflowBehavior="OverflowBehavior.FlipNever" Style="max-width: 1400px;">
+                    <MudPopover Class="pa-4" Open="OpenInfo[context.Id]" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" OverflowBehavior="OverflowBehavior.FlipNever" Style="max-width: 1400px;">
                         <div class="copywriting-description-display">
                             @((MarkupString)context.Value)
                         </div>
