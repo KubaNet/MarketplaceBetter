@@ -1,4 +1,5 @@
-﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
+@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
 @using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Model;
 @using System.IO
@@ -34,7 +35,21 @@
             <MudTd DataLabel="Product">@context.Product.Code</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
             <MudTd DataLabel="Element">@context.Element.Name</MudTd>
-            <MudTd DataLabel="Value">@context.Value</MudTd>
+            <MudTd DataLabel="Value">
+                @if (context.Element.SystemName != CopywritingElementEnum.Description)
+                {
+                    @context.Value
+                }
+                else
+                {
+                    <div @onclick="() => ToggleDescription(context.Id)">@context.Value</div>
+                    <MudPopover Class="pa-4" Open="OpenInfo[context.Id]" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OverflowBehavior="OverflowBehavior.FlipNever" Style="max-width: 1400px;">
+                        <div class="copywriting-description-display">
+                            @((MarkupString)context.Value)
+                        </div>
+                    </MudPopover>
+                }
+            </MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarCopywriting(context.Id))">Add</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditCopywriting(context.Id))">Edit</MudButton>
@@ -51,6 +66,7 @@
 
     private MudTable<CopywritingModel> Table;
     private ListRequest ListRequest = new();
+    private IDictionary<long, bool> OpenInfo;
 
     protected override void OnInitialized()
     {
@@ -72,6 +88,8 @@
         state.PopulateListRequest(ListRequest);
 
         IList<CopywritingModel> copywritings = CopywritingService.GetForListRequest(ListRequest);
+
+        InitializeOpenInfo(copywritings);
 
         return Task.FromResult(new TableData<CopywritingModel>() { TotalItems = CopywritingService.CountForListRequest(ListRequest), Items = copywritings });
     }
@@ -115,6 +133,21 @@
         {
             Table.ReloadServerData();
         }
+    }
+
+    private void InitializeOpenInfo(IList<CopywritingModel> copywritings)
+    {
+        OpenInfo = new Dictionary<long, bool>();
+
+        foreach (var copywriting in copywritings.Where(c => c.Element.SystemName == CopywritingElementEnum.Description))
+        {
+            OpenInfo.Add(copywriting.Id, false);
+        }
+    }
+
+    private void ToggleDescription(long id)
+    {
+        OpenInfo[id] = !OpenInfo[id];
     }
 
     private async Task GetMissing()

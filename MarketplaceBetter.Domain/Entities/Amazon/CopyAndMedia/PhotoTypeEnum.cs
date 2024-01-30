@@ -22,6 +22,8 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
 
         Other4 = 6,
 
-        Other5 = 7
+        Other5 = 7,
+
+        Other6 = 8,
     }
 }

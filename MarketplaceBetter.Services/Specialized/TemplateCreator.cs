@@ -205,6 +205,8 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(other4?.Url);
             PhotoModel other5 = _photoService.GetForVariant(child.Variant.Id, PhotoTypeEnum.Other5, InstanceEnum.All);
             csv.WriteField(other5?.Url);
+            PhotoModel other6 = _photoService.GetForVariant(child.Variant.Id, PhotoTypeEnum.Other6, InstanceEnum.All);
+            csv.WriteField(other6?.Url);
             PhotoModel swatch = _photoService.GetForVariant(child.Variant.Id, PhotoTypeEnum.Swatch, InstanceEnum.All);
             csv.WriteField(swatch?.Url);
         }

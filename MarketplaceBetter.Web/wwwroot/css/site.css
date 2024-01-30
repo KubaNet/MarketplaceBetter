@@ -55,3 +55,18 @@ button.icon-light-grey svg.mud-icon-root.mud-svg-icon {
 .mud-table-dense * .mud-table-row .variant-photo-sku-cell {
     padding: 6px 2px 6px 6px;
 }
+
+div.copywriting-description-display p {
+    margin-bottom: 10px;
+}
+
+div.copywriting-description-display ul {
+    list-style-type: disc;
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+div.copywriting-description-display ol {
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
