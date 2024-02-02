@@ -104,8 +104,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 					rules = searchField.Name switch
 					{
 						"id" => rules.Where(r => r.Id == searchField.Value.ParseToIntOrDefault()),
-						"country_from" => rules.Where(r => r.CountryFrom.Name.Contains(searchField.Value)),
-						"country_to" => rules.Where(r => r.CountryTo.Name.Contains(searchField.Value)),
+						"country_from" => rules.Where(r => r.CountryFrom.Name.Contains(searchField.Value) || r.CountryFrom.Code.Contains(searchField.Value)),
+						"country_to" => rules.Where(r => r.CountryTo.Name.Contains(searchField.Value) || r.CountryTo.Code.Contains(searchField.Value)),
 						"vat_value" => rules.Where(r => r.VatValue == searchField.Value.ParseToIntOrDefault()),
 						"vat_number" => rules.Where(r => r.VatNumber.Contains(searchField.Value)),
 						_ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -115,7 +115,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 				{
 					rules = rules.Where(r => r.Id == searchString.ParseToIntOrDefault()
 						|| r.CountryFrom.Name.Contains(searchString)
+						|| r.CountryFrom.Code.Contains(searchString)
 						|| r.CountryTo.Name.Contains(searchString)
+						|| r.CountryTo.Code.Contains(searchString)
 						|| r.VatValue == searchString.ParseToIntOrDefault()
 						|| r.VatNumber.Contains(searchString));
 				}
