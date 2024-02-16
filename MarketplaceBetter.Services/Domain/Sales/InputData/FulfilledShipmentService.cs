@@ -146,7 +146,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "amazon_order_id", "shipment_item_id", "amazon_order_item_id", "merchant_sku", "title", "dispatched_quantity", "currency", 
+                string[] searchFieldNames = new[] { "id", "invoice", "amazon_order_id", "shipment_item_id", "amazon_order_item_id", "merchant_sku", "title", "dispatched_quantity", "currency", 
                     "item_price", "item_tax", "delivery_price", "delivery_tax", "gif_wrap_price", "gift_wrapping_tax", "item_promo_discount", "shipment_promo_discount", 
                     "recipient_name", "delivery_address_1", "delivery_address_2", "delivery_address_3", "delivery_city_town", "delivery_county", "delivery_postcode", "delivery_country", "fc" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
@@ -156,6 +156,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                     shipments = searchField.Name switch
                     {
                         "id" => shipments.Where(s => s.Id == searchField.Value.ParseToIntOrDefault()),
+                        "invoice" => shipments.Where(s => s.InvoiceId == searchField.Value.ParseToIntOrDefault()),
                         "amazon_order_id" => shipments.Where(s => s.AmazonOrderId.Contains(searchField.Value)),
                         "shipment_item_id" => shipments.Where(s => s.ShipmentItemId.Contains(searchField.Value)),
                         "amazon_order_item_id" => shipments.Where(s => s.AmazonOrderItemId.Contains(searchField.Value)),
@@ -186,6 +187,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 else
                 {
                     shipments = shipments.Where(s => s.Id == searchString.ParseToIntOrDefault()
+                        || s.InvoiceId == searchString.ParseToIntOrDefault()
                         || s.AmazonOrderId.Contains(searchString)
                         || s.ShipmentItemId.Contains(searchString)
                         || s.AmazonOrderItemId.Contains(searchString)
@@ -223,6 +225,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 shipments = request.SortBy switch
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Id) : shipments.OrderByDescending(s => s.Id),
+                    "invoice" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Invoice.Id) : shipments.OrderByDescending(s => s.Invoice.Id),
                     "amazon_order_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.AmazonOrderId) : shipments.OrderByDescending(s => s.AmazonOrderId),
                     "shipment_item_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.ShipmentItemId) : shipments.OrderByDescending(s => s.ShipmentItemId),
                     "amazon_order_item_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.AmazonOrderItemId) : shipments.OrderByDescending(s => s.AmazonOrderItemId),
@@ -248,13 +251,12 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                     "delivery_postcode" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.DeliveryPostcode) : shipments.OrderByDescending(s => s.DeliveryPostcode),
                     "delivery_country" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.DeliveryCountry.Name) : shipments.OrderByDescending(s => s.DeliveryCountry.Name),
                     "fc" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.FC) : shipments.OrderByDescending(s => s.FC),
-                    "invoice" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Invoice.Id) : shipments.OrderByDescending(s => s.Invoice.Id),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }
             else
             {
-                shipments = shipments.OrderByDescending(s => s.Id);
+                shipments = shipments.OrderBy(s => s.InvoiceId);
             }
 
             return shipments;
