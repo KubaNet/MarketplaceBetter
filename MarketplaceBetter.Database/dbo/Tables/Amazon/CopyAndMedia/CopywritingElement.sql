@@ -3,7 +3,7 @@
 	[Id]			BIGINT					NOT NULL	IDENTITY,
 	[Name]			NVARCHAR (255)			NOT NULL,
 	[SystemName]	INT						NOT NULL,
-	[MaxByteCount]	INT						NOT NULL DEFAULT(0),
+	[MaxByteCount]	INT						NOT NULL,
 	CONSTRAINT		[PK_CopywritingElement]	PRIMARY KEY ([Id]),
 );
 GO
