@@ -30,7 +30,17 @@ namespace MarketplaceBetter.Infrastructure.Extensions
 			return number;
 		}
 
-		public static IList<string> SplitForFiltering(this string searchString)
+        public static bool ParseToBoolOrDefault(this string boolString)
+        {
+            if (boolString.Equals("t", StringComparison.OrdinalIgnoreCase) || boolString.Equals("true", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static IList<string> SplitForFiltering(this string searchString)
         {
             IList<string> searchStrings = new List<string>();
             foreach (var searchStringElement in searchString.Split('&'))

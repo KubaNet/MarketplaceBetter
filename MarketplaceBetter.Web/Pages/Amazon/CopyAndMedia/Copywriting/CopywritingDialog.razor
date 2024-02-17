@@ -5,6 +5,7 @@
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Domain.Base.Interfaces
 @using MarketplaceBetter.Services.Validation.Amazon.CopyAndMedia.Interfaces
+@using System.Text
 
 @inject ISnackbar Snackbar
 @inject ICopywritingService CopywritingService
@@ -39,13 +40,15 @@
                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect Label="Element" T="CopywritingElementModel" @bind-Value="Copywriting.Element" For="() => Copywriting.Element">
+        <MudSelect Label="Element" T="CopywritingElementModel" Value="Copywriting.Element" For="() => Copywriting.Element" ValueChanged="HandleElementChanged">
             @foreach (var element in Elements)
             {
                 <MudSelectItem Value="element">@element.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Label="Value" @bind-Value="Copywriting.Value" For="() => Copywriting.Value" />
+        <MudTextField Label="Value" T="string" Value="Copywriting.Value" For="() => Copywriting.Value" ValueChanged="HandleValueChanged" Immediate="true" />
+        <MudTextField Label="Byte Count" @bind-Value="Copywriting.ByteCount" For="() => Copywriting.ByteCount" ReadOnly="true" />
+        <MudCheckBox Label="@HasProperLengthLabel" @bind-Checked="Copywriting.HasProperLength" Color="Copywriting.HasProperLength? Color.Success : Color.Error" ReadOnly="true" CheckedIcon="@Icons.Material.Filled.Check" UncheckedIcon="@Icons.Material.Filled.Close"></MudCheckBox>
     </FormDialog>
 </EditForm>
 
@@ -66,6 +69,7 @@
     private IList<CopywritingElementModel> Elements;
 
     private bool ProductSelectDisabled = true;
+    private string HasProperLengthLabel = "Has Proper Length";
 
     protected override void OnInitialized()
     {
@@ -91,11 +95,14 @@
                 SetValuesForCurrentInstance();
             }
         }
+
+        UpdateHasProperLengthLabel();
     }
 
     private void SetInitialValues()
     {
         Copywriting = CopywritingService.Get(CopywritingId);
+
         if (AddingSimilar)
         {
             Copywriting.Id = 0;
@@ -135,6 +142,38 @@
     private void HandleInstanceChanged(InstanceModel instance)
     {
         Copywriting.Instance = instance;
+    }
+
+    private void HandleElementChanged(CopywritingElementModel element)
+    {
+        Copywriting.Element = element;
+
+        UpdateHasProperLength();
+        UpdateHasProperLengthLabel();
+    }
+
+    private void HandleValueChanged(string value)
+    {
+        Copywriting.Value = value;
+        Copywriting.ByteCount = Encoding.UTF8.GetByteCount(value);
+
+        UpdateHasProperLength();
+    }
+
+    private void UpdateHasProperLength()
+    {
+        if (Copywriting.Element != null)
+        {
+            Copywriting.HasProperLength = Copywriting.ByteCount <= Copywriting.Element.MaxByteCount;
+        }
+    }
+
+    private void UpdateHasProperLengthLabel()
+    {
+        if (Copywriting.Element != null)
+        {
+            HasProperLengthLabel = $"Has Proper Length (max {Copywriting.Element.MaxByteCount} bytes)";
+        }
     }
 
     private void ResetProduct()

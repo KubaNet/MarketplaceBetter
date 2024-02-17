@@ -25,5 +25,9 @@ namespace MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
         [Required]
         [StringLength(4000, MinimumLength = 2)]
         public string Value { get; set; }
+
+        public int ByteCount { get; set; }
+
+        public bool HasProperLength { get; set; }
     }
 }

@@ -28,6 +28,8 @@
             <MudTh><MudTableSortLabel SortLabel="instance" T="CopywritingModel">Instance</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="element" T="CopywritingModel">Element</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="value" T="CopywritingModel">Value</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="byte_count" T="CopywritingModel">Byte Count</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="has_proper_length" T="CopywritingModel">Has Proper Length</MudTableSortLabel></MudTh>
             <MudTh Style="width: 170px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -50,6 +52,8 @@
                     </MudPopover>
                 }
             </MudTd>
+            <MudTd DataLabel="Byte Count">@context.ByteCount</MudTd>
+                <MudTd DataLabel="Has Proper Length"><BoolDisplay BoolValue="context.HasProperLength" /></MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarCopywriting(context.Id))">Add</MudButton>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditCopywriting(context.Id))">Edit</MudButton>

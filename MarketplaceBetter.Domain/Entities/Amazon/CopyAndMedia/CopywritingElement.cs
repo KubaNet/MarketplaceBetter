@@ -11,5 +11,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
         public string Name { get; set; }
 
         public CopywritingElementEnum SystemName { get; set; }
+
+        public int MaxByteCount { get; set; }
     }
 }

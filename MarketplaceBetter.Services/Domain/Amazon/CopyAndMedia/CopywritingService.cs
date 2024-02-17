@@ -194,6 +194,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             toCopywriting.InstanceId = fromCopywriting.Instance.Id;
             toCopywriting.ElementId = fromCopywriting.Element.Id;
             toCopywriting.Value = fromCopywriting.Value;
+            toCopywriting.ByteCount = fromCopywriting.ByteCount;
+            toCopywriting.HasProperLength = fromCopywriting.ByteCount <= fromCopywriting.Element.MaxByteCount;
         }
 
         private IQueryable<Copywriting> ApplyFilter(IQueryable<Copywriting> copywritings, ListRequest request)
@@ -243,7 +245,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "product_id", "instance", "element", "value" };
+                string[] searchFieldNames = new[] { "id", "product", "product_id", "instance", "element", "value", "byte_count", "has_proper_length" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -256,6 +258,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         "instance" => copywritings.Where(c => c.Instance.Name.Contains(searchField.Value)),
                         "element" => copywritings.Where(c => c.Element.Name.Contains(searchField.Value)),
                         "value" => copywritings.Where(c => c.Value.Contains(searchField.Value)),
+                        "byte_count" => copywritings.Where(c => c.ByteCount == searchField.Value.ParseToIntOrDefault()),
+                        "has_proper_length" => copywritings.Where(c => c.HasProperLength == searchField.Value.ParseToBoolOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -266,7 +270,9 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         || c.Product.Name.Contains(searchString)
                         || c.Instance.Name.Contains(searchString)
                         || c.Element.Name.Contains(searchString)
-                        || c.Value.Contains(searchString));
+                        || c.Value.Contains(searchString)
+                        || c.ByteCount == searchString.ParseToIntOrDefault()
+                        || c.HasProperLength == searchString.ParseToBoolOrDefault());
                 }
             }
 
@@ -284,6 +290,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                     "instance" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Instance.Name) : copywritings.OrderByDescending(c => c.Instance.Name),
                     "element" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Element.Name) : copywritings.OrderByDescending(c => c.Element.Name),
                     "value" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.Value) : copywritings.OrderByDescending(c => c.Value),
+                    "byte_count" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.ByteCount) : copywritings.OrderByDescending(c => c.ByteCount),
+                    "has_proper_length" => request.SortDirection == SortDirection.Ascending ? copywritings.OrderBy(c => c.HasProperLength) : copywritings.OrderByDescending(c => c.HasProperLength),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

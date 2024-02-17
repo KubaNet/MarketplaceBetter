@@ -23,5 +23,9 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
         public virtual CopywritingElement Element { get; set; }
 
         public string Value { get; set; }
+
+        public int ByteCount {  get; set; }
+
+        public bool HasProperLength { get; set; }
     }
 }
