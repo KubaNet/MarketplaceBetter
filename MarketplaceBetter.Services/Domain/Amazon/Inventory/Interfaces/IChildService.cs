@@ -34,5 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         void DeleteAllForVariant(long variantId);
 
         string GetSkuFor(long? variantId, long? instanceId);
+
+        int GetPhotoCountFor(ChildModel child);
     }
 }

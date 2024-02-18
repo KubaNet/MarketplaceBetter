@@ -253,7 +253,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "product_id", "variant", "asin", "size", "color", "instance", "file_name", "type", "kind", "height", "width", "comment" };
+                string[] searchFieldNames = new[] { "id", "product", "product_id", "variant", "variant_id", "asin", "size", "color", "instance", "file_name", "type", "kind", "height", "width", "comment" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -264,6 +264,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         "product" => photos.Where(p => p.Variant.Product.Name.Contains(searchField.Value)),
                         "product_id" => photos.Where(p => p.Variant.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         "variant" => photos.Where(p => p.Variant.Sku.Contains(searchField.Value)),
+                        "variant_id" => photos.Where(p => p.VariantId == searchField.Value.ParseToIntOrDefault()),
                         "asin" => photos.Where(p => p.Variant.Asin.Contains(searchField.Value)),
                         "size" => photos.Where(p => p.Variant.Size.Name.Contains(searchField.Value)),
                         "color" => photos.Where(p => p.Variant.Color.Name.Contains(searchField.Value)),

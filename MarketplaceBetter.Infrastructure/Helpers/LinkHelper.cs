@@ -15,9 +15,14 @@ namespace MarketplaceBetter.Infrastructure.Helpers
             return $"childs?productId={productId}&instanceId={instanceId}&showAll=true";
         }
 
-        public static string GetUrlForVariantPhotos(long productId)
+        public static string GetUrlForVariantPhotosByProduct(long productId)
         {
             return $"variant-photos?productId={productId}&showAll=true";
+        }
+
+        public static string GetUrlForVariantPhotosByVariant(long variantId)
+        {
+            return $"variant-photos?variantId={variantId}&showAll=true";
         }
     }
 }

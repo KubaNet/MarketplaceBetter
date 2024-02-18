@@ -1,11 +1,11 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
-@inject IParentService ParentService
+@inject IChildService ChildService
 
 @if (PhotoCount > 0)
 {
-    <MudLink Href="@LinkHelper.GetUrlForVariantPhotosByProduct(Parent.Product.Id)" title="View photos" Style="text-decoration: none;">@PhotoCount photos</MudLink>
+    <MudLink Href="@LinkHelper.GetUrlForVariantPhotosByVariant(Child.Variant.Id)" title="View photos" Style="text-decoration: none;">@PhotoCount photos</MudLink>
 }
 else
 {
@@ -13,7 +13,7 @@ else
 }
 
 @code {
-    [Parameter] public ParentModel Parent { get; set; }
+    [Parameter] public ChildModel Child { get; set; }
 
     private int PhotoCount = 0;
 
@@ -21,6 +21,6 @@ else
     {
         base.OnInitialized();
 
-        PhotoCount = ParentService.GetPhotoCountFor(Parent);
+        PhotoCount = ChildService.GetPhotoCountFor(Child);
     }
 }

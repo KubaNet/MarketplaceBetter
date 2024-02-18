@@ -59,6 +59,7 @@
 @code {
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
     [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? VariantId { get; set; }
     [Parameter][SupplyParameterFromQuery] public bool? ShowAll { get; set; }
 
     private MudTable<VariantPhotosModel> Table;
@@ -88,6 +89,10 @@
         if (ProductId.HasValue)
         {
             ListRequest.SearchString = $"product_id: {ProductId.Value}";
+        }
+        if (VariantId.HasValue)
+        {
+            ListRequest.SearchString = $"variant_id: {VariantId.Value}";
         }
         if (ShowAll.HasValue)
         {
