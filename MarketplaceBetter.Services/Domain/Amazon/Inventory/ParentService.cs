@@ -149,7 +149,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         public int GetPhotoCountFor(ParentModel parent)
         {
-            return _photoRepository.Count(p => p.Variant.ProductId == parent.Product.Id);
+            return _photoRepository.Count(p => p.Variant.ProductId == parent.Product.Id && 
+                (p.InstanceId == parent.Instance.Id || p.Instance.SystemName == InstanceEnum.All));
         }
 
         private void TransferValues(Parent toParent, ParentModel fromParent)
