@@ -274,7 +274,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "status", "product", "variant", "brand", "instance" };
+                string[] searchFieldNames = new[] { "id", "name", "status", "product", "product_id", "variant", "brand", "instance" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -285,6 +285,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                         "name" => contents.Where(c => c.Name.Contains(searchField.Value)),
                         "status" => contents.Where(c => c.Status.Name.Contains(searchField.Value)),
                         "product" => contents.Where(c => c.Product.Code.Contains(searchField.Value)),
+                        "product_id" => contents.Where(c => c.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         "variant" => contents.Where(c => c.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || (v.Variant.Asin != null && v.Variant.Asin.Contains(searchField.Value)))),
                         "brand" => contents.Where(c => c.Product.Brand.Name.Contains(searchField.Value)),
                         "instance" => contents.Where(c => c.Instance.Name.Contains(searchField.Value)),

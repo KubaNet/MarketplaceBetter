@@ -227,7 +227,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 
 			foreach (string searchString in searchStrings)
 			{
-				string[] searchFieldNames = new[] { "id", "product", "invoice_name", "commodity_code" };
+				string[] searchFieldNames = new[] { "id", "product", "product_id", "invoice_name", "commodity_code" };
 				SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
 				if (searchField != null)
@@ -236,7 +236,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 					{
 						"id" => data.Where(d => d.Id == searchField.Value.ParseToIntOrDefault()),
 						"product" => data.Where(d => d.Product.Name.Contains(searchField.Value)),
-						"invoice_name" => data.Where(d => d.InvoiceName.Contains(searchField.Value)),
+                        "product_id" => data.Where(d => d.Product.Id == searchField.Value.ParseToIntOrDefault()),
+                        "invoice_name" => data.Where(d => d.InvoiceName.Contains(searchField.Value)),
 						"commodity_code" => data.Where(d => d.CommodityCode.Contains(searchField.Value)),
 						_ => throw new UnrecognizedSearchFieldException(searchField.Name)
 					};

@@ -134,7 +134,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "content", "status", "variant", "instance" };
+                string[] searchFieldNames = new[] { "content", "status", "variant", "product_id", "instance" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -145,6 +145,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                         "status" => modules.Where(m => m.Content.Status.Name.Contains(searchField.Value)),
                         "variant" => modules.Where(m => m.Content.Variants.Any(v => v.Variant.Sku.Contains(searchField.Value) || v.Variant.Asin.Contains(searchField.Value))
                             || m.Content.AllVariants && m.Content.Product.Variants.Any(v => v.Sku.Contains(searchField.Value) || v.Asin.Contains(searchField.Value))),
+                        "product_id" => modules.Where(m => m.Content.Variants.Any(v => v.Variant.ProductId == searchField.Value.ParseToIntOrDefault())),
                         "instance" => modules.Where(m => m.Content.Instance.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };

@@ -125,7 +125,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "product", "productcode", "color", "colorcode", "status", "sizes", "brand", "product_id" };
+                string[] searchFieldNames = new[] { "product", "product_id", "product_code", "color", "color_code", "status", "sizes", "brand" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -133,13 +133,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     variants = searchField.Name switch
                     {
                         "product" => variants.Where(v => v.Product.Name.Contains(searchField.Value)),
-                        "productcode" => variants.Where(v => v.Product.Code.Contains(searchField.Value)),
+                        "product_id" => variants.Where(v => v.Product.Id == searchField.Value.ParseToIntOrDefault()),
+                        "product_code" => variants.Where(v => v.Product.Code.Contains(searchField.Value)),
                         "status" => variants.Where(v => v.Status.Name.Contains(searchField.Value)),
                         "color" => variants.Where(v => v.Color.Name.Contains(searchField.Value)),
-                        "colorcode" => variants.Where(v => v.Color.Code.Contains(searchField.Value)),
+                        "color_code" => variants.Where(v => v.Color.Code.Contains(searchField.Value)),
                         "sizes" => variants.Where(v => v.Size.Name.Contains(searchField.Value)),
                         "brand" => variants.Where(v => v.Product.Brand.Name.Contains(searchField.Value)),
-                        "product_id" => variants.Where(v => v.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -165,10 +165,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 variants = request.SortBy switch
                 {
                     "product" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Name) : variants.OrderByDescending(v => v.Product.Name),
-                    "productcode" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Code) : variants.OrderByDescending(v => v.Product.Code),
+                    "product_code" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Code) : variants.OrderByDescending(v => v.Product.Code),
                     "status" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Status.Name) : variants.OrderByDescending(v => v.Status.Name),
                     "color" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Name) : variants.OrderByDescending(v => v.Color.Name),
-                    "colorcode" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Code) : variants.OrderByDescending(v => v.Color.Code),
+                    "color_code" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Color.Code) : variants.OrderByDescending(v => v.Color.Code),
                     "sizes" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Size.Name) : variants.OrderByDescending(v => v.Size.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? variants.OrderBy(v => v.Product.Brand.Name) : variants.OrderByDescending(v => v.Product.Brand.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)

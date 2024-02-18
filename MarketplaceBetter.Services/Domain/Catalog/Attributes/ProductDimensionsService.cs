@@ -168,7 +168,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "brand", "size", "product_id", "weight_g" };
+                string[] searchFieldNames = new[] { "id", "product", "product_id", "brand", "size", "weight_g" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -177,9 +177,9 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
                     {
                         "id" => dimensions.Where(d => d.Id == searchField.Value.ParseToIntOrDefault()),
                         "product" => dimensions.Where(d => d.Product.Code.Contains(searchField.Value)),
+                        "product_id" => dimensions.Where(d => d.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         "size" => dimensions.Where(d => d.Size.Name.Contains(searchField.Value)),
                         "brand" => dimensions.Where(d => d.Product.Brand.Name.Contains(searchField.Value)),
-                        "product_id" => dimensions.Where(d => d.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         "weight_g" => dimensions.Where(d => d.WeightInGrams == searchField.Value.ParseToDoubleOrDefault()),
                         "weight_lb" => dimensions.Where(d => d.WeightInPounds == searchField.Value.ParseToDoubleOrDefault()),
                         "depth_cm" => dimensions.Where(d => d.DepthInCentimeters == searchField.Value.ParseToDoubleOrDefault()),
