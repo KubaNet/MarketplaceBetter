@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Entities.Base;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace MarketplaceBetter.Infrastructure.Helpers
         public static string GetUrlForChilds(long productId, long instanceId)
         {
             return $"childs?productId={productId}&instanceId={instanceId}&showAll=true";
+        }
+
+        public static string GetUrlForVariantPhotos(long productId)
+        {
+            return $"variant-photos?productId={productId}&showAll=true";
         }
     }
 }

@@ -1,0 +1,26 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+
+@inject IParentService ParentService
+
+@if (PhotoCount > 0)
+{
+    <MudLink Href="@LinkHelper.GetUrlForVariantPhotos(Parent.Product.Id)" title="View photos" Style="text-decoration: none;">@PhotoCount photos</MudLink>
+}
+else
+{
+    <span>0 photos</span>
+}
+
+@code {
+    [Parameter] public ParentModel Parent { get; set; }
+
+    private int PhotoCount = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        PhotoCount = ParentService.GetPhotoCountFor(Parent);
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
@@ -33,6 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
+        private readonly IRepository<Photo> _photoRepository;
         private readonly IUserService _userService;
 
         public ParentService(
@@ -46,6 +48,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _productRepository = unitOfWork.GetRepository<Product>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
+            _photoRepository = unitOfWork.GetRepository<Photo>();
             _userService = userService;
         }
 
@@ -142,6 +145,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             }
 
             return null;
+        }
+
+        public int GetPhotoCountFor(ParentModel parent)
+        {
+            return _photoRepository.Count(p => p.Variant.ProductId == parent.Product.Id);
         }
 
         private void TransferValues(Parent toParent, ParentModel fromParent)

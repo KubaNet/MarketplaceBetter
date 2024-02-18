@@ -29,5 +29,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         void Update(ParentModel parent);
 
         string GetSkuFor(long? parentId, long? instanceId);
+
+        int GetPhotoCountFor(ParentModel parent);
     }
 }
