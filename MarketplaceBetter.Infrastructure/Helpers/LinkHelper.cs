@@ -1,5 +1,6 @@
 ﻿using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,19 @@ namespace MarketplaceBetter.Infrastructure.Helpers
             return $"childs?productId={productId}&instanceId={instanceId}&showAll=true";
         }
 
-        public static string GetUrlForVariantPhotosByProduct(long productId)
+        public static string GetUrlForVariantPhotosByProduct(long productId, long instanceId)
         {
-            return $"variant-photos?productId={productId}&showAll=true";
+            return $"variant-photos?productId={productId}&instanceId={instanceId}&showAll=true";
         }
 
-        public static string GetUrlForVariantPhotosByVariant(long variantId)
+        public static string GetUrlForVariantPhotosByVariant(long variantId, long instanceId)
         {
-            return $"variant-photos?variantId={variantId}&showAll=true";
+            return $"variant-photos?variantId={variantId}&instanceId={instanceId}&showAll=true";
+        }
+
+        public static string GetUrlForCopywriting(long productId, long instanceid)
+        {
+            return $"copywriting?productId={productId}&instanceId={instanceid}&showAll=true";
         }
     }
 }

@@ -3,6 +3,7 @@ using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.Products;
+using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
@@ -35,6 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IRepository<Photo> _photoRepository;
+        private readonly IRepository<Copywriting> _copywritingRepository;
         private readonly IUserService _userService;
 
         public ParentService(
@@ -49,6 +51,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _photoRepository = unitOfWork.GetRepository<Photo>();
+            _copywritingRepository = unitOfWork.GetRepository<Copywriting>();
             _userService = userService;
         }
 
@@ -99,10 +102,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                     continue;
                 }
 
-                Parent parent = new Parent 
-                { 
-                    ProductId = productId, 
-                    InstanceId = instance.Id, 
+                Parent parent = new Parent
+                {
+                    ProductId = productId,
+                    InstanceId = instance.Id,
                     Sku = GetSkuFor(productId, instance.Id),
                     Status = _statusRepository.Single(s => s.SystemName == EntityStatusEnum.Draft)
                 };
@@ -149,8 +152,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
         public int GetPhotoCountFor(ParentModel parent)
         {
-            return _photoRepository.Count(p => p.Variant.ProductId == parent.Product.Id && 
+            return _photoRepository.Count(p => p.Variant.ProductId == parent.Product.Id &&
                 (p.InstanceId == parent.Instance.Id || p.Instance.SystemName == InstanceEnum.All));
+        }
+
+        public IList<CopywritingModel> GetCopywritingFor(ParentModel parent)
+        {
+            return _mapper.Map<IList<CopywritingModel>>(_copywritingRepository.Where(c => c.ProductId == parent.Product.Id && c.InstanceId == parent.Instance.Id));
         }
 
         private void TransferValues(Parent toParent, ParentModel fromParent)

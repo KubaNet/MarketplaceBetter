@@ -1,0 +1,27 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
+@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+
+@inject IParentService ParentService
+
+@if (Copywriting.Any())
+{
+    <MudLink Href="@LinkHelper.GetUrlForCopywriting(Parent.Product.Id, Parent.Instance.Id)" title="View copywriting" Style="text-decoration: none;">@Copywriting.Count copy</MudLink>
+}
+else
+{
+    <span>0 copy</span>
+}
+
+@code {
+    [Parameter] public ParentModel Parent { get; set; }
+
+    private IList<CopywritingModel> Copywriting { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Copywriting = ParentService.GetCopywritingFor(Parent);
+    }
+}

@@ -5,7 +5,7 @@
 
 @if (PhotoCount > 0)
 {
-    <MudLink Href="@LinkHelper.GetUrlForVariantPhotosByVariant(Child.Variant.Id)" title="View photos" Style="text-decoration: none;">@PhotoCount photos</MudLink>
+    <MudLink Href="@LinkHelper.GetUrlForVariantPhotosByVariant(Child.Variant.Id, Child.Instance.Id)" title="View photos" Style="text-decoration: none;">@PhotoCount photos</MudLink>
 }
 else
 {

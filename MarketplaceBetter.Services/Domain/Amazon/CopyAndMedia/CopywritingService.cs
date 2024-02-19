@@ -245,7 +245,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "product", "product_id", "instance", "element", "value", "byte_count", "has_proper_length" };
+                string[] searchFieldNames = new[] { "id", "product", "product_id", "instance", "instance_id", "element", "value", "byte_count", "has_proper_length" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -256,6 +256,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         "product" => copywritings.Where(c => c.Product.Code.Contains(searchField.Value)),
                         "product_id" => copywritings.Where(c => c.Product.Id == searchField.Value.ParseToIntOrDefault()),
                         "instance" => copywritings.Where(c => c.Instance.Name.Contains(searchField.Value)),
+                        "instance_id" => copywritings.Where(c => c.InstanceId == searchField.Value.ParseToIntOrDefault()),
                         "element" => copywritings.Where(c => c.Element.Name.Contains(searchField.Value)),
                         "value" => copywritings.Where(c => c.Value.Contains(searchField.Value)),
                         "byte_count" => copywritings.Where(c => c.ByteCount == searchField.Value.ParseToIntOrDefault()),

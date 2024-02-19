@@ -67,6 +67,8 @@
 
 @code {
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ProductId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? InstanceId { get; set; }
 
     private MudTable<CopywritingModel> Table;
     private ListRequest ListRequest = new();
@@ -84,6 +86,14 @@
         if (!String.IsNullOrWhiteSpace(SearchString))
         {
             ListRequest.SearchString = SearchString;
+        }
+        if (ProductId.HasValue)
+        {
+            ListRequest.SearchString += $"& product_id: {ProductId.Value} ";
+        }
+        if (InstanceId.HasValue)
+        {
+            ListRequest.SearchString += $"& instance_id: {InstanceId.Value} ";
         }
     }
 

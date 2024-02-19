@@ -209,7 +209,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "variant", "variant_id", "product_id", "asin", "instance" };
+                string[] searchFieldNames = new[] { "variant", "variant_id", "product_id", "asin", "instance", "instance_id" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -221,6 +221,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         "product_id" => photos.Where(p => p.Variant.ProductId == searchField.Value.ParseToIntOrDefault()),
                         "asin" => photos.Where(p => p.Variant.Asin.Contains(searchField.Value)),
                         "instance" => photos.Where(p => p.Instance.Name.Contains(searchField.Value)),
+                        "instance_id" => photos.Where(p => p.InstanceId == searchField.Value.ParseToIntOrDefault() || p.Instance.SystemName == InstanceEnum.All),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }

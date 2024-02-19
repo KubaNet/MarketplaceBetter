@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Amazon.Inventory;
+﻿using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
+using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Services.Model;
 using System;
@@ -31,5 +32,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         string GetSkuFor(long? parentId, long? instanceId);
 
         int GetPhotoCountFor(ParentModel parent);
+
+        IList<CopywritingModel> GetCopywritingFor(ParentModel parent);
     }
 }
