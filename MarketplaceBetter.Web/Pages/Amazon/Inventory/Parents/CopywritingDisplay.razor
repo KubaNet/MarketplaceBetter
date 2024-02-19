@@ -1,4 +1,5 @@
-﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
+﻿@using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
+@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
 @using MarketplaceBetter.Domain.Model.Amazon.Inventory
 @using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
 
@@ -6,7 +7,74 @@
 
 @if (Copywriting.Any())
 {
-    <MudLink Href="@LinkHelper.GetUrlForCopywriting(Parent.Product.Id, Parent.Instance.Id)" title="View copywriting" Style="text-decoration: none;">@Copywriting.Count copy</MudLink>
+    <MudLink Href="@LinkHelper.GetUrlForCopywriting(Parent.Product.Id, Parent.Instance.Id)" title="View copywriting" Style="text-decoration: none;" @onmouseenter="Open" @onmouseleave="Close">@Copywriting.Count copy</MudLink>
+    <MudPopover Class="pa-4" Open="IsOpen" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter" OverflowBehavior="OverflowBehavior.FlipNever" Style="max-width: 2000px;">
+        <MudText Typo="Typo.h6" Color="Color.Primary">Title</MudText>
+        @if (TitleCopy != null)
+        {
+            <p>@TitleCopy.Value</p>
+        }
+        else
+        {
+            <span>@EmptyValue</span>
+        }
+        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 1</MudText>
+        @if (Bp1Copy != null)
+        {
+            <p>@Bp1Copy.Value</p>
+        }
+        else
+        {
+            <span>@EmptyValue</span>
+        }
+        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 2</MudText>
+        @if (Bp2Copy != null)
+        {
+            <p>@Bp2Copy.Value</p>
+        }
+        else
+        {
+            <span>@EmptyValue</span>
+        }
+        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 3</MudText>
+        @if (Bp3Copy != null)
+        {
+            <p>@Bp3Copy.Value</p>
+        }
+        else
+        {
+            <span>@EmptyValue</span>
+        }
+        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 4</MudText>
+        @if (Bp4Copy != null)
+        {
+            <p>@Bp4Copy.Value</p>
+        }
+        else
+        {
+            <span>@EmptyValue</span>
+        }
+        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 5</MudText>
+        @if (Bp5Copy != null)
+        {
+            <p>@Bp5Copy.Value</p>
+        }
+        else
+        {
+            <span>@EmptyValue</span>
+        }
+        <MudText Typo="Typo.h6" Color="Color.Primary">Description</MudText>
+        @if(DescriptionCopy != null)
+        {
+            <div class="copywriting-description-display">
+                @((MarkupString)DescriptionCopy.Value)
+            </div>
+        }
+        else
+        {
+            <span>@EmptyValue</span>
+        }
+    </MudPopover>
 }
 else
 {
@@ -17,11 +85,38 @@ else
     [Parameter] public ParentModel Parent { get; set; }
 
     private IList<CopywritingModel> Copywriting { get; set; }
+    private bool IsOpen { get; set; }
+    private string EmptyValue = "........";
+    private CopywritingModel TitleCopy;
+    private CopywritingModel Bp1Copy;
+    private CopywritingModel Bp2Copy;
+    private CopywritingModel Bp3Copy;
+    private CopywritingModel Bp4Copy;
+    private CopywritingModel Bp5Copy;
+    private CopywritingModel DescriptionCopy;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         Copywriting = ParentService.GetCopywritingFor(Parent);
+
+        TitleCopy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.Title);
+        Bp1Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint1);
+        Bp2Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint2);
+        Bp3Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint3);
+        Bp4Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint4);
+        Bp5Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint5);
+        DescriptionCopy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.Description);
+    }
+
+    private void Open()
+    {
+        IsOpen = true;
+    }
+
+    private void Close()
+    {
+        IsOpen = false;
     }
 }
