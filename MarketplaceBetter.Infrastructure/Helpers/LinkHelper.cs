@@ -11,6 +11,11 @@ namespace MarketplaceBetter.Infrastructure.Helpers
 {
     public static class LinkHelper
     {
+        public static string GetUrlForVariants(long productId)
+        {
+            return $"variants?productId={productId}&showAll=true";
+        }
+
         public static string GetUrlForChilds(long productId, long instanceId)
         {
             return $"childs?productId={productId}&instanceId={instanceId}&showAll=true";

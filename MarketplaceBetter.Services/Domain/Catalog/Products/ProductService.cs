@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Catalog.Products
 {
@@ -26,6 +27,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Product> _repository;
 		private readonly IRepository<EntityStatus> _statusRepository;
+        private readonly IRepository<Variant> _variantRepository;
         private readonly IParentService _parentService;
 		private readonly IUserService _userService;
 
@@ -39,6 +41,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Product>();
 			_statusRepository = unitOfWork.GetRepository<EntityStatus>();
+            _variantRepository = unitOfWork.GetRepository<Variant>();
             _parentService = parentService;
 			_userService = userService;
         }
@@ -117,7 +120,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             }
         }
 
-        private void TransferValues(Product toProduct, ProductModel fromProduct)
+        public int GetVariantsCountFor(ProductModel product)
+        {
+            return _variantRepository.Count(v => v.ProductId == product.Id);
+        }
+
+		private void TransferValues(Product toProduct, ProductModel fromProduct)
         {
             toProduct.Name = fromProduct.Name;
             toProduct.Code = fromProduct.Code;

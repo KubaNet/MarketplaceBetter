@@ -1,0 +1,26 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
+@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+
+@inject IProductService ProductService
+
+@if (VariantsCount > 0)
+{
+    <MudLink Href="@LinkHelper.GetUrlForVariants(Product.Id)" title="View variants" Style="text-decoration: none;">@VariantsCount variants</MudLink>
+}
+else
+{
+    <span>0 photos</span>
+}
+
+@code {
+    [Parameter] public ProductModel Product { get; set; }
+
+    private int VariantsCount = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        VariantsCount = ProductService.GetVariantsCountFor(Product);
+    }
+}

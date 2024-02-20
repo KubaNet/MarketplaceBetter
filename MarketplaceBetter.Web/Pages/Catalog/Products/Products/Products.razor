@@ -25,6 +25,7 @@
 			<MudTh><MudTableSortLabel SortLabel="name" T="ProductModel">Name</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="code" T="ProductModel">Code</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="status" T="ProductModel">Status</MudTableSortLabel></MudTh>
+			<MudTh>Variants</MudTh>
 			<MudTh><MudTableSortLabel SortLabel="brand" T="ProductModel">Brand</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="collection" T="ProductModel">Collection</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="color_group" T="ProductModel">Color group</MudTableSortLabel></MudTh>
@@ -38,6 +39,7 @@
 			<MudTd DataLabel="Name"><ProductDisplay Product="@context" /></MudTd>
 			<MudTd DataLabel="Code">@context.Code</MudTd>
 			<MudTd DataLabel="Status"><EntityStatusDisplay Status="@context.Status" /></MudTd>
+			<MudTd DataLabel="Variants"><VariantsDisplay Product="context" /></MudTd>
 			<MudTd DataLabel="Brand">@context.Brand.Name</MudTd>
 			<MudTd DataLabel="Collection">@context.Collection.Name</MudTd>
 			<MudTd DataLabel="Color group">@context.ColorGroup.Name</MudTd>

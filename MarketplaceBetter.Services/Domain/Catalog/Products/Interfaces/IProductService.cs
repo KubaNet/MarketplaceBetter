@@ -25,5 +25,8 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
         void Update(ProductModel product);
 
 		int GetMaxOrder();
-    }
+
+        int GetVariantsCountFor(ProductModel product);
+
+	}
 }
