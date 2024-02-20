@@ -34,6 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Pages\Amazon\Inventory\Parents\ChildsDisplay.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Shared\Display\BoolDisplay.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

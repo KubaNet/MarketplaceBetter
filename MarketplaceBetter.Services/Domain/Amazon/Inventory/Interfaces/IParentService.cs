@@ -34,5 +34,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
         int GetPhotoCountFor(ParentModel parent);
 
         IList<CopywritingModel> GetCopywritingFor(ParentModel parent);
+
+        int GetChildCountFor(ParentModel parent);
     }
 }

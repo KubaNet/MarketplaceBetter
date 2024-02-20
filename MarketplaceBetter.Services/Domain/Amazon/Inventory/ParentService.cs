@@ -37,6 +37,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IRepository<Photo> _photoRepository;
         private readonly IRepository<Copywriting> _copywritingRepository;
+        private readonly IRepository<Child> _childRepository;
         private readonly IUserService _userService;
 
         public ParentService(
@@ -52,6 +53,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _photoRepository = unitOfWork.GetRepository<Photo>();
             _copywritingRepository = unitOfWork.GetRepository<Copywriting>();
+            _childRepository = unitOfWork.GetRepository<Child>();
             _userService = userService;
         }
 
@@ -159,6 +161,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         public IList<CopywritingModel> GetCopywritingFor(ParentModel parent)
         {
             return _mapper.Map<IList<CopywritingModel>>(_copywritingRepository.Where(c => c.ProductId == parent.Product.Id && c.InstanceId == parent.Instance.Id));
+        }
+
+        public int GetChildCountFor(ParentModel parent)
+        {
+            return _childRepository.Count(c => c.Variant.ProductId == parent.Product.Id && c.InstanceId == parent.Instance.Id);
         }
 
         private void TransferValues(Parent toParent, ParentModel fromParent)

@@ -1,0 +1,26 @@
+﻿@using MarketplaceBetter.Domain.Model.Amazon.Inventory
+@using MarketplaceBetter.Services.Domain.Amazon.Inventory.Interfaces
+
+@inject IParentService ParentService
+
+@if (ChildCount > 0)
+{
+    <MudLink Href="@LinkHelper.GetUrlForChilds(Parent.Product.Id, Parent.Instance.Id)" title="View childs" Style="text-decoration: none;">@ChildCount childs</MudLink>
+}
+else
+{
+    <span>0 childs</span>
+}
+
+@code {
+    [Parameter] public ParentModel Parent { get; set; }
+
+    private int ChildCount = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ChildCount = ParentService.GetChildCountFor(Parent);
+    }
+}

@@ -9,61 +9,19 @@
 {
     <MudLink Href="@LinkHelper.GetUrlForCopywriting(Parent.Product.Id, Parent.Instance.Id)" title="View copywriting" Style="text-decoration: none;" @onmouseenter="Open" @onmouseleave="Close">@Copywriting.Count copy</MudLink>
     <MudPopover Class="pa-4" Open="IsOpen" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter" OverflowBehavior="OverflowBehavior.FlipNever" Style="max-width: 2000px;">
-        <MudText Typo="Typo.h6" Color="Color.Primary">Title</MudText>
         @if (TitleCopy != null)
         {
-            <p>@TitleCopy.Value</p>
+            <MudText Typo="Typo.h6">@TitleCopy.Value</MudText>
         }
         else
         {
-            <span>@EmptyValue</span>
+            <p>@EmptyValue</p>
         }
-        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 1</MudText>
-        @if (Bp1Copy != null)
-        {
-            <p>@Bp1Copy.Value</p>
-        }
-        else
-        {
-            <span>@EmptyValue</span>
-        }
-        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 2</MudText>
-        @if (Bp2Copy != null)
-        {
-            <p>@Bp2Copy.Value</p>
-        }
-        else
-        {
-            <span>@EmptyValue</span>
-        }
-        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 3</MudText>
-        @if (Bp3Copy != null)
-        {
-            <p>@Bp3Copy.Value</p>
-        }
-        else
-        {
-            <span>@EmptyValue</span>
-        }
-        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 4</MudText>
-        @if (Bp4Copy != null)
-        {
-            <p>@Bp4Copy.Value</p>
-        }
-        else
-        {
-            <span>@EmptyValue</span>
-        }
-        <MudText Typo="Typo.h6" Color="Color.Primary">Bullet Point 5</MudText>
-        @if (Bp5Copy != null)
-        {
-            <p>@Bp5Copy.Value</p>
-        }
-        else
-        {
-            <span>@EmptyValue</span>
-        }
-        <MudText Typo="Typo.h6" Color="Color.Primary">Description</MudText>
+        <p class="mt-3">1. @(Bp1Copy != null ? Bp1Copy.Value : EmptyValue)</p>
+        <p>2. @(Bp2Copy != null ? Bp2Copy.Value : EmptyValue)</p>
+        <p>3. @(Bp3Copy != null ? Bp3Copy.Value : EmptyValue)</p>
+        <p>4. @(Bp4Copy != null ? Bp4Copy.Value : EmptyValue)</p>
+        <p class="mb-3">5. @(Bp5Copy != null ? Bp5Copy.Value : EmptyValue)</p>
         @if(DescriptionCopy != null)
         {
             <div class="copywriting-description-display">
@@ -72,7 +30,7 @@
         }
         else
         {
-            <span>@EmptyValue</span>
+            <p>@EmptyValue</p>
         }
     </MudPopover>
 }
