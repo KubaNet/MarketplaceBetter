@@ -21,7 +21,7 @@ namespace MarketplaceBetter.Services.Domain.Base
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<User> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly TimeSpan LOGIN_TIMEOUT = TimeSpan.FromMinutes(30);
+        private readonly TimeSpan LOGIN_TIMEOUT = TimeSpan.FromHours(8);
 
         private long? CurrentStatusIdChache;
         private long? CurrentBrandIdCache;
