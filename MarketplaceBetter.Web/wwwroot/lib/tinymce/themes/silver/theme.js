@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 6.8.1 (2023-11-29)
+ * TinyMCE version 6.8.3 (2024-02-08)
  */
 
 (function () {
@@ -10837,7 +10837,7 @@
     const name$1 = requiredString('name');
     const label = requiredString('label');
     const text = requiredString('text');
-    const title$5 = requiredString('title');
+    const title = requiredString('title');
     const icon = requiredString('icon');
     const value$1 = requiredString('value');
     const fetch$1 = requiredFunction('fetch');
@@ -21154,7 +21154,7 @@
     });
 
     const promotionMessage = '\u26A1\ufe0fUpgrade';
-    const promotionLink = 'https://www.tiny.cloud/tinymce-self-hosted-premium-features/?utm_source=TinyMCE&utm_medium=SPAP&utm_campaign=SPAP&utm_id=editorreferral';
+    const promotionLink = 'https://www.tiny.cloud/tinymce-self-hosted-premium-features/?utm_campaign=self_hosted_upgrade_promo&utm_source=tiny&utm_medium=referral';
     const renderPromotion = spec => {
       return {
         uid: spec.uid,
@@ -23138,8 +23138,8 @@
       return styleSheetLoader.loadRawCss(key, css);
     };
     const loadUiSkins = async (editor, skinUrl) => {
-      const skinUrl_ = getSkinUrlOption(editor).getOr('default');
-      const skinUiCss = 'ui/' + skinUrl_ + '/skin.css';
+      const skinResourceIdentifier = getSkinUrlOption(editor).getOr('default');
+      const skinUiCss = 'ui/' + skinResourceIdentifier + '/skin.css';
       const css = tinymce.Resource.get(skinUiCss);
       if (isString(css)) {
         return Promise.resolve(loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader));
@@ -23151,7 +23151,8 @@
     const loadShadowDomUiSkins = async (editor, skinUrl) => {
       const isInShadowRoot$1 = isInShadowRoot(SugarElement.fromDom(editor.getElement()));
       if (isInShadowRoot$1) {
-        const shadowDomSkinCss = skinUrl + '/skin.shadowdom.css';
+        const skinResourceIdentifier = getSkinUrlOption(editor).getOr('default');
+        const shadowDomSkinCss = 'ui/' + skinResourceIdentifier + '/skin.shadowdom.css';
         const css = tinymce.Resource.get(shadowDomSkinCss);
         if (isString(css)) {
           loadRawCss(editor, shadowDomSkinCss, css, global$7.DOM.styleSheetLoader);
@@ -23164,9 +23165,9 @@
     };
     const loadUrlSkin = async (isInline, editor) => {
       getSkinUrlOption(editor).fold(() => {
-        const skinUrl_ = getSkinUrl(editor);
-        if (skinUrl_) {
-          editor.contentCSS.push(skinUrl_ + (isInline ? '/content.inline' : '/content') + '.min.css');
+        const skinResourceIdentifier = getSkinUrl(editor);
+        if (skinResourceIdentifier) {
+          editor.contentCSS.push(skinResourceIdentifier + (isInline ? '/content.inline' : '/content') + '.min.css');
         }
       }, skinUrl => {
         const skinContentCss = 'ui/' + skinUrl + (isInline ? '/content.inline' : '/content') + '.css';
@@ -23174,9 +23175,9 @@
         if (isString(css)) {
           loadRawCss(editor, skinContentCss, css, editor.ui.styleSheetLoader);
         } else {
-          const skinUrl_ = getSkinUrl(editor);
-          if (skinUrl_) {
-            editor.contentCSS.push(skinUrl_ + (isInline ? '/content.inline' : '/content') + '.min.css');
+          const skinResourceIdentifier = getSkinUrl(editor);
+          if (skinResourceIdentifier) {
+            editor.contentCSS.push(skinResourceIdentifier + (isInline ? '/content.inline' : '/content') + '.min.css');
           }
         }
       });
@@ -23194,12 +23195,12 @@
     const iframe = curry(loadSkin, false);
     const inline = curry(loadSkin, true);
 
-    const getTooltipText = (editor, prefix, value) => editor.translate([
-      `${ prefix } {0}`,
+    const makeTooltipText = (editor, labelWithPlaceholder, value) => editor.translate([
+      labelWithPlaceholder,
       editor.translate(value)
     ]);
 
-    const generateSelectItems = (_editor, backstage, spec) => {
+    const generateSelectItems = (backstage, spec) => {
       const generateItem = (rawItem, response, invalid, value) => {
         const translatedText = backstage.shared.providers.translate(rawItem.title);
         if (rawItem.type === 'separator') {
@@ -23262,11 +23263,11 @@
       const dataset = spec.dataset;
       const getStyleItems = dataset.type === 'basic' ? () => map$2(dataset.data, d => processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) : dataset.getData;
       return {
-        items: generateSelectItems(editor, backstage, spec),
+        items: generateSelectItems(backstage, spec),
         getStyleItems
       };
     };
-    const createSelectButton = (editor, backstage, spec, title, textUpdateEventName) => {
+    const createSelectButton = (editor, backstage, spec, tooltipWithPlaceholder, textUpdateEventName) => {
       const {items, getStyleItems} = createMenuItems(editor, backstage, spec);
       const getApi = comp => ({
         getComponent: constant$1(comp),
@@ -23279,7 +23280,7 @@
         }
       });
       const onSetup = api => {
-        const handler = e => api.setTooltip(getTooltipText(editor, title, e.value));
+        const handler = e => api.setTooltip(makeTooltipText(editor, tooltipWithPlaceholder, e.value));
         editor.on(textUpdateEventName, handler);
         return composeUnbinders(onSetupEvent(editor, 'NodeChange', api => {
           const comp = api.getComponent();
@@ -23339,7 +23340,8 @@
       };
     };
 
-    const title$4 = 'Align';
+    const menuTitle$4 = 'Align';
+    const btnTooltip$4 = 'Alignment {0}';
     const fallbackAlignment = 'left';
     const alignMenuItems = [
       {
@@ -23380,7 +23382,7 @@
       const dataset = buildBasicStaticDataset(alignMenuItems);
       const onAction = rawItem => () => find$5(alignMenuItems, item => item.format === rawItem.format).each(item => editor.execCommand(item.command));
       return {
-        tooltip: getTooltipText(editor, title$4, fallbackAlignment),
+        tooltip: makeTooltipText(editor, btnTooltip$4, fallbackAlignment),
         text: Optional.none(),
         icon: Optional.some('align-left'),
         isSelectedFor,
@@ -23393,11 +23395,11 @@
         isInvalid: item => !editor.formatter.canApply(item.format)
       };
     };
-    const createAlignButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$4(editor), title$4, 'AlignTextUpdate');
+    const createAlignButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$4(editor), btnTooltip$4, 'AlignTextUpdate');
     const createAlignMenu = (editor, backstage) => {
       const menuItems = createMenuItems(editor, backstage, getSpec$4(editor));
       editor.ui.registry.addNestedMenuItem('align', {
-        text: backstage.shared.providers.translate(title$4),
+        text: backstage.shared.providers.translate(menuTitle$4),
         onSetup: onSetupEditableToggle(editor),
         getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
       });
@@ -23412,7 +23414,8 @@
       }));
     };
 
-    const title$3 = 'Blocks';
+    const menuTitle$3 = 'Blocks';
+    const btnTooltip$3 = 'Block {0}';
     const fallbackFormat = 'Paragraph';
     const getSpec$3 = editor => {
       const isSelectedFor = format => () => editor.formatter.match(format);
@@ -23435,7 +23438,7 @@
       };
       const dataset = buildBasicSettingsDataset(editor, 'block_formats', Delimiter.SemiColon);
       return {
-        tooltip: getTooltipText(editor, title$3, fallbackFormat),
+        tooltip: makeTooltipText(editor, btnTooltip$3, fallbackFormat),
         text: Optional.some(fallbackFormat),
         icon: Optional.none(),
         isSelectedFor,
@@ -23448,17 +23451,18 @@
         isInvalid: item => !editor.formatter.canApply(item.format)
       };
     };
-    const createBlocksButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$3(editor), title$3, 'BlocksTextUpdate');
+    const createBlocksButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$3(editor), btnTooltip$3, 'BlocksTextUpdate');
     const createBlocksMenu = (editor, backstage) => {
       const menuItems = createMenuItems(editor, backstage, getSpec$3(editor));
       editor.ui.registry.addNestedMenuItem('blocks', {
-        text: title$3,
+        text: menuTitle$3,
         onSetup: onSetupEditableToggle(editor),
         getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
       });
     };
 
-    const title$2 = 'Fonts';
+    const menuTitle$2 = 'Fonts';
+    const btnTooltip$2 = 'Font {0}';
     const systemFont = 'System Font';
     const systemStackFonts = [
       '-apple-system',
@@ -23524,7 +23528,7 @@
       };
       const dataset = buildBasicSettingsDataset(editor, 'font_family_formats', Delimiter.SemiColon);
       return {
-        tooltip: getTooltipText(editor, title$2, systemFont),
+        tooltip: makeTooltipText(editor, btnTooltip$2, systemFont),
         text: Optional.some(systemFont),
         icon: Optional.none(),
         isSelectedFor,
@@ -23537,11 +23541,11 @@
         isInvalid: never
       };
     };
-    const createFontFamilyButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$2(editor), title$2, 'FontFamilyTextUpdate');
+    const createFontFamilyButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$2(editor), btnTooltip$2, 'FontFamilyTextUpdate');
     const createFontFamilyMenu = (editor, backstage) => {
       const menuItems = createMenuItems(editor, backstage, getSpec$2(editor));
       editor.ui.registry.addNestedMenuItem('fontfamily', {
-        text: backstage.shared.providers.translate(title$2),
+        text: backstage.shared.providers.translate(menuTitle$2),
         onSetup: onSetupEditableToggle(editor),
         getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
       });
@@ -23831,7 +23835,8 @@
       };
     };
 
-    const title$1 = 'Font sizes';
+    const menuTitle$1 = 'Font sizes';
+    const btnTooltip$1 = 'Font size {0}';
     const fallbackFontSize = '12pt';
     const legacyFontSizes = {
       '8pt': '1',
@@ -23900,7 +23905,7 @@
       };
       const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
       return {
-        tooltip: getTooltipText(editor, title$1, fallbackFontSize),
+        tooltip: makeTooltipText(editor, btnTooltip$1, fallbackFontSize),
         text: Optional.some(fallbackFontSize),
         icon: Optional.none(),
         isSelectedFor,
@@ -23913,7 +23918,7 @@
         isInvalid: never
       };
     };
-    const createFontSizeButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$1(editor), title$1, 'FontSizeTextUpdate');
+    const createFontSizeButton = (editor, backstage) => createSelectButton(editor, backstage, getSpec$1(editor), btnTooltip$1, 'FontSizeTextUpdate');
     const getConfigFromUnit = unit => {
       var _a;
       const baseConfig = { step: 1 };
@@ -23964,13 +23969,14 @@
     const createFontSizeMenu = (editor, backstage) => {
       const menuItems = createMenuItems(editor, backstage, getSpec$1(editor));
       editor.ui.registry.addNestedMenuItem('fontsize', {
-        text: title$1,
+        text: menuTitle$1,
         onSetup: onSetupEditableToggle(editor),
         getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
       });
     };
 
-    const title = 'Formats';
+    const menuTitle = 'Formats';
+    const btnTooltip = 'Format {0}';
     const getSpec = (editor, dataset) => {
       const fallbackFormat = 'Paragraph';
       const isSelectedFor = format => () => editor.formatter.match(format);
@@ -24001,7 +24007,7 @@
         fireStylesTextUpdate(editor, { value: text });
       };
       return {
-        tooltip: getTooltipText(editor, title, fallbackFormat),
+        tooltip: makeTooltipText(editor, btnTooltip, fallbackFormat),
         text: Optional.some(fallbackFormat),
         icon: Optional.none(),
         isSelectedFor,
@@ -24019,7 +24025,7 @@
         type: 'advanced',
         ...backstage.styles
       };
-      return createSelectButton(editor, backstage, getSpec(editor, dataset), title, 'StylesTextUpdate');
+      return createSelectButton(editor, backstage, getSpec(editor, dataset), btnTooltip, 'StylesTextUpdate');
     };
     const createStylesMenu = (editor, backstage) => {
       const dataset = {
@@ -24028,7 +24034,7 @@
       };
       const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
       editor.ui.registry.addNestedMenuItem('styles', {
-        text: title,
+        text: menuTitle,
         onSetup: onSetupEditableToggle(editor),
         getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
       });
@@ -27692,7 +27698,7 @@
               dom: {
                 tag: 'a',
                 attributes: {
-                  'href': 'https://www.tiny.cloud/powered-by-tiny?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce&utm_content=v6',
+                  'href': 'https://www.tiny.cloud/powered-by-tiny?utm_campaign=poweredby&utm_source=tiny&utm_medium=referral&utm_content=v6',
                   'rel': 'noopener',
                   'target': '_blank',
                   'aria-label': global$8.translate([
@@ -28606,7 +28612,7 @@
         'directory',
         'leaf'
       ]),
-      title$5,
+      title,
       requiredString('id'),
       optionOf('menu', MenuButtonSchema)
     ];
@@ -28684,7 +28690,7 @@
 
     const tabFields = [
       generatedName('tab'),
-      title$5,
+      title,
       requiredArrayOf('items', itemSchema)
     ];
     const tabPanelFields = [
