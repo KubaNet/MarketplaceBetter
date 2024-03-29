@@ -49,9 +49,10 @@
 
 @code {
     [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+    [Parameter][SupplyParameterFromQuery] public long? ColorId { get; set; }
 
     private MudTable<ColorTranslationModel> Table;
-	private ListRequest ListRequest = new();
+    private ListRequest ListRequest = new();
 
     protected override void OnInitialized()
     {
@@ -65,6 +66,13 @@
         if (!String.IsNullOrWhiteSpace(SearchString))
         {
             ListRequest.SearchString = SearchString;
+        }
+        else
+        {
+            if (ColorId.HasValue)
+            {
+                ListRequest.SearchString += $"color_id: {ColorId.Value}";
+            }
         }
     }
 

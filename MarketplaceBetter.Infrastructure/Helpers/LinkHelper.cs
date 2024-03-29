@@ -35,5 +35,10 @@ namespace MarketplaceBetter.Infrastructure.Helpers
         {
             return $"copywriting?productId={productId}&instanceId={instanceid}&showAll=true";
         }
+
+        public static string GetUrlForTranslations(long colorId)
+        {
+            return $"color-translations?colorId={colorId}&showAll=true";
+        }
     }
 }

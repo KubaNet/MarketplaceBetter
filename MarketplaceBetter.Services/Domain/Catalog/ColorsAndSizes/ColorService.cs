@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Infrastructure.Data;
@@ -23,6 +24,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Color> _repository;
+        private readonly IRepository<ColorTranslation> _translationRepository;
 		private readonly IUserService _userService;
 
 		public ColorService(
@@ -33,6 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Color>();
+            _translationRepository = unitOfWork.GetRepository<ColorTranslation>();
             _userService = userService;
         }
 
@@ -80,6 +83,11 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
             _repository.Update(colorToUpdate);
             _unitOfWork.Save();
+        }
+
+        public int GetTranslationsCountFor(ColorModel color)
+        {
+            return _translationRepository.Count(t => t.ColorId == color.Id);
         }
 
         private void TransferValues(Color toColor, ColorModel fromColor)

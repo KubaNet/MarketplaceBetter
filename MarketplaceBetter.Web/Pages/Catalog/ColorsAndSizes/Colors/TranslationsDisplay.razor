@@ -1,0 +1,26 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+
+@inject IColorService ColorService
+
+@if (TranslationsCount > 0)
+{
+    <MudLink Href="@LinkHelper.GetUrlForTranslations(Color.Id)" title="View translations" Style="text-decoration: none;">@TranslationsCount translations</MudLink>
+}
+else
+{
+    <span>0 translations</span>
+}
+
+@code {
+    [Parameter] public ColorModel Color { get; set; }
+
+    private int TranslationsCount = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        TranslationsCount = ColorService.GetTranslationsCountFor(Color);
+    }
+}

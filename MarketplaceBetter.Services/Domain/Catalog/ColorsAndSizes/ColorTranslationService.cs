@@ -113,7 +113,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "instance", "translation", "mapping", "color", "color_group", "brand" };
+                string[] searchFieldNames = new[] { "id", "instance", "translation", "mapping", "color", "color_id", "color_group", "brand" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -125,6 +125,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
                         "translation" => translations.Where(t => t.Translation.Contains(searchField.Value)),
                         "mapping" => translations.Where(t => t.Mapping.Contains(searchField.Value)),
                         "color" => translations.Where(t => t.Color.Name.Contains(searchField.Value)),
+                        "color_id" => translations.Where(t => t.ColorId == searchField.Value.ParseToIntOrDefault()),
                         "color_group" => translations.Where(t => t.Color.Group.Name.Contains(searchField.Value)),
                         "brand" => translations.Where(t => t.Color.Group.Brand.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -137,6 +138,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
                         || t.Translation.Contains(searchString)
                         || t.Mapping.Contains(searchString)
                         || t.Color.Name.Contains(searchString)
+                        || t.ColorId == searchString.ParseToIntOrDefault()
                         || t.Color.Group.Name.Contains(searchString)
                         || t.Color.Group.Brand.Name.Contains(searchString));
                 }

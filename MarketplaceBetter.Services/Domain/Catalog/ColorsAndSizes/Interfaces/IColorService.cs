@@ -23,5 +23,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
         void Add(ColorModel color);
 
         void Update(ColorModel color);
+
+        int GetTranslationsCountFor(ColorModel color);
     }
 }
