@@ -107,6 +107,8 @@
     <None Include="Scripts\Inserts\12_Currencies.sql" />
     <None Include="Scripts\CustomScripts\InsertingFulfillmentCenters.sql" />
     <None Include="Scripts\CustomScripts\InsertingVatRules.sql" />
+    <None Include="Scripts\CustomScripts\InsertingCopywriting.sql" />
+    <None Include="Scripts\CustomScripts\DeletingCopywriting.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />
