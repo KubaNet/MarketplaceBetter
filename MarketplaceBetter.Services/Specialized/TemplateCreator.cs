@@ -147,15 +147,15 @@ namespace MarketplaceBetter.Services.Specialized
         {
             CopywritingModel description = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.Description);
             csv.WriteField(description?.Value);
-            CopywritingModel bulletPoint1 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BulletPoint1);
+            CopywritingModel bulletPoint1 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BP1);
             csv.WriteField(bulletPoint1?.Value);
-            CopywritingModel bulletPoint2 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BulletPoint2);
+            CopywritingModel bulletPoint2 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BP2);
             csv.WriteField(bulletPoint2?.Value);
-            CopywritingModel bulletPoint3 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BulletPoint3);
+            CopywritingModel bulletPoint3 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BP3);
             csv.WriteField(bulletPoint3?.Value);
-            CopywritingModel bulletPoint4 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BulletPoint4);
+            CopywritingModel bulletPoint4 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BP4);
             csv.WriteField(bulletPoint4?.Value);
-            CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BulletPoint5);
+            CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BP5);
             csv.WriteField(bulletPoint5?.Value);
         }
 

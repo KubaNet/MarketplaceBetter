@@ -60,11 +60,11 @@ else
         Copywriting = ParentService.GetCopywritingFor(Parent);
 
         TitleCopy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.Title);
-        Bp1Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint1);
-        Bp2Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint2);
-        Bp3Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint3);
-        Bp4Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint4);
-        Bp5Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BulletPoint5);
+        Bp1Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BP1);
+        Bp2Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BP2);
+        Bp3Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BP3);
+        Bp4Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BP4);
+        Bp5Copy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.BP5);
         DescriptionCopy = Copywriting.SingleOrDefault(c => c.Element.SystemName == CopywritingElementEnum.Description);
     }
 

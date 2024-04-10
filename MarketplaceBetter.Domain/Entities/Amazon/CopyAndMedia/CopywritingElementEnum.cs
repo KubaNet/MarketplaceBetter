@@ -14,14 +14,14 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
 
         Description = 2,
 
-        BulletPoint1 = 3,
+        BP1 = 3,
 
-        BulletPoint2 = 4,
+        BP2 = 4,
 
-        BulletPoint3 = 5,
+        BP3 = 5,
 
-        BulletPoint4 = 6,
+        BP4 = 6,
 
-        BulletPoint5 = 7,
+        BP5 = 7,
     }
 }
