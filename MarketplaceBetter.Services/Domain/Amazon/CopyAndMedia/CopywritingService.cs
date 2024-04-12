@@ -272,8 +272,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         || c.Instance.Name.Contains(searchString)
                         || c.Element.Name.Contains(searchString)
                         || c.Value.Contains(searchString)
-                        || c.ByteCount == searchString.ParseToIntOrDefault()
-                        || c.HasProperLength == searchString.ParseToBoolOrDefault());
+                        || c.ByteCount == searchString.ParseToIntOrDefault());
                 }
             }
 
