@@ -1,0 +1,151 @@
+﻿@using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
+@using MarketplaceBetter.Domain.Model.Sales.InputData;
+@using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
+@using MarketplaceBetter.Services.Model;
+
+@page "/customer-returns"
+<PageTitle>Customer Returns</PageTitle>
+
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject ICustomerReturnService CustomerReturnService
+@inject IInvoiceService InvoiceService
+
+<MudText Typo="Typo.h4" Class="mt-2">Customer Returns</MudText>
+
+<MainBody>
+    <MudTable T="CustomerReturnModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CustomerReturnModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="Process" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowForwardIos" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Process</MudButton>
+            <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="CustomerReturnModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="return_date" T="CustomerReturnModel">Return Date</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="order_id" T="CustomerReturnModel">Order Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="sku" T="CustomerReturnModel">Sku</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="asin" T="CustomerReturnModel">Asin</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="fnsku" T="CustomerReturnModel">Fnsku</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product_name" T="CustomerReturnModel">Product Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="quantity" T="CustomerReturnModel">Quantity</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="fulfillment_center_id" T="CustomerReturnModel">Fulfillment Center Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="detailed_disposition" T="CustomerReturnModel">Detailed Disposition</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="reason" T="CustomerReturnModel">Reason</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="status" T="CustomerReturnModel">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="license_plate_number" T="CustomerReturnModel">License Plate Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="customer_comments" T="CustomerReturnModel">Customer Comments</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Return Date">@context.ReturnDate</MudTd>
+            <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
+            <MudTd DataLabel="Sku">@context.Sku</MudTd>
+            <MudTd DataLabel="Asin">@context.Asin</MudTd>
+            <MudTd DataLabel="Fnsku">@context.Fnsku</MudTd>
+            <MudTd DataLabel="Product Name">@context.ProductName</MudTd>
+            <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
+            <MudTd DataLabel="Fulfillment Center Id">@context.FulfillmentCenterId</MudTd>
+            <MudTd DataLabel="Detailed Disposition">@context.DetailedDisposition.Name</MudTd>
+            <MudTd DataLabel="Reason">@context.Reason.Name</MudTd>
+            <MudTd DataLabel="Status">@context.Status.Name</MudTd>
+            <MudTd DataLabel="License Plate Number">@context.LicensePlateNumber</MudTd>
+            <MudTd DataLabel="Customer Comments">@context.CustomerComments</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+    private MudTable<CustomerReturnModel> Table;
+    private ListRequest ListRequest = new();
+
+    private HashSet<CustomerReturnModel> SelectedReturns = new HashSet<CustomerReturnModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+    }
+
+    private Task<TableData<CustomerReturnModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<CustomerReturnModel> returns = CustomerReturnService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<CustomerReturnModel>() { TotalItems = CustomerReturnService.CountForListRequest(ListRequest), Items = returns });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private async void AddFromFile()
+    {
+        DialogResult result = await DialogService.Show<CustomerReturnsFromFileDialog>().Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+
+    private void OnSelectedItemsChanged(HashSet<CustomerReturnModel> selectedReturns)
+    {
+        SelectedReturns = selectedReturns;
+
+        if (SelectedReturns.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+
+    private void Process()
+    {
+        //InvoiceService.Create(SelectedReturns.ToList());
+
+        Snackbar.AddSuccess("Customer SelectedReturns were processed. See Invoice column to check if all invoices were created.");
+
+        Table.ReloadServerData();
+    }
+}

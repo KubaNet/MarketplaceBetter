@@ -195,3 +195,21 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[ReturnReason] WHERE [SystemName] = 33)
     VALUES ('JEWELLERY_NO_CERT', 33)
 ELSE UPDATE [dbo].[ReturnReason] SET [Name] = 'JEWELLERY_NO_CERT' WHERE [SystemName] = 33
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[ReturnReason] WHERE [SystemName] = 34)
+    INSERT INTO [dbo].[ReturnReason] ([Name], [SystemName])
+    VALUES ('APPAREL_TOO_SMALL', 34)
+ELSE UPDATE [dbo].[ReturnReason] SET [Name] = 'APPAREL_TOO_SMALL' WHERE [SystemName] = 34
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[ReturnReason] WHERE [SystemName] = 35)
+    INSERT INTO [dbo].[ReturnReason] ([Name], [SystemName])
+    VALUES ('APPAREL_TOO_LARGE', 35)
+ELSE UPDATE [dbo].[ReturnReason] SET [Name] = 'APPAREL_TOO_LARGE' WHERE [SystemName] = 35
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[ReturnReason] WHERE [SystemName] = 36)
+    INSERT INTO [dbo].[ReturnReason] ([Name], [SystemName])
+    VALUES ('APPAREL_STYLE', 36)
+ELSE UPDATE [dbo].[ReturnReason] SET [Name] = 'APPAREL_STYLE' WHERE [SystemName] = 36
+GO

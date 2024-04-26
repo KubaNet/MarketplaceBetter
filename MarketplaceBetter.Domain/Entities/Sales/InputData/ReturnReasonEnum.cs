@@ -75,5 +75,11 @@ namespace MarketplaceBetter.Domain.Entities.Sales.InputData
         JEWELLERY_LOOSE_STONE = 32,
 
         JEWELLERY_NO_CERT = 33,
+
+        APPAREL_TOO_SMALL = 34,
+
+        APPAREL_TOO_LARGE = 35,
+
+        APPAREL_STYLE = 36,
     }
 }

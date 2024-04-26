@@ -104,6 +104,10 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<AdditionalSku> AdditionalSku { get; set; }
         // => Input Data
         public DbSet<FulfilledShipment> FulfilledShipment { get; set; }
+        public DbSet<CustomerReturn> CustomerReturn { get; set; }
+        public DbSet<ReturnDetailedDisposition> ReturnDetailedDisposition { get; set; }
+        public DbSet<ReturnReason> ReturnReason { get; set; }
+        public DbSet<ReturnStatus> ReturnStatus { get; set; }
         // => Invoicing
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<InvoiceEntry> InvoiceEntry { get; set; }

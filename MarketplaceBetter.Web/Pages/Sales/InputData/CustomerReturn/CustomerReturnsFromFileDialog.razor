@@ -2,11 +2,11 @@
 @using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
 
 @inject ISnackbar Snackbar
-@inject IFulfilledShipmentService FulfilledShipmentService
+@inject ICustomerReturnService CustomerReturnService
 
 <EditForm Model="FileName" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <FormDialog Title="Add Fulfilled Shipments">
+    <FormDialog Title="Add Customer Returns">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <InputFile id="FileInput" OnChange="UploadFile" hidden />
@@ -60,9 +60,9 @@
             await File.OpenReadStream(maxAllowedSize: 100000000).CopyToAsync(memoryStream);
             memoryStream.Seek(0, SeekOrigin.Begin);
 
-            FulfilledShipmentService.AddFromFile(memoryStream);
+            CustomerReturnService.AddFromFile(memoryStream);
 
-            Snackbar.AddSuccess("Fulfilled Shipments were created. See Invoice column to check if all invoices were also created.");
+            Snackbar.AddSuccess("Customer Returns were created. See Invoice column to check if all invoices were also created.");
 
             MudDialog.Close();
         }

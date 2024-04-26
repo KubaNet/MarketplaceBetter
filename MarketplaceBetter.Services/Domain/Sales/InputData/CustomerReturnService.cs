@@ -174,11 +174,13 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 returns = request.SortBy switch
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.Id) : returns.OrderByDescending(r => r.Id),
+                    "return_date" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.ReturnDate) : returns.OrderByDescending(r => r.ReturnDate),
                     "order_id" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.OrderId) : returns.OrderByDescending(r => r.OrderId),
                     "sku" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.Sku) : returns.OrderByDescending(r => r.Sku),
                     "asin" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.Asin) : returns.OrderByDescending(r => r.Asin),
                     "fnsku" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.Fnsku) : returns.OrderByDescending(r => r.Fnsku),
                     "product_name" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.ProductName) : returns.OrderByDescending(r => r.ProductName),
+                    "quantity" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.Quantity) : returns.OrderByDescending(r => r.Quantity),
                     "fulfillment_center_id" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.FulfillmentCenterId) : returns.OrderByDescending(r => r.FulfillmentCenterId),
                     "detailed_disposition" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.DetailedDisposition) : returns.OrderByDescending(r => r.DetailedDisposition),
                     "reason" => request.SortDirection == SortDirection.Ascending ? returns.OrderBy(r => r.Reason) : returns.OrderByDescending(r => r.Reason),
