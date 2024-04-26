@@ -145,5 +145,12 @@
     <Build Include="dbo\Tables\Sales\Settings\ProductAccountingData.sql" />
     <Build Include="dbo\Tables\Sales\Settings\ProductionCost.sql" />
     <Build Include="dbo\Tables\Sales\Settings\AdditionalSku.sql" />
+    <Build Include="dbo\Tables\Sales\InputData\ReturnDetailedDisposition.sql" />
+    <None Include="Scripts\Inserts\13_ReturnDetailedDispositions.sql" />
+    <None Include="Scripts\Inserts\14_ReturnReasons.sql" />
+    <Build Include="dbo\Tables\Sales\InputData\ReturnReason.sql" />
+    <Build Include="dbo\Tables\Sales\InputData\ReturnStatus.sql" />
+    <None Include="Scripts\Inserts\15_ReturnStatuses.sql" />
+    <Build Include="dbo\Tables\Sales\InputData\CustomerReturn.sql" />
   </ItemGroup>
 </Project>

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Sales.InputData
 {
-    public class AmazonFulfillmentCenterProfile : Profile
+    public class FulfilledShipmentProfile : Profile
     {
-        public AmazonFulfillmentCenterProfile()
+        public FulfilledShipmentProfile()
         {
             CreateMap<FulfilledShipment, FulfilledShipmentModel>();
         }
