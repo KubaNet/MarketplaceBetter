@@ -23,5 +23,7 @@ namespace MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia
         BP4 = 6,
 
         BP5 = 7,
+
+        GenericKeywords = 8,
     }
 }

@@ -81,17 +81,15 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             {
                 CustomerReturn customerReturn = new CustomerReturn();
 
-                //customerReturn.AmazonOrderId = csv.GetField("Amazon Order Id");
-                //customerReturn.ShipmentItemId = csv.GetField("customerReturn Item ID");
-
-                //if (_repository.Any(r => r.AmazonOrderId == customerReturn.AmazonOrderId && s.ShipmentItemId == customerReturn.ShipmentItemId))
-                //{
-                //    continue;
-                //}
-
                 customerReturn.ReturnDate = csv.GetField<DateTime>("return-date");
                 customerReturn.OrderId = csv.GetField("order-id");
                 customerReturn.Sku = csv.GetField("sku");
+
+                if (_repository.Any(r => r.ReturnDate == customerReturn.ReturnDate && r.OrderId == customerReturn.OrderId && r.Sku == customerReturn.Sku))
+                {
+                    continue;
+                }
+
                 customerReturn.Asin = csv.GetField("asin");
                 customerReturn.Fnsku = csv.GetField("fnsku");
                 customerReturn.ProductName = csv.GetField("product-name");
