@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
+﻿using MarketplaceBetter.Domain.Entities.Advertising.Campaigns;
+using MarketplaceBetter.Domain.Entities.Amazon.APlusContents;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
@@ -111,6 +112,10 @@ namespace MarketplaceBetter.Infrastructure.Data
         // => Invoicing
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<InvoiceEntry> InvoiceEntry { get; set; }
+
+        // Advertising
+        // => Campaigns
+        public DbSet<Portfolio> Portfolio { get; set; }
 
         //public override int SaveChanges()
         //{

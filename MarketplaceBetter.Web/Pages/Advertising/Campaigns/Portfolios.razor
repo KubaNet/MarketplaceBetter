@@ -1,0 +1,110 @@
+﻿@using MarketplaceBetter.Domain.Model.Advertising.Campaigns
+@using MarketplaceBetter.Services.Domain.Advertising.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Model
+
+@page "/portfolios"
+<PageTitle>Portfolios</PageTitle>
+
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject IPortfolioService PortfolioService
+
+<MudText Typo="Typo.h4" Class="mt-2">Portfolios</MudText>
+
+<MainBody>
+    <MudTable T="PortfolioModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PortfolioModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudSpacer />
+            <MudButton OnClick="AddPortfolio" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Portfolio</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="PortfolioModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="name" T="PortfolioModel">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="amazon_id" T="PortfolioModel">Amazon Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="instance" T="PortfolioModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Amazon Id">@context.AmazonId</MudTd>
+            <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditPortfolio(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+    private MudTable<PortfolioModel> Table;
+    private ListRequest ListRequest = new();
+
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+    }
+
+    private Task<TableData<PortfolioModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<PortfolioModel> portfolios = PortfolioService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<PortfolioModel>() { TotalItems = PortfolioService.CountForListRequest(ListRequest), Items = portfolios });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private async void AddPortfolio()
+    {
+        DialogResult result = await DialogService.Show<PortfolioDialog>(null, new DialogParameters { ["Title"] = "Add Portfolio" }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void EditPortfolio(long id)
+    {
+        DialogResult result = await DialogService.Show<PortfolioDialog>(null, new DialogParameters { ["Title"] = "Edit Portfolio", ["IsEdit"] = true, ["PortfolioId"] = id }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

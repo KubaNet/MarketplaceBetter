@@ -74,6 +74,8 @@
     <Folder Include="dbo\Tables\Sales\InputData" />
     <Folder Include="dbo\Tables\Sales\Settings" />
     <Folder Include="dbo\Tables\Sales\Invoicing" />
+    <Folder Include="dbo\Tables\Advertising" />
+    <Folder Include="dbo\Tables\Advertising\Campaigns" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Inserts\02_Instances.sql" />
@@ -152,5 +154,6 @@
     <Build Include="dbo\Tables\Sales\InputData\ReturnStatus.sql" />
     <None Include="Scripts\Inserts\15_ReturnStatuses.sql" />
     <Build Include="dbo\Tables\Sales\InputData\CustomerReturn.sql" />
+    <Build Include="dbo\Tables\Advertising\Campaigns\Portfolio.sql" />
   </ItemGroup>
 </Project>

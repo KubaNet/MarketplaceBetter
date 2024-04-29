@@ -222,6 +222,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                     "id" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Id) : products.OrderByDescending(p => p.Id),
                     "name" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name),
                     "code" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Code) : products.OrderByDescending(p => p.Code),
+                    "status" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Status.Name) : products.OrderByDescending(p => p.Status.Name),
                     "brand" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Brand.Name) : products.OrderByDescending(p => p.Brand.Name),
                     "collection" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.Collection.Name) : products.OrderByDescending(p => p.Collection.Name),
                     "color_group" => request.SortDirection == SortDirection.Ascending ? products.OrderBy(p => p.ColorGroup.Name) : products.OrderByDescending(p => p.ColorGroup.Name),
