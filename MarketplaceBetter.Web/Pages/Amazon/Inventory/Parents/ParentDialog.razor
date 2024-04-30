@@ -103,7 +103,7 @@
 
     private void SetValuesForCurrentInstance()
     {
-        InstanceModel currentInstance = Instances.Single(b => b.Id == UserService.GetCurrentInstance().Id);
+        InstanceModel currentInstance = Instances.Single(i => i.Id == UserService.GetCurrentInstance().Id);
 
         HandleInstanceChanged(currentInstance);
     }

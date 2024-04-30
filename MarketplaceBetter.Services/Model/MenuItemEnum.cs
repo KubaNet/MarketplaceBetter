@@ -16,6 +16,8 @@ namespace MarketplaceBetter.Services.Model
 
         Amazon = 3,
 
+        Advertising = 4,
+
         Products = 10,
 
         CopyAndMedia = 11,
@@ -32,6 +34,8 @@ namespace MarketplaceBetter.Services.Model
 
         Inventory = 30,
 
-        APlusContent = 31
+        APlusContent = 31,
+
+        Campaigns = 40,
     }
 }

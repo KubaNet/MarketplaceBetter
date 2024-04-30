@@ -1,17 +1,27 @@
-﻿@using MarketplaceBetter.Domain.Model.Catalog.Products
-@using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
-@using MarketplaceBetter.Services.Validation.Catalog.Products.Interfaces
+﻿@using MarketplaceBetter.Domain.Model.Advertising.Campaigns
+@using MarketplaceBetter.Domain.Model.Base
+@using MarketplaceBetter.Services.Domain.Advertising.Campaigns.Interfaces
+@using MarketplaceBetter.Services.Domain.Base.Interfaces
+@using MarketplaceBetter.Services.Validation.Advertising.Campaigns.Interfaces
 
-@inject IBrandService BrandService
-@inject IBrandValidator BrandValidator
 @inject ISnackbar Snackbar
+@inject IPortfolioService PortfolioService
+@inject IPortfolioValidator PortfolioValidator
+@inject IUserService UserService
+@inject IInstanceService InstanceService
 
-<EditForm Model="Brand" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Portfolio" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudTextField Label="Name" @bind-Value="Brand.Name" For="() => Brand.Name" />
-        <MudTextField Label="Code" @bind-Value="Brand.Code" For="() => Brand.Code" MaxLength="5" />
+        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Portfolio.Instance" For="() => Portfolio.Instance">
+            @foreach (var instance in Instances)
+            {
+                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Label="Name" @bind-Value="Portfolio.Name" For="() => Portfolio.Name" />
+        <MudTextField Label="Amazon Id" @bind-Value="Portfolio.AmazonId" For="() => Portfolio.AmazonId" />
     </FormDialog>
 </EditForm>
 
@@ -19,36 +29,66 @@
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public long BrandId { get; set; }
+    [Parameter] public long PortfolioId { get; set; }
 
     private CustomValidation CustomValidation = new();
-    private BrandModel Brand = new();
+    private PortfolioModel Portfolio = new();
+
+    private IList<InstanceModel> Instances = new List<InstanceModel>();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
+        Instances = InstanceService.GetAllNormal(true);
+
         if (IsEdit)
         {
-            Brand = BrandService.Get(BrandId);
+            SetInitialValues();
         }
+        else
+        {
+            if (UserService.IsSpecificInstance())
+            {
+                SetValuesForCurrentInstance();
+            }
+        }
+    }
+
+    private void SetInitialValues()
+    {
+        Portfolio = PortfolioService.Get(PortfolioId);
+
+        Portfolio.Instance = Instances.Single(i => i.Id == Portfolio.Instance.Id);
+    }
+
+    private void SetValuesForCurrentInstance()
+    {
+        InstanceModel currentInstance = Instances.Single(b => b.Id == UserService.GetCurrentInstance().Id);
+
+        HandleInstanceChanged(currentInstance);
+    }
+
+    private void HandleInstanceChanged(InstanceModel instance)
+    {
+        Portfolio.Instance = instance;
     }
 
     private void HandleValidSubmit()
     {
-        ValidationResult result = BrandValidator.Validate(Brand);
+        ValidationResult result = PortfolioValidator.Validate(Portfolio);
 
         if (result.IsValid)
         {
             if (IsEdit)
             {
-                BrandService.Update(Brand);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Brand"));
+                PortfolioService.Update(Portfolio);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Portfolio"));
             }
             else
             {
-                BrandService.Add(Brand);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Brand"));
+                PortfolioService.Add(Portfolio);
+                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Portfolio"));
             }
 
             MudDialog.Close();

@@ -60,6 +60,12 @@
             <MudNavLink Href="/invoices">Invoices</MudNavLink>
         </MudNavGroup>
     </MudNavGroup>
+    <MudNavGroup Title="Advertising" Icon="@Icons.Material.Filled.AdsClick" Expanded="UserService.IsExpanded(MenuItemEnum.Advertising)" HideExpandIcon="true" ExpandedChanged="AdvertisingExpandedChanged">
+        <MudNavGroup Title="Campaigns" Icon="@Icons.Material.Filled.DomainAdd" Expanded="UserService.IsExpanded(MenuItemEnum.Campaigns)" HideExpandIcon="true" ExpandedChanged="CampaignsExpandedChanged">
+            <MudNavLink Href="/portfolios">Portfolios</MudNavLink>
+            <MudNavLink Href="/campaigns">Campaigns</MudNavLink>
+        </MudNavGroup>
+    </MudNavGroup>
 </MudNavMenu>
 
 @code {
@@ -78,39 +84,39 @@
         }
     }
 
-    private void CatalogExpandedChanged(bool expaned)
+    private void CatalogExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.Catalog, expaned);
+        UserService.SetExpanded(MenuItemEnum.Catalog, expanded);
     }
 
-    private void ProductsExpandedChanged(bool expaned)
+    private void ProductsExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.Products, expaned);
+        UserService.SetExpanded(MenuItemEnum.Products, expanded);
     }
 
-    private void ColorsAndSizesExpandedChanged(bool expaned)
+    private void ColorsAndSizesExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.ColorsAndSizes, expaned);
+        UserService.SetExpanded(MenuItemEnum.ColorsAndSizes, expanded);
     }
 
-    private void AttributesExpandedChanged(bool expaned)
+    private void AttributesExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.Attributes, expaned);
+        UserService.SetExpanded(MenuItemEnum.Attributes, expanded);
     }
 
-    private void AmazonExpandedChanged(bool expaned)
+    private void AmazonExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.Amazon, expaned);
+        UserService.SetExpanded(MenuItemEnum.Amazon, expanded);
     }
 
-    private void InventoryExpandedChanged(bool expaned)
+    private void InventoryExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.Inventory, expaned);
+        UserService.SetExpanded(MenuItemEnum.Inventory, expanded);
     }
 
-    private void CopyAndMediaExpandedChanged(bool expaned)
+    private void CopyAndMediaExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.CopyAndMedia, expaned);
+        UserService.SetExpanded(MenuItemEnum.CopyAndMedia, expanded);
     }
 
     private void APlusContentExpandedChanged(bool expanded)
@@ -118,24 +124,34 @@
         UserService.SetExpanded(MenuItemEnum.APlusContent, expanded);
     }
 
-    private void SalesExpandedChanged(bool expaned)
+    private void SalesExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.Sales, expaned);
+        UserService.SetExpanded(MenuItemEnum.Sales, expanded);
     }
 
-    private void InputDataExpandedChanged(bool expaned)
+    private void InputDataExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.InputData, expaned);
+        UserService.SetExpanded(MenuItemEnum.InputData, expanded);
     }
 
-    private void SalesSettingsExpandedChanged(bool expaned)
+    private void SalesSettingsExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.SalesSettings, expaned);
+        UserService.SetExpanded(MenuItemEnum.SalesSettings, expanded);
     }
 
-    private void InvoicingExpandedChanged(bool expaned)
+    private void InvoicingExpandedChanged(bool expanded)
     {
-        UserService.SetExpanded(MenuItemEnum.Invoicing, expaned);
+        UserService.SetExpanded(MenuItemEnum.Invoicing, expanded);
+    }
+
+    private void AdvertisingExpandedChanged(bool expanded)
+    {
+        UserService.SetExpanded(MenuItemEnum.Advertising, expanded);
+    }
+
+    private void CampaignsExpandedChanged(bool expanded)
+    {
+        UserService.SetExpanded(MenuItemEnum.Campaigns, expanded);
     }
 
     public void Dispose()
