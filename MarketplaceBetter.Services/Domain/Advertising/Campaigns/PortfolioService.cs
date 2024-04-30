@@ -85,6 +85,12 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns
 
         private IQueryable<Portfolio> ApplyFilter(IQueryable<Portfolio> portfolios, ListRequest request)
         {
+            if (_userService.IsSpecificInstance())
+            {
+                InstanceModel currentInstance = _userService.GetCurrentInstance();
+                portfolios = portfolios.Where(p => p.InstanceId == currentInstance.Id);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return portfolios;
