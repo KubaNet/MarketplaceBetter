@@ -21,11 +21,6 @@ namespace MarketplaceBetter.Services.Validation.Advertising.Campaigns
         {
             ValidationResult result = new();
 
-            if (_repository.Any(p => p.Id != portfolio.Id && p.Name == portfolio.Name && p.InstanceId == portfolio.Instance.Id))
-            {
-                result.AddErrorFor<PortfolioModel>(p => p.Name, ValidationMessages.PropertyNotUniqueForSelected, "Portfolio", "Name", "Instance");
-            }
-
             if (_repository.Any(p => p.Id != portfolio.Id && p.AmazonId == portfolio.AmazonId))
             {
                 result.AddErrorFor<PortfolioModel>(p => p.AmazonId, ValidationMessages.PropertyNotUnique, "Portfolio", "Amazon Id");

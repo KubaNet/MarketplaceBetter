@@ -56,16 +56,6 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns
             return _mapper.Map<IList<PortfolioModel>>(portfolios);
         }
 
-        public void Add(PortfolioModel portfolio)
-        {
-            Portfolio portfolioToAdd = new();
-
-            TransferValues(portfolioToAdd, portfolio);
-
-            _repository.Add(portfolioToAdd);
-            _unitOfWork.Save();
-        }
-
         public void Update(PortfolioModel portfolio)
         {
             Portfolio portfolioToUpdate = _repository.Get(portfolio.Id);
@@ -78,9 +68,7 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns
 
         private void TransferValues(Portfolio toPortfolio, PortfolioModel fromPortfolio)
         {
-            toPortfolio.Name = fromPortfolio.Name;
             toPortfolio.AmazonId = fromPortfolio.AmazonId;
-            toPortfolio.InstanceId = fromPortfolio.Instance.Id;
         }
 
         private IQueryable<Portfolio> ApplyFilter(IQueryable<Portfolio> portfolios, ListRequest request)
@@ -100,7 +88,7 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "name", "amazon_id", "instance" };
+                string[] searchFieldNames = new[] { "id", "name", "amazon_id", "instance", "campaign_type" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -111,6 +99,7 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns
                         "name" => portfolios.Where(p => p.Name.Contains(searchField.Value)),
                         "amazon_id" => portfolios.Where(p => p.AmazonId.Contains(searchField.Value)),
                         "instance" => portfolios.Where(p => p.Instance.Name.Contains(searchField.Value)),
+                        "campaign_type" => portfolios.Where(p => p.CampaignType.Name.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
@@ -119,7 +108,8 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns
                     portfolios = portfolios.Where(p => p.Id == searchString.ParseToIntOrDefault()
                         || p.Name.Contains(searchString)
                         || p.AmazonId.Contains(searchString)
-                        || p.Instance.Name.Contains(searchString));
+                        || p.Instance.Name.Contains(searchString)
+                        || p.CampaignType.Name.Contains(searchString));
                 }
             }
 
@@ -136,6 +126,7 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns
                     "name" => request.SortDirection == SortDirection.Ascending ? portfolios.OrderBy(p => p.Name) : portfolios.OrderByDescending(p => p.Name),
                     "amazon_id" => request.SortDirection == SortDirection.Ascending ? portfolios.OrderBy(p => p.AmazonId) : portfolios.OrderByDescending(p => p.AmazonId),
                     "instance" => request.SortDirection == SortDirection.Ascending ? portfolios.OrderBy(p => p.Instance.Name) : portfolios.OrderByDescending(p => p.Instance.Name),
+                    "campaign_type" => request.SortDirection == SortDirection.Ascending ? portfolios.OrderBy(p => p.CampaignType.Name) : portfolios.OrderByDescending(p => p.CampaignType.Name),
                     _ => throw new UnrecognizedSortingException<ListRequest>(request.SortBy)
                 };
             }

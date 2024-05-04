@@ -11,5 +11,9 @@ namespace MarketplaceBetter.Domain.Entities.Advertising.Campaigns
         public long InstanceId { get; set; }
 
         public virtual Instance Instance { get; set; }
+
+        public long CampaignTypeId { get; set; }
+
+        public virtual CampaignType CampaignType { get; set; }
     }
 }

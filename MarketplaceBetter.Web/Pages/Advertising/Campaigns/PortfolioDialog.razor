@@ -14,13 +14,6 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title=@Title>
         <DataAnnotationsValidator />
-        <MudSelect Label="Instance" T="InstanceModel" @bind-Value="Portfolio.Instance" For="() => Portfolio.Instance">
-            @foreach (var instance in Instances)
-            {
-                <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudTextField Label="Name" @bind-Value="Portfolio.Name" For="() => Portfolio.Name" />
         <MudTextField Label="Amazon Id" @bind-Value="Portfolio.AmazonId" For="() => Portfolio.AmazonId" />
     </FormDialog>
 </EditForm>
@@ -34,44 +27,19 @@
     private CustomValidation CustomValidation = new();
     private PortfolioModel Portfolio = new();
 
-    private IList<InstanceModel> Instances = new List<InstanceModel>();
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        Instances = InstanceService.GetAllNormal(true);
-
         if (IsEdit)
         {
             SetInitialValues();
-        }
-        else
-        {
-            if (UserService.IsSpecificInstance())
-            {
-                SetValuesForCurrentInstance();
-            }
         }
     }
 
     private void SetInitialValues()
     {
         Portfolio = PortfolioService.Get(PortfolioId);
-
-        Portfolio.Instance = Instances.Single(i => i.Id == Portfolio.Instance.Id);
-    }
-
-    private void SetValuesForCurrentInstance()
-    {
-        InstanceModel currentInstance = Instances.Single(b => b.Id == UserService.GetCurrentInstance().Id);
-
-        HandleInstanceChanged(currentInstance);
-    }
-
-    private void HandleInstanceChanged(InstanceModel instance)
-    {
-        Portfolio.Instance = instance;
     }
 
     private void HandleValidSubmit()
@@ -84,11 +52,6 @@
             {
                 PortfolioService.Update(Portfolio);
                 Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Portfolio"));
-            }
-            else
-            {
-                PortfolioService.Add(Portfolio);
-                Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Portfolio"));
             }
 
             MudDialog.Close();

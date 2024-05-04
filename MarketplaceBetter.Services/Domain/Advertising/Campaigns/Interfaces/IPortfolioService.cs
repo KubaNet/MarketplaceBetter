@@ -12,8 +12,6 @@ namespace MarketplaceBetter.Services.Domain.Advertising.Campaigns.Interfaces
 
         IList<PortfolioModel> GetForListRequest(ListRequest request);
 
-        void Add(PortfolioModel portfolio);
-
         void Update(PortfolioModel portfolio);
     }
 }

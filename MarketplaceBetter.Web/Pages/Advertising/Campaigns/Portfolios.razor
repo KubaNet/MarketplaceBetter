@@ -13,15 +13,12 @@
 
 <MainBody>
     <MudTable T="PortfolioModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PortfolioModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
-        <ToolBarContent>
-            <MudSpacer />
-            <MudButton OnClick="AddPortfolio" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Portfolio</MudButton>
-        </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="PortfolioModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="name" T="PortfolioModel">Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="amazon_id" T="PortfolioModel">Amazon Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="instance" T="PortfolioModel">Instance</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="campaign_type" T="PortfolioModel">Campaign Type</MudTableSortLabel></MudTh>
             <MudTh Style="width: 100px;">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -29,6 +26,7 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Amazon Id">@context.AmazonId</MudTd>
             <MudTd DataLabel="Instance">@context.Instance.Name</MudTd>
+            <MudTd DataLabel="Campaign Type">@context.CampaignType.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditPortfolio(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
@@ -84,13 +82,6 @@
         Table.ReloadServerData();
 
         StateHasChanged();
-    }
-
-    private async void AddPortfolio()
-    {
-        DialogResult result = await DialogService.Show<PortfolioDialog>(null, new DialogParameters { ["Title"] = "Add Portfolio" }).Result;
-
-        ProcessDialogResult(result);
     }
 
     private async void EditPortfolio(long id)

@@ -116,6 +116,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         // Advertising
         // => Campaigns
         public DbSet<Portfolio> Portfolio { get; set; }
+        public DbSet<CampaignType> CampaignType { get; set; }
 
         //public override int SaveChanges()
         //{
