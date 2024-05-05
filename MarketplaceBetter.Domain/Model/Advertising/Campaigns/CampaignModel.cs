@@ -1,5 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.Products;
-using System.ComponentModel.DataAnnotations;
+﻿using MarketplaceBetter.Domain.Model.Base;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 
 namespace MarketplaceBetter.Domain.Model.Advertising.Campaigns
 {
@@ -9,12 +9,14 @@ namespace MarketplaceBetter.Domain.Model.Advertising.Campaigns
 
         public string Name { get; set; }
 
-        [Required]
+        public string AmazonId { get; set; }
+
+        public InstanceModel Instance { get; set; }
+
         public PortfolioModel Portfolio { get; set; }
 
         public CampaignTypeModel Type { get; set; }
 
-        [Required]
         public ProductModel Product { get; set; }
     }
 }

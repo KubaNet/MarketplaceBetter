@@ -14,7 +14,7 @@ GO
 CREATE UNIQUE INDEX UIX_Portfolio_Instance_CampaignType  ON [dbo].[Portfolio] ([InstanceId] ASC, [CampaignTypeId] ASC);
 GO
 
-CREATE UNIQUE INDEX UIX_Portfolio_Instance_Name  ON [dbo].[Portfolio] ([InstanceId] ASC, [Name] ASC);
+CREATE UNIQUE INDEX UIX_Portfolio_Name  ON [dbo].[Portfolio] ([Name] ASC);
 GO
 
 CREATE UNIQUE INDEX UIX_Portfolio_AmazonId  ON [dbo].[Portfolio] ([AmazonId] ASC) WHERE [AmazonId] IS NOT NULL;

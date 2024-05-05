@@ -158,5 +158,8 @@
     <Build Include="dbo\Tables\Advertising\Campaigns\Portfolio.sql" />
     <Build Include="dbo\Tables\Advertising\Campaigns\CampaignType.sql" />
     <None Include="Scripts\Inserts\16_CampaignTypes.sql" />
+    <Build Include="dbo\Tables\Advertising\Campaigns\Campaign.sql" />
+    <Build Include="dbo\Tables\Advertising\Campaigns\AdGroupState.sql" />
+    <None Include="Scripts\Inserts\18_AdGroupStates.sql" />
   </ItemGroup>
 </Project>
