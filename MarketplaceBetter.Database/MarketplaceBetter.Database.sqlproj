@@ -160,7 +160,8 @@
     <None Include="Scripts\Inserts\16_CampaignTypes.sql" />
     <Build Include="dbo\Tables\Advertising\Campaigns\Campaign.sql" />
     <Build Include="dbo\Tables\Advertising\Campaigns\AdEntityState.sql" />
-    <None Include="Scripts\Inserts\18_AdGroupStates.sql" />
+    <None Include="Scripts\Inserts\18_AdEntityStates.sql" />
     <Build Include="dbo\Tables\Advertising\Campaigns\AdGroup.sql" />
+    <Build Include="dbo\Tables\Advertising\Campaigns\Ad.sql" />
   </ItemGroup>
 </Project>

@@ -120,6 +120,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<Campaign> Campaign { get; set; }
         public DbSet<AdEntityState> AdEntityState { get; set; }
         public DbSet<AdGroup> AdGroup { get; set; }
+        public DbSet<Ad> Ad { get; set; }
 
         //public override int SaveChanges()
         //{
