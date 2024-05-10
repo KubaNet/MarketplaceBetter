@@ -7,11 +7,13 @@
 	[PortfolioId]	BIGINT					NOT NULL,
 	[TypeId]		BIGINT					NOT NULL,
 	[ProductId]		BIGINT					NOT NULL,
+	[StateId]		BIGINT					NOT NULL,
 	CONSTRAINT		[PK_Campaign]			PRIMARY KEY ([Id]),
 	CONSTRAINT		[FK_Campaign_Instance]	FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
 	CONSTRAINT		[FK_Campaign_Portfolio]	FOREIGN KEY ([PortfolioId])	REFERENCES [dbo].[Portfolio] ([Id]),
-	CONSTRAINT		[FK_Campaign_Type]		FOREIGN KEY ([TypeId])	REFERENCES [dbo].[CampaignType] ([Id]),
+	CONSTRAINT		[FK_Campaign_Type]		FOREIGN KEY ([TypeId])		REFERENCES [dbo].[CampaignType] ([Id]),
 	CONSTRAINT		[FK_Campaign_Product]	FOREIGN KEY ([ProductId])	REFERENCES [dbo].[Product] ([Id]),
+	CONSTRAINT		[FK_Campaign_State]		FOREIGN KEY ([StateId])		REFERENCES [dbo].[AdEntityState] ([Id]),
 );
 GO
 

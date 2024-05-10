@@ -7,7 +7,7 @@
 	[InstanceId]		BIGINT						NOT NULL,
 	CONSTRAINT			[PK_Portfolio]				PRIMARY KEY ([Id]),
 	CONSTRAINT			[FK_Portfolio_CampaignType]	FOREIGN KEY ([CampaignTypeId])	REFERENCES [dbo].[CampaignType] ([Id]),
-	CONSTRAINT			[FK_Portfolio_Instance]		FOREIGN KEY ([InstanceId])	REFERENCES [dbo].[Instance] ([Id]),
+	CONSTRAINT			[FK_Portfolio_Instance]		FOREIGN KEY ([InstanceId])		REFERENCES [dbo].[Instance] ([Id]),
 );
 GO
 

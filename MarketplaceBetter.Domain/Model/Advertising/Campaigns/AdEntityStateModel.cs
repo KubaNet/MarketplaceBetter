@@ -2,12 +2,12 @@
 
 namespace MarketplaceBetter.Domain.Model.Advertising.Campaigns
 {
-    public class AdGroupStateModel
+    public class AdEntityStateModel
     {
         public long Id { get; set; }
 
         public string Name { get; set; }
 
-        public AdGroupStateEnum SystemName { get; set; }
+        public AdEntityStateEnum SystemName { get; set; }
     }
 }

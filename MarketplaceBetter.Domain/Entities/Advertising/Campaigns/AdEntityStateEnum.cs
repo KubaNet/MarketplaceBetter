@@ -1,6 +1,6 @@
 ﻿namespace MarketplaceBetter.Domain.Entities.Advertising.Campaigns
 {
-    public enum AdGroupStateEnum
+    public enum AdEntityStateEnum
     {
         None = 0,
 

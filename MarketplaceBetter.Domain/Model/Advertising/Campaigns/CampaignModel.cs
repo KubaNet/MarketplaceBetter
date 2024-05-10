@@ -18,5 +18,7 @@ namespace MarketplaceBetter.Domain.Model.Advertising.Campaigns
         public CampaignTypeModel Type { get; set; }
 
         public ProductModel Product { get; set; }
+
+        public AdEntityStateModel State { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace MarketplaceBetter.Domain.Entities.Advertising.Campaigns
 {
-    public class AdGroupState : Entity
+    public class AdEntityState : Entity
     {
         public string Name { get; set; }
 
-        public AdGroupStateEnum SystemName { get; set; }
+        public AdEntityStateEnum SystemName { get; set; }
     }
 }

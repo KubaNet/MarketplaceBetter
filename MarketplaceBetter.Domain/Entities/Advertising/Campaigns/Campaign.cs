@@ -24,5 +24,9 @@ namespace MarketplaceBetter.Domain.Entities.Advertising.Campaigns
         public long ProductId { get; set; }
 
         public virtual Product Product { get; set; }
+
+        public long StateId { get; set; }
+
+        public virtual AdEntityState State { get; set; }
     }
 }

@@ -4,11 +4,11 @@ using MarketplaceBetter.Domain.Model.Advertising.Campaigns;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Advertising.Campaigns
 {
-    public class AdGroupStateProfile : Profile
+    public class AdEntityStateProfile : Profile
     {
-        public AdGroupStateProfile()
+        public AdEntityStateProfile()
         {
-            CreateMap<AdGroupState, AdGroupStateModel>();
+            CreateMap<AdEntityState, AdEntityStateModel>();
         }
     }
 }
