@@ -89,6 +89,7 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField("Bullet Point 3");
             csv.WriteField("Bullet Point 4");
             csv.WriteField("Bullet Point 5");
+            csv.WriteField("Generic Keywords");
             // dimensions
             if (_productDimensionsRepository.Any(d => d.ProductId == parent.ProductId))
             {
@@ -157,6 +158,8 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(bulletPoint4?.Value);
             CopywritingModel bulletPoint5 = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.BP5);
             csv.WriteField(bulletPoint5?.Value);
+            CopywritingModel genericKeywords = _copywritingService.GetForProduct(productId, instanceId, CopywritingElementEnum.GenericKeywords);
+            csv.WriteField(genericKeywords?.Value);
         }
 
         private void WriteProductDimensions(CsvWriter csv, Child child)
