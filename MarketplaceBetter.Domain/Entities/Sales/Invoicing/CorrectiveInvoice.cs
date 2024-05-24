@@ -1,4 +1,7 @@
-﻿namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
+﻿using System;
+using System.Collections.Generic;
+
+namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
 {
     public class CorrectiveInvoice : Entity
     {
@@ -10,8 +13,12 @@
 
         public bool IsIssued { get; set; }
 
+        public DateTime? IssueDate { get; set; }
+
         public string ApiNumber { get; set; }
 
         public string ApiError { get; set; }
+
+        public virtual IList<CorrectiveInvoiceEntry> Entries { get; set; }
     }
 }

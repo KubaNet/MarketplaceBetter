@@ -165,5 +165,6 @@
     <Build Include="dbo\Tables\Advertising\Campaigns\AdGroup.sql" />
     <Build Include="dbo\Tables\Advertising\Campaigns\Ad.sql" />
     <Build Include="dbo\Tables\Sales\Invoicing\CorrectiveInvoice.sql" />
+    <Build Include="dbo\Tables\Sales\Invoicing\CorrectiveInvoiceEntry.sql" />
   </ItemGroup>
 </Project>

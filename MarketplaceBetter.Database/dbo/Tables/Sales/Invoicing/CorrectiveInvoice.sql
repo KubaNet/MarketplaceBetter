@@ -4,6 +4,7 @@
 	[InvoiceId]		BIGINT							NOT NULL,
 	[Number]		NVARCHAR (255)					NULL,
 	[IsIssued]		BIT								NOT NULL,
+	[IssueDate]		DATETIME2						NULL,
 	[ApiNumber]		NVARCHAR (255)					NULL,
 	[ApiError]		NVARCHAR (255)					NULL,
 	CONSTRAINT		[PK_CorrectiveInvoice]			PRIMARY KEY ([Id]),
