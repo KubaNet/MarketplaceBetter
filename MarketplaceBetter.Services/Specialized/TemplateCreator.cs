@@ -1,23 +1,21 @@
-﻿using CsvHelper.Configuration;
-using CsvHelper;
-using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
-using MarketplaceBetter.Services.Specialized.Interfaces;
+using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
+using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Infrastructure.Data;
-using System;
+using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
+using MarketplaceBetter.Services.Specialized.Interfaces;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Size = MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes.Size;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
-using MarketplaceBetter.Domain.Entities.Catalog.Attributes;
-using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
-using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
-using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 
 namespace MarketplaceBetter.Services.Specialized
 {
@@ -90,26 +88,26 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField("Bullet Point 4");
             csv.WriteField("Bullet Point 5");
             csv.WriteField("Generic Keywords");
-            // dimensions
-            if (_productDimensionsRepository.Any(d => d.ProductId == parent.ProductId))
-            {
-                string unit = parent.Instance.SystemName == InstanceEnum.US ? "[in]" : "[cm]";
-                csv.WriteField($"Depth {unit}");
-                csv.WriteField($"Width {unit}");
-                csv.WriteField($"Height {unit}");
-                csv.WriteField($"Length {unit}");
-            }
-            // images
-            csv.WriteField("Main Image");
-            csv.WriteField("Other Image 1");
-            csv.WriteField("Other Image 2");
-            csv.WriteField("Other Image 3");
-            csv.WriteField("Other Image 4");
-            csv.WriteField("Other Image 5");
-            csv.WriteField("Other Image 6");
-            csv.WriteField("Other Image 7");
-            csv.WriteField("Other Image 8");
-            csv.WriteField("Swatch Image");
+            //// dimensions
+            //if (_productDimensionsRepository.Any(d => d.ProductId == parent.ProductId))
+            //{
+            //    string unit = parent.Instance.SystemName == InstanceEnum.US ? "[in]" : "[cm]";
+            //    csv.WriteField($"Depth {unit}");
+            //    csv.WriteField($"Width {unit}");
+            //    csv.WriteField($"Height {unit}");
+            //    csv.WriteField($"Length {unit}");
+            //}
+            //// images
+            //csv.WriteField("Main Image");
+            //csv.WriteField("Other Image 1");
+            //csv.WriteField("Other Image 2");
+            //csv.WriteField("Other Image 3");
+            //csv.WriteField("Other Image 4");
+            //csv.WriteField("Other Image 5");
+            //csv.WriteField("Other Image 6");
+            //csv.WriteField("Other Image 7");
+            //csv.WriteField("Other Image 8");
+            //csv.WriteField("Swatch Image");
             csv.NextRecord();
         }
 
@@ -139,8 +137,8 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(colorTranslation?.Mapping);
             csv.WriteField(child.Variant.Size.Name);
             WriteCopywriting(csv, child.Variant.ProductId, child.InstanceId);
-            WriteProductDimensions(csv, child);
-            WritePhotos(csv, child);
+            //WriteProductDimensions(csv, child);
+            //WritePhotos(csv, child);
             csv.NextRecord();
         }
 

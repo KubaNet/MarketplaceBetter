@@ -39,6 +39,8 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
 
         public bool IsIssued { get; set; }
 
+        public DateTime? IssueDate { get; set; }
+
         public string ApiNumber { get; set; }
 
         public string ApiError { get; set; }

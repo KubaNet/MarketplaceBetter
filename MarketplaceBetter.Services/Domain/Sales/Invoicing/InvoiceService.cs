@@ -11,7 +11,7 @@ using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
-using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
+using MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Domain.Sales.Invocing
+namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
 {
     public class InvoiceService : IInvoiceService
     {
@@ -227,9 +227,11 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invocing
             toInvoice.IsIssued = fromInvoice.IsIssued;
             toInvoice.ApiNumber = fromInvoice.ApiNumber;
             toInvoice.ApiError = fromInvoice.ApiError;
+
             if (fromInvoice.IsIssued)
             {
                 toInvoice.Number = fromInvoice.Number;
+                toInvoice.IssueDate = DateTime.Now;
             }
             else
             {

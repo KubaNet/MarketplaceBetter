@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces
+namespace MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces
 {
     public interface IInvoiceService
     {

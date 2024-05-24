@@ -4,11 +4,11 @@ using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 
 namespace MarketplaceBetter.Infrastructure.Mappings.Sales.Invoicing
 {
-    public class InvoiceProfile : Profile
+    public class CorrectiveInvoiceProfile : Profile
     {
-        public InvoiceProfile()
+        public CorrectiveInvoiceProfile()
         {
-            CreateMap<Invoice, InvoiceModel>();
+            CreateMap<CorrectiveInvoice, CorrectiveInvoiceModel>();
         }
     }
 }

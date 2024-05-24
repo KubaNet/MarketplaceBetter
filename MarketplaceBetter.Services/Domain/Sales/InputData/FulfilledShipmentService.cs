@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
-using CsvHelper.Configuration;
 using CsvHelper;
+using CsvHelper.Configuration;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
+using MarketplaceBetter.Domain.Model.Sales.InputData;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
+using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
+using MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MudBlazor;
@@ -14,11 +17,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MarketplaceBetter.Services.Domain.Base.Interfaces;
-using MarketplaceBetter.Domain.Model.Sales.InputData;
-using MarketplaceBetter.Services.Domain.Sales.Invocing.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData
 {
@@ -146,8 +144,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "invoice", "amazon_order_id", "shipment_item_id", "amazon_order_item_id", "merchant_sku", "title", "dispatched_quantity", "currency", 
-                    "item_price", "item_tax", "delivery_price", "delivery_tax", "gif_wrap_price", "gift_wrapping_tax", "item_promo_discount", "shipment_promo_discount", 
+                string[] searchFieldNames = new[] { "id", "invoice", "amazon_order_id", "shipment_item_id", "amazon_order_item_id", "merchant_sku", "title", "dispatched_quantity", "currency",
+                    "item_price", "item_tax", "delivery_price", "delivery_tax", "gif_wrap_price", "gift_wrapping_tax", "item_promo_discount", "shipment_promo_discount",
                     "recipient_name", "delivery_address_1", "delivery_address_2", "delivery_address_3", "delivery_city_town", "delivery_county", "delivery_postcode", "delivery_country", "fc" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 

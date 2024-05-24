@@ -112,6 +112,7 @@
     <None Include="Scripts\CustomScripts\InsertingCopywriting.sql" />
     <None Include="Scripts\CustomScripts\DeletingCopywriting.sql" />
     <None Include="Scripts\Inserts\17_Portfolios.sql" />
+    <None Include="Scripts\CustomScripts\InsertingDescription.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />
@@ -163,5 +164,6 @@
     <None Include="Scripts\Inserts\18_AdEntityStates.sql" />
     <Build Include="dbo\Tables\Advertising\Campaigns\AdGroup.sql" />
     <Build Include="dbo\Tables\Advertising\Campaigns\Ad.sql" />
+    <Build Include="dbo\Tables\Sales\Invoicing\CorrectiveInvoice.sql" />
   </ItemGroup>
 </Project>
