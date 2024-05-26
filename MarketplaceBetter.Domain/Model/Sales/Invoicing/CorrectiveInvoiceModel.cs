@@ -1,4 +1,7 @@
-﻿namespace MarketplaceBetter.Domain.Model.Sales.Invoicing
+﻿using MarketplaceBetter.Domain.Entities.Sales.Invoicing;
+using System.Collections.Generic;
+
+namespace MarketplaceBetter.Domain.Model.Sales.Invoicing
 {
     public class CorrectiveInvoiceModel
     {
@@ -13,5 +16,7 @@
         public string ApiNumber { get; set; }
 
         public string ApiError { get; set; }
+
+        public IList<CorrectiveInvoiceEntry> Entries { get; set; }
     }
 }

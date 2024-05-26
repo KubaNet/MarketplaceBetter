@@ -1,0 +1,148 @@
+﻿@using MarketplaceBetter.Domain.Model.Sales.Invoicing;
+@using MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces;
+@using MarketplaceBetter.Services.Model
+
+@page "/corrective-invoices"
+<PageTitle>Corrective Invoices</PageTitle>
+
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject ICorrectiveInvoiceService CorrectiveInvoiceService
+
+<MudText Typo="Typo.h4" Class="mt-2">Corrective Invoices</MudText>
+
+<MainBody>
+    <MudTable T="CorrectiveInvoiceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CorrectiveInvoiceModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton OnClick="Issue" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DoubleArrow" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Issue</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="CorrectiveInvoiceModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="number" T="CorrectiveInvoiceModel">Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="is_issued" T="CorrectiveInvoiceModel">Is Issued</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="api_number" T="CorrectiveInvoiceModel">Api Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="api_error" T="CorrectiveInvoiceModel">Api Error</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Number">@context.Number</MudTd>
+            <MudTd DataLabel="Is Issued"><BoolDisplay BoolValue="context.IsIssued" /></MudTd>
+            <MudTd DataLabel="Api Number">@context.ApiNumber</MudTd>
+            <MudTd DataLabel="Api Error">
+                @if (context.ApiError != null)
+                {
+                    <MudAlert Severity="Severity.Error">@context.ApiError</MudAlert>
+                }
+            </MudTd>
+        </RowTemplate>
+        <ChildRowContent>
+            <MudTr>
+                <td colspan="18">
+                    <MudCard Style="border-radius: 0;">
+                        <MudCardContent>
+                            <MudTable Items="context.Entries" Context="EntryContext" Hover="true">
+                                <HeaderContent>
+                                    <MudTh>Quantity</MudTh>
+                                    <MudTh>Gross Price</MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    <MudTd DataLabel="Quantity">@EntryContext.Quantity</MudTd>
+                                    <MudTd DataLabel="Gross Price">@EntryContext.GrossPrice</MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        </MudCardContent>
+                    </MudCard>
+                </td>
+            </MudTr>
+        </ChildRowContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+    private MudTable<CorrectiveInvoiceModel> Table;
+    private ListRequest ListRequest = new();
+
+    private HashSet<CorrectiveInvoiceModel> SelectedCorrectiveInvoices = new HashSet<CorrectiveInvoiceModel>();
+    private bool NoneSelected = true;
+    private int CurrentRowsPerPageValue = Standard.InitialRowsPerPage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+    }
+
+    private Task<TableData<CorrectiveInvoiceModel>> Reload(TableState state)
+    {
+        state.PopulateListRequest(ListRequest);
+
+        IList<CorrectiveInvoiceModel> centers = CorrectiveInvoiceService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<CorrectiveInvoiceModel>() { TotalItems = CorrectiveInvoiceService.CountForListRequest(ListRequest), Items = centers });
+    }
+
+    private void OnRowsPerPageChanged(int rowsPerPage)
+    {
+        CurrentRowsPerPageValue = rowsPerPage;
+    }
+
+    private void Filter(string searchString)
+    {
+        ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
+
+        Table.ReloadServerData();
+
+        StateHasChanged();
+    }
+
+    private void OnSelectedItemsChanged(HashSet<CorrectiveInvoiceModel> selectedCorrectiveInvoices)
+    {
+        SelectedCorrectiveInvoices = selectedCorrectiveInvoices;
+
+        if (SelectedCorrectiveInvoices.Any())
+        {
+            NoneSelected = false;
+        }
+        else
+        {
+            NoneSelected = true;
+        }
+    }
+
+    private async void Issue()
+    {
+        if (SelectedCorrectiveInvoices.All(i => i.IsIssued))
+        {
+            Snackbar.Add("All selected corrective invoices are already issued.", Severity.Warning);
+
+            return;
+        }
+
+        DialogResult result = await DialogService.Show<IssueCorrectiveInvoicesDialog>(null, new DialogParameters { ["CorrectiveInvoices"] = SelectedCorrectiveInvoices.Where(i => !i.IsIssued).OrderBy(i => i.Id).ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
+
+        if (!result.Canceled)
+        {
+            await Table.ReloadServerData();
+        }
+    }
+}

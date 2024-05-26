@@ -14,9 +14,12 @@
 	[StatusId]				BIGINT									NOT NULL,
 	[LicensePlateNumber]	NVARCHAR (255)							NOT NULL,
 	[CustomerComments]		NVARCHAR (2000)							NULL,
+	[Error]					NVARCHAR (2000)							NULL,
+	[CorrectiveInvoiceId]	BIGINT									NULL,
 	CONSTRAINT				[PK_CustomerReturn]						PRIMARY KEY ([Id]),
 	CONSTRAINT				[FK_CustomerReturn_DetailedDisposition]	FOREIGN KEY ([DetailedDispositionId])	REFERENCES [dbo].[ReturnDetailedDisposition] ([Id]),
 	CONSTRAINT				[FK_CustomerReturn_Reason]				FOREIGN KEY ([ReasonId])	REFERENCES [dbo].[ReturnReason] ([Id]),
-	CONSTRAINT				[FK_CustomerReturn_Invoice]				FOREIGN KEY ([StatusId])	REFERENCES [dbo].[ReturnStatus] ([Id]),
+	CONSTRAINT				[FK_CustomerReturn_Status]				FOREIGN KEY ([StatusId])	REFERENCES [dbo].[ReturnStatus] ([Id]),
+	CONSTRAINT				[FK_CustomerReturn_CorrectiveInvoice]	FOREIGN KEY ([CorrectiveInvoiceId])	REFERENCES [dbo].[CorrectiveInvoice] ([Id]),
 );
 GO

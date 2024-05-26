@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using AutoMapper;
 using MarketplaceBetter.Infrastructure.Data;
+using MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData
 {
@@ -26,13 +27,15 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
         private readonly IReturnDetailedDispositionService _returnDetailedDispositionService;
         private readonly IReturnReasonService _returnReasonService;
         private readonly IReturnStatusService _returnStatusService;
+        private readonly ICorrectiveInvoiceService _correctiveInvoiceService;
 
         public CustomerReturnService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IReturnDetailedDispositionService returnDetailedDispositionService,
             IReturnReasonService returnReasonService,
-            IReturnStatusService returnStatusService)
+            IReturnStatusService returnStatusService,
+            ICorrectiveInvoiceService correctiveInvoiceService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -40,6 +43,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             _returnDetailedDispositionService = returnDetailedDispositionService;
             _returnReasonService = returnReasonService;
             _returnStatusService = returnStatusService;
+            _correctiveInvoiceService = correctiveInvoiceService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -107,7 +111,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             _unitOfWork.Save();
 
-            //_invoiceService.Create(_mapper.Map<IList<CustomerReturnModel>>(returns));
+            _correctiveInvoiceService.Create(_mapper.Map<IList<CustomerReturnModel>>(returns));
         }
 
         private IQueryable<CustomerReturn> ApplyFilter(IQueryable<CustomerReturn> returns, ListRequest request)

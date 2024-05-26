@@ -1,0 +1,85 @@
+﻿@using System.IO
+@using MarketplaceBetter.Domain.Model.Sales.Invoicing;
+@using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
+@using MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IFulfilledShipmentService FulfilledShipmentService
+@inject IInvoiceService InvoiceService
+
+<EditForm Model="Model" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title="Issue Invoices" FormButtonsDisabled="IssuingInProgress">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudNumericField Label="Next Invoice Number" @bind-Value="Model.NextNumber" Min="1" Disabled="IssuingInProgress" />
+        <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" hidden="@(!IssuingInProgress)" Class="mt-3" />
+        <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@(!IssuingInProgress)">Progress <b>@CurrentInvoiceNumber / @TotalInvoicesCount</b>. Issuing Invoice Id: @CurrentInvoice.Id</MudText>
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<InvoiceModel> Invoices { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private IssueInvoiceModel Model = new IssueInvoiceModel();
+
+    private bool IssuingInProgress;
+    private double CurrentProgressValue;
+    private int CurrentInvoiceNumber;
+    private int TotalInvoicesCount;
+    private InvoiceModel CurrentInvoice;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        TotalInvoicesCount = Invoices.Count;
+        CurrentInvoice = Invoices.First();
+    }
+
+    private async void HandleValidSubmit()
+    {
+        ValidationResult validationResult = new();
+
+        if (Model.NextNumber == 0)
+        {
+            validationResult.AddError("Next Invoice Number can't be 0.");
+        }
+
+        if (validationResult.IsValid)
+        {
+            int nextNumber = Model.NextNumber;
+            IssuingInProgress = true;
+            double progressStep = (double)100 / (double)TotalInvoicesCount;
+
+            foreach (var invoice in Invoices)
+            {
+                CurrentInvoice = invoice;
+                StateHasChanged();
+
+                nextNumber = await InvoiceService.Issue(invoice, nextNumber);
+
+                await Task.Delay(1000);
+                CurrentProgressValue += progressStep;
+                CurrentInvoiceNumber++;
+            }
+
+            CurrentProgressValue = 100;
+            StateHasChanged();
+
+            Snackbar.AddSuccess("Invoices were issued. See Is Issued and Api Error to check if they were issued properly.");
+            MudDialog.Close();
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(validationResult.Errors);
+        }
+    }
+
+    private class IssueInvoiceModel
+    {
+        public int NextNumber { get; set; }
+    }
+}

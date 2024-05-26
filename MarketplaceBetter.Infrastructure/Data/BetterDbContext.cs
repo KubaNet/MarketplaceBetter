@@ -112,6 +112,8 @@ namespace MarketplaceBetter.Infrastructure.Data
         // => Invoicing
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<InvoiceEntry> InvoiceEntry { get; set; }
+        public DbSet<CorrectiveInvoice> CorrectiveInvoice { get; set; }
+        public DbSet<CorrectiveInvoiceEntry> CorrectiveInvoiceEntry { get; set; }
 
         // Advertising
         // => Campaigns

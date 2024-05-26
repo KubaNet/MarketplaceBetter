@@ -1,9 +1,5 @@
-﻿using MarketplaceBetter.Domain.Entities.Sales.InputData;
+﻿using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Sales.InputData
 {
@@ -36,5 +32,9 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
         public string LicensePlateNumber { get; set; }
 
         public string CustomerComments { get; set; }
+
+        public string Error { get; set; }
+
+        public CorrectiveInvoiceModel CorrectiveInvoice { get; set; }
     }
 }

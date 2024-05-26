@@ -24,6 +24,7 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="CustomerReturnModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="corrective_invoice" T="CustomerReturnModel">Corrective Invoice</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="return_date" T="CustomerReturnModel">Return Date</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="order_id" T="CustomerReturnModel">Order Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="sku" T="CustomerReturnModel">Sku</MudTableSortLabel></MudTh>
@@ -40,6 +41,16 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Invoice">
+                @if (context.CorrectiveInvoice != null)
+                {
+                    <MudLink Href="@string.Concat("/corrective_invoices?SearchString=Id: ", context.CorrectiveInvoice.Id)" Underline="Underline.None" Color="Color.Info">Corrective Invoice Id: @context.CorrectiveInvoice.Id</MudLink>
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Error">@context.Error</MudAlert>
+                }
+            </MudTd>
             <MudTd DataLabel="Return Date">@context.ReturnDate</MudTd>
             <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
             <MudTd DataLabel="Sku">@context.Sku</MudTd>
