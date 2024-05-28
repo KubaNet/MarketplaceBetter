@@ -19,6 +19,6 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Invoicing
 
         public string ApiError { get; set; }
 
-        public virtual IList<CorrectiveInvoiceEntry> Entries { get; set; }
+        public virtual IList<CorrectiveInvoiceEntry> Entries { get; set; } = new List<CorrectiveInvoiceEntry>();
     }
 }

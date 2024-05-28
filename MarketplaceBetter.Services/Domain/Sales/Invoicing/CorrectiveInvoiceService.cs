@@ -59,7 +59,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
 
             foreach (var groupedReturn in groupedReturns)
             {
-                IList<Invoice> invoices = _invoiceRepository.Where(i => i.OrderId.Equals(groupedReturn.Key)).ToList();
+                IList<Invoice> invoices = _invoiceRepository.Where(i => i.OrderId.Equals(groupedReturn.Key) && i.IsIssued).ToList();
                 IList<CorrectiveInvoice> correctiveInvoices = _repository.Where(ci => invoices.Any(i => i.Id == ci.InvoiceId)).ToList();
 
                 IList<CustomerReturnModel> returnsToCorrect = groupedReturn.Value;
@@ -73,7 +73,54 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                     if (!returnsToCorrect.Any())
                     {
                         break;
-                    }    
+                    }
+
+                    CorrectiveInvoice lastCorrectiveInvoice = correctiveInvoices.OrderByDescending(i => i.IssueDate).First();
+
+                    CorrectiveInvoice correctiveInvoice = new CorrectiveInvoice();
+                    if (lastCorrectiveInvoice != null)
+                    {
+                        GetValuesFrom(correctiveInvoice, lastCorrectiveInvoice);
+                    }
+                    else
+                    {
+                        GetValuesFrom(correctiveInvoice, invoice);
+                    }
+
+                    bool isCorrected = false;
+                    foreach (var returnToCorrect in returnsToCorrect)
+                    {
+                        CorrectiveInvoiceEntry entry = correctiveInvoice.Entries.SingleOrDefault(e => e.InvoiceEntry.Variant.Asin.Equals(returnToCorrect.Asin) && e.Quantity > 0);
+
+                        if (entry != null)
+                        {
+                            isCorrected = true;
+                            int adjustedQuantityCount = 0;
+                            for (int i = 0; i < returnToCorrect.Quantity; i++)
+                            {
+                                entry.GrossPrice -= entry.GrossPrice / entry.Quantity;
+                                entry.Quantity -= 1;
+                                adjustedQuantityCount++;
+
+                                if (entry.Quantity == 0)
+                                {
+                                    break;
+                                }
+                            }
+
+                            returnToCorrect.Quantity -= adjustedQuantityCount;
+                        }
+                        else
+                        {
+                            throw new Exception("Can't find invoice entry to correct");
+                        }
+                    }
+
+                    if (isCorrected)
+                    {
+                        _repository.Add(correctiveInvoice);
+                        _unitOfWork.Save();
+                    }
                 }
             }
         }
@@ -198,6 +245,32 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
             }
 
             return false;
+        }
+
+        private void GetValuesFrom(CorrectiveInvoice correctiveInvoiceTo, CorrectiveInvoice correctiveInvoiceFrom)
+        {
+            foreach (var entry in correctiveInvoiceFrom.Entries)
+            {
+                correctiveInvoiceTo.Entries.Add(
+                    new CorrectiveInvoiceEntry
+                    {
+                        GrossPrice = entry.GrossPrice,
+                        Quantity = entry.Quantity,
+                    });
+            }
+        }
+
+        private void GetValuesFrom(CorrectiveInvoice correctiveInvoiceTo, Invoice invoiceFrom)
+        {
+            foreach (var entry in invoiceFrom.Entries)
+            {
+                correctiveInvoiceTo.Entries.Add(
+                    new CorrectiveInvoiceEntry
+                    {
+                        GrossPrice = entry.GrossPrice,
+                        Quantity = entry.Quantity,
+                    });
+            }
         }
     }
 }
