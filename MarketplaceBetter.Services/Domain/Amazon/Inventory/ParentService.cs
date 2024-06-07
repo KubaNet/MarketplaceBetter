@@ -19,6 +19,7 @@ using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 {
@@ -28,27 +29,32 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Parent> _repository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Variant> _variantRepository;
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IRepository<Photo> _photoRepository;
         private readonly IRepository<Copywriting> _copywritingRepository;
         private readonly IRepository<Child> _childRepository;
+        private readonly IChildService _childService;
         private readonly IUserService _userService;
 
         public ParentService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
+            IChildService childService,
             IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<Parent>();
             _productRepository = unitOfWork.GetRepository<Product>();
+            _variantRepository = unitOfWork.GetRepository<Variant>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _photoRepository = unitOfWork.GetRepository<Photo>();
             _copywritingRepository = unitOfWork.GetRepository<Copywriting>();
             _childRepository = unitOfWork.GetRepository<Child>();
+            _childService = childService;
             _userService = userService;
         }
 
@@ -110,6 +116,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 _repository.Add(parent);
                 _unitOfWork.Save();
             }
+
+            IList<Variant> productVariants = _variantRepository.Where(v => v.ProductId == productId && v.Status.SystemName != EntityStatusEnum.Withdrawn).ToList();
+            foreach (Variant variant in productVariants)
+            {
+                _childService.AddForVariant(variant.Id);
+            }
         }
 
         public void Update(ParentModel parent)
@@ -120,6 +132,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
 
             _repository.Update(parentToUpdate);
             _unitOfWork.Save();
+
+            IList<Variant> productVariants = _variantRepository.Where(v => v.ProductId == parent.Product.Id && v.Status.SystemName != EntityStatusEnum.Withdrawn).ToList();
+            foreach (Variant variant in productVariants)
+            {
+                _childService.AddForVariant(variant.Id);
+            }
         }
 
         public string GetSkuFor(long? productId, long? instanceId)

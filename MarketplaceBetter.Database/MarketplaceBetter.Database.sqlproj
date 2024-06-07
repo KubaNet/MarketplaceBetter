@@ -113,6 +113,7 @@
     <None Include="Scripts\CustomScripts\DeletingCopywriting.sql" />
     <None Include="Scripts\Inserts\17_Portfolios.sql" />
     <None Include="Scripts\CustomScripts\CopyingCopywriting.sql" />
+    <None Include="Scripts\CustomScripts\InsertingNewSizes.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Catalog\Attributes\ProductDimensions.sql" />

@@ -29,12 +29,14 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 		private readonly IRepository<EntityStatus> _statusRepository;
         private readonly IRepository<Variant> _variantRepository;
         private readonly IParentService _parentService;
+        private readonly IChildService _childService;
 		private readonly IUserService _userService;
 
         public ProductService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IParentService parentService,
+            IChildService childService,
             IUserService userService)
         {
             _mapper = mapper;
@@ -43,6 +45,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
 			_statusRepository = unitOfWork.GetRepository<EntityStatus>();
             _variantRepository = unitOfWork.GetRepository<Variant>();
             _parentService = parentService;
+            _childService = childService;
 			_userService = userService;
         }
 
@@ -106,6 +109,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _unitOfWork.Save();
 
             _parentService.AddForProduct(productToUpdate.Id);
+
+            IList<Variant> productVariants = _variantRepository.Where(v => v.ProductId == product.Id && v.Status.SystemName != EntityStatusEnum.Withdrawn).ToList();
+            foreach (Variant variant in productVariants)
+            {
+                _childService.AddForVariant(variant.Id);
+            }
         }
 
 		public int GetMaxOrder()
