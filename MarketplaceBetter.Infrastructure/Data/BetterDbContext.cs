@@ -48,6 +48,15 @@ namespace MarketplaceBetter.Infrastructure.Data
                 .WithOne()
                 .HasForeignKey("ContentId")
                 .IsRequired();
+
+            modelBuilder.Entity<CustomerReturn>()
+                .HasMany(r => r.CorrectiveInvoices)
+                .WithMany()
+                .UsingEntity(
+                    "CustomerReturnCorrectiveInvoice",
+                    l => l.HasOne(typeof(CorrectiveInvoice)).WithMany().HasForeignKey("CorrectiveInvoiceId"),
+                    r => r.HasOne(typeof(CustomerReturn)).WithMany().HasForeignKey("CustomerReturnId")
+                );
         }
 
         // Base

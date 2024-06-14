@@ -68,17 +68,14 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                 IList<CustomerReturnModel> returnsToCorrect = groupedReturn.Value;
                 foreach (var invoice in invoices)
                 {
-                    if (!CanBeCorrected(invoice, correctiveInvoices, returnsToCorrect))
+                    IList<CorrectiveInvoice> invoiceCorrectiveInvoices = _repository.Where(ci => ci.InvoiceId == invoice.Id).ToList();
+
+                    if (!returnsToCorrect.Any(r => r.Quantity > 0))
                     {
                         break;
                     }
 
-                    if (!returnsToCorrect.Any())
-                    {
-                        break;
-                    }
-
-                    CorrectiveInvoice lastCorrectiveInvoice = correctiveInvoices.OrderByDescending(i => i.IssueDate).FirstOrDefault();
+                    CorrectiveInvoice lastCorrectiveInvoice = invoiceCorrectiveInvoices.OrderByDescending(i => i.IssueDate).FirstOrDefault();
 
                     CorrectiveInvoice correctiveInvoice = new CorrectiveInvoice();
                     if (lastCorrectiveInvoice != null)
@@ -112,10 +109,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                             }
 
                             returnToCorrect.Quantity -= adjustedQuantityCount;
-                        }
-                        else
-                        {
-                            throw new Exception("Can't find invoice entry to correct");
+                            
+                            CustomerReturn customerReturn = _customerReturnRepository.Get(returnToCorrect.Id);
+                            customerReturn.CorrectiveInvoices.Add(correctiveInvoice);
                         }
                     }
 
@@ -209,11 +205,6 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
 
             foreach (var singleReturn in returns)
             {
-                if (singleReturn.CorrectiveInvoice != null)
-                {
-                    continue;
-                }
-
                 string key = singleReturn.OrderId;
                 if (!groupedReturns.ContainsKey(key))
                 {
@@ -224,36 +215,6 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
             }
 
             return groupedReturns;
-        }
-
-        private bool CanBeCorrected(Invoice invoice, IList<CorrectiveInvoice> correctiveInvoices, IList<CustomerReturnModel> returnsToCorrect)
-        {
-            if (correctiveInvoices.Any())
-            {
-                CorrectiveInvoice lastCorrectiveInvoice = correctiveInvoices.OrderByDescending(i => i.IssueDate).First();
-
-                foreach (var returnToCorrect in returnsToCorrect)
-                {
-                    if (lastCorrectiveInvoice.Entries.Any(e =>
-                        e.InvoiceEntry.Variant.Asin.Equals(returnToCorrect.Asin) && e.Quantity > 0))
-                    {
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                foreach (var returnToCorrect in returnsToCorrect)
-                {
-                    if (invoice.Entries.Any(e =>
-                        e.Variant.Asin.Equals(returnToCorrect.Asin)))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
 
         private void GetValuesFrom(CorrectiveInvoice correctiveInvoiceTo, CorrectiveInvoice correctiveInvoiceFrom)

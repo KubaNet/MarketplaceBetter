@@ -1,5 +1,7 @@
 ﻿using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MarketplaceBetter.Domain.Model.Sales.InputData
 {
@@ -35,6 +37,6 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
 
         public string Error { get; set; }
 
-        public CorrectiveInvoiceModel CorrectiveInvoice { get; set; }
+        public IList<CorrectiveInvoiceModel> CorrectiveInvoices { get; set; } = new List<CorrectiveInvoiceModel>();
     }
 }

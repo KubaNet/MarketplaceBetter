@@ -1,5 +1,6 @@
 ﻿using MarketplaceBetter.Domain.Entities.Sales.Invoicing;
 using System;
+using System.Collections.Generic;
 
 namespace MarketplaceBetter.Domain.Entities.Sales.InputData
 {
@@ -39,8 +40,6 @@ namespace MarketplaceBetter.Domain.Entities.Sales.InputData
 
         public string Error { get; set; }
 
-        public long? CorrectiveInvoiceId { get; set; }
-
-        public virtual CorrectiveInvoice CorrectiveInvoice { get; set; }
+        public virtual IList<CorrectiveInvoice> CorrectiveInvoices { get; set; } = new List<CorrectiveInvoice>();
     }
 }
