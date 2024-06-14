@@ -8,6 +8,6 @@
 	[ApiNumber]		NVARCHAR (255)					NULL,
 	[ApiError]		NVARCHAR (255)					NULL,
 	CONSTRAINT		[PK_CorrectiveInvoice]			PRIMARY KEY ([Id]),
-	CONSTRAINT		[FK_CorrectiveInvoice_Invoice_]	FOREIGN KEY ([InvoiceId])	REFERENCES [dbo].[Invoice] ([Id]),
+	CONSTRAINT		[FK_CorrectiveInvoice_Invoice]	FOREIGN KEY ([InvoiceId])	REFERENCES [dbo].[Invoice] ([Id]),
 );
 GO

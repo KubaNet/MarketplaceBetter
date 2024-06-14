@@ -22,6 +22,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<CorrectiveInvoice> _repository;
+        private readonly IRepository<CustomerReturn> _customerReturnRepository;
         private readonly IRepository<Invoice> _invoiceRepository;
 
         public CorrectiveInvoiceService(
@@ -32,6 +33,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
             _unitOfWork = unitOfWork;
             _repository = unitOfWork.GetRepository<CorrectiveInvoice>();
             _invoiceRepository = unitOfWork.GetRepository<Invoice>();
+            _customerReturnRepository = unitOfWork.GetRepository<CustomerReturn>();
         }
         public int CountForListRequest(ListRequest request)
         {
@@ -60,7 +62,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
             foreach (var groupedReturn in groupedReturns)
             {
                 IList<Invoice> invoices = _invoiceRepository.Where(i => i.OrderId.Equals(groupedReturn.Key) && i.IsIssued).ToList();
-                IList<CorrectiveInvoice> correctiveInvoices = _repository.Where(ci => invoices.Any(i => i.Id == ci.InvoiceId)).ToList();
+                IList<long> invoicesIds = invoices.Select(i => i.Id).ToList();
+                IList<CorrectiveInvoice> correctiveInvoices = _repository.Where(ci => invoicesIds.Contains(ci.InvoiceId)).ToList();
 
                 IList<CustomerReturnModel> returnsToCorrect = groupedReturn.Value;
                 foreach (var invoice in invoices)
@@ -75,7 +78,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                         break;
                     }
 
-                    CorrectiveInvoice lastCorrectiveInvoice = correctiveInvoices.OrderByDescending(i => i.IssueDate).First();
+                    CorrectiveInvoice lastCorrectiveInvoice = correctiveInvoices.OrderByDescending(i => i.IssueDate).FirstOrDefault();
 
                     CorrectiveInvoice correctiveInvoice = new CorrectiveInvoice();
                     if (lastCorrectiveInvoice != null)
@@ -141,7 +144,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
 
             foreach (string searchString in searchStrings)
             {
-                string[] searchFieldNames = new[] { "id", "number", "api_number", "api_error" };
+                string[] searchFieldNames = new[] { "id", "invoice_id", "number", "invoice_number", "api_number", "api_error" };
                 SearchField searchField = SearchFieldExtractor.ExtractFrom(searchString, searchFieldNames);
 
                 if (searchField != null)
@@ -149,7 +152,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                     correctiveInvoices = searchField.Name switch
                     {
                         "id" => correctiveInvoices.Where(i => i.Id == searchField.Value.ParseToIntOrDefault()),
+                        "invoice_id" => correctiveInvoices.Where(i => i.Invoice.Id == searchField.Value.ParseToIntOrDefault()),
                         "number" => correctiveInvoices.Where(i => i.Number.Contains(searchField.Value)),
+                        "invoice_number" => correctiveInvoices.Where(i => i.Invoice.Number.Contains(searchField.Value)),
                         "api_number" => correctiveInvoices.Where(i => i.ApiNumber.Contains(searchField.Value)),
                         "api_error" => correctiveInvoices.Where(i => i.ApiError.Contains(searchField.Value)),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
@@ -158,7 +163,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                 else
                 {
                     correctiveInvoices = correctiveInvoices.Where(i => i.Id == searchString.ParseToIntOrDefault()
+                        || i.Invoice.Id == searchString.ParseToIntOrDefault()
                         || i.Number.Contains(searchString)
+                        || i.Invoice.Number.Contains(searchString)
                         || i.ApiNumber.Contains(searchString)
                         || i.ApiError.Contains(searchString));
                 }
@@ -174,7 +181,9 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                 correctiveInvoices = request.SortBy switch
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? correctiveInvoices.OrderBy(i => i.Id) : correctiveInvoices.OrderByDescending(i => i.Id),
+                    "invoice_id" => request.SortDirection == SortDirection.Ascending ? correctiveInvoices.OrderBy(i => i.Invoice.Id) : correctiveInvoices.OrderByDescending(i => i.Invoice.Id),
                     "number" => request.SortDirection == SortDirection.Ascending ? correctiveInvoices.OrderBy(i => i.Number) : correctiveInvoices.OrderByDescending(i => i.Number),
+                    "invoice_number" => request.SortDirection == SortDirection.Ascending ? correctiveInvoices.OrderBy(i => i.Invoice.Number) : correctiveInvoices.OrderByDescending(i => i.Invoice.Number),
                     "is_issued" => request.SortDirection == SortDirection.Ascending ? correctiveInvoices.OrderBy(i => i.IsIssued) : correctiveInvoices.OrderByDescending(i => i.IsIssued),
                     "api_number" => request.SortDirection == SortDirection.Ascending ? correctiveInvoices.OrderBy(i => i.ApiNumber) : correctiveInvoices.OrderByDescending(i => i.ApiNumber),
                     "api_error" => request.SortDirection == SortDirection.Ascending ? correctiveInvoices.OrderBy(i => i.ApiError) : correctiveInvoices.OrderByDescending(i => i.ApiError),
@@ -249,6 +258,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
 
         private void GetValuesFrom(CorrectiveInvoice correctiveInvoiceTo, CorrectiveInvoice correctiveInvoiceFrom)
         {
+            correctiveInvoiceTo.Invoice = correctiveInvoiceFrom.Invoice;
+
             foreach (var entry in correctiveInvoiceFrom.Entries)
             {
                 correctiveInvoiceTo.Entries.Add(
@@ -256,12 +267,15 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                     {
                         GrossPrice = entry.GrossPrice,
                         Quantity = entry.Quantity,
+                        InvoiceEntry = entry.InvoiceEntry
                     });
             }
         }
 
         private void GetValuesFrom(CorrectiveInvoice correctiveInvoiceTo, Invoice invoiceFrom)
         {
+            correctiveInvoiceTo.Invoice = invoiceFrom;
+
             foreach (var entry in invoiceFrom.Entries)
             {
                 correctiveInvoiceTo.Entries.Add(
@@ -269,6 +283,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                     {
                         GrossPrice = entry.GrossPrice,
                         Quantity = entry.Quantity,
+                        InvoiceEntry = entry
                     });
             }
         }

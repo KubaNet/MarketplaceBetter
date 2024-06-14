@@ -25,6 +25,8 @@
             <MudTh><MudTableSortLabel SortLabel="is_issued" T="CorrectiveInvoiceModel">Is Issued</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="api_number" T="CorrectiveInvoiceModel">Api Number</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="api_error" T="CorrectiveInvoiceModel">Api Error</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="invoice_id" T="CorrectiveInvoiceModel">Invoice Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="invoice_number" T="CorrectiveInvoiceModel">Invoice Number</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -37,6 +39,8 @@
                     <MudAlert Severity="Severity.Error">@context.ApiError</MudAlert>
                 }
             </MudTd>
+            <MudTd DataLabel="Invoice Id">@context.Invoice.Id</MudTd>
+            <MudTd DataLabel="Invoice Number">@context.Invoice.Number</MudTd>
         </RowTemplate>
         <ChildRowContent>
             <MudTr>
@@ -45,12 +49,22 @@
                         <MudCardContent>
                             <MudTable Items="context.Entries" Context="EntryContext" Hover="true">
                                 <HeaderContent>
-                                    <MudTh>Quantity</MudTh>
-                                    <MudTh>Gross Price</MudTh>
+                                    <MudTh>Invoice Name</MudTh>
+                                    <MudTh>Variant</MudTh>
+                                    <MudTh>Currency</MudTh>
+                                    <MudTh>Quantity Before</MudTh>
+                                    <MudTh>Quantity After</MudTh>
+                                    <MudTh>Gross Price Before</MudTh>
+                                    <MudTh>Gross Price After</MudTh>
                                 </HeaderContent>
                                 <RowTemplate>
-                                    <MudTd DataLabel="Quantity">@EntryContext.Quantity</MudTd>
-                                    <MudTd DataLabel="Gross Price">@EntryContext.GrossPrice</MudTd>
+                                    <MudTd DataLabel="Invoice Name">@EntryContext.InvoiceEntry.InvoiceName</MudTd>
+                                    <MudTd DataLabel="Variant">@EntryContext.InvoiceEntry.Variant.Sku</MudTd>
+                                    <MudTd DataLabel="Currency">@EntryContext.InvoiceEntry.Currency.Name</MudTd>
+                                    <MudTd DataLabel="Quantity Before">@EntryContext.InvoiceEntry.Quantity</MudTd>
+                                    <MudTd DataLabel="Quantity After">@EntryContext.Quantity</MudTd>
+                                    <MudTd DataLabel="Gross Price Before">@EntryContext.InvoiceEntry.GrossPrice</MudTd>
+                                    <MudTd DataLabel="Gross Price After">@EntryContext.GrossPrice</MudTd>
                                 </RowTemplate>
                             </MudTable>
                         </MudCardContent>

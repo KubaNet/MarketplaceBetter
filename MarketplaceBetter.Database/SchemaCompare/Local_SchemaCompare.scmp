@@ -9,7 +9,7 @@
   </SourceModelProvider>
   <TargetModelProvider>
     <ConnectionBasedModelProvider>
-      <ConnectionString>Data Source=KUBA-LAPTOP;Initial Catalog=MarketplaceBetter;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False</ConnectionString>
+      <ConnectionString>Data Source=KUBA-PC;Initial Catalog=MarketplaceBetter;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0</ConnectionString>
     </ConnectionBasedModelProvider>
   </TargetModelProvider>
   <SchemaCompareSettingsService>
@@ -31,6 +31,10 @@
       <PropertyElementName>
         <Name>AllowIncompatiblePlatform</Name>
         <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>AllowTableRecreation</Name>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>BackupDatabaseBeforeChanges</Name>
@@ -265,6 +269,10 @@
         <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
+        <Name>IgnoreSensitivityClassifications</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
         <Name>AllowUnsafeRowLevelSecurityDataMovement</Name>
         <Value>False</Value>
       </PropertyElementName>
@@ -294,6 +302,10 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>RegisterDataTierApplication</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>PerformIndexOperationsOnline</Name>
         <Value>False</Value>
       </PropertyElementName>
       <PropertyElementName>
@@ -338,7 +350,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>TargetConnectionString</Name>
-        <Value>Data Source=KUBA-LAPTOP;Initial Catalog=MarketplaceBetter;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;Application Name="Microsoft SQL Server Data Tools, Schema Compare"</Value>
+        <Value>Data Source=KUBA-PC;Initial Catalog=MarketplaceBetter;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Application Name="Microsoft SQL Server Data Tools, Schema Compare";Command Timeout=0</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>TreatVerificationErrorsAsWarnings</Name>
@@ -714,7 +726,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>ExcludeDatabaseRoles</Name>
-        <Value>False</Value>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>ExcludeDatabaseTriggers</Name>
@@ -898,7 +910,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>ExcludeUsers</Name>
-        <Value>False</Value>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>ExcludeViews</Name>
@@ -1006,6 +1018,22 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlAssemblyFile</Name>
+        <Value>ExcludedType</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlRoleMembership</Name>
+        <Value>ExcludedType</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlUser</Name>
+        <Value>ExcludedType</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlRole</Name>
+        <Value>ExcludedType</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlGenericDatabaseScopedConfigurationOptions</Name>
         <Value>ExcludedType</Value>
       </PropertyElementName>
     </ConfigurationOptionsElement>
