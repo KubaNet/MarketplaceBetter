@@ -42,14 +42,18 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Invoice">
-@*                 @if (context.CorrectiveInvoice != null)
+                @if (context.CorrectiveInvoices.Any())
                 {
-                    <MudLink Href="@string.Concat("/corrective_invoices?SearchString=Id: ", context.CorrectiveInvoice.Id)" Underline="Underline.None" Color="Color.Info">Corrective Invoice Id: @context.CorrectiveInvoice.Id</MudLink>
+                    foreach (var correctiveInvoice in context.CorrectiveInvoices)
+                    {
+                        <MudLink Href="@string.Concat("/corrective_invoices?SearchString=Id: ", correctiveInvoice.Id)" Underline="Underline.None" Color="Color.Info">Corrective Invoice Id: @correctiveInvoice.Id</MudLink>
+                    }
                 }
-                else
+
+                @if (!string.IsNullOrWhiteSpace(context.Error))
                 {
                     <MudAlert Severity="Severity.Error">@context.Error</MudAlert>
-                } *@
+                }
             </MudTd>
             <MudTd DataLabel="Return Date">@context.ReturnDate</MudTd>
             <MudTd DataLabel="Order Id">@context.OrderId</MudTd>

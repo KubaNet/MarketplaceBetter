@@ -90,28 +90,32 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                     bool isCorrected = false;
                     foreach (var returnToCorrect in returnsToCorrect)
                     {
-                        CorrectiveInvoiceEntry entry = correctiveInvoice.Entries.SingleOrDefault(e => e.InvoiceEntry.Variant.Asin.Equals(returnToCorrect.Asin) && e.Quantity > 0);
+                        IList<CorrectiveInvoiceEntry> entries = correctiveInvoice.Entries.Where(e => e.InvoiceEntry.Variant.Asin.Equals(returnToCorrect.Asin) && e.Quantity > 0).ToList();
 
-                        if (entry != null)
+                        if (entries.Any())
                         {
-                            isCorrected = true;
-                            int adjustedQuantityCount = 0;
-                            for (int i = 0; i < returnToCorrect.Quantity; i++)
+                            foreach (var entry in entries)
                             {
-                                entry.GrossPrice -= entry.GrossPrice / entry.Quantity;
-                                entry.Quantity -= 1;
-                                adjustedQuantityCount++;
-
-                                if (entry.Quantity == 0)
+                                isCorrected = true;
+                                int adjustedQuantityCount = 0;
+                                for (int i = 0; i < returnToCorrect.Quantity; i++)
                                 {
-                                    break;
+                                    entry.GrossPrice -= entry.GrossPrice / entry.Quantity;
+                                    entry.Quantity -= 1;
+                                    adjustedQuantityCount++;
+
+                                    if (entry.Quantity == 0)
+                                    {
+                                        break;
+                                    }
                                 }
+
+                                returnToCorrect.Quantity -= adjustedQuantityCount;
                             }
 
-                            returnToCorrect.Quantity -= adjustedQuantityCount;
-                            
                             CustomerReturn customerReturn = _customerReturnRepository.Get(returnToCorrect.Id);
                             customerReturn.CorrectiveInvoices.Add(correctiveInvoice);
+                            _customerReturnRepository.Update(customerReturn);
                         }
                     }
 
@@ -120,6 +124,21 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                         _repository.Add(correctiveInvoice);
                         _unitOfWork.Save();
                     }
+                }
+
+                if (returnsToCorrect.Any(r => r.Quantity > 0))
+                {
+                    foreach (var returnToCorrect in returnsToCorrect)
+                    {
+                        if (returnToCorrect.Quantity > 0)
+                        {
+                            CustomerReturn customerReturn = _customerReturnRepository.Get(returnToCorrect.Id);
+                            customerReturn.Error = "This return was not corrected fully.";
+                            _customerReturnRepository.Update(customerReturn);
+                        }
+                    }
+
+                    _unitOfWork.Save();
                 }
             }
         }

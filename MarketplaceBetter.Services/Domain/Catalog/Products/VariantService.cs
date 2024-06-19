@@ -169,7 +169,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             toVariant.ColorId = fromVariant.Color.Id;
             toVariant.SizeId = fromVariant.Size.Id;
             toVariant.Ean = fromVariant.Ean;
-            toVariant.Asin = fromVariant.Asin;
+            toVariant.Asin = string.IsNullOrWhiteSpace(fromVariant.Asin) ? null : fromVariant.Asin;
         }
 
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)

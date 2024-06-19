@@ -225,14 +225,7 @@ namespace MarketplaceBetter.Services.Specialized
             Size size = variant.Size;
             CopywritingModel title = _copywritingService.GetForProduct(variant.ProductId, child.InstanceId, CopywritingElementEnum.Title);
 
-            if (size.IsOneSize)
-            {
-                return $"{title?.Value} ({colorTranslation?.Translation})";
-            }
-            else
-            {
-                return $"{title?.Value} ({size.Code}, {colorTranslation?.Translation})";
-            }
+            return $"{title?.Value} ({size.Code}, {colorTranslation?.Translation})";
         }
     }
 }
