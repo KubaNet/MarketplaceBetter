@@ -1,6 +1,7 @@
 ﻿@using MarketplaceBetter.Domain.Model.Sales.Invoicing;
 @using MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces;
 @using MarketplaceBetter.Services.Model
+@using System.Threading
 
 @page "/corrective-invoices"
 <PageTitle>Corrective Invoices</PageTitle>
@@ -13,7 +14,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Corrective Invoices</MudText>
 
 <MainBody>
-    <MudTable T="CorrectiveInvoiceModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CorrectiveInvoiceModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="CorrectiveInvoiceModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<CorrectiveInvoiceModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -103,7 +104,7 @@
         }
     }
 
-    private Task<TableData<CorrectiveInvoiceModel>> Reload(TableState state)
+    private Task<TableData<CorrectiveInvoiceModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 

@@ -1,5 +1,6 @@
 ﻿@using MarketplaceBetter.Domain.Model.Base;
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
+@using System.Threading
 
 @page "/users"
 @inject IUserService UserService
@@ -7,7 +8,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Users</MudText>
 
 <MainBody>
-    <MudTable T="UserModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<UserModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue>
+    <MudTable T="UserModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<UserModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="UserModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="login" T="UserModel">Login</MudTableSortLabel></MudTh>
@@ -36,7 +37,7 @@
         base.OnInitialized();
     }
 
-    private Task<TableData<UserModel>> Reload(TableState state)
+    private Task<TableData<UserModel>> Reload(TableState state, CancellationToken token)
     {
         IList<UserModel> users = UserService.GetAll();
 

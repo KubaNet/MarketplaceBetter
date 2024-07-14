@@ -1,6 +1,7 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Model
+@using System.Threading
 
 @page "/colors"
 <PageTitle>Colors</PageTitle>
@@ -12,7 +13,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Colors</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ColorModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ColorModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString"  Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
@@ -63,7 +64,7 @@
         }
     }
 
-	private Task<TableData<ColorModel>> Reload(TableState state)
+	private Task<TableData<ColorModel>> Reload(TableState state, CancellationToken token)
 	{
 		state.PopulateListRequest(ListRequest);
 

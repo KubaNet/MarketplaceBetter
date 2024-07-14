@@ -25,7 +25,7 @@
             <MudStack Style="width: 100%;">
                 <MudFileUpload @ref="MudFileUpload" T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnInputFileChanged" MaximumFileCount="500" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20" InputStyle="opacity:0"
                                @ondragenter="SetDragClass" @ondragleave="ClearDragClass" @ondragend="ClearDragClass">
-                    <ButtonTemplate>
+                    <ActivatorContent>
                         <MudPaper MinHeight="500px" Outlined="true" Class="@DragClass">
                             <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
                             @foreach (var uploadedFile in UploadedFiles)
@@ -33,7 +33,7 @@
                                 <MudChip T="string" Color="ChipsColors[uploadedFile.Key]" Text="@uploadedFile.Value.Name" />
                             }
                         </MudPaper>
-                    </ButtonTemplate>
+                    </ActivatorContent>
                 </MudFileUpload>
             </MudStack>
         </MudContainer>

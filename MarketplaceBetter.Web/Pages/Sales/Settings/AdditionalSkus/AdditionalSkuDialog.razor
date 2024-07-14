@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 @using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 @using MarketplaceBetter.Services.Validation.Sales.Settings.Interfaces;
+@using System.Threading
 
 @inject ISnackbar Snackbar
 @inject IAdditionalSkuService AdditionalSkuService
@@ -54,7 +55,7 @@
         }
     }
 
-    private async Task<IEnumerable<VariantModel>> SearchVariants(string search)
+    private async Task<IEnumerable<VariantModel>> SearchVariants(string search, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(search))
         {

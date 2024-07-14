@@ -4,6 +4,7 @@
 @using MarketplaceBetter.Services.Model
 @using MarketplaceBetter.Services.Specialized.Interfaces;
 @using System.IO
+@using System.Threading
 
 @page "/parents"
 <PageTitle>Parents</PageTitle>
@@ -19,7 +20,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Parents</MudText>
 
 <MainBody>
-    <MudTable T="ParentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ParentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="ParentModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ParentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -60,9 +61,9 @@
             <MudTd DataLabel="Comment"><ParentComment Parent="context" /></MudTd>
             <MudTd>
                 <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context))" Class="d-inline-flex mt-0">
-                    <ButtonTemplate>
+                    <ActivatorContent>
                         <MudButton for="@File" HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Upload</MudButton>
-                    </ButtonTemplate>
+                    </ActivatorContent>
                 </MudFileUpload>
                 <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => Export(context.Id, context.Sku))">Export</MudButton>
                 <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
@@ -115,7 +116,7 @@
         }
     }
 
-    private Task<TableData<ParentModel>> Reload(TableState state)
+    private Task<TableData<ParentModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 

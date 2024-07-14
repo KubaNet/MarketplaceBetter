@@ -13,7 +13,7 @@
     <MudTable Items="@BrandsData" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
             <MudSpacer />
-            <MudButton OnClick="AddBrand" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Brand</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Brand</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Id</MudTh>
@@ -25,7 +25,7 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditBrand(context.Id))">Edit</MudButton></MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
@@ -43,21 +43,21 @@
         BrandsData = BrandService.GetAll();
     }
 
-    private async void AddBrand()
+    private async void Add()
     {
         DialogResult result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Add Brand" }).Result;
 
-        ProcessBrandDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditBrand(long id)
+    private async void Edit(long id)
     {
         DialogResult result = await DialogService.Show<BrandDialog>(null, new DialogParameters { ["Title"] = "Edit Brand", ["IsEdit"] = true, ["BrandId"] = id }).Result;
 
-        ProcessBrandDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private void ProcessBrandDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {

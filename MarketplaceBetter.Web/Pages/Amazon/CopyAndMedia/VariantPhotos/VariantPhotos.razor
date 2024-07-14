@@ -4,6 +4,7 @@
 @using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Model;
+@using System.Threading
 
 @page "/variant-photos"
 <PageTitle>Variant Photos</PageTitle>
@@ -17,10 +18,10 @@
 <MudText Typo="Typo.h4" Class="mt-2">Variant Photos</MudText>
 
 <MainBody>
-    <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<VariantPhotosModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<VariantPhotosModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-            <MudCheckBox T="bool" T="bool" Label="Show shared only" Value="ShowSharedOnly" Class="mt-4" ValueChanged="OnShowSharedOnlyChanged" />
+            <MudCheckBox T="bool" Label="Show shared only" Value="ShowSharedOnly" Class="mt-4" ValueChanged="OnShowSharedOnlyChanged" />
             <MudSpacer />
             <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
         </ToolBarContent>
@@ -105,7 +106,7 @@
         }
     }
 
-    private Task<TableData<VariantPhotosModel>> Reload(TableState state)
+    private Task<TableData<VariantPhotosModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 

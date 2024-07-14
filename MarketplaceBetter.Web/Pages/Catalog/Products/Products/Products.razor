@@ -2,6 +2,7 @@
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
 @using MarketplaceBetter.Services.Model
+@using System.Threading
 
 @page "/products"
 <PageTitle>Products</PageTitle>
@@ -13,7 +14,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Products</MudText>
 
 <MainBody>
-	<MudTable T="ProductModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+	<MudTable T="ProductModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ProductModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
@@ -79,7 +80,7 @@
 		}
 	}
 
-	private Task<TableData<ProductModel>> Reload(TableState state)
+	private Task<TableData<ProductModel>> Reload(TableState state, CancellationToken token)
 	{
 		state.PopulateListRequest(ListRequest);
 

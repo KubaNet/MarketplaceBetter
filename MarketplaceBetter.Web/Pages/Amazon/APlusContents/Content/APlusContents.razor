@@ -1,6 +1,7 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.APlusContents;
 @using MarketplaceBetter.Services.Domain.Amazon.APlusContents.Interfaces;
 @using MarketplaceBetter.Services.Model;
+@using System.Threading
 
 @page "/a-plus-content"
 <PageTitle>A+ Content</PageTitle>
@@ -13,7 +14,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">A+ Content</MudText>
 
 <MainBody>
-    <MudTable T="APlusContentModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<APlusContentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="APlusContentModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<APlusContentModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -86,7 +87,7 @@
         }
     }
 
-    private Task<TableData<APlusContentModel>> Reload(TableState state)
+    private Task<TableData<APlusContentModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 

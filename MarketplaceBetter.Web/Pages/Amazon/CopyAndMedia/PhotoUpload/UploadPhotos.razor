@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Model
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Specialized.Interfaces
+@using System.Threading
 
 @page "/add-photos"
 <PageTitle>Add multiple Photos</PageTitle>
@@ -16,7 +17,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Add multiple Photos</MudText>
 
 <MainBody>
-    <MudTable T="PhotoUploadModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PhotoUploadModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
+    <MudTable T="PhotoUploadModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<PhotoUploadModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true">
         <ToolBarContent>
             <MudTextField Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <span class="mt-5 ml-3">Number of photos: @NumberOfPhotos</span>
@@ -103,7 +104,7 @@
         }
     }
 
-    private Task<TableData<PhotoUploadModel>> Reload(TableState state)
+    private Task<TableData<PhotoUploadModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 

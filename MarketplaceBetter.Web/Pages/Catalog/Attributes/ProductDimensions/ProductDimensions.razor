@@ -4,6 +4,7 @@
 @using MarketplaceBetter.Services.Domain.Base.Interfaces;
 @using MarketplaceBetter.Services.Domain.Catalog.Attributes.Interfaces;
 @using MarketplaceBetter.Services.Model;
+@using System.Threading
 
 @page "/product-dimensions"
 <PageTitle>Product Dimensions</PageTitle>
@@ -17,7 +18,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Product Dimensions</MudText>
 
 <MainBody>
-    <MudTable T="ProductDimensionsModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductDimensionsModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="ProductDimensionsModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ProductDimensionsModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
@@ -171,7 +172,7 @@
         }
     }
 
-    private Task<TableData<ProductDimensionsModel>> Reload(TableState state)
+    private Task<TableData<ProductDimensionsModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 

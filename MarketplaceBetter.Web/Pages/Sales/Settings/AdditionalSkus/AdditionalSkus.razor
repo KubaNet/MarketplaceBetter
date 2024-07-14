@@ -1,6 +1,7 @@
 ﻿@using MarketplaceBetter.Domain.Model.Sales.Settings;
 @using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 @using MarketplaceBetter.Services.Model
+@using System.Threading
 
 @page "/additional-skus"
 <PageTitle>Additional SKUs</PageTitle>
@@ -12,7 +13,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Additional SKUs</MudText>
 
 <MainBody>
-	<MudTable T="AdditionalSkuModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<AdditionalSkuModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+	<MudTable T="AdditionalSkuModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<AdditionalSkuModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
@@ -57,7 +58,7 @@
 		}
 	}
 
-	private Task<TableData<AdditionalSkuModel>> Reload(TableState state)
+	private Task<TableData<AdditionalSkuModel>> Reload(TableState state, CancellationToken token)
 	{
 		state.PopulateListRequest(ListRequest);
 

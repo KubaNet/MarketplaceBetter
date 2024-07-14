@@ -1,6 +1,7 @@
 ﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
 @using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 @using MarketplaceBetter.Services.Model
+@using System.Threading
 
 @page "/sizes"
 <PageTitle>Sizes</PageTitle>
@@ -11,11 +12,11 @@
 <MudText Typo="Typo.h4" Class="mt-2">Sizes</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<SizeModel>>>(ReloadSizes))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<SizeModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
-			<MudTextField Placeholder="Search" T="string" ValueChanged="FilterSizes" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudTextField Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
-            <MudButton OnClick="AddSize" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Size</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Size</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="SizeModel">Id</MudTableSortLabel></MudTh>
@@ -30,10 +31,10 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Is One Size"><MudCheckBox T="bool" T="bool" Checked="@context.IsOneSize" Disabled="true"></MudCheckBox></MudTd>
+            <MudTd DataLabel="Is One Size"><MudCheckBox T="bool" Value="@context.IsOneSize" Disabled="true"></MudCheckBox></MudTd>
             <MudTd DataLabel="Group">@context.Group.Name</MudTd>
             <MudTd DataLabel="Brand">@context.Group.Brand.Name</MudTd>
-            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditSize(context.Id))">Edit</MudButton></MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
@@ -45,7 +46,7 @@
     private MudTable<SizeModel> Table;
 	private ListRequest ListRequest = new();
 
-	private Task<TableData<SizeModel>> ReloadSizes(TableState state)
+	private Task<TableData<SizeModel>> Reload(TableState state, CancellationToken token)
 	{
 		state.PopulateListRequest(ListRequest);
 
@@ -54,7 +55,7 @@
 		return Task.FromResult(new TableData<SizeModel>() { TotalItems = SizeService.CountForListRequest(ListRequest), Items = colors });
 	}
 
-	private void FilterSizes(string searchString)
+	private void Filter(string searchString)
 	{
 		ListRequest.SearchString = searchString;
 
@@ -63,21 +64,21 @@
 		StateHasChanged();
 	}
 
-    private async void AddSize()
+    private async void Add()
     {
         DialogResult result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Add Size" }).Result;
 
-        ProcessSizeDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditSize(long id)
+    private async void Edit(long id)
     {
         DialogResult result = await DialogService.Show<SizeDialog>(null, new DialogParameters { ["Title"] = "Edit Size", ["IsEdit"] = true, ["SizeId"] = id }).Result;
 
-        ProcessSizeDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private void ProcessSizeDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {

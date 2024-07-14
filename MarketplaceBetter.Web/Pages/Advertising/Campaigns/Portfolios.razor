@@ -1,6 +1,7 @@
 ﻿@using MarketplaceBetter.Domain.Model.Advertising.Campaigns
 @using MarketplaceBetter.Services.Domain.Advertising.Campaigns.Interfaces
 @using MarketplaceBetter.Services.Model
+@using System.Threading
 
 @page "/portfolios"
 <PageTitle>Portfolios</PageTitle>
@@ -12,7 +13,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Portfolios</MudText>
 
 <MainBody>
-    <MudTable T="PortfolioModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<PortfolioModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+    <MudTable T="PortfolioModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<PortfolioModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="PortfolioModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="name" T="PortfolioModel">Name</MudTableSortLabel></MudTh>
@@ -58,7 +59,7 @@
         }
     }
 
-    private Task<TableData<PortfolioModel>> Reload(TableState state)
+    private Task<TableData<PortfolioModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 

@@ -2,6 +2,7 @@
 @using MarketplaceBetter.Services.Domain.Sales.Settings.Interfaces;
 @using MarketplaceBetter.Services.Model
 @using System.IO;
+@using System.Threading
 
 @page "/products-accounting-data"
 <PageTitle>Products Accounting Data</PageTitle>
@@ -14,7 +15,7 @@
 <MudText Typo="Typo.h4" Class="mt-2">Products Accounting Data</MudText>
 
 <MainBody>
-	<MudTable T="ProductAccountingDataModel" @ref="Table" ServerData="@(new Func<TableState, Task<TableData<ProductAccountingDataModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
+	<MudTable T="ProductAccountingDataModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ProductAccountingDataModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
 		<ToolBarContent>
 			<MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 			<MudSpacer />
@@ -73,7 +74,7 @@
 		}
 	}
 
-	private Task<TableData<ProductAccountingDataModel>> Reload(TableState state)
+	private Task<TableData<ProductAccountingDataModel>> Reload(TableState state, CancellationToken token)
 	{
 		state.PopulateListRequest(ListRequest);
 

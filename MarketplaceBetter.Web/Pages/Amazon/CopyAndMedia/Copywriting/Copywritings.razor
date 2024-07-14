@@ -3,6 +3,7 @@
 @using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Model;
 @using System.IO
+@using System.Threading
 
 @page "/copywriting"
 <PageTitle>Copywriting</PageTitle>
@@ -15,12 +16,12 @@
 <MudText Typo="Typo.h4" Class="mt-2">Copywriting</MudText>
 
 <MainBody>
-    <MudTable @ref="Table" ServerData="@(new Func<TableState, Task<TableData<CopywritingModel>>>(ReloadCopywritings))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<CopywritingModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="FilterCopywritings" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="GetMissing" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.CloudDownload" Color="Color.Info" Class="ml-2">Get Missing</MudButton>
-            <MudButton OnClick="AddCopywriting" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Copywriting</MudButton>
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add Copywriting</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="CopywritingModel">Id</MudTableSortLabel></MudTh>
@@ -55,8 +56,8 @@
             <MudTd DataLabel="Byte Count">@context.ByteCount</MudTd>
                 <MudTd DataLabel="Has Proper Length"><BoolDisplay BoolValue="context.HasProperLength" /></MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilarCopywriting(context.Id))">Add</MudButton>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditCopywriting(context.Id))">Edit</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddSimilar(context.Id))">Add</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -97,7 +98,7 @@
         }
     }
 
-    private Task<TableData<CopywritingModel>> ReloadCopywritings(TableState state)
+    private Task<TableData<CopywritingModel>> Reload(TableState state, CancellationToken token)
     {
         state.PopulateListRequest(ListRequest);
 
@@ -108,7 +109,7 @@
         return Task.FromResult(new TableData<CopywritingModel>() { TotalItems = CopywritingService.CountForListRequest(ListRequest), Items = copywritings });
     }
 
-    private void FilterCopywritings(string searchString)
+    private void Filter(string searchString)
     {
         ListRequest.SearchString = searchString;
 
@@ -120,28 +121,28 @@
         StateHasChanged();
     }
 
-    private async void AddCopywriting()
+    private async void Add()
     {
         DialogResult result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Add Copywriting" }).Result;
 
-        ProcessCopywritingDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void AddSimilarCopywriting(long id)
+    private async void AddSimilar(long id)
     {
         DialogResult result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Add Copywriting", ["AddingSimilar"] = true, ["CopywritingId"] = id }).Result;
 
-        ProcessCopywritingDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private async void EditCopywriting(long id)
+    private async void Edit(long id)
     {
         DialogResult result = await DialogService.Show<CopywritingDialog>(null, new DialogParameters { ["Title"] = "Edit Copywriting", ["IsEdit"] = true, ["CopywritingId"] = id }).Result;
 
-        ProcessCopywritingDialogResult(result);
+        ProcessDialogResult(result);
     }
 
-    private void ProcessCopywritingDialogResult(DialogResult result)
+    private void ProcessDialogResult(DialogResult result)
     {
         if (!result.Canceled)
         {
