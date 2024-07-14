@@ -61,7 +61,7 @@
             <MudTd>
                 <MudFileUpload T="IBrowserFile" @bind-Files="File" Context="file" OnFilesChanged="@(() => UploadTemplate(context))" Class="d-inline-flex mt-0">
                     <ButtonTemplate>
-                        <MudButton for="@file" HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Upload</MudButton>
+                        <MudButton for="@File" HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Upload</MudButton>
                     </ButtonTemplate>
                 </MudFileUpload>
                 <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="@(() => Export(context.Id, context.Sku))">Export</MudButton>

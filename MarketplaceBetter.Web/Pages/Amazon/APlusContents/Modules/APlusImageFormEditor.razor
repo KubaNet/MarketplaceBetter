@@ -13,7 +13,7 @@
     </MudButton>
     @if (ImagesToAdd.ContainsKey(ElementName))
     {
-        <MudList>
+        <MudList T="string">
             <MudListItem Icon="@Icons.Material.Filled.AttachFile">
                 @ImagesToAdd[ElementName].Name <code>(@ImagesToAdd[ElementName].Size.BytesToKilobytes() KB)</code>
             </MudListItem>

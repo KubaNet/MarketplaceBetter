@@ -1,7 +1,7 @@
 ﻿@using MarketplaceBetter.Domain.Entities.Base;
 @using MarketplaceBetter.Domain.Model.Base;
 
-<MudChip Variant="Variant.Text" Color="Color" Style="font-weight:500;">@Status.Name</MudChip>
+<MudChip T="string" Variant="Variant.Text" Color="Color" Style="font-weight:500;">@Status.Name</MudChip>
 
 @code {
     [Parameter] public EntityStatusModel Status { get; set; }

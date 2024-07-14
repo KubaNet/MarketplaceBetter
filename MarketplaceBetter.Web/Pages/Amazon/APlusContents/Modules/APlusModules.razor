@@ -40,7 +40,7 @@
             <MudTd DataLabel="Elements">
                 @if (context.Module.SystemName == APlusModuleEnum.StandardComparisonChart)
                 {
-                    <span @onclick="() => ShowComparisonChart(context)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">.. show elements ..</span>
+                    <span @onclick="() => ShowComparisonChart(context)" class="ml-3" style="color: @(BetterTheme.PaletteLight.Primary); font-weight: bold; cursor: pointer;">.. show elements ..</span>
                 }
                 else
                 {
@@ -123,7 +123,7 @@
 
     private async void Add()
     {
-        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+        DialogOptions options = new DialogOptions() { BackdropClick = false };
 
         DialogResult result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module" }, options).Result;
 
@@ -132,7 +132,7 @@
 
     private async void AddSimilar(long id)
     {
-        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+        DialogOptions options = new DialogOptions() { BackdropClick = false };
 
         DialogResult result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Add A+ Module", ["AddingSimilar"] = true, ["ModuleValueId"] = id }, options).Result;
 
@@ -141,7 +141,7 @@
 
     private async void Edit(long id)
     {
-        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+        DialogOptions options = new DialogOptions() { BackdropClick = false };
 
         DialogResult result = await DialogService.Show<APlusModuleDialog>(null, new DialogParameters { ["Title"] = "Edit A+ Module", ["IsEdit"] = true, ["ModuleValueId"] = id }, options).Result;
 

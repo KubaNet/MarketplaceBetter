@@ -48,7 +48,7 @@
         </MudSelect>
         <MudTextField Label="Value" T="string" Value="Copywriting.Value" For="() => Copywriting.Value" ValueChanged="HandleValueChanged" Immediate="true" />
         <MudTextField Label="Byte Count" @bind-Value="Copywriting.ByteCount" For="() => Copywriting.ByteCount" ReadOnly="true" />
-        <MudCheckBox Label="@HasProperLengthLabel" @bind-Checked="Copywriting.HasProperLength" Color="Copywriting.HasProperLength? Color.Success : Color.Error" ReadOnly="true" CheckedIcon="@Icons.Material.Filled.Check" UncheckedIcon="@Icons.Material.Filled.Close"></MudCheckBox>
+        <MudCheckBox T="bool" Label="@HasProperLengthLabel" @bind-Value="Copywriting.HasProperLength" Color="Copywriting.HasProperLength? Color.Success : Color.Error" ReadOnly="true" CheckedIcon="@Icons.Material.Filled.Check" UncheckedIcon="@Icons.Material.Filled.Close"></MudCheckBox>
     </FormDialog>
 </EditForm>
 

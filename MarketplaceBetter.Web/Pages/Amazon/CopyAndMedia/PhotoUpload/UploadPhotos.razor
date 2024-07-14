@@ -95,7 +95,7 @@
 
         if (firstRender)
         {
-            DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+            DialogOptions options = new DialogOptions() { BackdropClick = false };
 
             DialogResult result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
 
@@ -125,7 +125,7 @@
 
     private async void Upload()
     {
-        DialogOptions options = new DialogOptions() { DisableBackdropClick = true };
+        DialogOptions options = new DialogOptions() { BackdropClick = false };
 
         DialogResult result = await DialogService.Show<UploadPhotosDialog>(null, options).Result;
 
@@ -196,7 +196,7 @@
             return;
         }
 
-        DialogResult result = await DialogService.Show<SavePhotosDialog>(null, new DialogParameters { ["PhotoUploads"] = SelectedPhotos.ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
+        DialogResult result = await DialogService.Show<SavePhotosDialog>(null, new DialogParameters { ["PhotoUploads"] = SelectedPhotos.ToList() }, new DialogOptions { BackdropClick = false }).Result;
 
         Snackbar.AddSuccess("Photos were successfully saved.");
 

@@ -45,7 +45,7 @@
             <APlusImageFormEditor @key="elementValue" ElementValue="elementValue" ImagesToAdd="ImagesToAdd" ImagesToDelete="ImagesToDelete" ProductAsinField="productAsinField" />
             break;
         case APlusElementTypeEnum.TrueOrFalse:
-            <MudCheckBox Label="@elementValue.Element.Name" @bind-Checked="elementValue.TrueOrFalse" TriState="true" For="() => elementValue.TrueOrFalse" />
+            <MudCheckBox T="bool?" Label="@elementValue.Element.Name" @bind-Value="elementValue.TrueOrFalse" TriState="true" For="() => elementValue.TrueOrFalse" />
             break;
         default:
             throw new UnrecognizedEnumValueException<APlusElementTypeEnum>(elementValue.Element.Type.SystemName);
@@ -59,7 +59,7 @@
                 int index = i * 12 + ((productIndex % 6) * 2);
                 APlusElementValueModel productMetricElement = ProductsMetricsElements[index];
                 productMetricElement.TrueOrFalse = productMetricElement.TrueOrFalse ?? false;
-                <MudCheckBox Label="@(Metrics[i].ElementValue.SingleLineText ?? Metrics[i].ElementValue.Element.Name)" @bind-Checked="productMetricElement.TrueOrFalse" For="() => productMetricElement.TrueOrFalse" />
+                <MudCheckBox T="bool?" Label="@(Metrics[i].ElementValue.SingleLineText ?? Metrics[i].ElementValue.Element.Name)" @bind-Value="productMetricElement.TrueOrFalse" For="() => productMetricElement.TrueOrFalse" />
             }
             else
             {

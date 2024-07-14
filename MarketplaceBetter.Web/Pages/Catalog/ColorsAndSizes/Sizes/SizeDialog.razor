@@ -30,7 +30,7 @@
         </MudSelect>
         <MudTextField Label="Name" @bind-Value="Size.Name" For="() => Size.Name" />
         <MudTextField Label="Code" @bind-Value="Size.Code" For="() => Size.Code" />
-        <MudCheckBox Label="Is One Size" @bind-Checked="Size.IsOneSize" For="() => Size.IsOneSize" Color="Color.Primary"></MudCheckBox>
+        <MudCheckBox T="bool" Label="Is One Size" @bind-Value="Size.IsOneSize" For="() => Size.IsOneSize" Color="Color.Primary"></MudCheckBox>
     </FormDialog>
 </EditForm>
 

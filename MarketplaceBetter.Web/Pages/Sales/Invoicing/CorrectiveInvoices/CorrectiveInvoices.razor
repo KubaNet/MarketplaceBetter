@@ -152,7 +152,7 @@
             return;
         }
 
-        DialogResult result = await DialogService.Show<IssueCorrectiveInvoicesDialog>(null, new DialogParameters { ["CorrectiveInvoices"] = SelectedCorrectiveInvoices.Where(i => !i.IsIssued).OrderBy(i => i.Id).ToList() }, new DialogOptions { DisableBackdropClick = true }).Result;
+        DialogResult result = await DialogService.Show<IssueCorrectiveInvoicesDialog>(null, new DialogParameters { ["CorrectiveInvoices"] = SelectedCorrectiveInvoices.Where(i => !i.IsIssued).OrderBy(i => i.Id).ToList() }, new DialogOptions { BackdropClick = false }).Result;
 
         if (!result.Canceled)
         {

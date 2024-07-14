@@ -51,7 +51,7 @@
                     </div>
                     <div class="flex-grow-1"></div>
                     <div>
-                        <MudSelect T="EntityStatusModel" Value="Status" Label="Status" DisableUnderLine="true" MaxHeight="500" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedStatusChange">
+                        <MudSelect T="EntityStatusModel" Value="Status" Label="Status" Underline="false" MaxHeight="500" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedStatusChange">
                             @foreach (var status in Statuses)
                             {
                                 <MudSelectItem Value="status">@status.Name</MudSelectItem>
@@ -59,13 +59,13 @@
                         </MudSelect>
                     </div>
                     <div>
-                        <MudCheckBox T="bool" Checked="HideDrafts" Label="Hide Drafts" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideDraftsChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
+                        <MudCheckBox T="bool" Value="HideDrafts" Label="Hide Drafts" Style=@($"color: {BetterTheme.PaletteLight.TextPrimary}") Class="mt-1 ml-3" ValueChanged="OnHideDraftsChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
                     </div>
                     <div>
-                        <MudCheckBox T="bool" Checked="HideWithdrawn" Label="Hide Withdrawn" Style=@($"color: {BetterTheme.Palette.TextPrimary}") Class="mt-1 ml-3" CheckedChanged="OnHideWithdrawnChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
+                        <MudCheckBox T="bool" Value="HideWithdrawn" Label="Hide Withdrawn" Style=@($"color: {BetterTheme.PaletteLight.TextPrimary}") Class="mt-1 ml-3" ValueChanged="OnHideWithdrawnChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
                     </div>
                     <div>
-                        <MudSelect T="BrandCollectionModel" Value="BrandCollection" Label="Brand -- Collection" DisableUnderLine="true" Style="width: 180px;" MaxHeight="800" Class="ml-6" ValueChanged="OnSelectedBrandChange">
+                        <MudSelect T="BrandCollectionModel" Value="BrandCollection" Label="Brand -- Collection" Underline="false" Style="width: 180px;" MaxHeight="800" Class="ml-6" ValueChanged="OnSelectedBrandChange">
                             @foreach (var brand in BrandsAndCollections)
                             {
                                 <MudSelectItem Value="brand">@brand.Name</MudSelectItem>
@@ -73,7 +73,7 @@
                         </MudSelect>
                     </div>
                     <div>
-                        <MudSelect T="StandardSizeModel" Value="Size" Label="Size" DisableUnderLine="true" MaxHeight="500" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedSizeChange">
+                        <MudSelect T="StandardSizeModel" Value="Size" Label="Size" Underline="false" MaxHeight="500" Style="width: 180px;" Class="ml-6" ValueChanged="OnSelectedSizeChange">
                             @foreach (var size in Sizes)
                             {
                                 <MudSelectItem Value="size">@size.Name</MudSelectItem>
@@ -81,7 +81,7 @@
                         </MudSelect>
                     </div>
                     <div>
-                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" DisableUnderLine="true" Style="width: 180px;" MaxHeight="600" Class="ml-4" ValueChanged="OnSelectedInstanceChange">
+                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" Underline="false" Style="width: 180px;" MaxHeight="600" Class="ml-4" ValueChanged="OnSelectedInstanceChange">
                             @foreach (var instance in Instances)
                             {
                                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
@@ -131,10 +131,10 @@
 
     MudTheme BetterTheme = new MudTheme()
         {
-            Palette = new PaletteLight()
+            PaletteLight = new PaletteLight()
             {
                 Primary = "#32ae70",
-                AppbarBackground = Colors.Grey.Lighten3,
+                AppbarBackground = Colors.Gray.Lighten3,
             }
         };
 
@@ -316,10 +316,13 @@
 
         GlobalSearchResults = __builder =>
         {
-            <MudList Clickable="true">
+            <MudList T="string" ReadOnly="false">
                 @foreach (var searchResult in searchResults)
                 {
-                    <MudListItem Avatar="@searchResult.Icon" IconColor="(searchResult.ResultsCount > 0 ? Color.Dark : Color.Inherit)" OnClick="(() => GoToResults(searchResult.BaseUrl, searchString))">
+                    <MudListItem OnClick="(() => GoToResults(searchResult.BaseUrl, searchString))">
+                        <MudAvatar>
+                            <MudIcon Icon="@searchResult.Icon" Color="(searchResult.ResultsCount > 0 ? Color.Dark : Color.Inherit)" />>
+                        </MudAvatar>
                         @if (searchResult.ResultsCount > 0)
                         {
                             <text>

@@ -30,7 +30,7 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Is One Size"><MudCheckBox T="bool" Checked="@context.IsOneSize" Disabled="true"></MudCheckBox></MudTd>
+            <MudTd DataLabel="Is One Size"><MudCheckBox T="bool" T="bool" Checked="@context.IsOneSize" Disabled="true"></MudCheckBox></MudTd>
             <MudTd DataLabel="Group">@context.Group.Name</MudTd>
             <MudTd DataLabel="Brand">@context.Group.Brand.Name</MudTd>
             <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => EditSize(context.Id))">Edit</MudButton></MudTd>

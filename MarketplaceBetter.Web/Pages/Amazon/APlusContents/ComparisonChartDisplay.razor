@@ -25,7 +25,7 @@
                         APlusElementValueModel highlightElement = ProductsElements.Single(e => e.Element.Name.Equals($"Highlight Column (product {index})"));
                         <MudItem xs="2">
                             <MudText Typo="Typo.subtitle1" Align="Align.Center">Product @index</MudText>
-                            <MudCheckBox Label="Highlight Column" Checked="highlightElement.TrueOrFalse" ReadOnly="true" />
+                            <MudCheckBox T="bool" Label="Highlight Column" Value="highlightElement.TrueOrFalse.Value" ReadOnly="true" />
                             @if (imageElement.Image != null)
                             {
                                 <MudTooltip Placement="Placement.Right">
@@ -76,7 +76,7 @@
                                 {
                                     <div class="d-flex flex-grow">
                                         <div class="d-flex flex-1"></div>
-                                        <div class="d-flex"><MudCheckBox Checked="productMetricCheckboxElement.TrueOrFalse" ReadOnly="true" /></div>
+                                        <div class="d-flex"><MudCheckBox T="bool" T="bool" Value="productMetricCheckboxElement.TrueOrFalse.Value" ReadOnly="true" /></div>
                                         <div class="d-flex flex-1"></div>
                                     </div>
                                 }

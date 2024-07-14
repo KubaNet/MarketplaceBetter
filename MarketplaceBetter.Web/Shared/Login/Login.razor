@@ -9,7 +9,7 @@
 <MudThemeProvider Theme="BetterTheme" />
 <MudSnackbarProvider />
 
-<div style="position:fixed; padding:0; margin:0; top:0; left:0; width: 100%; height: 100%; background-color:@(Colors.Grey.Lighten4);">
+<div style="position:fixed; padding:0; margin:0; top:0; left:0; width: 100%; height: 100%; background-color:@(Colors.Gray.Lighten4);">
     <div class="d-flex justify-center pt-10" style="position: relative; top: 30%;">
         <EditForm Model="LoginModel" OnValidSubmit="LoginUser">
             <CustomValidation @ref="CustomValidation" />
@@ -43,7 +43,7 @@
 
     MudTheme BetterTheme = new MudTheme()
         {
-            Palette = new PaletteLight()
+            PaletteLight = new PaletteLight()
             {
                 Primary = "#32ae70",
             }

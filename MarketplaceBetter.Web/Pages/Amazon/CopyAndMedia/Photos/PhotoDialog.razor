@@ -61,7 +61,7 @@
         </MudButton>
         @if (PhotoFile != null)
         {
-            <MudList>
+            <MudList T="string">
                 <MudListItem Icon="@Icons.Material.Filled.AttachFile">
                     @PhotoFile.Name <code>@PhotoFile.Size bytes</code>
                 </MudListItem>

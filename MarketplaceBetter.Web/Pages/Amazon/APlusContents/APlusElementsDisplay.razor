@@ -22,7 +22,7 @@
         case APlusElementTypeEnum.SingleLineText:
             <div>
                 <MudTooltip Placement="Placement.Right">
-                    <ChildContent><span @onclick="() => CopyElement(elementName)" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <ChildContent><span @onclick="() => CopyElement(elementName)" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.PaletteLight.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
                     <TooltipContent>Click to copy</TooltipContent>
                 </MudTooltip>
                 <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
@@ -33,7 +33,7 @@
         case APlusElementTypeEnum.BodyText:
             <div>
                 <MudTooltip Placement="Placement.Right">
-                    <ChildContent><span @onclick="() => CopyElement(elementName)" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
+                    <ChildContent><span @onclick="() => CopyElement(elementName)" @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.PaletteLight.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span></ChildContent>
                     <TooltipContent>Click to copy</TooltipContent>
                 </MudTooltip>
                 <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
@@ -60,7 +60,7 @@
             break;
         case APlusElementTypeEnum.TrueOrFalse:
             <div>
-                <span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.Palette.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span>
+                <span @onmouseenter="() => ShowElement(elementName)" @onmouseleave="() => HideElement(elementName)" class="ml-3" style="color: @(BetterTheme.PaletteLight.Primary); font-weight: bold; cursor: pointer;">@elementValue.Element.Name</span>
                 <MudPopover Class="pa-4" Open="OpenInfo[elementName]" AnchorOrigin="Origin.CenterLeft" TransformOrigin="Origin.CenterRight">
                     @if (elementValue.TrueOrFalse.Value)
                     {
