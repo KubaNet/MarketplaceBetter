@@ -76,7 +76,8 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField("Seller SKU");
             csv.WriteField("Brand Name");
             csv.WriteField("Product Name");
-            csv.WriteField("Product ID");
+            csv.WriteField("Product ID (ASIN)");
+            csv.WriteField("Product ID (EAN)");
             csv.WriteField("Color Name");
             csv.WriteField("Color Map");
             csv.WriteField("Size Name");
@@ -120,6 +121,7 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(null);
             csv.WriteField(null);
             csv.WriteField(null);
+            csv.WriteField(null);
             WriteCopywriting(csv, parent.ProductId, parent.InstanceId);
             csv.NextRecord();
         }
@@ -132,7 +134,8 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(child.Sku);
             csv.WriteField(child.Variant.Product.Brand.Name);
             csv.WriteField(GetProductName(child, colorTranslation));
-            csv.WriteField(child.Variant.Asin ?? child.Variant.Ean);
+            csv.WriteField(child.Variant.Asin);
+            csv.WriteField(child.Variant.Ean);
             csv.WriteField(colorTranslation?.Translation);
             csv.WriteField(colorTranslation?.Mapping);
             csv.WriteField(child.Variant.Size.Name);
