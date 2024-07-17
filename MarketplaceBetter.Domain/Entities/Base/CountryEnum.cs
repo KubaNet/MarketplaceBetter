@@ -106,6 +106,8 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         India = 48,
 
-        UnitedArabEmirates = 49
+        UnitedArabEmirates = 49,
+
+        Australia = 50
     }
 }

@@ -68,9 +68,9 @@
 	{
 		state.PopulateListRequest(ListRequest);
 
-		IList<VatRuleModel> centers = VatRuleService.GetForListRequest(ListRequest);
+		IList<VatRuleModel> rules = VatRuleService.GetForListRequest(ListRequest);
 
-		return Task.FromResult(new TableData<VatRuleModel>() { TotalItems = VatRuleService.CountForListRequest(ListRequest), Items = centers });
+		return Task.FromResult(new TableData<VatRuleModel>() { TotalItems = VatRuleService.CountForListRequest(ListRequest), Items = rules });
 	}
 
 	private void OnRowsPerPageChanged(int rowsPerPage)
