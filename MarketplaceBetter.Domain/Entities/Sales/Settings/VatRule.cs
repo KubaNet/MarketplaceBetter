@@ -17,7 +17,7 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Settings
 
 		public virtual Country CountryTo { get; set; }
 
-		public int VatValue { get; set; }
+		public double VatValue { get; set; }
 
 		public string VatNumber { get; set; }
 	}

@@ -24,7 +24,7 @@ namespace MarketplaceBetter.Domain.Model.Sales.Settings
 		[Display(Name = "Vat Value")]
 		[Required]
 		[Range(0, 30)]
-		public int VatValue { get; set; }
+		public double VatValue { get; set; }
 
 		[Display(Name = "Vat Number")]
 		[Required]

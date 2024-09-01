@@ -26,7 +26,7 @@
                 <MudSelectItem Value="country">@country.Name (@country.Code)</MudSelectItem>
             }
         </MudSelect>
-        <MudNumericField Label="Vat Value" T="int" @bind-Value="VatRule.VatValue" Variant="Variant.Text" Min="1" Max="30" HideSpinButtons="true" />
+        <MudNumericField Label="Vat Value" T="double" @bind-Value="VatRule.VatValue" Variant="Variant.Text" Min="1" Max="30" HideSpinButtons="true" />
         <MudTextField Label="Vat Number" @bind-Value="VatRule.VatNumber" For="() => VatRule.VatNumber" />
     </FormDialog>
 </EditForm>
