@@ -188,7 +188,7 @@ namespace MarketplaceBetter.Services.Specialized
                     NewField("produkt_jm_1", "1"),
                     NewField("produkt_ilosc_1", "1"),
                     NewField("produkt_wartosc_brutto_1", invoice.ShippingGrossPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)),
-                    NewField("produkt_stawka_vat_1", invoice.VatRule.VatValue.ToString()),
+                    NewField("produkt_stawka_vat_1", invoice.VatRule.VatValue.ToString().Replace(',', '.')),
                 });
 
                 int entryNumber = 2;
@@ -201,7 +201,7 @@ namespace MarketplaceBetter.Services.Specialized
                         NewField($"produkt_jm_{entryNumber}", "2"),
                         NewField($"produkt_ilosc_{entryNumber}", entry.Quantity.ToString()),
                         NewField($"produkt_wartosc_brutto_{entryNumber}", entry.GrossPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)),
-                        NewField($"produkt_stawka_vat_{entryNumber}", invoice.VatRule.VatValue.ToString())
+                        NewField($"produkt_stawka_vat_{entryNumber}", invoice.VatRule.VatValue.ToString().Replace(',', '.'))
                     });
 
                     entryNumber++;
@@ -219,7 +219,7 @@ namespace MarketplaceBetter.Services.Specialized
                         NewField($"produkt_jm_{entryNumber}", "2"),
                         NewField($"produkt_ilosc_{entryNumber}", entry.Quantity.ToString()),
                         NewField($"produkt_wartosc_brutto_{entryNumber}", entry.GrossPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)),
-                        NewField($"produkt_stawka_vat_{entryNumber}", invoice.VatRule.VatValue.ToString())
+                        NewField($"produkt_stawka_vat_{entryNumber}", invoice.VatRule.VatValue.ToString().Replace(',', '.'))
                     });
 
                     entryNumber++;

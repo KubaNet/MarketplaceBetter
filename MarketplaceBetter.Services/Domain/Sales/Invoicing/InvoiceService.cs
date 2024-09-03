@@ -373,7 +373,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                         "buyer_state" => invoices.Where(i => i.BuyerState.Contains(searchField.Value)),
                         "buyer_country" => invoices.Where(i => i.BuyerCountry.Contains(searchField.Value)),
                         "vat_number" => invoices.Where(i => i.VatRule.VatNumber.Contains(searchField.Value)),
-                        "vat_value" => invoices.Where(i => i.VatRule.VatValue == searchField.Value.ParseToIntOrDefault()),
+                        "vat_value" => invoices.Where(i => i.VatRule.VatValue == searchField.Value.ParseToDoubleOrDefault()),
                         _ => throw new UnrecognizedSearchFieldException(searchField.Name)
                     };
                 }
