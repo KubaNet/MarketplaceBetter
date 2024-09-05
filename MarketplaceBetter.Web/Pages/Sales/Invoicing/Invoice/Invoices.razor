@@ -16,7 +16,7 @@
 <MainBody>
     <MudTable T="InvoiceModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<InvoiceModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="Issue" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DoubleArrow" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Issue</MudButton>
         </ToolBarContent>

@@ -18,7 +18,7 @@
 <MainBody>
     <MudTable T="ChildModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ChildModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="AddAPlusContent" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddPhotoAlternate" Color="Color.Primary" Disabled="NoneSelected" Class="ml-2">Add A+ Content</MudButton>
             <MudButton OnClick="ChangeStatusOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.PublishedWithChanges" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Change Status</MudButton>

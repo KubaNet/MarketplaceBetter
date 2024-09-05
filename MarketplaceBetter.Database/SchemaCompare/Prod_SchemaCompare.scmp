@@ -9,7 +9,7 @@
   </SourceModelProvider>
   <TargetModelProvider>
     <ConnectionBasedModelProvider>
-      <ConnectionString>Data Source=192.168.168.32;Initial Catalog=MarketplaceBetter_Prod;Persist Security Info=True;User ID=MarketplaceBetter_Prod;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=False;Trust Server Certificate=False;Command Timeout=0</ConnectionString>
+      <ConnectionString>Data Source=185.189.127.207;Initial Catalog=MarketplaceBetter_Prod;Persist Security Info=True;User ID=MarketplaceBetter_Prod;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0</ConnectionString>
     </ConnectionBasedModelProvider>
   </TargetModelProvider>
   <SchemaCompareSettingsService>
@@ -31,6 +31,10 @@
       <PropertyElementName>
         <Name>AllowIncompatiblePlatform</Name>
         <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>AllowTableRecreation</Name>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>BackupDatabaseBeforeChanges</Name>
@@ -301,6 +305,10 @@
         <Value>False</Value>
       </PropertyElementName>
       <PropertyElementName>
+        <Name>PerformIndexOperationsOnline</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
         <Name>RebuildIndexesOfflineForDataPhase</Name>
         <Value>False</Value>
       </PropertyElementName>
@@ -342,7 +350,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>TargetConnectionString</Name>
-        <Value>Data Source=192.168.168.32;Initial Catalog=MarketplaceBetter_Prod;Persist Security Info=True;User ID=MarketplaceBetter_Prod;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=False;Trust Server Certificate=False;Application Name="Microsoft SQL Server Data Tools, Schema Compare";Command Timeout=0</Value>
+        <Value>Data Source=185.189.127.207;Initial Catalog=MarketplaceBetter_Prod;Persist Security Info=True;User ID=MarketplaceBetter_Prod;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Application Name="Microsoft SQL Server Data Tools, Schema Compare";Command Timeout=0</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>TreatVerificationErrorsAsWarnings</Name>

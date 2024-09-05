@@ -15,7 +15,7 @@
 <MainBody>
     <MudTable @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ProductColorModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
         <ToolBarContent>
-            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="product" T="ProductColorModel">Product</MudTableSortLabel></MudTh>
