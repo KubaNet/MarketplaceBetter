@@ -120,7 +120,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                         continue;
                     }
 
-                    archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                    archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.NoCompression);
                 }
             }
 

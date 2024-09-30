@@ -20,7 +20,7 @@
         <MudContainer>
             <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
             <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Progress <b>@CurrentPhotoNumber / @Photos.Count</b>. Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
-            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">All photos prepared. Downloading will start soon, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">All photos prepared. Downloading is in progress, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
         </MudContainer>
     </DialogContent>
 </MudDialog>
@@ -78,7 +78,9 @@
 
     private async void Download()
     {
-        await Task.Delay(500);
+        VariantPhotosService.ClearPhotosToDownload();
+
+        await Task.Delay(2000);
 
         double progressStep = (double)100 / (double)Photos.Count;
 
@@ -88,7 +90,7 @@
             CurrentVariant = photo.Variant.Sku;
             StateHasChanged();
 
-            await Task.Delay(500);
+            await Task.Delay(100);
             await VariantPhotosService.PrepareForDownload(photo, photo.Variant);
 
             CurrentProgressValue += progressStep;
