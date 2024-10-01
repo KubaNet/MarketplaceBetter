@@ -224,7 +224,16 @@ namespace MarketplaceBetter.Services.Specialized
                 return null;
             }
 
-            return _productRepository.SingleOrDefault(p => p.BrandId == brand.Id && p.Code == nameParts[2]);
+            Product product = _productRepository.SingleOrDefault(p => p.BrandId == brand.Id && p.Code == nameParts[2]);
+
+            if (product != null)
+            {
+                return product;
+            }
+
+            string productCode = string.Format("{0}_{1}", nameParts[2], nameParts[3]);
+
+            return _productRepository.SingleOrDefault(p => p.BrandId == brand.Id && p.Code == productCode);
         }
 
         private Brand GetBrand(IList<string> nameParts)
