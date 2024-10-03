@@ -36,6 +36,12 @@ namespace MarketplaceBetter.Web
             services.AddDbContext<BetterDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BetterConnection")));
             services.AddScoped<AuthenticationStateProvider, BetterAuthenticationStateProvider>();
             services.AddHttpContextAccessor();
+            services.AddSignalR(options =>
+            {
+                options.ClientTimeoutInterval = TimeSpan.FromMinutes(30);
+                options.HandshakeTimeout = TimeSpan.FromSeconds(60);
+                options.KeepAliveInterval = TimeSpan.FromMinutes(30);
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
