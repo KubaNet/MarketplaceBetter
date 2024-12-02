@@ -1,0 +1,81 @@
+﻿@using System.IO;
+@using System.Threading;
+@using MarketplaceBetter.Domain.Entities.Base;
+@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
+@using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces;
+@using MarketplaceBetter.Specialized.Interfaces;
+
+@inject IPhotoService PhotoService
+@inject IPhotoCloudService PhotoCloudService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+
+<MudDialog Style="min-width: 60%;">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Preparing @Photos.Count photos to download.</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer>
+            <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@PhotoInfoHidden">Progress <b>@CurrentPhotoNumber / @Photos.Count</b>. Preparing @(CurrentPhoto?.Type.Name) photo for variant @CurrentVariant</MudText>
+            <MudText Typo="Typo.body1" Class="ma-4" Align="Align.Center" hidden="@RemovingInfoHidden">All photos prepared. Downloading is in progress, please wait <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></MudText>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public IList<PhotoModel> Photos { get; set; }
+
+    private PhotoModel CurrentPhoto;
+    private string CurrentVariant;
+    private double CurrentProgressValue;
+    private int CurrentPhotoNumber = 0;
+    private bool PhotoInfoHidden = false;
+    private bool RemovingInfoHidden = true;
+
+    protected override void OnInitialized()
+    {
+        Download();
+    }
+
+    private async void Download()
+    {
+        PhotoService.ClearPhotosToDownload();
+
+        await Task.Delay(2000);
+
+        double progressStep = (double)100 / (double)Photos.Count;
+
+        foreach (var photo in Photos)
+        {
+            CurrentPhoto = photo;
+            CurrentVariant = photo.Variant.Sku;
+            StateHasChanged();
+
+            await Task.Delay(100);
+            await PhotoService.PrepareForDownload(photo, photo.Variant);
+
+            CurrentProgressValue += progressStep;
+            CurrentPhotoNumber++;
+        }
+
+        CurrentProgressValue = 100;
+        PhotoInfoHidden = true;
+        RemovingInfoHidden = false;
+        StateHasChanged();
+
+        Stream archiveStream = PhotoService.DownloadPhotos();
+
+        DotNetStreamReference streamReference = new DotNetStreamReference(archiveStream);
+
+        await JS.InvokeVoidAsync("DownloadFileFromStream", CancellationToken.None, "photos.zip", streamReference);
+
+        await Task.Delay(500);
+
+        PhotoService.ClearPhotosToDownload();
+
+        MudDialog.Close();
+    }
+}

@@ -172,7 +172,7 @@
             return;
         }
 
-        DialogResult result = await DialogService.Show<DownloadPhotosDialog>(null, new DialogParameters { ["VariantPhotos"] = SelectedVariantPhotos.ToList() }, new DialogOptions { BackdropClick = false }).Result;
+        DialogResult result = await DialogService.Show<DownloadVariantPhotosDialog>(null, new DialogParameters { ["VariantPhotos"] = SelectedVariantPhotos.ToList() }, new DialogOptions { BackdropClick = false }).Result;
 
         Table.SelectedItems.Clear();
 

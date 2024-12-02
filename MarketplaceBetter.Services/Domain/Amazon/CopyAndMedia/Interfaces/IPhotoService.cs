@@ -5,6 +5,7 @@ using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,5 +37,11 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
         void DeleteAllForVariant(long variantId);
 
         void UpdateType(IList<PhotoModel> photos, PhotoTypeModel type);
+
+        Task PrepareForDownload(PhotoModel photo, VariantModel variant);
+
+        Stream DownloadPhotos();
+
+        void ClearPhotosToDownload();
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia
+@using MarketplaceBetter.Domain.Model.Base
 @using MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 @using MarketplaceBetter.Services.Model
 @using MarketplaceBetter.Specialized.Interfaces
@@ -21,6 +22,7 @@
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudCheckBox T="bool" Label="Show shared only" Value="ShowSharedOnly" Class="mt-4" ValueChanged="OnShowSharedOnlyChanged" />
             <MudSpacer />
+            <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
             <MudButton OnClick="ChangeTypeOfSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Workspaces" Color="Color.Dark" Disabled="NoneSelected" Class="ml-2">Change Type</MudButton>
             <MudButton OnClick="DeleteSelected" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="NoneSelected" Class="ml-2">Delete</MudButton>
             <MudButton OnClick="AddMultiple" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FastForward" Color="Color.Info" Class="ml-2">Add multiple</MudButton>
@@ -201,5 +203,31 @@
         {
             NoneSelected = true;
         }
+    }
+
+    private async void DownloadPhotos()
+    {
+        if (SelectedPhotos.Any(p => String.IsNullOrWhiteSpace(p.Variant.Asin)))
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("Some of selected variants don't have assigned ASIN. This is necessary to download their photos.", Severity.Warning);
+
+            return;
+        }
+
+        InstanceModel firstInstance = SelectedPhotos.First().Instance;
+        if (SelectedPhotos.Any(p => p.Instance.Id != firstInstance.Id))
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("To download photos the Instance has to be the same for all selected variants.", Severity.Warning);
+
+            return;
+        }
+
+        DialogResult result = await DialogService.Show<DownloadPhotosDialog>(null, new DialogParameters { ["Photos"] = SelectedPhotos.ToList() }, new DialogOptions { BackdropClick = false }).Result;
+
+        Table.SelectedItems.Clear();
+
+        StateHasChanged();
     }
 }

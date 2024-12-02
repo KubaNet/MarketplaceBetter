@@ -19,8 +19,14 @@ using MarketplaceBetter.Specialized.Interfaces;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -32,12 +38,14 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
         private readonly IRepository<Instance> _instanceRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IUserService _userService;
+        private readonly string _downloadFolderPath;
 
         public PhotoService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IPhotoCloudService photoCloudService,
-            IUserService userService)
+            IUserService userService,
+            IWebHostEnvironment environment)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -45,6 +53,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             _instanceRepository = unitOfWork.GetRepository<Instance>();
             _photoCloudService = photoCloudService;
             _userService = userService;
+            _downloadFolderPath = Path.Combine(environment.WebRootPath, "_download");
         }
 
         public PhotoModel Get(long id) => _mapper.Map<PhotoModel>(_repository.Get(id));
@@ -155,6 +164,62 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 
                 _repository.Update(photoToUpdate);
                 _unitOfWork.Save();
+            }
+        }
+
+        public async Task PrepareForDownload(PhotoModel photo, VariantModel variant)
+        {
+            if (variant.Asin == null)
+            {
+                return;
+            }
+
+            string url = _photoCloudService.GetOriginalUrl(photo.CloudId, photo.Version);
+            string format = _photoCloudService.GetFormat(photo.CloudId);
+
+            string fileName = $"{variant.Asin}.{photo.Type.AmazonUploadCode}.{format}";
+
+            using HttpClient client = new HttpClient();
+            using Stream stream = await client.GetStreamAsync(url);
+
+            string path = Path.Combine(_downloadFolderPath, fileName);
+            using FileStream file = new FileStream(path, FileMode.Create);
+
+            stream.CopyTo(file);
+        }
+
+        public Stream DownloadPhotos()
+        {
+            MemoryStream memoryStream = new MemoryStream();
+
+            using (ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                foreach (var file in Directory.GetFiles(_downloadFolderPath))
+                {
+                    if (file.Contains("_placeholder", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.NoCompression);
+                }
+            }
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return memoryStream;
+        }
+
+        public void ClearPhotosToDownload()
+        {
+            foreach (var file in Directory.GetFiles(_downloadFolderPath))
+            {
+                if (file.Contains("_placeholder", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                File.Delete(file);
             }
         }
 
