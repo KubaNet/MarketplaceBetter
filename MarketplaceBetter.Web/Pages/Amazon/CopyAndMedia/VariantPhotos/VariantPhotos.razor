@@ -21,8 +21,8 @@
     <MudTable T="VariantPhotosModel" @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<VariantPhotosModel>>>(Reload))" MultiSelection="true" SelectedItemsChanged="OnSelectedItemsChanged" Dense="true" Hover="true" RowsPerPage=CurrentRowsPerPageValue RowsPerPageChanged="OnRowsPerPageChanged">
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-            <MudCheckBox T="bool" Label="Show shared only" Value="ShowSharedOnly" Class="mt-4" ValueChanged="OnShowSharedOnlyChanged" />
-            <MudCheckBox T="bool" Label="Show shared only" Value="ShowHeroColorOnly" Class="mt-4" ValueChanged="OnShowHeroColorOnlyChanged" />
+            <MudCheckBox T="bool" Label="Shared only" Value="ShowSharedOnly" Class="mt-4" ValueChanged="OnShowSharedOnlyChanged" />
+            <MudCheckBox T="bool" Label="Hero colors only" Value="ShowHeroColorOnly" Class="mt-4" ValueChanged="OnShowHeroColorOnlyChanged" />
             <MudSpacer />
             <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
         </ToolBarContent>
