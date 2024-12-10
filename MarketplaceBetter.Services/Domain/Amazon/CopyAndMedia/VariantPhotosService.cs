@@ -31,6 +31,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
         private readonly IMapper _mapper;
         private readonly IRepository<Photo> _repository;
         private readonly IRepository<Instance> _instanceRepository;
+        private readonly IRepository<HeroColor> _heroColorRepository;
         private readonly IPhotoCloudService _photoCloudService;
         private readonly IUserService _userService;
         private readonly string _downloadFolderPath;
@@ -45,27 +46,28 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Photo>();
             _instanceRepository = unitOfWork.GetRepository<Instance>();
+            _heroColorRepository = unitOfWork.GetRepository<HeroColor>();
             _photoCloudService = photoCloudService;
             _userService = userService;
             _downloadFolderPath = Path.Combine(environment.WebRootPath, "_download");
         }
 
-        public int CountForListRequest(ListRequest request, bool showSharedOnly)
+        public int CountForListRequest(ListRequest request, bool showSharedOnly, bool showHeroColorOnly)
         {
             IQueryable<Photo> photos = _repository.GetQuery();
 
-            photos = ApplyFilter(photos, request, showSharedOnly);
+            photos = ApplyFilter(photos, request, showSharedOnly, showHeroColorOnly);
 
             var groupedPhotos = photos.GroupBy(p => new { p.VariantId, p.InstanceId });
 
             return groupedPhotos.Count();
         }
 
-        public IList<VariantPhotosModel> GetForListRequest(ListRequest request, bool showSharedOnly)
+        public IList<VariantPhotosModel> GetForListRequest(ListRequest request, bool showSharedOnly, bool showHeroColorOnly)
         {
             IQueryable<Photo> photos = _repository.GetQuery();
 
-            photos = ApplyFilter(photos, request, showSharedOnly);
+            photos = ApplyFilter(photos, request, showSharedOnly, showHeroColorOnly);
             photos = ApplySorting(photos, request);
 
             var groupedPhotos = photos.ToList().GroupBy(p => new { p.VariantId, p.InstanceId });
@@ -139,7 +141,8 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             }
         }
 
-        private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request, bool showSharedOnly)
+        private IQueryable<Photo> ApplyFilter(IQueryable<Photo> photos, ListRequest request, 
+            bool showSharedOnly, bool showHeroColorOnly)
         {
             if (_userService.IsSpecificBrand())
             {
@@ -195,6 +198,13 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             if (hideWithdrawn && !_userService.IsSpecificStatus())
             {
                 photos = photos.Where(p => p.Variant.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
+            if (showHeroColorOnly)
+            {
+                IList<string> heroColors = _heroColorRepository.GetAll().Select(c => c.ProductId + "_" + c.ColorId).ToList(); ;
+
+                photos = photos.Where(p => heroColors.Any(c => c == Convert.ToString(p.Variant.ProductId) + "_" + Convert.ToString(p.Variant.ColorId)));
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

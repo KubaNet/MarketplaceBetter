@@ -22,6 +22,7 @@
         <ToolBarContent>
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudCheckBox T="bool" Label="Show shared only" Value="ShowSharedOnly" Class="mt-4" ValueChanged="OnShowSharedOnlyChanged" />
+            <MudCheckBox T="bool" Label="Show shared only" Value="ShowHeroColorOnly" Class="mt-4" ValueChanged="OnShowHeroColorOnlyChanged" />
             <MudSpacer />
             <MudButton OnClick="DownloadPhotos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" Color="Color.Secondary" Disabled="NoneSelected" Class="ml-2">Download</MudButton>
         </ToolBarContent>
@@ -67,6 +68,7 @@
     private MudTable<VariantPhotosModel> Table;
     private ListRequest ListRequest = new();
     private bool ShowSharedOnly;
+    private bool ShowHeroColorOnly;
     private IList<PhotoTypeModel> Types;
 
     private HashSet<VariantPhotosModel> SelectedVariantPhotos = new HashSet<VariantPhotosModel>();
@@ -110,9 +112,9 @@
     {
         state.PopulateListRequest(ListRequest);
 
-        IList<VariantPhotosModel> variantPhotos = VariantPhotosService.GetForListRequest(ListRequest, ShowSharedOnly);
+        IList<VariantPhotosModel> variantPhotos = VariantPhotosService.GetForListRequest(ListRequest, ShowSharedOnly, ShowHeroColorOnly);
 
-        return Task.FromResult(new TableData<VariantPhotosModel>() { TotalItems = VariantPhotosService.CountForListRequest(ListRequest, ShowSharedOnly), Items = variantPhotos });
+        return Task.FromResult(new TableData<VariantPhotosModel>() { TotalItems = VariantPhotosService.CountForListRequest(ListRequest, ShowSharedOnly, ShowHeroColorOnly), Items = variantPhotos });
     }
 
     private void OnRowsPerPageChanged(int rowsPerPage)
@@ -135,6 +137,14 @@
     {
         ShowSharedOnly = showSharedOnly;
         
+        Table.ReloadServerData();
+        StateHasChanged();
+    }
+
+    private void OnShowHeroColorOnlyChanged(bool showHeroColorOnly)
+    {
+        ShowHeroColorOnly = showHeroColorOnly;
+
         Table.ReloadServerData();
         StateHasChanged();
     }

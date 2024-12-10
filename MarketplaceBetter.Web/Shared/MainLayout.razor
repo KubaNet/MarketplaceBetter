@@ -312,7 +312,7 @@
         searchResults.Add(new SearchResult { EntityName = "Childs", BaseUrl = "childs", ResultsCount = ChildService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.Inventory });
         searchResults.Add(new SearchResult { EntityName = "Copywriting", BaseUrl = "copywriting", ResultsCount = CopywritingService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "Photos", BaseUrl = "photos", ResultsCount = PhotoService.CountForListRequest(searchRequest, false), Icon = Icons.Material.Filled.PhotoLibrary });
-        searchResults.Add(new SearchResult { EntityName = "Variant Photos", BaseUrl = "variant-photos", ResultsCount = VariantPhotosService.CountForListRequest(searchRequest, false), Icon = Icons.Material.Filled.PhotoLibrary });
+        searchResults.Add(new SearchResult { EntityName = "Variant Photos", BaseUrl = "variant-photos", ResultsCount = VariantPhotosService.CountForListRequest(searchRequest, false, false), Icon = Icons.Material.Filled.PhotoLibrary });
         searchResults.Add(new SearchResult { EntityName = "A+ Content", BaseUrl = "a-plus-content", ResultsCount = APlusContentService.CountForListRequest(searchRequest), Icon = Icons.Material.Filled.AddPhotoAlternate });
 
         GlobalSearchResults = __builder =>
