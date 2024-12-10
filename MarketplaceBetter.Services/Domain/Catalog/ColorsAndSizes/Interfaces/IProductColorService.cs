@@ -1,4 +1,5 @@
-﻿using MarketplaceBetter.Domain.Model.Catalog.Products;
+﻿using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
         int CountForListRequest(ListRequest request);
 
         IList<ProductColorModel> GetForListRequest(ListRequest request);
+
+        IList<ColorModel> GetAllForProduct(long productId);
     }
 }

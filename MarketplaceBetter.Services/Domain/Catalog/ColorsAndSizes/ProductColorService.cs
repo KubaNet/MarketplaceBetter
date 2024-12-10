@@ -71,6 +71,13 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
             }).ToList();
         }
 
+        public IList<ColorModel> GetAllForProduct(long productId)
+        {
+            IQueryable<Variant> variants = _repository.GetQuery();
+
+            return _mapper.Map<IList<ColorModel>>(variants.Select(v => v.Color).Distinct());
+        }
+
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
         {
             if (_userService.IsSpecificBrand())

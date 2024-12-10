@@ -4,7 +4,7 @@ using MarketplaceBetter.Domain.Validation;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes.Interfaces;
 
-namespace MarketplaceBetter.Services.Validation.Catalog.ColorsAndHeroColor
+namespace MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes
 {
     public class HeroColorValidator : IHeroColorValidator
     {
@@ -21,7 +21,7 @@ namespace MarketplaceBetter.Services.Validation.Catalog.ColorsAndHeroColor
 
             if (_repository.Any(c => c.Id != heroColor.Id && c.ProductId == heroColor.Product.Id))
             {
-                result.AddErrorFor<HeroColorModel>(s => s.Product, ValidationMessages.EntityNotUniqueForSelected, "Hero Color", "Product");
+                result.AddErrorFor<HeroColorModel>(c => c.Product, ValidationMessages.EntityNotUniqueForSelected, "Hero Color", "Product");
             }
 
             return result;

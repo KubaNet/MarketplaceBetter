@@ -6,30 +6,28 @@
 @using MarketplaceBetter.Services.Validation.Catalog.ColorsAndSizes.Interfaces
 
 @inject ISnackbar Snackbar
+@inject IHeroColorService HeroColorService
+@inject IHeroColorValidator HeroColorValidator
+@inject IProductService ProductService
 @inject IColorService ColorService
-@inject IColorValidator ColorValidator
-@inject IBrandService BrandService
-@inject IColorGroupService ColorGroupService
-@inject IUserService UserService
+@inject IProductColorService ProductColorService
 
-<EditForm Model="Color" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="HeroColor" OnValidSubmit="@HandleValidSubmit">
 	<CustomValidation @ref="CustomValidation" />
 	<FormDialog Title=@Title>
 		<DataAnnotationsValidator />
-		<MudSelect Label="Brand" T="BrandModel" Value="Brand" ValueChanged="HandleBrandChanged">
-			@foreach (var brand in Brands)
+		<MudSelect Label="Product" T="ProductModel" Value="HeroColor.Product" For="() => HeroColor.Product" ValueChanged="HandleProductChanged">
+			@foreach (var brand in Products)
 			{
 				<MudSelectItem Value="brand">@brand.Name</MudSelectItem>
 			}
 		</MudSelect>
-		<MudSelect Label="Group" T="ColorGroupModel" @bind-Value="Color.Group" For="() => Color.Group" Disabled="ColorGroupSelectDisabled">
-			@foreach (var group in ColorGroups)
+		<MudSelect Label="Color" T="ColorModel" @bind-Value="HeroColor.Color" For="() => HeroColor.Color" Disabled="ColorSelectDisabled">
+			@foreach (var color in Colors)
 			{
-				<MudSelectItem Value="group">@group.Name</MudSelectItem>
+				<MudSelectItem Value="color">@color.Name</MudSelectItem>
 			}
 		</MudSelect>
-		<MudTextField Label="Name" @bind-Value="Color.Name" For="() => Color.Name" />
-		<MudTextField Label="Code" @bind-Value="Color.Code" For="() => Color.Code" />
 	</FormDialog>
 </EditForm>
 
@@ -37,89 +35,73 @@
 	[CascadingParameter] public MudDialogInstance MudDialog { get; set; }
 	[Parameter] public string Title { get; set; }
 	[Parameter] public bool IsEdit { get; set; }
-	[Parameter] public long ColorId { get; set; }
+	[Parameter] public long HeroColorId { get; set; }
 
 	private CustomValidation CustomValidation = new();
-	private ColorModel Color = new();
-	private BrandModel Brand;
+	private HeroColorModel HeroColor = new();
+	private bool ColorSelectDisabled = true;
 
-	private IList<BrandModel> Brands;
-	private IList<ColorGroupModel> ColorGroups = new List<ColorGroupModel>();
-
-	private bool ColorGroupSelectDisabled = true;
+	private IList<ProductModel> Products;
+	private IList<ColorModel> Colors = new List<ColorModel>();
 
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
 
-		Brands = BrandService.GetAll(true);
+		Products = ProductService.GetAll();
 
 		if (IsEdit)
 		{
 			SetInitialValues();
 		}
-		else
-		{
-			if (UserService.IsSpecificBrand())
-			{
-				SetValuesForCurrentBrand();
-			}
-		}
 	}
 
 	private void SetInitialValues()
 	{
-		Color = ColorService.Get(ColorId);
+		HeroColor = HeroColorService.Get(HeroColorId);
 
-		ActivateColorGroup(Color.Group.Brand.Id);
+		ActivateColor(HeroColor.Product.Id);
 
-		Brand = Brands.Single(b => b.Id == Color.Group.Brand.Id);
-		Color.Group = ColorGroups.Single(g => g.Id == Color.Group.Id);
+		HeroColor.Product = Products.Single(p => p.Id == HeroColor.Product.Id);
+		HeroColor.Color = Colors.Single(c => c.Id == HeroColor.Color.Id);
 	}
 
-	private void SetValuesForCurrentBrand()
+	private void HandleProductChanged(ProductModel product)
 	{
-		BrandModel currentBrand = Brands.Single(b => b.Id == UserService.GetCurrentBrand().Id);
+		HeroColor.Product = product;
 
-		HandleBrandChanged(currentBrand);
+		ResetColor();
+		ActivateColor(product.Id);
 	}
 
-	private void HandleBrandChanged(BrandModel brand)
+	private void ResetColor()
 	{
-		Brand = brand;
-
-		ResetColorGroup();
-		ActivateColorGroup(brand.Id);
+		HeroColor.Color = null;
+		ColorSelectDisabled = true;
+		Colors = new List<ColorModel>();
 	}
 
-	private void ResetColorGroup()
+	private void ActivateColor(long productId)
 	{
-		Color.Group = null;
-		ColorGroupSelectDisabled = true;
-		ColorGroups = new List<ColorGroupModel>();
-	}
-
-	private void ActivateColorGroup(long brandId)
-	{
-		ColorGroupSelectDisabled = false;
-		ColorGroups = ColorGroupService.GetAllForBrand(brandId);
+		ColorSelectDisabled = false;
+		Colors = ProductColorService.GetAllForProduct(productId);
 	}
 
 	private void HandleValidSubmit()
 	{
-		ValidationResult result = ColorValidator.Validate(Color);
+		ValidationResult result = HeroColorValidator.Validate(HeroColor);
 
 		if (result.IsValid)
 		{
 			if (IsEdit)
 			{
-				ColorService.Update(Color);
-				Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Color"));
+				HeroColorService.Update(HeroColor);
+				Snackbar.AddSuccess(OperationMessages.SuccessfullyUpdated("Hero Color"));
 			}
 			else
 			{
-				ColorService.Add(Color);
-				Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Color"));
+				HeroColorService.Add(HeroColor);
+				Snackbar.AddSuccess(OperationMessages.SuccessfullyAdded("Hero Color"));
 			}
 
 			MudDialog.Close();
