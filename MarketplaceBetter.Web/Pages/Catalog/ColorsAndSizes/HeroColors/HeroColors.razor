@@ -1,0 +1,105 @@
+﻿@using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes
+@using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
+@using MarketplaceBetter.Services.Model
+@using System.Threading
+
+@page "/hero-colors"
+<PageTitle>Hero Colors</PageTitle>
+
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+@inject IHeroColorService HeroColorService
+
+<MudText Typo="Typo.h4" Class="mt-2">Hero Colors</MudText>
+
+<MainBody>
+    <MudTable @ref="Table" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<HeroColorModel>>>(Reload))" Dense="true" Hover="true" RowsPerPage=Standard.InitialRowsPerPage>
+        <ToolBarContent>
+            <MudTextField Value="ListRequest.SearchString"  Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			<MudSpacer />
+            <MudButton OnClick="Add" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Hero Color</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="id" T="HeroColorModel">Id</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product" T="HeroColorModel">Product</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="product_code" T="HeroColorModel">Product Code</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="color" T="HeroColorModel">Color</MudTableSortLabel></MudTh>
+            <MudTh Style="width: 100px;">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Product">@context.Product.Name</MudTd>
+            <MudTd DataLabel="Product Code">@context.Product.Code</MudTd>
+            <MudTd DataLabel="Color">@context.Color.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { Standard.SmallestRowsPerPage, Standard.MediumRowsPerPage, Standard.LargestRowsPerPage }" />
+        </PagerContent>
+    </MudTable>
+</MainBody>
+
+@code {
+    [Parameter][SupplyParameterFromQuery] public string SearchString { get; set; }
+
+    private MudTable<HeroColorModel> Table;
+	private ListRequest ListRequest = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ProcessQueryParameters();
+    }
+
+    private void ProcessQueryParameters()
+    {
+        if (!String.IsNullOrWhiteSpace(SearchString))
+        {
+            ListRequest.SearchString = SearchString;
+        }
+    }
+
+	private Task<TableData<HeroColorModel>> Reload(TableState state, CancellationToken token)
+	{
+		state.PopulateListRequest(ListRequest);
+
+		IList<HeroColorModel> heroColors = HeroColorService.GetForListRequest(ListRequest);
+
+        return Task.FromResult(new TableData<HeroColorModel>() { TotalItems = HeroColorService.CountForListRequest(ListRequest), Items = heroColors });
+	}
+
+	private void Filter(string searchString)
+	{
+		ListRequest.SearchString = searchString;
+
+        string newUrl = Navigation.GetUriWithQueryParameter(Standard.SearchQueryParamater, String.IsNullOrWhiteSpace(searchString) ? null : searchString);
+        Navigation.NavigateTo(newUrl, replace: true);
+
+		Table.ReloadServerData();
+
+		StateHasChanged();
+	}
+
+    private async void Add()
+    {
+        DialogResult result = await DialogService.Show<HeroColorDialog>(null, new DialogParameters { ["Title"] = "Add Hero Color" }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private async void Edit(long id)
+    {
+        DialogResult result = await DialogService.Show<HeroColorDialog>(null, new DialogParameters { ["Title"] = "Edit Hero Color", ["IsEdit"] = true, ["HeroColorId"] = id }).Result;
+
+        ProcessDialogResult(result);
+    }
+
+    private void ProcessDialogResult(DialogResult result)
+    {
+        if (!result.Canceled)
+        {
+            Table.ReloadServerData();
+        }
+    }
+}

@@ -74,6 +74,7 @@ namespace MarketplaceBetter.Infrastructure.Data
         public DbSet<Variant> Variant { get; set; }
         // => Colors and Sizes
         public DbSet<Color> Color { get; set; }
+        public DbSet<HeroColor> HeroColor { get; set; }
         public DbSet<ColorTranslation> ColorTranslation { get; set; }
         public DbSet<ColorGroup> ColorGroup { get; set; }
         public DbSet<Size> Size { get; set; }

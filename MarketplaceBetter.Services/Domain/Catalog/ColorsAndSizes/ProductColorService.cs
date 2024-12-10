@@ -8,7 +8,7 @@ using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
-using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
+using MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MudBlazor;
@@ -19,15 +19,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
-namespace MarketplaceBetter.Services.Domain.Catalog.Products
+namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 {
     public class ProductColorService : IProductColorService
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Variant> _repository;
-		private readonly IUserService _userService;
+        private readonly IUserService _userService;
 
-		public ProductColorService(
+        public ProductColorService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IUserService userService)
@@ -35,7 +35,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             _mapper = mapper;
             _repository = unitOfWork.GetRepository<Variant>();
             _userService = userService;
-		}
+        }
 
         public int CountForListRequest(ListRequest request)
         {
@@ -74,10 +74,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
         private IQueryable<Variant> ApplyFilter(IQueryable<Variant> variants, ListRequest request)
         {
             if (_userService.IsSpecificBrand())
-			{
+            {
                 BrandModel currentBrand = _userService.GetCurrentBrand();
                 variants = variants.Where(v => v.Product.BrandId == currentBrand.Id);
-			}
+            }
 
             if (_userService.IsSpecificCollection())
             {

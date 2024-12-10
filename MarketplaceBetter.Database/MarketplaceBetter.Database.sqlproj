@@ -168,5 +168,6 @@
     <Build Include="dbo\Tables\Sales\Invoicing\CorrectiveInvoice.sql" />
     <Build Include="dbo\Tables\Sales\Invoicing\CorrectiveInvoiceEntry.sql" />
     <Build Include="dbo\Tables\Sales\InputData\CustomerReturnCorrectiveInvoice.sql" />
+    <Build Include="dbo\Tables\Catalog\ColorsAndSizes\HeroColor.sql" />
   </ItemGroup>
 </Project>

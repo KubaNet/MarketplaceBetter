@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces
+namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes.Interfaces
 {
     public interface IProductColorService
     {
