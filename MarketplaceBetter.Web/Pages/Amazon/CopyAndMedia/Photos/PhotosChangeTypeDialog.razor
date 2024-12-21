@@ -9,16 +9,19 @@
 
 <EditForm Model="Type" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
-    <FormDialog Title="Change type of photos">
+    <FormDialog Title="Change type of photos" FormButtonsDisabled="FormButtonsDisabled">
         <ValidationSummary />
-        <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Type" ReadOnly="!PhotoInfoHidden">
+        <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Type" ReadOnly="SelectIsReadOnly">
             @foreach (var type in Types)
             {
                 <MudSelectItem Value="type">@type.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudProgressLinear Class="mt-4" Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
-        <MudText Class="ma-4" Typo="Typo.body1" Align="Align.Center">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b></MudText>
+        @if (ShowPhotoInfo)
+        {
+            <MudProgressLinear Class="mt-4" Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
+            <MudText Class="ma-4" Typo="Typo.body1" Align="Align.Center">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b></MudText>
+        }
     </FormDialog>
 </EditForm>
 
@@ -30,7 +33,9 @@
     private PhotoTypeModel Type = new PhotoTypeModel();
     private IList<PhotoTypeModel> Types;
 
-    private bool PhotoInfoHidden = true;
+    private bool SelectIsReadOnly = false;
+    private bool ShowPhotoInfo = false;
+    private bool FormButtonsDisabled = false;
     private double CurrentProgressValue;
     private int CurrentPhotoNumber = 0;
     private int TotalPhotoCount;
@@ -45,15 +50,19 @@
         TotalPhotoCount = PhotosToUpdate.Count;
     }
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
         ValidationResult validationResult = PhotoValidator.ValidateTypeChange(PhotosToUpdate, Type);
 
         if (validationResult.IsValid)
         {
-            PhotoInfoHidden = false;
+            ShowPhotoInfo = true;
+            SelectIsReadOnly = true;
+            FormButtonsDisabled = true;
             double progressStep = (double)100 / (double)TotalPhotoCount;
+
             StateHasChanged();
+            await Task.Delay(500);
 
             foreach (var photo in PhotosToUpdate)
             {
@@ -61,7 +70,9 @@
 
                 CurrentProgressValue += progressStep;
                 CurrentPhotoNumber++;
+
                 StateHasChanged();
+                await Task.Delay(500);
             }
 
             Snackbar.AddSuccess("Type of photos was successfully changed.");
