@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Specialized
 {
@@ -79,7 +77,7 @@ namespace MarketplaceBetter.Specialized
             ImageUploadParams parameters = new ImageUploadParams
             {
                 AllowedFormats = _allowedFormats,
-                PublicId = fullFileName, 
+                PublicId = fullFileName,
                 File = new FileDescription(fullFileName, originalFileUrl)
             };
 
@@ -88,6 +86,17 @@ namespace MarketplaceBetter.Specialized
             PhotoUploadResult uploadResult = CreatePhotoUploadResult(result);
 
             return uploadResult;
+        }
+
+        public PhotoRenamingResult Rename(string cloudId, string newFileName)
+        {
+            string fullFileName = $"{_instanceFolder}/{newFileName}";
+
+            RenameResult result = _cloudinary.Rename(cloudId, fullFileName);
+
+            PhotoRenamingResult renamingResult = CreateRenamingResult(result);
+
+            return renamingResult;
         }
 
         public string GetOriginalUrl(string cloudId, string version)
@@ -169,6 +178,24 @@ namespace MarketplaceBetter.Specialized
             }
 
             return uploadResult;
+        }
+
+        private PhotoRenamingResult CreateRenamingResult(RenameResult result)
+        {
+            PhotoRenamingResult renamingResult = new PhotoRenamingResult();
+
+            if (result.Error != null)
+            {
+                throw new Exception($"There was error with renaming photo {result.PublicId}");
+            }
+            else
+            {
+                renamingResult.CloudId = result.PublicId;
+                renamingResult.Version = result.Version;
+                renamingResult.Url = result.SecureUrl.ToString();
+            }
+
+            return renamingResult;
         }
     }
 }

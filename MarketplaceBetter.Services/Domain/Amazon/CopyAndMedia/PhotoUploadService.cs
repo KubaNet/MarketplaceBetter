@@ -124,7 +124,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
         public void Save(PhotoUploadModel photoUpload, VariantModel variant)
         {
             string fileName = $"{photoUpload.Instance.Name.ToLower()}_variant_{variant.Id}_{photoUpload.Type.SystemName}";
-            string fullFileName = $"product_{variant.Product.Id}/variant_{variant.Id}/instance_{photoUpload.Instance.Name.ToLower()}/{photoUpload.Instance.Name.ToLower()}_variant_{variant.Id}_{photoUpload.Type.SystemName}";
+            string fullFileName = $"product_{variant.Product.Id}/variant_{variant.Id}/instance_{photoUpload.Instance.Name.ToLower()}/{fileName}";
 
             PhotoUploadResult result = _photoCloudService.SaveFromPreUpload(photoUpload.CloudId, photoUpload.Version, fullFileName);
 

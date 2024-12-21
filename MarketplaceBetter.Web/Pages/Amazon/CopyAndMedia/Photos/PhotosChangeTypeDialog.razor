@@ -11,12 +11,14 @@
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title="Change type of photos">
         <ValidationSummary />
-        <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Type">
+        <MudSelect Label="Type" T="PhotoTypeModel" @bind-Value="Type" ReadOnly="!PhotoInfoHidden">
             @foreach (var type in Types)
             {
                 <MudSelectItem Value="type">@type.Name</MudSelectItem>
             }
         </MudSelect>
+        <MudProgressLinear Class="mt-4" Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" />
+        <MudText Class="ma-4" Typo="Typo.body1" Align="Align.Center">Progress <b>@CurrentPhotoNumber / @TotalPhotoCount</b></MudText>
     </FormDialog>
 </EditForm>
 
@@ -28,13 +30,19 @@
     private PhotoTypeModel Type = new PhotoTypeModel();
     private IList<PhotoTypeModel> Types;
 
+    private bool PhotoInfoHidden = true;
+    private double CurrentProgressValue;
+    private int CurrentPhotoNumber = 0;
+    private int TotalPhotoCount;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         Types = PhotoTypeService.GetAll();
-
         Type = Types.First();
+
+        TotalPhotoCount = PhotosToUpdate.Count;
     }
 
     private void HandleValidSubmit()
@@ -43,7 +51,18 @@
 
         if (validationResult.IsValid)
         {
-            PhotoService.UpdateType(PhotosToUpdate, Type);
+            PhotoInfoHidden = false;
+            double progressStep = (double)100 / (double)TotalPhotoCount;
+            StateHasChanged();
+
+            foreach (var photo in PhotosToUpdate)
+            {
+                PhotoService.UpdateType(photo, Type);
+
+                CurrentProgressValue += progressStep;
+                CurrentPhotoNumber++;
+                StateHasChanged();
+            }
 
             Snackbar.AddSuccess("Type of photos was successfully changed.");
 

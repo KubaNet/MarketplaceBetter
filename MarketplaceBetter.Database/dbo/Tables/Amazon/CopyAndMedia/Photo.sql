@@ -21,7 +21,7 @@
 );
 GO
 
-CREATE UNIQUE INDEX UIX_Photo_CloudId  ON [dbo].[Photo] ([Url] ASC);
+CREATE UNIQUE INDEX UIX_Photo_CloudId  ON [dbo].[Photo] ([CloudId] ASC);
 GO
 
 CREATE UNIQUE INDEX UIX_Photo_Url  ON [dbo].[Photo] ([Url] ASC);

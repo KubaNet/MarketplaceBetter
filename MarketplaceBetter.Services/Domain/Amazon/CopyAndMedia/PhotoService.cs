@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
-using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
@@ -16,17 +14,16 @@ using MarketplaceBetter.Services.Domain.Base.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
 using MarketplaceBetter.Specialized.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
-using System.IO.Compression;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Hosting;
+using Variant = MarketplaceBetter.Domain.Entities.Catalog.Products.Variant;
 
 namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
 {
@@ -154,17 +151,29 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             Delete(photos);
         }
 
-        public void UpdateType(IList<PhotoModel> photos, PhotoTypeModel type)
+        public void UpdateType(PhotoModel photo, PhotoTypeModel type)
         {
-            foreach (var photo in photos)
+            Photo photoToUpdate = _repository.Get(photo.Id);
+            Variant variant = photoToUpdate.Variant;
+
+            string fileName = $"{photoToUpdate.Instance.Name.ToLower()}_variant_{variant.Id}_{type.SystemName}";
+            string fullFileName = $"product_{variant.Product.Id}/variant_{variant.Id}/instance_{photoToUpdate.Instance.Name.ToLower()}/{fileName}";
+
+            if (photo.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
             {
-                Photo photoToUpdate = _repository.Get(photo.Id);
-
-                photoToUpdate.TypeId = type.Id;
-
-                _repository.Update(photoToUpdate);
-                _unitOfWork.Save();
+                return;
             }
+
+            PhotoRenamingResult renamingResult = _photoCloudService.Rename(photoToUpdate.CloudId, fullFileName);
+
+            photoToUpdate.TypeId = type.Id;
+            photoToUpdate.FileName = fileName;
+            photoToUpdate.CloudId = renamingResult.CloudId;
+            photoToUpdate.Version = renamingResult.Version;
+            photoToUpdate.Url = renamingResult.Url;
+
+            _repository.Update(photoToUpdate);
+            _unitOfWork.Save();
         }
 
         public async Task PrepareForDownload(PhotoModel photo, VariantModel variant)

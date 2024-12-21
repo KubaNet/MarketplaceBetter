@@ -36,7 +36,7 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia.Interfaces
 
         void DeleteAllForVariant(long variantId);
 
-        void UpdateType(IList<PhotoModel> photos, PhotoTypeModel type);
+        void UpdateType(PhotoModel photo, PhotoTypeModel type);
 
         Task PrepareForDownload(PhotoModel photo, VariantModel variant);
 

@@ -1,10 +1,6 @@
 ﻿using MarketplaceBetter.Services.Model;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Specialized.Interfaces
 {
@@ -15,6 +11,8 @@ namespace MarketplaceBetter.Specialized.Interfaces
         PhotoUploadResult PreUpload(MemoryStream photoStream, string fileName);
 
         PhotoUploadResult SaveFromPreUpload(string cloudId, string version, string fileName);
+
+        PhotoRenamingResult Rename(string cloudId, string newFileName);
 
         string GetOriginalUrl(string cloudId, string version);
 

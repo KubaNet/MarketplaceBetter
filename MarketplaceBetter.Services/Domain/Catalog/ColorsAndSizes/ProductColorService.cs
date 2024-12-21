@@ -73,7 +73,7 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
 
         public IList<ColorModel> GetAllForProduct(long productId)
         {
-            IQueryable<Variant> variants = _repository.GetQuery();
+            IQueryable<Variant> variants = _repository.Where(v => v.ProductId == productId);
 
             return _mapper.Map<IList<ColorModel>>(variants.Select(v => v.Color).Distinct());
         }
