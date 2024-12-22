@@ -186,7 +186,7 @@ namespace MarketplaceBetter.Specialized
 
             if (result.Error != null)
             {
-                throw new Exception($"There was error with renaming photo {result.PublicId}");
+                throw new Exception($"There was error with renaming photo {result.PublicId}: {result.Error.Message}");
             }
             else
             {
