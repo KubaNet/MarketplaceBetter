@@ -107,6 +107,8 @@
 
     private Task<TableData<ChildModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<ChildModel> childs = ChildService.GetForListRequest(ListRequest);

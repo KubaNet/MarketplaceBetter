@@ -103,6 +103,8 @@
 
     private Task<TableData<CustomerReturnModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<CustomerReturnModel> returns = CustomerReturnService.GetForListRequest(ListRequest);

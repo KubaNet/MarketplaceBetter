@@ -91,6 +91,8 @@
 
     private Task<TableData<PhotoModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<PhotoModel> photos = PhotoService.GetForListRequest(ListRequest, ShowSharedOnly);

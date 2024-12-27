@@ -39,6 +39,8 @@
 
     private Task<TableData<UserModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         IList<UserModel> users = UserService.GetAll();
 
         return Task.FromResult(new TableData<UserModel>() { TotalItems = users.Count, Items = users });

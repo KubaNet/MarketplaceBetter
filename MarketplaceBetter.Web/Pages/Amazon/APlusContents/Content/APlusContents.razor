@@ -89,6 +89,8 @@
 
     private Task<TableData<APlusContentModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<APlusContentModel> contents = ContentService.GetForListRequest(ListRequest);

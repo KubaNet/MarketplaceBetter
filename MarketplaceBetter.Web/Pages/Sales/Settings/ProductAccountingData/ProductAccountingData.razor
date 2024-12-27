@@ -76,6 +76,8 @@
 
 	private Task<TableData<ProductAccountingDataModel>> Reload(TableState state, CancellationToken token)
 	{
+		Table.SelectedItems = null;
+
 		state.PopulateListRequest(ListRequest);
 
 		IList<ProductAccountingDataModel> data = ProductAccountingDataService.GetForListRequest(ListRequest);

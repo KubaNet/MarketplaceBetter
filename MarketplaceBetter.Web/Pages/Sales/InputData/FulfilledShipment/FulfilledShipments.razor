@@ -123,6 +123,8 @@
 
     private Task<TableData<FulfilledShipmentModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<FulfilledShipmentModel> shipments = FulfilledShipmentService.GetForListRequest(ListRequest);

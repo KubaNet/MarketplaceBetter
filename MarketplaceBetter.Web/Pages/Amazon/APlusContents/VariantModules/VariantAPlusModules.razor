@@ -116,6 +116,8 @@
 
     private Task<TableData<APlusVariantModulesModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<APlusVariantModulesModel> variantModules = VariantModulesService.GetForListRequest(ListRequest);

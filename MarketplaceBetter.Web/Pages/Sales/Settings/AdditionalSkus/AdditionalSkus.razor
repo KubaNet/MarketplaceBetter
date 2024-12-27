@@ -60,6 +60,8 @@
 
 	private Task<TableData<AdditionalSkuModel>> Reload(TableState state, CancellationToken token)
 	{
+		Table.SelectedItems = null;
+
 		state.PopulateListRequest(ListRequest);
 
 		IList<AdditionalSkuModel> centers = AdditionalSkuService.GetForListRequest(ListRequest);

@@ -61,6 +61,8 @@
 
     private Task<TableData<PortfolioModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<PortfolioModel> portfolios = PortfolioService.GetForListRequest(ListRequest);

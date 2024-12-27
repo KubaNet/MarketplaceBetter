@@ -42,6 +42,8 @@
 
 	private Task<TableData<SizeGroupModel>> Reload(TableState state, CancellationToken token)
 	{
+        Table.SelectedItems = null;
+
 		state.PopulateListRequest(ListRequest);
 
 		IList<SizeGroupModel> groups = SizeGroupService.GetForListRequest(ListRequest);

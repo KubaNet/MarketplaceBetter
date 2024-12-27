@@ -98,6 +98,8 @@
 
     private Task<TableData<APlusModuleValueModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<APlusModuleValueModel> module = ModuleValueService.GetForListRequest(ListRequest);

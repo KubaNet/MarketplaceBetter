@@ -126,6 +126,8 @@
 
     private Task<TableData<InvoiceModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<InvoiceModel> centers = InvoiceService.GetForListRequest(ListRequest);

@@ -118,6 +118,8 @@
 
     private Task<TableData<ParentModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         IList<ParentModel> parents = ParentService.GetForListRequest(ListRequest);

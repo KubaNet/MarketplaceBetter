@@ -66,6 +66,8 @@
 
 	private Task<TableData<ColorModel>> Reload(TableState state, CancellationToken token)
 	{
+        Table.SelectedItems = null;
+
 		state.PopulateListRequest(ListRequest);
 
 		IList<ColorModel> colors = ColorService.GetForListRequest(ListRequest);

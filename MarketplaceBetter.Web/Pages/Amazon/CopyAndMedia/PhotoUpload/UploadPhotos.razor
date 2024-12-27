@@ -106,6 +106,8 @@
 
     private Task<TableData<PhotoUploadModel>> Reload(TableState state, CancellationToken token)
     {
+        Table.SelectedItems = null;
+
         state.PopulateListRequest(ListRequest);
 
         PhotoUploads = PhotoUploadService.GetForListRequest(ListRequest);
