@@ -69,9 +69,16 @@
                 MudDialog.Close();
             } catch (Exception ex)
             {
-                validationResult.AddError(ex.Message);
+                if (ex.Message.Contains("There doesn't exists a country with code"))
+                {
+                    validationResult.AddError(ex.Message);
 
-                CustomValidation.DisplayErrors(validationResult.Errors);
+                    CustomValidation.DisplayErrors(validationResult.Errors);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
         else

@@ -297,3 +297,21 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 50)
     VALUES ('Australia', 50, 'AU')
 ELSE UPDATE [dbo].[Country] SET [Name] = 'Australia', [Code] = 'AU' WHERE [SystemName] = 50
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 51)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('South Africa', 51, 'ZA')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'South Africa', [Code] = 'ZA' WHERE [SystemName] = 51
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 52)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Peru', 52, 'PE')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Peru', [Code] = 'PE' WHERE [SystemName] = 52
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 53)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Colombia', 53, 'CO')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Colombia', [Code] = 'CO' WHERE [SystemName] = 53
+GO

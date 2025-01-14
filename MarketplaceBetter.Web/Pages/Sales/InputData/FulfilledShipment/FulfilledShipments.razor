@@ -26,6 +26,7 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="id" T="FulfilledShipmentModel">Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="invoice" T="FulfilledShipmentModel">Invoice</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="error" T="FulfilledShipmentModel">Error</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="amazon_order_id" T="FulfilledShipmentModel">Amazon Order Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="shipment_item_id" T="FulfilledShipmentModel">Shipment Item Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortLabel="amazon_order_item_id" T="FulfilledShipmentModel">Amazon Order Item Id</MudTableSortLabel></MudTh>
@@ -59,9 +60,15 @@
                 {
                     <MudLink Href="@string.Concat("/invoices?SearchString=Id: ", context.Invoice.Id)" Underline="Underline.None" Color="Color.Info">Invoice Id: @context.Invoice.Id</MudLink>
                 }
-                else
+                else if (!context.IsInvoiceable)
                 {
-                    <MudAlert Severity="Severity.Error">@context.Error</MudAlert>
+                    <MudAlert Severity="Severity.Info">Not invoiceable</MudAlert>
+                }
+            </MudTd>
+            <MudTd DataLabel="Error">
+                @if (context.Error != null)
+                {
+                    <MudAlert Severity="Severity.Error">@context.Error</MudAlert>                    
                 }
             </MudTd>
             <MudTd DataLabel="Amazon Order Id">@context.AmazonOrderId</MudTd>

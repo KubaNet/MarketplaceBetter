@@ -108,6 +108,14 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         UnitedArabEmirates = 49,
 
-        Australia = 50
+        Australia = 50,
+
+        SouthAfrica = 51,
+
+        Peru = 52,
+
+        Colombia = 53,
+
+
     }
 }

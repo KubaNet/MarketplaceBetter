@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
 using MarketplaceBetter.Domain.Entities.Sales.Invoicing;
 using MarketplaceBetter.Domain.Entities.Sales.Settings;
@@ -86,6 +87,22 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
 
                 CountryModel countryFrom = _fulfillmentCenterService.GetFor(firstShipment.FC).Country;
                 CountryModel countryTo = firstShipment.DeliveryCountry;
+
+                if (countryFrom.SystemName == CountryEnum.UnitedStates || countryFrom.SystemName == CountryEnum.Canada)
+                {
+                    foreach (var shipment in groupedShipment.Value)
+                    {
+                        FulfilledShipment shipmentToUpdate = _fulfilledShipmentRepository.Get(shipment.Id);
+
+                        shipmentToUpdate.IsInvoiceable = false;
+                        shipmentToUpdate.Error = null;
+
+                        _fulfilledShipmentRepository.Update(shipmentToUpdate);
+                        _unitOfWork.Save();
+                    }
+
+                    continue;
+                }
 
                 VatRuleModel vatRule = _vatRuleService.GetFor(countryFrom.Id, countryTo.Id);
                 if (vatRule == null)
@@ -187,6 +204,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                     FulfilledShipment shipmentToUpdate = _fulfilledShipmentRepository.Get(shipment.Id);
 
                     shipmentToUpdate.InvoiceId = invoice.Id;
+                    shipmentToUpdate.Error = null;
 
                     _fulfilledShipmentRepository.Update(shipmentToUpdate);
                     _unitOfWork.Save();

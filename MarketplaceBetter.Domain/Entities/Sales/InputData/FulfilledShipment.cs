@@ -66,6 +66,8 @@ namespace MarketplaceBetter.Domain.Entities.Sales.InputData
 
         public string Error { get; set; }
 
+        public bool IsInvoiceable { get; set; }
+
         public long? InvoiceId { get; set; }
 
         public virtual Invoice Invoice { get; set; }

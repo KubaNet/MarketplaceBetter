@@ -19,6 +19,8 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         SEK = 4,
 
-        USD = 5
+        USD = 5,
+
+        CAD = 6
     }
 }

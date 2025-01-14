@@ -27,3 +27,9 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[Currency] WHERE [SystemName] = 5)
     VALUES ('USD', 5)
 ELSE UPDATE [dbo].[Currency] SET [Name] = 'USD' WHERE [SystemName] = 5
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Currency] WHERE [SystemName] = 6)
+    INSERT INTO [dbo].[Currency] ([Name], [SystemName])
+    VALUES ('CAD', 6)
+ELSE UPDATE [dbo].[Currency] SET [Name] = 'CAD' WHERE [SystemName] = 6
+GO

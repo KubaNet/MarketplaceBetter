@@ -84,37 +84,38 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 FulfilledShipment shipment = new FulfilledShipment();
 
                 shipment.AmazonOrderId = csv.GetField("Amazon Order Id");
-                shipment.ShipmentItemId = csv.GetField("Shipment Item ID");
+                shipment.ShipmentItemId = GetTextField(csv, "Shipment Item ID", "Shipment Item Id");
 
                 if (_repository.Any(s => s.AmazonOrderId == shipment.AmazonOrderId && s.ShipmentItemId == shipment.ShipmentItemId))
                 {
                     continue;
                 }
 
-                shipment.AmazonOrderItemId = csv.GetField("Amazon Order Item ID");
+                shipment.AmazonOrderItemId = GetTextField(csv, "Amazon Order Item ID", "Amazon Order Item Id");
                 shipment.PaymentsDate = csv.GetField<DateTime>("Payments Date");
                 shipment.MerchantSku = csv.GetField("Merchant SKU");
                 shipment.Title = csv.GetField("Title");
-                shipment.DispatchedQuantity = csv.GetField<int>("Dispatched Quantity");
+                shipment.DispatchedQuantity = GetNumberField(csv, "Dispatched Quantity", "Shipped Quantity");
                 shipment.Currency = _currencyService.GetByName(csv.GetField("Currency"));
                 shipment.ItemPrice = csv.GetField<decimal>("Item Price");
                 shipment.ItemTax = csv.GetField<decimal>("Item Tax");
-                shipment.DeliveryPrice = csv.GetField<decimal>("Delivery Price");
-                shipment.DeliveryTax = csv.GetField<decimal>("Delivery Tax");
+                shipment.DeliveryPrice = GetMoneyField(csv, "Delivery Price", "Shipping Price");
+                shipment.DeliveryTax = GetMoneyField(csv, "Delivery Tax", "Shipping Tax");
                 shipment.GiftWrapPrice = csv.GetField<decimal>("Gift Wrap Price");
-                shipment.GiftWrappingTax = csv.GetField<decimal>("Gift Wrapping Tax");
+                shipment.GiftWrappingTax = GetMoneyField(csv, "Gift Wrapping Tax", "Gift Wrap Tax");
                 shipment.ItemPromoDiscount = csv.GetField<decimal>("Item Promo Discount");
                 shipment.ShipmentPromoDiscount = csv.GetField<decimal>("Shipment Promo Discount");
                 shipment.RecipientName = csv.GetField("Recipient Name");
-                shipment.DeliveryAddress1 = csv.GetField("Delivery Address 1");
-                shipment.DeliveryAddress2 = csv.GetField("Delivery Address 2");
-                shipment.DeliveryAddress3 = csv.GetField("Delivery Address 3");
-                shipment.DeliveryCityTown = csv.GetField("Delivery City/Town");
-                shipment.DeliveryCounty = csv.GetField("Delivery County");
-                shipment.DeliveryPostcode = csv.GetField("Delivery Postcode");
+                shipment.DeliveryAddress1 = GetTextField(csv, "Delivery Address 1", "Shipping Address 1");
+                shipment.DeliveryAddress2 = GetTextField(csv, "Delivery Address 2", "Shipping Address 2");
+                shipment.DeliveryAddress3 = GetTextField(csv, "Delivery Address 3", "Shipping Address 3");
+                shipment.DeliveryCityTown = GetTextField(csv, "Delivery City/Town", "Shipping City");
+                shipment.DeliveryCounty = GetTextField(csv, "Delivery County", "Shipping State");
+                shipment.DeliveryPostcode = GetTextField(csv, "Delivery Postcode", "Shipping Postal Code");
                 shipment.FC = csv.GetField("FC");
+                shipment.IsInvoiceable = true;
 
-                string countryCode = csv.GetField("Delivery Country Code");
+                string countryCode = GetTextField(csv, "Delivery Country Code", "Shipping Country Code");
                 if (_countryService.Exists(countryCode))
                 {
                     shipment.DeliveryCountry = _countryService.GetByCode(countryCode);
@@ -131,6 +132,57 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             _unitOfWork.Save();
 
             _invoiceService.Create(_mapper.Map<IList<FulfilledShipmentModel>>(shipments));
+        }
+        
+        private string GetTextField(CsvReader csv, string fieldName, string alternativeFieldName)
+        {
+            try
+            {
+                return csv.GetField(fieldName);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains($"Field with name '{fieldName}' does not exist"))
+                {
+                    return csv.GetField(alternativeFieldName);
+                }
+
+                throw;
+            }
+        }
+
+        private int GetNumberField(CsvReader csv, string fieldName, string alternativeFieldName)
+        {
+            try
+            {
+                return csv.GetField<int>(fieldName);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains($"Field with name '{fieldName}' does not exist"))
+                {
+                    return csv.GetField<int>(alternativeFieldName);
+                }
+
+                throw;
+            }
+        }
+
+        private decimal GetMoneyField(CsvReader csv, string fieldName, string alternativeFieldName)
+        {
+            try
+            {
+                return csv.GetField<decimal>(fieldName);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains($"Field with name '{fieldName}' does not exist"))
+                {
+                    return csv.GetField<decimal>(alternativeFieldName);
+                }
+
+                throw;
+            }
         }
 
         private IQueryable<FulfilledShipment> ApplyFilter(IQueryable<FulfilledShipment> shipments, ListRequest request)
@@ -224,6 +276,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 {
                     "id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Id) : shipments.OrderByDescending(s => s.Id),
                     "invoice" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Invoice.Id) : shipments.OrderByDescending(s => s.Invoice.Id),
+                    "error" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.Error) : shipments.OrderByDescending(s => s.Error),
                     "amazon_order_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.AmazonOrderId) : shipments.OrderByDescending(s => s.AmazonOrderId),
                     "shipment_item_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.ShipmentItemId) : shipments.OrderByDescending(s => s.ShipmentItemId),
                     "amazon_order_item_id" => request.SortDirection == SortDirection.Ascending ? shipments.OrderBy(s => s.AmazonOrderItemId) : shipments.OrderByDescending(s => s.AmazonOrderItemId),

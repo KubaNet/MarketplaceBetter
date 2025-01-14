@@ -64,6 +64,8 @@ namespace MarketplaceBetter.Domain.Model.Sales.InputData
 
         public string Error { get; set; }
 
+        public bool IsInvoiceable { get; set; }
+
         public InvoiceModel Invoice { get; set; }
     }
 }
