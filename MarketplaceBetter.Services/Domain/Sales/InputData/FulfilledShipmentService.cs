@@ -121,7 +121,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 }
                 else
                 {
-                    throw new Exception($"There doesn't exists a country with code {countryCode}");
+                    throw new Exception($"There doesn't exists a country with code {countryCode} (amazon order id: {shipment.AmazonOrderId})");
                 }
 
                 _repository.Add(shipment);

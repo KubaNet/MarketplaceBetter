@@ -60,11 +60,19 @@
             await File.OpenReadStream(maxAllowedSize: 100000000).CopyToAsync(memoryStream);
             memoryStream.Seek(0, SeekOrigin.Begin);
 
-            FulfilledShipmentService.AddFromFile(memoryStream);
+            try
+            {
+                FulfilledShipmentService.AddFromFile(memoryStream);
 
-            Snackbar.AddSuccess("Fulfilled Shipments were created. See Invoice column to check if all invoices were also created.");
+                Snackbar.AddSuccess("Fulfilled Shipments were created. See Invoice column to check if all invoices were also created.");
 
-            MudDialog.Close();
+                MudDialog.Close();
+            } catch (Exception ex)
+            {
+                validationResult.AddError(ex.Message);
+
+                CustomValidation.DisplayErrors(validationResult.Errors);
+            }
         }
         else
         {
