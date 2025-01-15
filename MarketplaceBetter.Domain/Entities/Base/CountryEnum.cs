@@ -116,6 +116,12 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         Colombia = 53,
 
+        SouthKorea = 54,
 
+        Philippines = 55,
+
+        Singapore = 56,
+
+        Brazil = 57
     }
 }

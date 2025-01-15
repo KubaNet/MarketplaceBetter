@@ -88,7 +88,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                 CountryModel countryFrom = _fulfillmentCenterService.GetFor(firstShipment.FC).Country;
                 CountryModel countryTo = firstShipment.DeliveryCountry;
 
-                if (countryFrom.SystemName == CountryEnum.UnitedStates || countryFrom.SystemName == CountryEnum.Canada)
+                if (countryFrom.SystemName == CountryEnum.UnitedStates || countryFrom.SystemName == CountryEnum.Canada
+                    || countryFrom.SystemName == CountryEnum.India)
                 {
                     foreach (var shipment in groupedShipment.Value)
                     {

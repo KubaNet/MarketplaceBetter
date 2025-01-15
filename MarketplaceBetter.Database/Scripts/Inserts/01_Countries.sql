@@ -315,3 +315,27 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 53)
     VALUES ('Colombia', 53, 'CO')
 ELSE UPDATE [dbo].[Country] SET [Name] = 'Colombia', [Code] = 'CO' WHERE [SystemName] = 53
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 54)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('South Korea', 54, 'KR')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'South Korea', [Code] = 'KR' WHERE [SystemName] = 54
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 55)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Philippines', 55, 'PH')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Philippines', [Code] = 'PH' WHERE [SystemName] = 55
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 56)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Singapore', 56, 'SG')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Singapore', [Code] = 'SG' WHERE [SystemName] = 56
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 57)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Brazil', 57, 'BR')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Brazil', [Code] = 'BR' WHERE [SystemName] = 57
+GO
