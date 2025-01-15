@@ -1,18 +1,20 @@
 ﻿using AutoMapper;
 using CsvHelper;
 using CsvHelper.Configuration;
-using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
-using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
+using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Model.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Sales.InputData;
 using MarketplaceBetter.Infrastructure.Data;
 using MarketplaceBetter.Infrastructure.Exceptions;
 using MarketplaceBetter.Infrastructure.Extensions;
 using MarketplaceBetter.Services.Domain.Base.Interfaces;
+using MarketplaceBetter.Services.Domain.Catalog.Products.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
 using MarketplaceBetter.Services.Domain.Sales.Invoicing.Interfaces;
 using MarketplaceBetter.Services.Helpers;
 using MarketplaceBetter.Services.Model;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -31,13 +33,15 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IInvoiceService _invoiceService;
+        private readonly IVariantService _variantService;
 
         public FulfilledShipmentService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICountryService countryService,
             ICurrencyService currencyService,
-            IInvoiceService invoiceService)
+            IInvoiceService invoiceService,
+            IVariantService variantService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -45,6 +49,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             _countryService = countryService;
             _currencyService = currencyService;
             _invoiceService = invoiceService;
+            _variantService = variantService;
         }
 
         public int CountForListRequest(ListRequest request)
@@ -160,9 +165,38 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
             {
                 SaleReportItem reportItem = new SaleReportItem();
 
+                VariantModel variant = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku);
 
+                if (variant == null)
+                {
+                    throw new Exception($"Unrecognized sku: {shipment.MerchantSku} for order: {shipment.AmazonOrderId}");
+                }
 
-                reportItems.Add(reportItem);
+                if (reportItems.Any(i => i.Variant.Id == variant.Id))
+                {
+                    reportItem = reportItems.Single(i => i.Variant.Id == variant.Id);
+                }
+                else
+                {
+                    reportItem.Variant = variant;
+                    reportItem.Product = variant.Product;
+                    reportItem.Color = variant.Color;
+                    reportItem.Size = variant.Size;
+
+                    reportItems.Add(reportItem);
+                }
+
+                reportItem.Sold += shipment.DispatchedQuantity;
+            }
+
+            foreach (var reportItem in reportItems)
+            {
+                csv.WriteField(reportItem.Product.Name);
+                csv.WriteField(reportItem.Color.Name);
+                csv.WriteField(reportItem.Size.Name);
+                csv.WriteField(reportItem.Sold);
+
+                csv.NextRecord();
             }
 
             writer.Flush();
@@ -173,13 +207,20 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
         private class SaleReportItem
         {
-            public Product Product { get; set; }
+            public VariantModel Variant { get; set; }
 
-            public Color Color { get; set; }
+            public ProductModel Product { get; set; }
 
-            public Size Size { get; set; }
+            public ColorModel Color { get; set; }
+
+            public SizeModel Size { get; set; }
 
             public int Sold { get; set; }
+
+            public override string ToString()
+            {
+                return $"{Variant.Sku} - {Sold}";
+            }
         }
 
         private void WriteHeader(CsvWriter csv)

@@ -33,11 +33,26 @@
 
         if (validationResult.IsValid)
         {
-            using Stream fileStream = FulfilledShipmentService.GetSalesReport(Report.DateFrom.Value, Report.DateTo.Value);
+            try
+            {
+                using Stream fileStream = FulfilledShipmentService.GetSalesReport(Report.DateFrom.Value, Report.DateTo.Value);
 
-            using var streamReference = new DotNetStreamReference(fileStream);
+                using var streamReference = new DotNetStreamReference(fileStream);
 
-            await JS.InvokeVoidAsync("DownloadFileFromStream", $"SalesReport.csv", streamReference);
+                await JS.InvokeVoidAsync("DownloadFileFromStream", $"SalesReport.csv", streamReference);
+            } catch (Exception ex)
+            {
+                if (ex.Message.Contains("Unrecognized sku"))
+                {
+                    validationResult.AddError(ex.Message);
+
+                    CustomValidation.DisplayErrors(validationResult.Errors);
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
         else
         {
