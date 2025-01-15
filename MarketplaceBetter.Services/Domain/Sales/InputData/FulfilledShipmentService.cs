@@ -161,16 +161,27 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 && s.PaymentsDate <= dateTo.AddDays(1)).ToList();
             IList<SaleReportItem> reportItems = new List<SaleReportItem>();
 
+            IList<string> wrongVariants = new List<string>();
+            foreach (var shipment in shipments)
+            {
+                VariantModel variant = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku);
+
+                if (variant == null)
+                {
+                    wrongVariants.Add(shipment.MerchantSku);
+                }
+            }
+
+            if (wrongVariants.Any())
+            {
+                throw new Exception("Unrecognized sku: " + string.Join("; ", wrongVariants));
+            }
+
             foreach (var shipment in shipments)
             {
                 SaleReportItem reportItem = new SaleReportItem();
 
                 VariantModel variant = _variantService.GetBySkuOrAdditionalSku(shipment.MerchantSku);
-
-                if (variant == null)
-                {
-                    throw new Exception($"Unrecognized sku: {shipment.MerchantSku} for order: {shipment.AmazonOrderId}");
-                }
 
                 if (reportItems.Any(i => i.Variant.Id == variant.Id))
                 {
@@ -189,7 +200,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
                 reportItem.Sold += shipment.DispatchedQuantity;
             }
 
-            foreach (var reportItem in reportItems)
+            foreach (var reportItem in reportItems.OrderBy(i => i.Product.Name).ThenBy(i => i.Color.Name)
+                .ThenBy(i => i.Size.Name))
             {
                 csv.WriteField(reportItem.Product.Name);
                 csv.WriteField(reportItem.Color.Name);
