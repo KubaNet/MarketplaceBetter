@@ -21,6 +21,7 @@
             <MudTextField Value="ListRequest.SearchString" Placeholder="Search" T="string" ValueChanged="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton OnClick="Process" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowForwardIos" Color="Color.Info" Disabled="NoneSelected" Class="ml-2">Process</MudButton>
+            <MudButton OnClick="DownloadSalesReport" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Secondary" Class="ml-2">Download Sales Report</MudButton>
             <MudButton OnClick="AddFromFile" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-2">Add from file</MudButton>
         </ToolBarContent>
         <HeaderContent>
@@ -161,6 +162,11 @@
         DialogResult result = await DialogService.Show<FulfilledShipmentsFromFileDialog>().Result;
 
         ProcessDialogResult(result);
+    }
+
+    private void DownloadSalesReport()
+    {
+        DialogService.Show<DownloadSalesReportDialog>();
     }
 
     private void ProcessDialogResult(DialogResult result)

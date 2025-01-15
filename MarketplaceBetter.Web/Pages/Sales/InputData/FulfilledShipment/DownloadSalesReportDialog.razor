@@ -1,0 +1,47 @@
+﻿@using System.IO
+@using MarketplaceBetter.Domain.Model.Sales.InputData
+@using MarketplaceBetter.Services.Domain.Sales.InputData.Interfaces;
+
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+@inject IFulfilledShipmentService FulfilledShipmentService
+
+<EditForm Model="Report" OnValidSubmit="@HandleValidSubmit">
+    <CustomValidation @ref="CustomValidation" />
+    <FormDialog Title="Download Sales Report">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MudDatePicker Label="From" @bind-Date="Report.DateFrom" />
+        <MudDatePicker Label="To"  @bind-Date="Report.DateTo" />
+    </FormDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+
+    private CustomValidation CustomValidation = new();
+    private DownloadSalesReportModel Report = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private async void HandleValidSubmit()
+    {
+        ValidationResult validationResult = new();
+
+        if (validationResult.IsValid)
+        {
+            using Stream fileStream = FulfilledShipmentService.GetSalesReport(Report.DateFrom.Value, Report.DateTo.Value);
+
+            using var streamReference = new DotNetStreamReference(fileStream);
+
+            await JS.InvokeVoidAsync("DownloadFileFromStream", $"SalesReport.csv", streamReference);
+        }
+        else
+        {
+            CustomValidation.DisplayErrors(validationResult.Errors);
+        }
+    }
+}

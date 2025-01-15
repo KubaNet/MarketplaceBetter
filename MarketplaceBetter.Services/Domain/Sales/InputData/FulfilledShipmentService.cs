@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CsvHelper;
 using CsvHelper.Configuration;
+using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales.InputData;
 using MarketplaceBetter.Domain.Model.Sales.InputData;
 using MarketplaceBetter.Infrastructure.Data;
@@ -17,6 +19,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace MarketplaceBetter.Services.Domain.Sales.InputData
 {
@@ -133,7 +136,62 @@ namespace MarketplaceBetter.Services.Domain.Sales.InputData
 
             _invoiceService.Create(_mapper.Map<IList<FulfilledShipmentModel>>(shipments));
         }
-        
+
+        public Stream GetSalesReport(DateTime dateFrom, DateTime dateTo)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+                Encoding = Encoding.UTF8,
+                HasHeaderRecord = false,
+            };
+
+            CsvWriter csv = new CsvWriter(writer, config);
+
+            WriteHeader(csv);
+
+            IList<FulfilledShipment> shipments = _repository.Where(s => s.PaymentsDate >= dateFrom
+                && s.PaymentsDate <= dateTo.AddDays(1)).ToList();
+            IList<SaleReportItem> reportItems = new List<SaleReportItem>();
+
+            foreach (var shipment in shipments)
+            {
+                SaleReportItem reportItem = new SaleReportItem();
+
+
+
+                reportItems.Add(reportItem);
+            }
+
+            writer.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
+        }
+
+        private class SaleReportItem
+        {
+            public Product Product { get; set; }
+
+            public Color Color { get; set; }
+
+            public Size Size { get; set; }
+
+            public int Sold { get; set; }
+        }
+
+        private void WriteHeader(CsvWriter csv)
+        {
+            csv.WriteField("Product");
+            csv.WriteField("Color");
+            csv.WriteField("Size");
+            csv.WriteField("Sold");
+
+            csv.NextRecord();
+        }
+
         private string GetTextField(CsvReader csv, string fieldName, string alternativeFieldName)
         {
             try
