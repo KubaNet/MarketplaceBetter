@@ -339,3 +339,9 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 57)
     VALUES ('Brazil', 57, 'BR')
 ELSE UPDATE [dbo].[Country] SET [Name] = 'Brazil', [Code] = 'BR' WHERE [SystemName] = 57
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 58)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Bermuda', 58, 'BM')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Bermuda', [Code] = 'BM' WHERE [SystemName] = 58
+GO

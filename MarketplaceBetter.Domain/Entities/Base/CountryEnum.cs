@@ -122,6 +122,8 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         Singapore = 56,
 
-        Brazil = 57
+        Brazil = 57,
+
+        Bermuda = 58,
     }
 }
