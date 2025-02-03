@@ -134,7 +134,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 					csv.WriteField(productData.CommodityCode);
 					csv.WriteField(productData.Weight);
 					csv.WriteField(cost?.Cost);
-					csv.WriteField(cost?.Currency.Name);
+					csv.WriteField(currency.Name);
 
 					csv.NextRecord();
 				}
@@ -153,7 +153,7 @@ namespace MarketplaceBetter.Services.Domain.Sales.Settings
 					csv.WriteField(productData.CommodityCode);
 					csv.WriteField(productData.Weight);
 					csv.WriteField(cost?.Cost);
-					csv.WriteField(cost?.Currency.Name);
+					csv.WriteField(currency.Name);
 
 					csv.NextRecord();
 				}
