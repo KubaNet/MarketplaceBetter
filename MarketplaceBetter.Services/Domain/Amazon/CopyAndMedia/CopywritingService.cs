@@ -185,6 +185,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                 products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
+            bool hideCopies = _userService.HideCopies();
+            if (hideCopies)
+            {
+                products = products.Where(p => p.IsSizeCopy == false);
+            }
+
             return products;
         }
 
@@ -234,6 +240,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             if (hideWithdrawn && !_userService.IsSpecificStatus())
             {
                 copywritings = copywritings.Where(c => c.Product.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
+            bool hideCopies = _userService.HideCopies();
+            if (hideCopies)
+            {
+                copywritings = copywritings.Where(c => c.Product.IsSizeCopy == false);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

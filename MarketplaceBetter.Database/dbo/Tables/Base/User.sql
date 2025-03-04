@@ -12,6 +12,7 @@
 	[CurrentInstanceId]		BIGINT						NOT NULL,
 	[HideDrafts]			BIT							NOT NULL,
 	[HideWithdrawn]			BIT							NOT NULL,
+	[HideCopies]			BIT							NOT NULL DEFAULT(0),
 	[ExpandedMenu]			NVARCHAR (255)				NOT NULL,
 	CONSTRAINT				[PK_User]					PRIMARY KEY ([Id]),
 	CONSTRAINT				[FK_User_CurrentStatus]		FOREIGN KEY ([CurrentStatusId])		REFERENCES [dbo].[EntityStatus] ([Id]),

@@ -1,12 +1,8 @@
 ﻿using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
 using MarketplaceBetter.Domain.Validation.Attributes;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Domain.Model.Catalog.Products
 {
@@ -42,6 +38,8 @@ namespace MarketplaceBetter.Domain.Model.Catalog.Products
         public EntityStatusModel Status { get; set; }
 
         public string Comment { get; set; }
+
+        public bool IsSizeCopy { get; set; }
 
         public IList<VariantModel> Variants { get; set; }
     }

@@ -10,6 +10,7 @@
 	[Order]			INT					NOT NULL,
 	[StatusId]		BIGINT				NOT NULL,
 	[Comment]		NVARCHAR (max)		NULL,
+	[IsSizeCopy]	BIT					NOT NULL DEFAULT(0),
 	CONSTRAINT	[PK_Product]			PRIMARY KEY ([Id]),
 	CONSTRAINT  [FK_Product_Brand]		FOREIGN KEY ([BrandId])			REFERENCES [dbo].[Brand] ([Id]),
 	CONSTRAINT  [FK_Product_Collection]	FOREIGN KEY ([CollectionId])	REFERENCES [dbo].[Collection] ([Id]),

@@ -456,6 +456,35 @@ namespace MarketplaceBetter.Services.Domain.Base
             UpdateSettingsCache(user);
         }
 
+        public bool HideCopies()
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            return user.HideCopies;
+        }
+
+        public void SetHideCopies(bool hideCopies)
+        {
+            User user = GetCurrentUser();
+
+            if (user == null)
+            {
+                return;
+            }
+
+            user.HideCopies = hideCopies;
+
+            _repository.Update(user);
+            _unitOfWork.Save();
+
+            UpdateSettingsCache(user);
+        }
+
         private void UpdateSettingsCache(User user)
         {
             if (user == null)

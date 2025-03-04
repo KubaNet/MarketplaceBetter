@@ -66,6 +66,9 @@
                         <MudCheckBox T="bool" Value="HideWithdrawn" Label="Hide Withdrawn" Style=@($"color: {BetterTheme.PaletteLight.TextPrimary}") Class="mt-1 ml-3" ValueChanged="OnHideWithdrawnChange" Disabled="DraftsAndWithdrawnDisabled"></MudCheckBox>
                     </div>
                     <div>
+                        <MudCheckBox T="bool" Value="HideCopies" Label="Hide Copies" Style=@($"color: {BetterTheme.PaletteLight.TextPrimary}") Class="mt-1 ml-3" ValueChanged="OnHideCopiesChange"></MudCheckBox>
+                    </div>
+                    <div>
                         <MudSelect T="BrandCollectionModel" Value="BrandCollection" Label="Brand -- Collection" Underline="false" Style="width: 180px;" MaxHeight="800" Class="ml-6" ValueChanged="OnSelectedBrandChange">
                             @foreach (var brand in BrandsAndCollections)
                             {
@@ -82,7 +85,7 @@
                         </MudSelect>
                     </div>
                     <div>
-                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" Underline="false" Style="width: 180px;" MaxHeight="600" Class="ml-4" ValueChanged="OnSelectedInstanceChange">
+                        <MudSelect T="InstanceModel" Value="Instance" Label="Instance" Underline="false" Style="width: 150px;" MaxHeight="600" Class="ml-4" ValueChanged="OnSelectedInstanceChange">
                             @foreach (var instance in Instances)
                             {
                                 <MudSelectItem Value="instance">@instance.Name</MudSelectItem>
@@ -126,6 +129,7 @@
 
     private bool HideDrafts = false;
     private bool HideWithdrawn = false;
+    private bool HideCopies = false;
     private bool DraftsAndWithdrawnDisabled = false;
     private bool GlobalSearchResultsOpen = false;
     private RenderFragment GlobalSearchResults;
@@ -149,6 +153,7 @@
         InitializeCurrentInstance();
         InitializeDraftsSetting();
         InitializeWithdrawnSetting();
+        InitializeCopiesSetting();
     }
 
     private void InitializeCurrentStatus()
@@ -229,6 +234,11 @@
         HideWithdrawn = UserService.HideWithdrawn();
     }
 
+    private void InitializeCopiesSetting()
+    {
+        HideCopies = UserService.HideCopies();
+    }
+
     private void OnSelectedStatusChange(EntityStatusModel status)
     {
         Status = status;
@@ -287,6 +297,13 @@
     private void OnHideWithdrawnChange(bool hideWithdrawn)
     {
         UserService.SetHideWithdrawn(hideWithdrawn);
+
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+
+    private void OnHideCopiesChange(bool hideCopies)
+    {
+        UserService.SetHideCopies(hideCopies);
 
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }

@@ -177,6 +177,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
                 products = products.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
+            bool hideCopies = _userService.HideCopies();
+            if (hideCopies)
+            {
+                products = products.Where(p => p.IsSizeCopy == false);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return products;

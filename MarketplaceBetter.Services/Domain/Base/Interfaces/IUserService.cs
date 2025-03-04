@@ -67,5 +67,9 @@ namespace MarketplaceBetter.Services.Domain.Base.Interfaces
         bool HideWithdrawn();
 
         void SetHideWithdrawn(bool hideWithdrawn);
+
+        bool HideCopies();
+
+        void SetHideCopies(bool hideCopies);
     }
 }

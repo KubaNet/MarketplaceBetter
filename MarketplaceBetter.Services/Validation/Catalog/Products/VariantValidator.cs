@@ -39,6 +39,11 @@ namespace MarketplaceBetter.Services.Validation.Catalog.Products
                 result.AddErrorFor<VariantModel>(v => v.Asin, "ASIN should be exactly 10 characters long.");
             }
 
+            if (_repository.Any(v => v.Id != variant.Id && v.Ean != null && v.Ean == variant.Ean))
+            {
+                result.AddErrorFor<VariantModel>(v => v.Asin, ValidationMessages.PropertyNotUnique, "Variant", "Ean");
+            }
+
             if (_repository.Any(v => v.Id != variant.Id && v.ProductId == variant.Product.Id && v.ColorId == variant.Color.Id && v.SizeId == variant.Size.Id))
             {
                 result.AddError("There already exists such a variant.");

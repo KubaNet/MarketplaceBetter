@@ -42,6 +42,8 @@ namespace MarketplaceBetter.Domain.Entities.Base
 
         public bool HideWithdrawn { get; set; }
 
+        public bool HideCopies { get; set; }
+
         public string ExpandedMenu { get; set; }
     }
 }

@@ -38,6 +38,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.Products
 
         public string Comment { get; set; }
 
+        public bool IsSizeCopy { get; set; }
+
         public virtual IList<Variant> Variants { get; set; }
 
         public override string ToString()

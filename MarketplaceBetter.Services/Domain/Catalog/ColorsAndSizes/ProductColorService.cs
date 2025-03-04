@@ -123,6 +123,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
                 variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
+            bool hideCopies = _userService.HideCopies();
+            if (hideCopies)
+            {
+                variants = variants.Where(v => v.Product.IsSizeCopy == false);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return variants;

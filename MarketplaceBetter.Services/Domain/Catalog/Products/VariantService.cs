@@ -2,6 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Amazon.Inventory;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Entities.Sales.Settings;
 using MarketplaceBetter.Domain.Model.Amazon.Inventory;
 using MarketplaceBetter.Domain.Model.Base;
@@ -215,6 +216,12 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Products
             if (hideWithdrawn && !_userService.IsSpecificStatus())
             {
                 variants = variants.Where(v => v.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
+            bool hideCopies = _userService.HideCopies();
+            if (hideCopies)
+            {
+                variants = variants.Where(v => v.Product.IsSizeCopy == false);
             }
 
             if (string.IsNullOrWhiteSpace(request.SearchString))

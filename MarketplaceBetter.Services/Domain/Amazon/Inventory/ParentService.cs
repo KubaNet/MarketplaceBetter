@@ -228,6 +228,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 parents = parents.Where(p => p.Status.SystemName != EntityStatusEnum.Withdrawn);
             }
 
+            bool hideCopies = _userService.HideCopies();
+            if (hideCopies)
+            {
+                parents = parents.Where(p => p.Product.IsSizeCopy == false);
+            }
+
             if (string.IsNullOrWhiteSpace(request.SearchString))
             {
                 return parents;

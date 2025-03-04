@@ -2,6 +2,7 @@
 using MarketplaceBetter.Domain.Entities.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Entities.Base;
 using MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes;
+using MarketplaceBetter.Domain.Entities.Catalog.Products;
 using MarketplaceBetter.Domain.Model.Amazon.CopyAndMedia;
 using MarketplaceBetter.Domain.Model.Base;
 using MarketplaceBetter.Domain.Model.Catalog.ColorsAndSizes;
@@ -198,6 +199,12 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
             if (hideWithdrawn && !_userService.IsSpecificStatus())
             {
                 photos = photos.Where(p => p.Variant.Status.SystemName != EntityStatusEnum.Withdrawn);
+            }
+
+            bool hideCopies = _userService.HideCopies();
+            if (hideCopies)
+            {
+                photos = photos.Where(p => p.Variant.Product.IsSizeCopy == false);
             }
 
             if (showHeroColorOnly)
