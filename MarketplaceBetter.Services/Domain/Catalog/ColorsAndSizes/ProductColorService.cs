@@ -99,6 +99,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.ColorsAndSizes
                 {
                     variants = variants.Where(v => v.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || v.Size.StandardSize.SystemName == StandardSizeEnum.M);
                 }
+                else if (currentSize.SystemName == StandardSizeEnum.NotOneSize)
+                {
+                    variants = variants.Where(v => v.Size.StandardSize.SystemName != StandardSizeEnum.OneSize);
+                }
                 else
                 {
                     variants = variants.Where(v => v.Size.StandardSizeId == currentSize.Id);

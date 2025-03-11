@@ -45,3 +45,9 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[StandardSize] WHERE [SystemName] = 8)
     VALUES ('XXL', 8)
 ELSE UPDATE [dbo].[StandardSize] SET [Name] = 'XXL' WHERE [SystemName] = 8
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[StandardSize] WHERE [SystemName] = 9)
+    INSERT INTO [dbo].[StandardSize] ([Name], [SystemName])
+    VALUES ('Not One Size', 9)
+ELSE UPDATE [dbo].[StandardSize] SET [Name] = 'Not One Size' WHERE [SystemName] = 9
+GO

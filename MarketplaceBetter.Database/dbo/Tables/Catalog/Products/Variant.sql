@@ -25,3 +25,6 @@ GO
 
 CREATE UNIQUE INDEX UIX_Variant_Asin  ON [dbo].[Variant] ([Asin] ASC) WHERE [Asin] IS NOT NULL;
 GO
+
+CREATE UNIQUE INDEX UIX_Variant_Ean  ON [dbo].[Variant] ([Ean] ASC) WHERE [Ean] IS NOT NULL;
+GO

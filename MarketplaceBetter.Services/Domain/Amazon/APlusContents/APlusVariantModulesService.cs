@@ -94,6 +94,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.APlusContents
                 {
                     modules = modules.Where(m => !m.Content.Variants.Any() || m.Content.Variants.Any(v => v.Variant.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || v.Variant.Size.StandardSize.SystemName == StandardSizeEnum.M));
                 }
+                else if (currentSize.SystemName == StandardSizeEnum.NotOneSize)
+                {
+                    modules = modules.Where(m => !m.Content.Variants.Any() || m.Content.Variants.Any(v => v.Variant.Size.StandardSize.SystemName != StandardSizeEnum.OneSize));
+                }
                 else
                 {
                     modules = modules.Where(m => !m.Content.Variants.Any() || m.Content.Variants.Any(v => v.Variant.Size.StandardSizeId == currentSize.Id));

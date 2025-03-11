@@ -135,6 +135,10 @@ namespace MarketplaceBetter.Services.Domain.Catalog.Attributes
                 {
                     dimensions = dimensions.Where(d => d.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || d.Size.StandardSize.SystemName == StandardSizeEnum.M);
                 }
+                else if (currentSize.SystemName == StandardSizeEnum.NotOneSize)
+                {
+                    dimensions = dimensions.Where(d => d.Size.StandardSize.SystemName != StandardSizeEnum.OneSize);
+                }
                 else
                 {
                     dimensions = dimensions.Where(d => d.Size.StandardSizeId == currentSize.Id);

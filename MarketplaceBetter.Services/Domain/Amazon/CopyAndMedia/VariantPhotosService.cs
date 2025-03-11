@@ -164,6 +164,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.CopyAndMedia
                 {
                     photos = photos.Where(p => p.Variant.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || p.Variant.Size.StandardSize.SystemName == StandardSizeEnum.M);
                 }
+                else if (currentSize.SystemName == StandardSizeEnum.NotOneSize)
+                {
+                    photos = photos.Where(p => p.Variant.Size.StandardSize.SystemName != StandardSizeEnum.OneSize);
+                }
                 else
                 {
                     photos = photos.Where(p => p.Variant.Size.StandardSizeId == currentSize.Id);

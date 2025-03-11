@@ -24,6 +24,8 @@ namespace MarketplaceBetter.Domain.Entities.Catalog.ColorsAndSizes
 
         XL = 7,
 
-        XXL = 8
+        XXL = 8,
+
+        NotOneSize = 9
     }
 }

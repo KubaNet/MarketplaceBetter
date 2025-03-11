@@ -203,6 +203,10 @@ namespace MarketplaceBetter.Services.Domain.Amazon.Inventory
                 {
                     childs = childs.Where(c => c.Variant.Size.StandardSize.SystemName == StandardSizeEnum.OneSize || c.Variant.Size.StandardSize.SystemName == StandardSizeEnum.M);
                 }
+                else if (currentSize.SystemName == StandardSizeEnum.NotOneSize)
+                {
+                    childs = childs.Where(c => c.Variant.Size.StandardSize.SystemName != StandardSizeEnum.OneSize);
+                }
                 else
                 {
                     childs = childs.Where(c => c.Variant.Size.StandardSizeId == currentSize.Id);
