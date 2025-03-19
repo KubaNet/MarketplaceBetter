@@ -93,7 +93,6 @@
     <None Include="Scripts\Inserts\06_PhotoKindBeginnings.sql" />
     <None Include="SchemaCompare\Local_SchemaCompare.scmp" />
     <None Include="SchemaCompare\Prod_SchemaCompare.scmp" />
-    <None Include="SchemaCompare\Test_SchemaCompare.scmp" />
     <None Include="Scripts\CustomScripts\InsertingColorTranslations.sql" />
     <None Include="Scripts\CustomScripts\UpdatingVariantsSKU.sql" />
     <None Include="Scripts\CustomScripts\UpdatingParentsSKU.sql" />
