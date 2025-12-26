@@ -1,13 +1,14 @@
 ﻿CREATE TABLE [dbo].[VatRule]
 (
-	[Id]			BIGINT						NOT NULL						IDENTITY,
-	[CountryFromId]	BIGINT						NOT NULL,
-	[CountryToId]	BIGINT						NOT NULL,
-	[VatValue]		FLOAT						NOT NULL,
-	[VatNumber]		NVARCHAR (255)				NOT NULL,
-	CONSTRAINT		[PK_VatRule]				PRIMARY KEY ([Id]),
-	CONSTRAINT		[FK_VatRule_CountryFrom]	FOREIGN KEY ([CountryFromId])	REFERENCES [dbo].[Country] ([Id]),
-	CONSTRAINT		[FK_VatRule_CountryTo]		FOREIGN KEY ([CountryToId])		REFERENCES [dbo].[Country] ([Id]),
+	[Id]				BIGINT						NOT NULL						IDENTITY,
+	[CountryFromId]		BIGINT						NOT NULL,
+	[CountryToId]		BIGINT						NOT NULL,
+	[VatValue]			FLOAT						NOT NULL,
+	[VatNumber]			NVARCHAR (255)				NOT NULL,
+	[InvoiceNextNumber]	INT							NOT NULL						DEFAULT(1),
+	CONSTRAINT			[PK_VatRule]				PRIMARY KEY ([Id]),
+	CONSTRAINT			[FK_VatRule_CountryFrom]	FOREIGN KEY ([CountryFromId])	REFERENCES [dbo].[Country] ([Id]),
+	CONSTRAINT			[FK_VatRule_CountryTo]		FOREIGN KEY ([CountryToId])		REFERENCES [dbo].[Country] ([Id]),
 );
 GO
 

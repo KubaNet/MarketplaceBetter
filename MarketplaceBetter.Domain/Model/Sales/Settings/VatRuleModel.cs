@@ -30,5 +30,9 @@ namespace MarketplaceBetter.Domain.Model.Sales.Settings
 		[Required]
 		[BetterLength]
 		public string VatNumber { get; set; }
-	}
+
+        [Display(Name = "Invoice Next Number")]
+        [Required]
+        public int InvoiceNextNumber { get; set; }
+    }
 }

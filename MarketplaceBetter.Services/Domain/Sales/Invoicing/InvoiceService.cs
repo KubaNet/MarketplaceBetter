@@ -21,7 +21,6 @@ using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
@@ -33,6 +32,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
         private readonly IRepository<Invoice> _repository;
         private readonly IRepository<FulfilledShipment> _fulfilledShipmentRepository;
         private readonly IRepository<ProductAccountingData> _productAccountingData;
+        private readonly IRepository<VatRule> _vatRuleRepository;
+        private readonly IRepository<Country> _countryRepository;
         private readonly IFulfillmentCenterService _fulfillmentCenterService;
         private readonly IVatRuleService _vatRuleService;
         private readonly IVariantService _variantService;
@@ -51,6 +52,8 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
             _repository = unitOfWork.GetRepository<Invoice>();
             _fulfilledShipmentRepository = unitOfWork.GetRepository<FulfilledShipment>();
             _productAccountingData = unitOfWork.GetRepository<ProductAccountingData>();
+            _vatRuleRepository = unitOfWork.GetRepository<VatRule>();
+            _countryRepository = unitOfWork.GetRepository<Country>();
             _fulfillmentCenterService = fulfillmentCenterService;
             _vatRuleService = vatRuleService;
             _variantService = variantService;
@@ -86,6 +89,10 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
                 FulfilledShipmentModel firstShipment = groupedShipment.Value.First();
 
                 CountryModel countryFrom = _fulfillmentCenterService.GetFor(firstShipment.FC).Country;
+                if (countryFrom.SystemName == CountryEnum.Spain)
+                {
+                    countryFrom = _mapper.Map<CountryModel>(_countryRepository.Single(c => c.SystemName == CountryEnum.Poland));
+                }
                 CountryModel countryTo = firstShipment.DeliveryCountry;
 
                 if (countryFrom.SystemName == CountryEnum.UnitedStates || countryFrom.SystemName == CountryEnum.Canada
@@ -213,21 +220,16 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
             }
         }
 
-        public async Task<int> Issue(InvoiceModel invoice, int nextNumber)
+        public async Task Issue(InvoiceModel invoice)
         {
             if (invoice.IsIssued)
             {
-                return nextNumber;
+                return;
             }
 
-            if (invoice.VatRule.CountryFrom.Code.Equals("ES", StringComparison.InvariantCultureIgnoreCase))
-            {
-                invoice.Number = $"{nextNumber}/PL/{invoice.VatRule.CountryTo.Code}/{DateTime.Now.Year}";
-            }
-            else
-            {
-                invoice.Number = $"{nextNumber}/{invoice.VatRule.CountryFrom.Code}/{invoice.VatRule.CountryTo.Code}/{DateTime.Now.Year}";
-            }
+            VatRule freshVatRule = _vatRuleRepository.Get(invoice.VatRule.Id);
+
+            invoice.Number = $"{freshVatRule.InvoiceNextNumber}/{invoice.VatRule.CountryFrom.Code}/{invoice.VatRule.CountryTo.Code}/{DateTime.Now.Year}";
 
             await _fakturowoService.Issue(invoice);
 
@@ -236,9 +238,15 @@ namespace MarketplaceBetter.Services.Domain.Sales.Invoicing
             TransferIssueValues(invoiceToUpdate, invoice);
 
             _repository.Update(invoiceToUpdate);
-            _unitOfWork.Save();
 
-            return invoice.IsIssued ? ++nextNumber : nextNumber;
+            if (invoice.IsIssued)
+            {
+                freshVatRule.InvoiceNextNumber++;
+
+                _vatRuleRepository.Update(freshVatRule);
+            }
+
+            _unitOfWork.Save();
         }
 
         private void TransferIssueValues(Invoice toInvoice, InvoiceModel fromInvoice)

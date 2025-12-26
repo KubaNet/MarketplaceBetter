@@ -28,6 +28,7 @@
         </MudSelect>
         <MudNumericField Label="Vat Value" T="double" @bind-Value="VatRule.VatValue" Variant="Variant.Text" Min="1" Max="30" HideSpinButtons="true" />
         <MudTextField Label="Vat Number" @bind-Value="VatRule.VatNumber" For="() => VatRule.VatNumber" />
+        <MudNumericField Label="Invoice Next Number" T="int" @bind-Value="VatRule.InvoiceNextNumber" Variant="Variant.Text" Min="1" HideSpinButtons="true" />
     </FormDialog>
 </EditForm>
 

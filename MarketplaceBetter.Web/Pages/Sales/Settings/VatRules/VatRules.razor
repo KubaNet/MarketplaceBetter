@@ -25,6 +25,7 @@
 			<MudTh><MudTableSortLabel SortLabel="country_to" T="VatRuleModel">Country To</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="vat_value" T="VatRuleModel">Vat Value</MudTableSortLabel></MudTh>
 			<MudTh><MudTableSortLabel SortLabel="vat_number" T="VatRuleModel">Vat Number</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortLabel="invoice_next_number" T="VatRuleModel">Invoice Number</MudTableSortLabel></MudTh>
 			<MudTh Style="width: 100px;">Actions</MudTh>
 		</HeaderContent>
 		<RowTemplate>
@@ -33,6 +34,7 @@
 			<MudTd DataLabel="Country To">@context.CountryTo.Name (@context.CountryTo.Code)</MudTd>
 			<MudTd DataLabel="Vat Value">@context.VatValue %</MudTd>
 			<MudTd DataLabel="Vat Number">@context.VatNumber</MudTd>
+			<MudTd DataLabel="Invoice Next Number">@context.InvoiceNextNumber</MudTd>
 			<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => Edit(context.Id))">Edit</MudButton></MudTd>
 		</RowTemplate>
 		<PagerContent>

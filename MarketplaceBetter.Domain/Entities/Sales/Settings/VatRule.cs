@@ -20,5 +20,7 @@ namespace MarketplaceBetter.Domain.Entities.Sales.Settings
 		public double VatValue { get; set; }
 
 		public string VatNumber { get; set; }
+
+        public int InvoiceNextNumber { get; set; }
 	}
 }
