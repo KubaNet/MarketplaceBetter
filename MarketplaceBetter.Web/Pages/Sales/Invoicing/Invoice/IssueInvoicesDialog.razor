@@ -7,7 +7,7 @@
 @inject IFulfilledShipmentService FulfilledShipmentService
 @inject IInvoiceService InvoiceService
 
-<EditForm OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="Model" OnValidSubmit="@HandleValidSubmit">
     <CustomValidation @ref="CustomValidation" />
     <FormDialog Title="Issue Invoices" FormButtonsDisabled="IssuingInProgress">
         <MudProgressLinear Value="CurrentProgressValue" Color="Color.Primary" Size="Size.Medium" hidden="@(!IssuingInProgress)" Class="mt-3" />
@@ -20,6 +20,7 @@
     [Parameter] public IList<InvoiceModel> Invoices { get; set; }
 
     private CustomValidation CustomValidation = new();
+    private IssueInvoiceModel Model = new IssueInvoiceModel();
 
     private bool IssuingInProgress;
     private double CurrentProgressValue;
@@ -58,4 +59,6 @@
         Snackbar.AddSuccess("Invoices were issued. See Is Issued and Api Error to check if they were issued properly.");
         MudDialog.Close();
     }
+
+    private class IssueInvoiceModel { }
 }
