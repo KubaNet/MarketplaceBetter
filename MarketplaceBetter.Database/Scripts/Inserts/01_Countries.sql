@@ -345,3 +345,15 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 58)
     VALUES ('Bermuda', 58, 'BM')
 ELSE UPDATE [dbo].[Country] SET [Name] = 'Bermuda', [Code] = 'BM' WHERE [SystemName] = 58
 GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 59)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Ecuador', 59, 'EC')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Ecuador', [Code] = 'EC' WHERE [SystemName] = 59
+GO
+
+IF NOT EXISTS (SELECT NULL FROM [dbo].[Country] WHERE [SystemName] = 60)
+    INSERT INTO [dbo].[Country] ([Name], [SystemName], [Code])
+    VALUES ('Malaysia', 60, 'MY')
+ELSE UPDATE [dbo].[Country] SET [Name] = 'Malaysia', [Code] = 'MY' WHERE [SystemName] = 60
+GO

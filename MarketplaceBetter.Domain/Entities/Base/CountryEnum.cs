@@ -125,5 +125,9 @@ namespace MarketplaceBetter.Domain.Entities.Base
         Brazil = 57,
 
         Bermuda = 58,
+
+        Ecuador = 59,
+
+        Malaysia = 60,
     }
 }
