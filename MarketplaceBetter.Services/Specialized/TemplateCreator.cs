@@ -75,7 +75,8 @@ namespace MarketplaceBetter.Services.Specialized
         {
             csv.WriteField("Seller SKU");
             csv.WriteField("Brand Name");
-            csv.WriteField("Product Name");
+            csv.WriteField("Item Name");
+            csv.WriteField("Item Highlight");
             csv.WriteField("Product ID (ASIN)");
             csv.WriteField("Product ID (EAN)");
             csv.WriteField("Color Name");
@@ -116,7 +117,8 @@ namespace MarketplaceBetter.Services.Specialized
         {
             csv.WriteField(parent.Sku);
             csv.WriteField(parent.Product.Brand.Name);
-            csv.WriteField(GetProductName(parent));
+            csv.WriteField(GetItemName(parent));
+            csv.WriteField(GetItemHighlight(parent));
             csv.WriteField(parent.Asin);
             csv.WriteField(null);
             csv.WriteField(null);
@@ -133,7 +135,8 @@ namespace MarketplaceBetter.Services.Specialized
 
             csv.WriteField(child.Sku);
             csv.WriteField(child.Variant.Product.Brand.Name);
-            csv.WriteField(GetProductName(child, colorTranslation));
+            csv.WriteField(GetItemName(child, colorTranslation));
+            csv.WriteField(GetItemHighlight(child));
             csv.WriteField(child.Variant.Asin);
             csv.WriteField(child.Variant.Ean);
             csv.WriteField(colorTranslation?.Translation);
@@ -215,20 +218,30 @@ namespace MarketplaceBetter.Services.Specialized
             csv.WriteField(swatch?.Url);
         }
 
-        private string GetProductName(Parent parent)
+        private string GetItemName(Parent parent)
         {
             CopywritingModel title = _copywritingService.GetForProduct(parent.ProductId, parent.InstanceId, CopywritingElementEnum.Title);
 
             return title?.Value;
         }
 
-        private string GetProductName(Child child, ColorTranslation colorTranslation)
+        private string GetItemName(Child child, ColorTranslation colorTranslation)
         {
             Variant variant = child.Variant;
             Size size = variant.Size;
             CopywritingModel title = _copywritingService.GetForProduct(variant.ProductId, child.InstanceId, CopywritingElementEnum.Title);
 
             return $"{title?.Value} ({size.Code}, {colorTranslation?.Translation})";
+        }
+
+        private string GetItemHighlight(Parent parent)
+        {
+            return _copywritingService.GetForProduct(parent.ProductId, parent.InstanceId, CopywritingElementEnum.Highlights)?.Value;
+        }
+
+        private string GetItemHighlight(Child child)
+        {
+            return _copywritingService.GetForProduct(child.Variant.ProductId, child.InstanceId, CopywritingElementEnum.Highlights)?.Value;
         }
     }
 }

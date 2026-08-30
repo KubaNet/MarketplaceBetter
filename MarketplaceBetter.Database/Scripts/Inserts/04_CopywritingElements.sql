@@ -1,7 +1,7 @@
 ﻿IF NOT EXISTS (SELECT NULL FROM [dbo].[CopywritingElement] WHERE [SystemName] = 1)
     INSERT INTO [dbo].[CopywritingElement] ([Name], [SystemName], [MaxByteCount])
-    VALUES ('Title', 1, 80)
-ELSE UPDATE [dbo].[CopywritingElement] SET [Name] = 'Title', [MaxByteCount] = 80 WHERE [SystemName] = 1
+    VALUES ('Title', 1, 75)
+ELSE UPDATE [dbo].[CopywritingElement] SET [Name] = 'Title', [MaxByteCount] = 75 WHERE [SystemName] = 1
 GO
 
 IF NOT EXISTS (SELECT NULL FROM [dbo].[CopywritingElement] WHERE [SystemName] = 2)
@@ -44,4 +44,9 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[CopywritingElement] WHERE [SystemName] = 
     INSERT INTO [dbo].[CopywritingElement] ([Name], [SystemName], [MaxByteCount])
     VALUES ('Generic Keywords', 8, 500)
 ELSE UPDATE [dbo].[CopywritingElement] SET [Name] = 'Generic Keywords', [MaxByteCount] = 500 WHERE [SystemName] = 8
+GO
+IF NOT EXISTS (SELECT NULL FROM [dbo].[CopywritingElement] WHERE [SystemName] = 9)
+    INSERT INTO [dbo].[CopywritingElement] ([Name], [SystemName], [MaxByteCount])
+    VALUES ('Highlights', 9, 125)
+ELSE UPDATE [dbo].[CopywritingElement] SET [Name] = 'Highlights', [MaxByteCount] = 125 WHERE [SystemName] = 9
 GO
