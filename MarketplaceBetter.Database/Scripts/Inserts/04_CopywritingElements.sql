@@ -45,6 +45,7 @@ IF NOT EXISTS (SELECT NULL FROM [dbo].[CopywritingElement] WHERE [SystemName] = 
     VALUES ('Generic Keywords', 8, 500)
 ELSE UPDATE [dbo].[CopywritingElement] SET [Name] = 'Generic Keywords', [MaxByteCount] = 500 WHERE [SystemName] = 8
 GO
+
 IF NOT EXISTS (SELECT NULL FROM [dbo].[CopywritingElement] WHERE [SystemName] = 9)
     INSERT INTO [dbo].[CopywritingElement] ([Name], [SystemName], [MaxByteCount])
     VALUES ('Highlights', 9, 125)

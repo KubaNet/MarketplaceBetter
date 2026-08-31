@@ -231,7 +231,7 @@ namespace MarketplaceBetter.Services.Specialized
             Size size = variant.Size;
             CopywritingModel title = _copywritingService.GetForProduct(variant.ProductId, child.InstanceId, CopywritingElementEnum.Title);
 
-            return $"{title?.Value} ({size.Code}, {colorTranslation?.Translation})";
+            return $"{title?.Value}, {colorTranslation?.Translation}, {size.Code}";
         }
 
         private string GetItemHighlight(Parent parent)
